@@ -1,0 +1,59 @@
+---
+title: Rede e nomes
+description: Como os serviços de um projeto se enxergam no Rustploy - rede por projeto, nome DNS de serviços Application (rp_nome) e Compose (chave do YAML), nomes de container e por que nenhum container publica porta.
+---
+
+## Uma rede por projeto
+
+Cada projeto tem uma rede Docker bridge dedicada, criada na primeira vez que
+precisa. Todos os serviços do projeto entram nela. Dentro dela, o DNS do Docker
+resolve nomes de serviço. Entre projetos diferentes, **não há rota**.
+
+## Como um serviço chama outro
+
+| De quem é o serviço chamado | Nome para usar |
+|---|---|
+| **Application** (Registry, Git, Zip) | `rp_<nome do serviço>` |
+| **Compose** | a chave do serviço **dentro do YAML**, sob `services:` |
+
+Exemplo: uma API (Application `api`) que usa um Postgres criado pelo assistente
+de **Database** aponta para o host do Postgres que aparece na aba **Connection**
+do banco. Essa aba mostra o host e a URL de conexão **internos** já prontos para
+copiar.
+
+Com réplicas, todas recebem o mesmo apelido e o DNS do Docker distribui entre
+elas.
+
+### Renomear
+
+Renomear um serviço Application muda o apelido `rp_<nome>` **no próximo
+deploy**, e o nome antigo deixa de resolver. Quem o chamava por variável de
+ambiente precisa ser atualizado. Em serviço Compose, o nome interno é a chave do
+YAML, então renomear o serviço no Rustploy não o altera.
+
+## Nomes de container
+
+Para **Application**:
+
+| Container | Nome |
+|---|---|
+| em produção | `rp_<id8>_<nome>` (mais `_r1`, `_r2`… nas réplicas) |
+| em deploy | `rp_<id8>_<nome>_staging_<deploy>` |
+
+`<id8>` são os 8 primeiros caracteres do id do serviço. Eles evitam colisão,
+porque nomes de container são únicos no servidor inteiro e dois projetos podem
+ter um serviço chamado `api`.
+
+Para achar um container, o Rustploy usa *labels*, não o nome. Em
+`docker ps`, os containers dele têm o label `rustploy.managed=true`.
+
+## Nenhum container publica porta
+
+No Docker puro você usaria `-p 8080:80`. Aqui não. Quem escuta nas portas 80 e
+443 do servidor é o proxy interno (**ingress**), e ele encaminha para o IP do
+container na rede do projeto. É isso que permite trocar de versão sem janela de
+indisponibilidade.
+
+A **exceção** são bancos e brokers que você decide expor: o Rustploy aloca uma
+porta externa na faixa configurada (`[external_ports]`, padrão 20000–20999) e,
+se o helper de firewall estiver ativo, a libera no `ufw`.

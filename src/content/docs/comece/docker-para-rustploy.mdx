@@ -33,9 +33,12 @@ uma operação atômica.
 
 ## Como o seu app acha o banco
 
-Dentro de um projeto, os serviços se alcançam pelo nome do container na rede
-do projeto. Um serviço Compose chamado `meu-banco` responde como
-`rp_meu-banco`. Veja [Glossário](/comece/glossario/) para o formato dos nomes.
+Dentro de um projeto, os serviços se alcançam pelo nome na rede do projeto:
+
+- **Serviço Application** (imagem, Git, zip): responde como `rp_<nome>`, em que `<nome>` é o nome do serviço.
+- **Serviço Compose**: responde pelo nome do serviço *dentro do YAML* (a chave sob `services:`).
+
+Detalhes em [Rede e nomes](/conceitos/rede-e-nomes/).
 
 ## Onde o Rustploy difere do Docker puro
 

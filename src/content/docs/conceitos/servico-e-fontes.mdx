@@ -1,0 +1,64 @@
+---
+title: Serviço e fontes
+description: Um serviço do Rustploy tem uma de quatro fontes - Registry, Git, Archive (zip) ou Compose. Como escolher entre elas, o que cada uma faz no deploy e o que o serviço configura além da fonte.
+---
+
+Um **serviço** é uma coisa que roda dentro de um projeto: uma aplicação, um
+banco, um broker ou uma stack inteira. O que define *de onde ele vem* é a
+**fonte**.
+
+## As quatro fontes
+
+| Fonte | Você fornece | No deploy o Rustploy... | Use quando |
+|---|---|---|---|
+| **Registry** | uma imagem (`nginx:latest`, `ghcr.io/org/app:1.2`) | baixa a imagem | você já tem a imagem pronta, ou usa a de terceiros |
+| **Git** | URL do repositório e branch | clona, constrói com o seu `Dockerfile`, sobe | o código está num repositório |
+| **Archive** | um `.zip` com o `Dockerfile` na raiz | desempacota e constrói | quer subir código sem Git (teto de 100 MiB) |
+| **Compose** | um arquivo Docker Compose | roda `docker compose up` da stack | bancos, brokers, ou vários containers que andam juntos |
+
+### Como escolher
+
+- Tem um repositório com `Dockerfile`? **Git**.
+- Tem a imagem num registry? **Registry**.
+- Precisa de vários containers juntos, ou usa um template? **Compose**.
+- Só tem o código na máquina? **Archive**.
+
+Não há *buildpacks*: construir a partir de código exige um `Dockerfile`.
+
+## Tipos de serviço no assistente
+
+O assistente **Novo serviço** oferece seis opções:
+
+| Opção | O que cria |
+|---|---|
+| **Application** | serviço de aplicação, de Git ou de Registry |
+| **Database** | um banco pronto (Postgres, MySQL, MariaDB, MongoDB, Redis), como stack Compose |
+| **Broker** | Kafka, RabbitMQ ou NATS, como stack Compose |
+| **Compose** | a sua stack, colando o YAML |
+| **Template** | um app do catálogo (mais de 380 aplicações) |
+| **Importar** | recria um serviço exportado de outro servidor |
+
+## O que mais um serviço configura
+
+| Campo | Para quê |
+|---|---|
+| **Porta** | a porta *dentro* do container para onde o proxy envia o tráfego |
+| **Domínios** | de um a vários, cada um com a sua porta e com ou sem TLS |
+| **Variáveis de ambiente** | as do serviço, somadas às do projeto |
+| **Volumes** | só *bind mounts* (`/host:/container[:ro]`) |
+| **Healthcheck** | decide se o container novo pode receber tráfego |
+| **Réplicas** | quantos containers do mesmo serviço |
+| **Recursos** | CPU shares e limite de memória |
+| **Comando e argumentos** | sobrescreve o `CMD` da imagem |
+
+## Compose: qual container recebe o domínio
+
+Uma stack Compose tem vários containers, mas só **um** atende o domínio. O
+Rustploy escolhe, nesta ordem:
+
+1. o serviço indicado como **alvo de ingress** (o nome dentro do YAML);
+2. o container que expõe a porta que o domínio pede;
+3. o primeiro por ordem alfabética (determinístico, com aviso no log).
+
+Se o domínio responde 502 numa stack Compose, quase sempre é a escolha do
+alvo ou a porta do domínio.

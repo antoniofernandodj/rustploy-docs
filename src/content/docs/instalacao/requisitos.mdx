@@ -3,8 +3,6 @@ title: Requisitos
 description: O que a VPS precisa ter para rodar o Rustploy - Linux com systemd, Docker Engine, portas 80, 443 e 9797 abertas e um domínio apontando para o servidor.
 ---
 
-import { Aside } from '@astrojs/starlight/components';
-
 ## No servidor
 
 - **Linux** com **systemd**. O daemon roda como serviço.
@@ -28,7 +26,4 @@ Aponte um registro DNS `A` (ou `AAAA`) de cada domínio para o IP do servidor
 **antes** de configurar o domínio no serviço. O Let's Encrypt precisa
 alcançar a porta 80 do servidor por esse nome para emitir o certificado.
 
-<Aside type="caution" title="Instalador em revisão">
-  O guia passo a passo de instalação (script, serviço systemd e primeiro boot)
-  entra aqui depois de ser testado numa VPS limpa.
-</Aside>
+Próximo passo: [instalar o daemon](/instalacao/instalar-daemon/).

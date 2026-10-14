@@ -41,8 +41,20 @@ export default defineConfig({
         ]},
         { label: 'Instalação', items: [
           { slug: 'instalacao/requisitos' },
-          { slug: 'instalacao/config-toml' },
+          { slug: 'instalacao/instalar-daemon' },
+          { slug: 'instalacao/instalar-clientes' },
           { slug: 'instalacao/primeiro-acesso' },
+          { slug: 'instalacao/config-toml' },
+          { slug: 'instalacao/atualizar' },
+        ]},
+        { label: 'Tutorial', items: [
+          { slug: 'tutorial/primeiro-deploy' },
+        ]},
+        { label: 'Conceitos', items: [
+          { slug: 'conceitos/projeto' },
+          { slug: 'conceitos/servico-e-fontes' },
+          { slug: 'conceitos/rede-e-nomes' },
+          { slug: 'conceitos/ciclo-de-vida' },
         ]},
         { label: 'Agentes de IA (MCP)', items: [
           { slug: 'agentes/visao-geral' },

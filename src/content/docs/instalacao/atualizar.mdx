@@ -1,0 +1,39 @@
+---
+title: Atualizar o Rustploy
+description: Como atualizar o daemon e os clientes do Rustploy sem perder dados - o que é preservado no upgrade, como reinstalar o pacote e como o daemon retoma deploys interrompidos.
+---
+
+## Atualizar o daemon
+
+Instale o `.deb` novo por cima do antigo:
+
+```bash
+sudo dpkg -i rustployd_<versão-nova>_*.deb
+```
+
+O pacote reinicia o serviço sozinho. O que é preservado:
+
+- **Seus dados**, em `/var/lib/rustploy` (banco SQLite, builds, registry, backups de variáveis).
+- **A configuração**, `/etc/rustploy/config.toml`. Ela é marcada como arquivo de configuração do pacote: o `dpkg` pergunta antes de sobrescrever se você a editou.
+- **A chave mestra** dos secrets, em `/etc/rustploy/master.key`.
+
+Os containers dos seus serviços **continuam rodando** durante a atualização do
+daemon: eles são do Docker, não do processo do Rustploy.
+
+## O que acontece se um deploy estava em andamento
+
+Ao subir, o daemon procura deploys em estado não terminal e decide pelo estado
+em que pararam: antes da troca de rota o container antigo ainda vive, então é
+um *rollback* seguro; uma troca em curso é inspecionada no Docker; `Promoting`
+é concluído. A tabela de rotas do proxy é reconstruída a partir do Docker.
+
+## Atualizar os clientes
+
+- **Web UI**: já vem no daemon. Se o navegador mostrar a versão antiga, force o recarregamento (`Ctrl+Shift+R`), porque os arquivos são servidos com cache longo.
+- **GUI**: instale o novo `.deb` ou substitua a pasta do zip portátil.
+
+
+:::tip
+Faça backup de `/etc/rustploy/master.key` e `/var/lib/rustploy` antes de atualizações
+grandes. Sem a chave mestra, os secrets gravados não podem ser decifrados.
+:::

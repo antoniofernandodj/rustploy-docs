@@ -1,0 +1,84 @@
+---
+title: O ciclo de vida de um deploy
+description: Os estados por que passa um deploy no Rustploy (Pending até Live), o caminho por tipo de fonte, o que acontece em caso de falha e onde achar a causa do erro.
+---
+
+Um **deploy** é uma máquina de estados. Cada transição é gravada e aparece na
+aba **Deployments** do serviço.
+
+## O caminho feliz
+
+```text
+Pending → PreDeployCheck → ResolvingDeps
+            ├─ PullingImage ──────────┐   (fonte Registry)
+            ├─ CloningRepo → BuildingImage ─┤   (fonte Git ou Archive)
+            └─ ComposingUp ───────────┤   (fonte Compose)
+                                       ▼
+        Staging → HealthcheckPolling → SwappingIn → Draining → Promoting → Live
+```
+
+| Estado | O que acontece |
+|---|---|
+| **Pending** | o deploy entrou na fila (um por vez no servidor inteiro) |
+| **PreDeployCheck** | roda os jobs de verificação configurados; se algum falha, o deploy para |
+| **ResolvingDeps** | decide o caminho pela fonte do serviço (pull, clone e build, ou compose) |
+| **PullingImage** | baixa a imagem do registry |
+| **CloningRepo** | clona o repositório |
+| **BuildingImage** | constrói a imagem com o seu `Dockerfile` |
+| **ComposingUp** | sobe a stack Compose |
+| **Staging** | sobe o container novo ao lado do atual |
+| **HealthcheckPolling** | testa a saúde do container novo |
+| **SwappingIn** | troca a rota do proxy para o novo (atômico) e para os containers antigos |
+| **Draining** | espera `drain_secs` (10 s por padrão) para as conexões em andamento terminarem |
+| **Promoting** | remove os containers antigos e renomeia o novo para o nome definitivo |
+| **Live** | pronto, atendendo tráfego |
+
+Estados finais: `Live`, `Stopped` (parado de propósito), `Failed` e `Pruning`
+(substituído por um deploy mais novo).
+
+## Em caso de falha
+
+Qualquer erro dispara **RollingBack**: o container novo é descartado, o antigo
+segue no ar e o deploy termina em **Failed**. Um deploy que falha **não derruba
+o que já estava rodando**.
+
+### Onde está a causa
+
+A causa do erro vai para quatro lugares:
+
+1. o **log do deploy** (aba Deployments → abrir o deploy), com a linha `==> Erro em [<Estado>]: …`;
+2. o **histórico de estados** do deploy, na transição para `RollingBack`;
+3. a **notificação** na tela e, na GUI, a notificação do sistema;
+4. o **status do serviço**, que mostra a primeira linha do erro.
+
+Comece pelo log do deploy.
+
+## O healthcheck decide a troca
+
+O Rustploy faz o seu próprio teste de saúde (não depende do `HEALTHCHECK` do
+Dockerfile):
+
+- **Http**: faz uma requisição ao caminho configurado e compara o status.
+- **Tcp**: só verifica que a porta aceita conexão.
+- **Docker**: lê o estado de saúde que o próprio Docker calculou.
+- **None**: não testa; basta o container estar de pé.
+
+Se o container para durante o teste, o deploy aborta na hora.
+
+## A fila
+
+Só **um deploy roda por vez** no servidor. Os outros esperam na fila, que você
+vê na tela **Deploy Engine** (abas Fila, Executando e Histórico). Dá para
+promover um deploy ("furar a fila"), reordenar, pausar a fila inteira e abortar
+um deploy em execução.
+
+## Se o daemon reiniciar no meio
+
+Ao subir, o daemon retoma o que estava em andamento: antes da troca de rota é
+um *rollback* seguro; uma troca em curso é conferida no Docker; `Promoting` é
+concluído.
+
+## Logs: o que é guardado
+
+- **Log de build** e de deploy: guardados.
+- **Log de runtime do container**: lido do Docker **ao vivo** e **não persistido**. Ao trocar de versão o container antigo é removido, e o log dele vai junto.

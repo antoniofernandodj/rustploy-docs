@@ -1,0 +1,144 @@
+---
+title: Seu primeiro deploy
+description: Tutorial de ponta a ponta - criar um projeto, subir uma imagem Docker como serviço, acompanhar o deploy, apontar um domínio com HTTPS, fazer um segundo deploy e voltar atrás com rollback.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Em cerca de 15 minutos você vai colocar uma aplicação no ar, ver a troca sem
+downtime acontecer e voltar uma versão. Usaremos a imagem pública `nginx`, para
+não depender de código seu.
+
+**Antes de começar** você precisa do [daemon instalado](/instalacao/instalar-daemon/)
+e de um [cliente](/instalacao/instalar-clientes/). Os nomes de botões abaixo são os
+da web UI; a GUI desktop usa os mesmos.
+
+## 1. Entre
+
+Abra o painel e cole o [token de conexão](/instalacao/primeiro-acesso/). Você
+cai na tela **Deployments**, ainda vazia.
+
+## 2. Crie um projeto
+
+Um projeto é o grupo de serviços que se enxergam entre si numa rede própria.
+
+<Steps>
+1. No menu lateral, abra **Projects**.
+2. Clique em **+ Novo projeto**, dê o nome `tutorial` e confirme.
+3. Clique no card do projeto para abri-lo.
+</Steps>
+
+## 3. Crie um serviço
+
+<Steps>
+1. Na aba **Serviços** do projeto, clique em **+ Novo serviço**.
+2. Em *Escolha o tipo de serviço*, selecione **Application**.
+3. Preencha:
+   - **Nome**: `site`
+   - **Origem**: aba **Registry**, com a imagem `nginx:latest`
+   - **Porta**: `80`, a porta em que o nginx escuta *dentro* do container
+   - **Domínio**: deixe em branco por enquanto
+4. Clique em **Criar Application**.
+</Steps>
+
+O serviço foi **criado, mas ainda não está no ar**: criar não faz deploy. Você
+caiu na tela do serviço, com as abas **General, Connection, Environment,
+Domains, Deployments, Healthcheck, Logs e Advanced**.
+
+## 4. Configure o healthcheck
+
+O healthcheck é o que autoriza a troca. Sem ele, o Rustploy só garante que o
+container subiu, não que a aplicação responde.
+
+<Steps>
+1. Abra a aba **Healthcheck**.
+2. Em **KIND** escolha **Http**.
+3. Em **HTTP PATH** use `/` e em **EXPECTED STATUS** `200`.
+4. Clique em **Save**.
+</Steps>
+
+Um serviço novo nasce com o healthcheck em **None**. Sempre configure um antes
+de usar de verdade.
+
+## 5. Faça o deploy
+
+Clique em **Deploy** no topo do serviço. Abra a aba **Deployments** e
+acompanhe os estados. Para uma imagem de registry, o caminho é:
+
+```text
+Pending → PullingImage → Staging → HealthcheckPolling → SwappingIn → Draining → Promoting → Live
+```
+
+Em resumo: o Rustploy baixa a imagem, sobe um container **ao lado** (o
+*staging*), testa o healthcheck, troca a rota do proxy e, só então, remove o
+container antigo (se houver). Quando o estado chegar a **Live**, o serviço está
+no ar. O status do serviço passa a **Running**.
+
+Veja o que o container escreve na aba **Logs**.
+
+## 6. Aponte um domínio
+
+<Aside type="caution" title="DNS antes de tudo">
+  Crie um registro DNS `A` do seu domínio (por exemplo `site.meusite.com`) para
+  o IP do servidor **antes** deste passo. Para HTTPS, o
+  [ACME precisa estar ligado](/instalacao/instalar-daemon/#ligar-o-https) e a
+  porta 80 alcançável.
+</Aside>
+
+<Steps>
+1. Abra a aba **Domains**.
+2. Digite o domínio em `dominio.com`. Deixe a porta em branco (usa a porta do serviço, `80`).
+3. Marque **TLS** para HTTPS automático e clique em **Adicionar**.
+</Steps>
+
+Acesse `https://site.meusite.com`. A primeira visita pode demorar alguns
+segundos enquanto o certificado é emitido. Sem TLS marcado, o serviço responde
+em HTTP pela porta do ingress (80 por padrão).
+
+Cada domínio aparece na lista como `https → :80` ou `http → :80`: o esquema
+público e a porta do container para onde vai o tráfego.
+
+## 7. Faça um segundo deploy e veja a troca
+
+Mude algo que faça diferença, por exemplo a imagem para `nginx:alpine` na aba
+**General**, salve e clique em **Deploy** de novo.
+
+Desta vez o container antigo continua atendendo enquanto o novo sobe e passa no
+healthcheck. A rota só muda no passo **SwappingIn**, de uma vez; depois vem o
+**Draining** (uma espera curta, 10 s por padrão, para as conexões em andamento
+terminarem) e, no **Promoting**, a remoção do antigo. Se o healthcheck do novo
+falhasse, o estado iria para **RollingBack** e o antigo seguiria no ar.
+
+## 8. Volte uma versão
+
+Hoje o jeito confiável de voltar é **redeployar a versão anterior**: na aba
+**General**, ponha de volta a imagem (ou a branch, ou o commit) que funcionava e
+clique em **Deploy**. Como todo deploy, ele só troca a rota depois de passar no
+healthcheck.
+
+<Aside type="caution" title="O botão Rollback">
+  O botão **Rollback** do serviço apenas localiza o deploy anterior; ele não
+  redeploya. Não conte com ele para voltar uma versão.
+</Aside>
+
+## O que você aprendeu
+
+- Projeto agrupa serviços numa rede.
+- Criar um serviço não faz deploy; **Deploy** faz.
+- O healthcheck decide se a troca acontece.
+- O proxy troca a rota de uma vez, sem janela de indisponibilidade.
+- Domínio e TLS vivem na aba **Domains**.
+
+## Se algo deu errado
+
+| Sintoma | O que olhar |
+|---|---|
+| Deploy terminou em **Failed** | Aba **Deployments**: a causa aparece no log do deploy. Veja [O ciclo de vida do deploy](/conceitos/ciclo-de-vida/) |
+| O domínio responde **502** | O proxy tem a rota, mas o container não respondeu. Confira a **porta** do domínio e o healthcheck. Um agente de IA pode ajudar: [diagnosticar 502](/agentes/receitas/) |
+| O certificado não sai | DNS ainda não aponta para o servidor, ACME desligado, ou porta 80 fechada |
+| Nada responde no domínio, em HTTP | Confira se o serviço está **Running** e se `http_port` do ingress é a porta que você abriu |
+
+## Próximos passos
+
+- Entenda [o que é um serviço e suas fontes](/conceitos/servico-e-fontes/).
+- Aprenda como os serviços [se enxergam](/conceitos/rede-e-nomes/).

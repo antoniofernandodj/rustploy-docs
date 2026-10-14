@@ -11,9 +11,9 @@ description: Definição de cada termo do Rustploy - projeto, serviço, fonte, d
 
 **Deploy (deployment).** Uma execução de implantação de um serviço. Id `dep_`. Passa por estados até `Live` ou `Failed`.
 
-**Staging.** O container novo, subido ao lado do atual enquanto é testado. Nome `rp_<nome>_<id curto>_staging`.
+**Staging.** O container novo, subido ao lado do atual enquanto é testado. Nome `rp_<id8>_<nome>_staging_<deploy>`, em que `<id8>` são os 8 primeiros caracteres do id do serviço.
 
-**Live.** O container que está recebendo tráfego. Nome `rp_<nome>_live`.
+**Live.** O container que está recebendo tráfego. Nome `rp_<id8>_<nome>`. Na rede do projeto ele também responde pelo apelido `rp_<nome>`.
 
 **Drain.** Pausa curta, depois da troca de rota, para as conexões em andamento no container antigo terminarem (`drain_secs`, padrão 10 s).
 

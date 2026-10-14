@@ -1,0 +1,43 @@
+---
+title: Projeto
+description: O projeto é a unidade de isolamento do Rustploy - uma rede Docker própria, variáveis de ambiente e secrets compartilhados entre os serviços. Containers de projetos diferentes não se enxergam.
+---
+
+Um **projeto** agrupa serviços que trabalham juntos: a API, o banco, o worker
+de um mesmo sistema.
+
+## O que um projeto dá
+
+- **Uma rede bridge dedicada.** Todos os serviços do projeto entram nela e se alcançam pelo nome. Containers de projetos diferentes **não se enxergam**.
+- **Variáveis de ambiente do projeto**, herdadas por todos os serviços. Uma variável do serviço com o mesmo nome prevalece.
+- **Secrets do projeto**, valores cifrados que você referencia nas variáveis.
+- **Jobs**, tarefas agendadas ou manuais que rodam na rede do projeto.
+
+## Identificadores
+
+Todo objeto tem um id com prefixo que diz o tipo, seguido de um ULID:
+
+| Prefixo | Objeto |
+|---|---|
+| `prj_` | projeto |
+| `svc_` | serviço |
+| `dep_` | deploy |
+| `arc_` | arquivo zip enviado |
+
+Você os vê na API e nas ferramentas de agente.
+
+## Nome e renomeação
+
+Renomear o projeto (**Editar projeto**) não muda a rede dele nem recria nada: o
+nome da rede é gravado no momento da criação.
+
+
+:::note
+Os manifestos de Infra as Code casam projeto e serviço **por nome**. Um manifesto
+antigo aplicado depois de renomear cria um projeto novo em vez de atualizar o
+existente.
+:::
+
+## Excluir
+
+Só dá para excluir um projeto sem serviços. Remova os serviços antes.

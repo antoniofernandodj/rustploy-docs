@@ -1,0 +1,64 @@
+---
+title: Instalar os clientes (GUI e web UI)
+description: Os três jeitos de operar o Rustploy - web UI no navegador, GUI desktop para Linux (.deb) e Windows (zip portátil) e agentes de IA por MCP.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Os clientes são intercambiáveis: falam com a mesma API e entram com o mesmo
+[token de conexão](/instalacao/primeiro-acesso/).
+
+## Web UI: zero instalação
+
+O daemon já serve a interface na porta da API. Abra no navegador:
+
+```text
+http://SEU_SERVIDOR:9797
+```
+
+(ou `https://` se você configurou `[api].domain`). Cole o token de conexão. A
+web UI é um PWA: o navegador oferece instalá-la como aplicativo.
+
+## GUI desktop
+
+Um aplicativo nativo, leve, com bandeja do sistema e notificação quando um
+deploy termina. Ele **não precisa estar na mesma máquina do daemon**.
+
+### Linux (.deb)
+
+Gere o pacote a partir do repositório e instale:
+
+```bash
+make deb-gui          # gera dist/*.deb
+sudo dpkg -i dist/rustploy-gui_*.deb
+```
+
+Depois abra **Rustploy** no menu de aplicativos ou rode `rustploy-gui`.
+
+### Windows (zip portátil)
+
+O repositório gera um `.zip` portátil com `make rustploy-gui-windows-dist`
+(resultado em `dist/rustploy-gui-windows.zip`). Descompacte e execute o
+`rustploy-gui.exe`.
+
+<Aside type="note">
+  O executável do Windows ainda não tem uma assinatura que o SmartScreen
+  reconheça de imediato. Se aparecer o aviso, use "Mais informações → Executar
+  assim mesmo".
+</Aside>
+
+## Agentes de IA
+
+Para operar por um agente como o Claude Code, veja
+[Operar o Rustploy com agentes de IA](/agentes/visao-geral/).
+
+## Qual usar?
+
+| | Web UI | GUI desktop |
+|---|---|---|
+| Instalação | nenhuma | pacote |
+| Notificações do sistema | não | sim, mesmo com a janela fechada |
+| Vários servidores salvos | não | sim |
+| Funciona em celular | sim (PWA) | não |
+
+As duas cobrem o dia a dia. Alguns recursos só existem pela API ou pelo MCP.
