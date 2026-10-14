@@ -1,0 +1,92 @@
+---
+title: Fazer deploy a partir de um repositório Git
+description: Como criar um serviço Rustploy a partir de um repositório Git com Dockerfile - repositório público, privado com token ou secret, conta GitHub/Gitea conectada por OAuth ou PAT, branch, Dockerfile e contexto de build.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Com a fonte **Git**, o Rustploy clona o repositório, constrói a imagem com o seu
+`Dockerfile` e sobe o container.
+
+<Aside type="note" title="Precisa do git no servidor">
+  O clone usa o comando `git` do servidor. Instale-o (`sudo apt-get install git`)
+  se ainda não estiver lá. Sem ele o deploy falha com "falha ao iniciar git".
+</Aside>
+
+## Repositório público
+
+<Steps>
+1. No projeto, **+ Novo serviço → Application**.
+2. Em **Origem**, escolha **Git**, cole a URL (`https://github.com/usuario/repo.git`) e a **branch**.
+3. Informe a **porta** em que o app escuta dentro do container e **Criar Application**.
+4. Faça o **Deploy**.
+</Steps>
+
+O repositório precisa ter um `Dockerfile`. Não há *buildpacks*.
+
+## Repositório privado
+
+Há dois caminhos. O segundo é o recomendado.
+
+### Opção A: token guardado como secret
+
+1. Gere um *Personal Access Token* no provedor, com permissão de leitura do repositório.
+2. No projeto, aba **Secrets**, crie um secret (por exemplo `GITHUB_TOKEN`) com o token como valor.
+3. Na aba **General** do serviço, preencha **CREDENTIALS (secret)** com o **nome** do secret, `GITHUB_TOKEN`, e não com o valor.
+4. Use a URL em **HTTPS**.
+
+O Rustploy monta a URL de clone com o token (`https://x-token-auth:<token>@…`) só em
+memória, e o log mostra `***` no lugar. Se o provedor exigir um usuário real,
+preencha **USERNAME**.
+
+<Aside type="caution">
+  URLs SSH (`git@github.com:…`) não usam o campo de credenciais. Use HTTPS.
+</Aside>
+
+### Opção B: conectar a conta (OAuth ou token)
+
+Em **Settings → Git**, conecte uma conta **GitHub** ou **Gitea** uma vez e
+reutilize em todos os serviços.
+
+<Steps>
+1. Escolha o provedor (**GitHub** ou **Gitea**). Para GitHub Enterprise ou Gitea próprio, preencha **BASE URL**.
+2. Escolha o método:
+   - **OAuth2**: crie um aplicativo OAuth no provedor, cole a **REDIRECT URI** que a tela mostra, e informe **CLIENT ID** e **CLIENT SECRET**.
+   - **Token (PAT)**: cole um *Personal Access Token* com escopo `repo`.
+3. Clique em **Conectar conta**. No OAuth, autorize no navegador.
+</Steps>
+
+Depois, na aba **General** do serviço, escolha o provedor **Gitea/GitHub**: a
+tela lista as suas contas, repositórios e branches para você escolher.
+
+<Aside type="caution" title="OAuth e a porta da API">
+  O retorno do OAuth chega à porta da API (`9797`). Ela precisa ser alcançável
+  pelo seu navegador no endereço que está na **REDIRECT URI**.
+</Aside>
+
+## Branch, Dockerfile e contexto
+
+| Campo | O que faz | Padrão |
+|---|---|---|
+| **BRANCH** | a branch clonada | `main` |
+| **DOCKERFILE** | caminho do Dockerfile, relativo ao contexto | `Dockerfile` |
+| **CONTEXT PATH** | a pasta enviada ao Docker como contexto de build | `.` |
+
+Em um monorepo, aponte o **CONTEXT PATH** para a pasta do app (`apps/web`) e o
+**DOCKERFILE** para o arquivo dentro dela. O Rustploy confere que o Dockerfile
+existe antes de chamar o Docker.
+
+### Campos que a tela mostra mas ainda não têm efeito
+
+<Aside type="caution">
+  **BUILD PATH (root)**, **WATCH PATHS** e **BUILD STAGE** são gravados no
+  serviço, mas o deploy ainda **não os usa**: o clone é sempre da raiz, não há
+  filtro por caminho e o build não escolhe um *target* multi-stage. Para
+  multi-stage, termine o `Dockerfile` na etapa que você quer. O mesmo vale para
+  submódulos Git: eles não são baixados.
+</Aside>
+
+## Deploy automático a cada push
+
+Veja [Webhooks de deploy](/guias/webhooks/). Se o serviço tem uma branch
+configurada, pushes em outras branches são ignorados.

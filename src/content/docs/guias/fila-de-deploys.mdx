@@ -1,0 +1,35 @@
+---
+title: A fila de deploys
+description: Como funciona a fila global de deploys do Rustploy (um por vez), e como promover, reordenar, pausar e abortar deploys na tela Deploy Engine.
+---
+
+O Rustploy executa **um deploy por vez** em todo o servidor. Isso protege uma VPS
+pequena de vários builds simultâneos. Os demais ficam na **fila**.
+
+## A tela Deploy Engine
+
+No menu lateral, **Deploy Engine**, com três abas:
+
+| Aba | Mostra |
+|---|---|
+| **Fila** | os deploys esperando, em ordem |
+| **Executando** | o deploy ativo e o estado em que está |
+| **Histórico** | os deploys recentes e o desfecho de cada um |
+
+## O que dá para fazer
+
+| Ação | Efeito |
+|---|---|
+| **Promover** (furar a fila) | move um deploy enfileirado para o início |
+| **Reordenar** | define a ordem exata da fila |
+| **Pausar / retomar** | a fila para de iniciar novos deploys (o em execução termina) |
+| **Cancelar** um enfileirado | remove da fila |
+| **Abortar** o em execução | interrompe o deploy |
+
+Jobs e deploys compartilham a mesma fila.
+
+## Pelo agente
+
+A ferramenta `status` do MCP mostra a fila. Os comandos são
+`DeployQueuePromote`, `DeployQueueReorder`, `DeployQueuePause` e `DeployAbort`,
+via `rpc`.

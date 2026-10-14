@@ -1,0 +1,53 @@
+---
+title: Stacks Docker Compose
+description: Como rodar uma stack Docker Compose no Rustploy - colar o YAML, o que o Rustploy injeta (rede do projeto), nomes internos, domínio e alvo de ingress, e como editar a stack depois.
+---
+
+A fonte **Compose** roda uma stack inteira com `docker compose up`. É o tipo
+usado pelos bancos, brokers e templates, e serve para qualquer conjunto de
+containers que andam juntos.
+
+## Criar
+
+**+ Novo serviço → Compose**. Preencha:
+
+- **Nome** da stack;
+- **Porta** do container que atende o domínio (em stacks com vários containers, a porta de quem serve HTTP);
+- **Domínio** (opcional);
+- **Docker Compose (YAML)** com o seu arquivo.
+
+Depois edite o YAML na aba **General** do serviço (**Salvar compose**) e faça
+**Deploy**.
+
+## O que o Rustploy faz com o seu YAML
+
+Antes do `docker compose up`, o daemon **injeta a rede do projeto** em todos os
+serviços da stack. Você **não precisa declarar rede nenhuma**. Resultado:
+
+- os containers da stack enxergam os outros serviços do projeto;
+- os outros serviços alcançam a stack pelo **nome do serviço dentro do YAML** (a chave sob `services:`).
+
+## Não publique portas
+
+Não use `ports:` para colocar o app na internet: o proxy do Rustploy roteia por
+domínio. Use o **domínio** do serviço.
+
+Para bancos e brokers que precisam de acesso externo, use a opção de exposição
+do assistente: o Rustploy aloca uma porta na faixa `[external_ports]`.
+
+## Qual container recebe o domínio
+
+Numa stack com vários containers só **um** atende o domínio. A escolha, em
+ordem:
+
+1. o serviço definido como **alvo de ingress**;
+2. o container que expõe a porta do domínio;
+3. o primeiro por ordem alfabética.
+
+Se o domínio dá 502 numa stack, comece por aí:
+[Diagnosticar um 502](/guias/diagnosticar-502/).
+
+## Volumes
+
+O Rustploy só usa *bind mounts* nos serviços que ele cria. Na sua stack
+Compose, como o YAML é seu, você decide os volumes.

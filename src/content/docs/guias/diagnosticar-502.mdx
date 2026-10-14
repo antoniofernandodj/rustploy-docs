@@ -1,0 +1,60 @@
+---
+title: Diagnosticar um erro 502
+description: Passo a passo para descobrir por que um domínio do Rustploy responde 502 - ler a tabela de rotas do ingress, reconciliar as rotas sem redeploy, conferir porta, healthcheck e alvo de ingress em stacks Compose.
+---
+
+Um **502** vem do proxy do Rustploy: ele recebeu o pedido, achou a rota, mas o
+container de destino não respondeu. O certificado e o DNS estão certos, porque
+senão você nem chegaria ao proxy.
+
+## 1. Veja a tabela de rotas
+
+O proxy mantém as rotas em memória. Pelo MCP, peça a um agente, ou chame a
+ferramenta `ingress_routes`. Pela API:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" https://SERVIDOR:9797/api/rpc \
+  -d '"IngressRoutes"'
+```
+
+Interprete:
+
+| O que você vê | Significa | O que fazer |
+|---|---|---|
+| o domínio **não aparece** | nenhum deploy registrou a rota (serviço parado, ou o deploy falhou antes de promover) | confira o status do serviço e o último deploy |
+| `backends` **vazio** | a rota existe, sem destino | passo 2 |
+| `backends` apontando para a **porta errada** | a porta do domínio não é a do app | passo 3 |
+
+A tela **Ingress** do painel mostra as mesmas rotas, por domínio.
+
+## 2. Reconcilie as rotas
+
+A reconciliação relê os containers que existem no Docker e reescreve a tabela,
+**sem redeploy** e sem recriar nada. O daemon já faz isso sozinho a cada 30
+segundos e no boot, mas você pode forçar:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" https://SERVIDOR:9797/api/rpc \
+  -d '{"IngressReconcile":{"service_id":"svc_…"}}'
+```
+
+(ou a ferramenta MCP `ingress_reconcile`). Se continuar errado depois disso, o
+problema não é a tabela: é a configuração do serviço.
+
+## 3. Confira a configuração
+
+- **Porta do domínio** (aba **Domains**) é a porta em que o app escuta *dentro* do container? É o erro mais comum.
+- **O app escuta em `0.0.0.0`?** Um app que escuta só em `127.0.0.1` não é alcançável pela rede do container.
+- **O healthcheck** está passando? Veja o status do serviço e a aba **Logs**.
+- **Stack Compose**: o domínio pode estar indo para o container errado. Defina o **alvo de ingress** (o nome do serviço dentro do YAML que serve o domínio).
+
+## 4. Olhe os logs
+
+Aba **Logs** do serviço: o app caiu ao subir? Erro de conexão com o banco?
+Lembre-se de que o log do container antigo some na troca de versão.
+
+## Com um agente de IA
+
+Este é o caso em que o MCP mais ajuda. Veja as
+[receitas de prompts](/agentes/receitas/): "o domínio X está dando 502, descubra
+por quê".

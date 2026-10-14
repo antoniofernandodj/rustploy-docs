@@ -50,6 +50,17 @@ export default defineConfig({
         { label: 'Tutorial', items: [
           { slug: 'tutorial/primeiro-deploy' },
         ]},
+        { label: 'Guias', items: [
+          { slug: 'guias/git' },
+          { slug: 'guias/zip' },
+          { slug: 'guias/compose' },
+          { slug: 'guias/variaveis-e-secrets' },
+          { slug: 'guias/healthcheck' },
+          { slug: 'guias/dominios-e-tls' },
+          { slug: 'guias/diagnosticar-502' },
+          { slug: 'guias/webhooks' },
+          { slug: 'guias/fila-de-deploys' },
+        ]},
         { label: 'Conceitos', items: [
           { slug: 'conceitos/projeto' },
           { slug: 'conceitos/servico-e-fontes' },
@@ -62,6 +73,7 @@ export default defineConfig({
           { slug: 'agentes/ferramentas' },
           { slug: 'agentes/receitas' },
           { slug: 'agentes/seguranca' },
+          { slug: 'agentes/manual' },
         ]},
       ],
       plugins: [

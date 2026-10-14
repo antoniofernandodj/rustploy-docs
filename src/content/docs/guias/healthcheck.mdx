@@ -1,0 +1,57 @@
+---
+title: Healthcheck
+description: Como configurar o healthcheck de um serviço no Rustploy (None, Tcp, Http, Docker), o que significam intervalo, timeout, tentativas e período de início, e como escolher valores.
+---
+
+O healthcheck decide se o container novo pode receber tráfego. É o que torna a
+troca de versão segura: se ele não passar, o deploy falha e o container antigo
+continua no ar.
+
+Configure na aba **Healthcheck** do serviço e clique em **Save**.
+
+
+:::caution
+Um serviço novo nasce com o healthcheck em **None**: o deploy só confere que o
+container subiu, não que o app responde. Configure um antes de usar em produção.
+:::
+
+## Tipos
+
+| Tipo | O que testa | Use quando |
+|---|---|---|
+| **None** | nada; basta o container estar de pé | serviços sem endpoint, ou ao começar |
+| **Tcp** | a porta aceita conexão | bancos, brokers e apps sem rota de saúde |
+| **Http** | uma requisição ao **HTTP PATH** devolve o **EXPECTED STATUS** | aplicações web (o melhor teste) |
+| **Docker** | o estado de saúde calculado pelo `HEALTHCHECK` da imagem | a imagem já define um `HEALTHCHECK` |
+
+O teste **Http** usa o IP do container na rede do projeto e a porta do serviço.
+
+## Os tempos
+
+| Campo | Significado |
+|---|---|
+| **START PERIOD (s)** | espera inicial antes do primeiro teste (tempo de boot do app) |
+| **INTERVAL (s)** | pausa entre uma tentativa e a seguinte |
+| **TIMEOUT (s)** | quanto cada tentativa pode demorar |
+| **RETRIES** | número máximo de tentativas |
+
+O deploy espera o **START PERIOD**, tenta até **RETRIES** vezes e, se nenhuma
+passar, falha com `healthcheck failed after N retries`. Se o container parar no
+meio do teste, o deploy aborta na hora.
+
+Um app que leva 40 s para subir precisa que `START PERIOD + INTERVAL × RETRIES`
+cubra esses 40 s com folga.
+
+## Receita para uma aplicação web
+
+```text
+KIND            Http
+HTTP PATH       /health        (ou / se não houver rota de saúde)
+EXPECTED STATUS 200
+START PERIOD    5
+INTERVAL        5
+TIMEOUT         3
+RETRIES         10
+```
+
+Esses são os valores iniciais da tela. Ajuste ao tempo de boot do seu app.
