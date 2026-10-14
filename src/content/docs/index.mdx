@@ -1,0 +1,35 @@
+---
+title: Rustploy
+description: PaaS self-hosted em Rust, um binário só, sobre Docker. Deploy sem downtime, domínios com HTTPS automático e um servidor MCP para operar tudo com IA.
+template: splash
+hero:
+  tagline: Seu próprio PaaS em uma VPS pequena. Um binário em Rust, sem Swarm, sem Kubernetes, sem Traefik.
+  actions:
+    - text: O que é o Rustploy
+      link: /comece/o-que-e/
+      icon: right-arrow
+    - text: Conectar um agente de IA
+      link: /agentes/visao-geral/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Para quem já sabe Docker" icon="rocket">
+    Você não aprende outra ferramenta de container. Aprende o que o Rustploy
+    faz *em volta* do Docker. Comece pelo [mapa Docker → Rustploy](/comece/docker-para-rustploy/).
+  </Card>
+  <Card title="Deploy sem downtime" icon="random">
+    O container novo sobe ao lado, passa no healthcheck e só então o proxy
+    troca a rota. Se falhar, volta sozinho.
+  </Card>
+  <Card title="Leve de verdade" icon="seti:rust">
+    Daemon, proxy reverso, TLS (ACME), banco SQLite e registry OCI no mesmo
+    processo. Alvo: menos de 50 MB de RAM em repouso.
+  </Card>
+  <Card title="Operável por IA" icon="star">
+    O daemon fala MCP. O Claude Code lista serviços, dispara deploy, espera o
+    resultado e diagnostica um 502. [Veja como conectar](/agentes/conectar-claude-code/).
+  </Card>
+</CardGrid>

@@ -1,0 +1,29 @@
+---
+title: Operar o Rustploy com agentes de IA
+description: O daemon do Rustploy serve um servidor MCP em /mcp. Um agente como o Claude Code lista serviços, dispara deploy, espera o resultado, lê build logs e diagnostica 502.
+---
+
+O `rustployd` embute um servidor **MCP** (Model Context Protocol). Qualquer
+agente que fale MCP, como o Claude Code, opera o seu servidor conversando, de
+**qualquer máquina**. O app desktop não precisa estar aberto.
+
+## O que o agente consegue fazer
+
+- Listar projetos e serviços, com status e porta.
+- **Disparar um deploy e esperar o resultado**, recebendo `ok`, a causa do erro e o fim do log.
+- Ler o build log, paginado.
+- Diagnosticar um **502** olhando a tabela de rotas viva do proxy, e corrigi-la sem redeploy.
+- Executar **qualquer** comando do protocolo, pela ferramenta `rpc`: criar serviço, mexer em variáveis, exportar o manifesto, rodar um job.
+
+## Como funciona
+
+O MCP é só JSON-RPC 2.0 num `POST /mcp` (transporte *Streamable HTTP*, respostas
+JSON, sem SSE). As ferramentas chamam o mesmo código que as telas usam; não há
+porta dos fundos exclusiva para humanos nem para IA.
+
+## Por onde começar
+
+1. [Conectar o Claude Code](/agentes/conectar-claude-code/)
+2. [As ferramentas](/agentes/ferramentas/)
+3. [Receitas de prompts](/agentes/receitas/)
+4. [Segurança](/agentes/seguranca/): leia antes de dar o token a um agente.

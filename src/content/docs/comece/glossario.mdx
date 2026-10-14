@@ -1,0 +1,34 @@
+---
+title: Glossário
+description: Definição de cada termo do Rustploy - projeto, serviço, fonte, deploy, ingress, staging, drain, token de conexão, job e servidor compartilhado.
+---
+
+**Projeto.** Agrupa serviços numa rede Docker dedicada e guarda variáveis de ambiente e secrets comuns. Id com prefixo `prj_`.
+
+**Serviço.** Uma coisa que roda: aplicação, banco, broker ou stack Compose. Id `svc_`. Tem uma *fonte*, uma porta, domínios, variáveis, volumes e healthcheck.
+
+**Fonte.** De onde vem o serviço: `Registry` (imagem pronta), `Git` (repositório com Dockerfile), `Archive` (zip com Dockerfile na raiz) ou `Compose` (arquivo compose).
+
+**Deploy (deployment).** Uma execução de implantação de um serviço. Id `dep_`. Passa por estados até `Live` ou `Failed`.
+
+**Staging.** O container novo, subido ao lado do atual enquanto é testado. Nome `rp_<nome>_<id curto>_staging`.
+
+**Live.** O container que está recebendo tráfego. Nome `rp_<nome>_live`.
+
+**Drain.** Pausa curta, depois da troca de rota, para as conexões em andamento no container antigo terminarem (`drain_secs`, padrão 10 s).
+
+**Ingress.** O proxy reverso embutido. Mantém a tabela de rotas em memória: domínio para container, e porta TCP externa para container.
+
+**Healthcheck.** Teste que decide se o container novo pode receber tráfego: `Http`, `Tcp`, `DockerNative` ou `None`.
+
+**Secret.** Valor cifrado em repouso (`age`) e referenciado numa variável de ambiente como `secret:NOME`.
+
+**Job.** Tarefa de execução única (compose efêmero), manual ou agendada.
+
+**Template.** Aplicação pronta do catálogo (formato do Dokploy), criada em um clique pelo wizard.
+
+**Servidor compartilhado.** Um banco (Postgres) que vários projetos usam, cada um com database e usuário próprios.
+
+**Token de conexão.** String em base64 de `host:porta::token`: o endereço do daemon e o token da API juntos. É o que você cola na tela de login e no comando do MCP.
+
+**MCP.** Model Context Protocol: o padrão que permite a um agente de IA chamar ferramentas. O daemon serve um em `POST /mcp`.

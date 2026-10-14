@@ -1,0 +1,100 @@
+---
+title: Referência das ferramentas MCP
+description: As nove ferramentas do servidor MCP do Rustploy (status, list_services, list_deploys, deploy, build_logs, ingress_routes, ingress_reconcile, rpc, manual), com argumentos e exemplos.
+---
+
+O servidor MCP expõe nove ferramentas. Elas cobrem os caminhos frequentes já
+resolvidos; para todo o resto existe `rpc`.
+
+| Ferramenta | Argumentos | Para quê |
+|---|---|---|
+| `status` | | versão e uptime do daemon e a fila de deploys |
+| `list_services` | | índice projeto → serviço: `service_id`, nome, status, origem, porta |
+| `list_deploys` | `limit` (1 a 200, padrão 20) | últimos deploys, com o desfecho resolvido |
+| `deploy` | `service_id` **ou** `service` (nome), `wait`, `timeout_s`, `log_tail` | dispara e **espera** o resultado |
+| `build_logs` | `deployment_id`, `after`, `limit` | build log paginado por cursor |
+| `ingress_routes` | | tabela de rotas viva do proxy |
+| `ingress_reconcile` | `service_id` (opcional) | recalcula as rotas sem redeploy |
+| `rpc` | `command` | qualquer comando do protocolo |
+| `manual` | | o manual completo que o daemon serve aos agentes |
+
+## `deploy`
+
+A ferramenta mais usada. Dispara o deploy e só responde quando ele termina.
+
+```json
+{ "name": "deploy", "arguments": { "service": "api", "wait": true } }
+```
+
+Resposta de um deploy que falhou:
+
+```json
+{
+  "deployment_id": "dep_01M11Z99…",
+  "state": "Failed",
+  "ok": false,
+  "error": "docker build error: Cannot locate specified Dockerfile: Dockerfile",
+  "log_tail": ["…"],
+  "log_cursor": 6,
+  "waited": true,
+  "timed_out": false
+}
+```
+
+- **`ok`**: `true` é `Live`; `false` é `Failed`; `null` é "ainda rodando" ou terminal sem desfecho (`Stopped`, parado de propósito, e `Pruning`, substituído por um deploy mais novo). Não trate esses dois como falha.
+- O nome do serviço é único **por projeto**. Com ambiguidade, a ferramenta recusa e lista os candidatos como `projeto=service_id`.
+- `wait: false` volta na hora; acompanhe com `list_deploys` e `build_logs`.
+- `timeout_s` padrão 900 (teto 3600). `log_tail` padrão 40 (teto 500).
+- Para continuar lendo o log, chame `build_logs` com `after = log_cursor` e depois com o `next_after` de cada resposta.
+
+## `ingress_routes` e `ingress_reconcile`
+
+Servem para diagnosticar um **502**. O erro vem do proxy do Rustploy: a rota
+existe e o backend não respondeu.
+
+| O que você vê na tabela | Significa |
+|---|---|
+| domínio **ausente** | nenhum deploy registrou a rota (serviço parado, ou o deploy falhou antes de promover) |
+| `backends` **vazio** | rota sem destino; 502 garantido |
+| `backends` na **porta errada** | caso clássico de stack Compose: o alvo de ingress aponta para o container ou a porta errada |
+
+`ingress_reconcile` relê os containers que existem e reescreve as rotas sem
+recriar nada. Se o erro continuar depois dele, o problema está na configuração
+do serviço (alvo de ingress, porta do domínio), não na tabela.
+
+## `rpc`
+
+Executa qualquer `Command` do protocolo. A codificação é *externally tagged*:
+variante com campos é um objeto de uma chave, variante sem campos é a string nua.
+
+```json
+{ "name": "rpc", "arguments": { "command": { "ServiceGet": { "id": "svc_…" } } } }
+```
+
+```json
+{ "name": "rpc", "arguments": { "command": "ProjectList" } }
+```
+
+
+:::caution
+`ServiceUpdate` **substitui** o serviço inteiro, não é um patch. Faça `ServiceGet`,
+mude o campo e devolva o spec completo; um campo omitido é um campo apagado.
+:::
+
+## Chamando sem cliente MCP
+
+O MCP é JSON-RPC 2.0, então dá para usar `curl`:
+
+```bash
+export RP=https://SERVIDOR:PORTA RPT=<access_token>
+
+curl -s -H "Authorization: Bearer $RPT" -H "Content-Type: application/json" \
+  $RP/mcp -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+
+curl -s -H "Authorization: Bearer $RPT" -H "Content-Type: application/json" \
+  $RP/mcp -d '{"jsonrpc":"2.0","id":2,"method":"tools/call",
+               "params":{"name":"list_services","arguments":{}}}'
+```
+
+O resultado de `tools/call` vem em `result.content[0].text` e já decodificado em
+`result.structuredContent`. Erro da ferramenta vem com `result.isError: true`.

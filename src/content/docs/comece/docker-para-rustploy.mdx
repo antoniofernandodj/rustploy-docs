@@ -1,0 +1,44 @@
+---
+title: Do Docker para o Rustploy
+description: Tabela que traduz comandos e conceitos do Docker (run, network, compose, proxy) para os conceitos do Rustploy (projeto, serviço, deploy, ingress).
+---
+
+Se você sabe Docker, o Rustploy é o que você faria à mão, automatizado. Esta
+página é a tradução.
+
+## Conceitos
+
+| No Docker, você faz... | No Rustploy isso é... |
+|---|---|
+| Criar uma rede bridge para um conjunto de containers | Um **projeto**. Cada projeto tem a sua rede; projetos não se enxergam |
+| `docker run` de uma imagem | Um **serviço** com fonte *Registry* |
+| `docker build` de um repositório e depois `run` | Um serviço com fonte *Git* (ou *Archive*, um zip) |
+| `docker compose up` | Um serviço com fonte *Compose* |
+| Parar o antigo, subir o novo, ajustar o nginx | Um **deploy** |
+| `-p 8080:80` | **Nada.** Containers não publicam porta; o *ingress* roteia por domínio |
+| Configurar nginx/Traefik + certbot | **Domínios** do serviço; o TLS é automático (ACME) |
+| `--env-file` | **Variáveis de ambiente** (do projeto ou do serviço) e **secrets** |
+| `HEALTHCHECK` no Dockerfile | **Healthcheck** do serviço (HTTP, TCP ou o do Docker), usado para decidir o swap |
+| `docker logs -f` | Aba **Logs** (runtime ao vivo) e **build log** (guardado) |
+| `docker system prune` | **Limpeza** manual ou agendada |
+| `cron` + `docker compose run` | **Job** (Schedules) |
+
+## Por que nenhuma porta é publicada
+
+No Docker puro, trocar um container que ocupa a porta `8080` exige derrubá-lo
+antes de subir o novo, e há uma janela de indisponibilidade. No Rustploy quem
+ocupa as portas 80 e 443 é o proxy interno. Ele repassa para o IP do container
+na rede do projeto. Trocar de versão é trocar um ponteiro na tabela de rotas,
+uma operação atômica.
+
+## Como o seu app acha o banco
+
+Dentro de um projeto, os serviços se alcançam pelo nome do container na rede
+do projeto. Um serviço Compose chamado `meu-banco` responde como
+`rp_meu-banco`. Veja [Glossário](/comece/glossario/) para o formato dos nomes.
+
+## Onde o Rustploy difere do Docker puro
+
+- **Volumes**: o Rustploy só usa *bind mounts* (`/caminho/no/host:/caminho/no/container`). Ele nunca cria volume nomeado.
+- **Logs de runtime não são guardados.** `docker logs` funciona enquanto o container existe; ao trocar de versão o container antigo some com o log dele. O log de **build** fica guardado.
+- **Um deploy por vez.** Há uma fila global; os demais esperam.

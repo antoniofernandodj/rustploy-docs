@@ -1,0 +1,50 @@
+---
+title: Receitas de prompts para operar o servidor
+description: Prompts prontos para o Claude Code operar o Rustploy via MCP - deploy com diagnóstico de falha, domínio com 502, histórico de deploys e auditoria do servidor.
+---
+
+Cada receita é um pedido em linguagem natural e o que o agente faz por baixo.
+Em todas, o agente já conhece as ferramentas pelas `instructions` do handshake.
+
+## Fazer deploy e saber por que falhou
+
+> Faça deploy do serviço `api` e me diga se deu certo. Se falhou, explique a causa.
+
+O agente chama `deploy` com `wait: true`. Se `ok` for `false`, lê o campo
+`error` e o `log_tail`; se precisar de mais, continua com `build_logs`.
+
+## O domínio está dando 502
+
+> `app.meusite.com` está respondendo 502. Descubra por quê.
+
+`ingress_routes` mostra se a rota existe e para onde aponta. Se o `backends`
+está vazio ou na porta errada, `ingress_reconcile` tenta consertar. Se não
+resolver, o agente inspeciona o serviço com `rpc` (`ServiceGet`) e confere a
+porta do domínio e o alvo de ingress.
+
+## O que aconteceu nos últimos deploys
+
+> Resuma os últimos 10 deploys: quais falharam e por quê.
+
+`list_deploys` com `limit: 10` já devolve o desfecho resolvido de cada um.
+
+## Auditoria rápida
+
+> Liste todos os serviços e me diga quais não estão `Running`.
+
+`list_services` devolve o status de cada um.
+
+## Criar um serviço de um template
+
+> Crie no projeto `blog` um serviço a partir do template `ghost`.
+
+O agente usa `rpc` com `WizardCatalog` para achar o template e `WizardCreate`
+para criá-lo. Peça que ele mostre o que vai criar **antes** de executar.
+
+## Boas práticas ao pedir
+
+- Diga o **servidor** quando houver mais de um registrado (`rustploy-producao`).
+- Para operações destrutivas, peça que o agente **descreva e aguarde** sua confirmação.
+- Peça "somente leitura" quando só quiser diagnosticar.
+
+Antes de liberar um agente em produção, leia a página de [segurança](/agentes/seguranca/).

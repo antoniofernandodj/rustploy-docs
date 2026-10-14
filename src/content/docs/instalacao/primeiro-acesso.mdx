@@ -1,0 +1,38 @@
+---
+title: Primeiro acesso e token de conexão
+description: Como obter o token de conexão do Rustploy (host:porta::token em base64) e usá-lo para entrar na GUI, na web UI e no MCP.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Todo cliente do Rustploy (GUI, web UI e agentes de IA) entra com o mesmo
+**token de conexão**.
+
+## O que é
+
+É o base64 de `host:porta::token_da_api`: o endereço do daemon e o token da API
+numa string só. Ele **não** inclui o esquema (`http` ou `https`); os clientes
+testam os dois.
+
+Exemplo de formato, só para ilustrar:
+
+```bash
+echo -n 'rustploy.exemplo.com:9797::SEU_TOKEN' | base64
+```
+
+## Onde obter
+
+- Na VPS: `rustployd access-key`.
+- No `config.toml`: `[api].connection_token`. O daemon o regrava a cada boot, logo abaixo de `token`.
+- Numa sessão aberta da GUI ou da web UI: **Settings → Web Server → Token de conexão → Copiar**.
+
+## Entrar
+
+- **Web UI**: abra `http(s)://SEU_SERVIDOR:9797` e cole o token.
+- **GUI desktop**: cole o token na tela de login. Os servidores usados ficam lembrados.
+- **Agente de IA**: veja [Conectar o Claude Code](/agentes/conectar-claude-code/).
+
+<Aside type="caution" title="O token vale como administrador">
+  Não existe escopo nem modo somente leitura. Cole o token só em máquinas suas.
+  Se ele vazar, troque `[api].token` no `config.toml` e reinicie o daemon.
+</Aside>

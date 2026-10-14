@@ -1,0 +1,144 @@
+---
+title: O arquivo config.toml
+description: Referência do config.toml do rustployd - onde fica, a ordem de busca, cada seção (daemon, api, ingress, acme, docker, deploy, metrics, secrets, external_ports, registry) e os padrões.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+O `rustployd` lê a configuração de um arquivo TOML. Sem arquivo, valem os padrões.
+
+## Onde ele é procurado
+
+Na ordem, o primeiro que existir:
+
+1. o caminho em `$RUSTPLOY_CONFIG`;
+2. `/etc/rustploy/config.toml`;
+3. `~/.config/rustploy/config.toml`.
+
+<Aside type="danger" title="O parse é tudo ou nada">
+  Se você usa um arquivo próprio em `RUSTPLOY_CONFIG`, ele só é aceito se
+  contiver **todas** as seções. Não há mistura com os padrões. Um arquivo
+  parcial é rejeitado por inteiro. O arquivo de `/etc/rustploy/config.toml`
+  instalado pelo pacote já vem completo; edite-o em vez de recriá-lo.
+</Aside>
+
+## Variáveis de ambiente que sobrescrevem o arquivo
+
+| Variável | Efeito |
+|---|---|
+| `RUSTPLOY_CONFIG` | caminho do arquivo de configuração |
+| `RUSTPLOY_DB_PATH` | diretório do banco (sob systemd o unit já a define) |
+| `RUSTPLOY_LOG_LEVEL` ou `RUST_LOG` | nível de log (o log é JSON estruturado) |
+| `RUSTPLOY_API_TOKEN` | token da API |
+
+## Seções
+
+### `[daemon]`
+
+```toml
+[daemon]
+db_path   = "/var/lib/rustploy/db"
+log_level = "info"
+```
+
+Sob systemd, o `db_path` é fixado pela variável `RUSTPLOY_DB_PATH` do unit, que
+tem prioridade. Editar o campo no arquivo não tem efeito nesse caso.
+
+### `[api]`
+
+```toml
+[api]
+bind_address = "0.0.0.0"
+port         = 9797
+token        = "<token forte>"
+domain       = "rustploy.meusite.com"   # opcional: TLS automático na própria porta
+```
+
+Padrão: `127.0.0.1:9797`, sem token. Essa porta serve também a web UI, os
+webhooks de deploy e o MCP.
+
+<Aside type="caution">
+  **Guarda de segurança:** o daemon se recusa a subir com `bind_address` que não
+  seja loopback e sem `token`.
+</Aside>
+
+Com `domain` definido, a porta da API termina TLS com certificado ACME.
+
+### `[ingress]` e `[ingress.acme]`
+
+```toml
+[ingress]
+http_port    = 80
+https_port   = 443
+bind_address = "0.0.0.0"
+
+[ingress.acme]
+enabled   = false
+email     = ""
+directory = "https://acme-v02.api.letsencrypt.org/directory"
+```
+
+Para ter HTTPS automático, ligue `enabled` e informe um `email` válido.
+
+### `[docker]`
+
+```toml
+[docker]
+socket_path = "/var/run/docker.sock"
+```
+
+### `[deploy]`
+
+```toml
+[deploy]
+drain_secs  = 10
+image_cache = 2
+```
+
+`drain_secs` é a espera após a troca de rota antes de remover o container
+antigo.
+
+### `[metrics]`
+
+```toml
+[metrics]
+interval_secs  = 2
+history_points = 60
+```
+
+### `[secrets]`
+
+```toml
+[secrets]
+master_key_path = "/etc/rustploy/master.key"
+```
+
+A chave mestra que cifra os secrets. **Faça backup dela**: sem a chave, os
+secrets gravados não podem ser decifrados.
+
+### `[external_ports]`
+
+```toml
+[external_ports]
+range_start = 20000
+range_end   = 20999
+```
+
+A faixa de portas do host que o Rustploy aloca para expor bancos e brokers.
+É também a única faixa que o helper de firewall aceita abrir.
+
+### `[registry]`
+
+```toml
+[registry]
+enabled = false
+port    = 5100
+# storage_dir = "/var/lib/rustploy/db/registry"
+```
+
+O registry Docker embutido, desligado por padrão.
+
+### `[env_backup]`
+
+Snapshots periódicos das variáveis de ambiente. Opcional; por padrão a cada 60 s
+em `<db_path>/env_backups/`.
