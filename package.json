@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "sync-manual": "node scripts/sync-manual.mjs",
-    "gen": "node scripts/sync-manual.mjs && node scripts/gen-templates.mjs && node scripts/gen-protocol.mjs"
+    "gen": "node scripts/sync-manual.mjs && node scripts/gen-templates.mjs && node scripts/gen-protocol.mjs && node scripts/gen-manifest.mjs"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.6",

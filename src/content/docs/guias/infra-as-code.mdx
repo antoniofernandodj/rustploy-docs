@@ -85,7 +85,7 @@ projects:
 
 | Campo | Observação |
 |---|---|
-| `source` | **exatamente uma** de `registry: <imagem>`, `git: {…}` ou `compose: <yaml>` |
+| `source` | `registry: <imagem>`, `git: {…}` ou `compose: <yaml>`. Use **uma**: havendo mais, vale a primeira nessa ordem |
 | `source.compose_ingress` | serviço do compose que recebe o domínio |
 | `port`, `host_port` | porta do container; porta externa (TCP) |
 | `domains` | lista de `{domain, port, tls}` |
@@ -99,7 +99,21 @@ projects:
 `source.git` aceita `url`, `branch`, `dockerfile`, `context`, `username`,
 `credentials` e `provider` (o **nome** da conta Git conectada).
 
-Um manifesto pode também referenciar arquivos: `- include: ./web/rustploy.yml`.
+O `include:` de um item de `projects:` (que apontava para outro arquivo) **não é aceito** pela
+importação do daemon: declare os projetos no próprio arquivo.
+
+Todos os campos, com tipo, padrão e as regras de cada um, estão na
+[Referência do manifesto](/referencia/manifesto/).
+
+## Cuidado ao importar sobre o que já existe
+
+<Aside type="danger">
+  Um serviço que já existe e é diferente do manifesto tem o **spec inteiro substituído**. O que
+  o manifesto não descreve volta ao padrão: em especial a **fila de pré-deploy**, que não faz
+  parte do manifesto. Os **jobs** também não fazem. Antes de importar num servidor com
+  serviços, exporte e compare. Os detalhes, regra por regra, estão em
+  [O que a importação faz](/referencia/manifesto/#o-que-a-importação-faz).
+</Aside>
 
 ## Limites
 

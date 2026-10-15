@@ -79,6 +79,7 @@ export default defineConfig({
           { slug: 'migracao/dokploy' },
         ]},
         { label: 'Referência', items: [
+          { slug: 'referencia/manifesto' },
           { slug: 'referencia/comandos' },
           { slug: 'referencia/respostas' },
           { slug: 'referencia/eventos' },
