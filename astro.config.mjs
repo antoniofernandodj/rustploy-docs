@@ -82,6 +82,7 @@ export default defineConfig({
           { slug: 'conceitos/projeto' },
           { slug: 'conceitos/servico-e-fontes' },
           { slug: 'conceitos/rede-e-nomes' },
+          { slug: 'conceitos/variaveis-de-ambiente' },
           { slug: 'conceitos/ciclo-de-vida' },
         ]},
         { label: 'Agentes de IA (MCP)', items: [

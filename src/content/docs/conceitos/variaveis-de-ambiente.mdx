@@ -1,0 +1,118 @@
+---
+title: Como as variáveis de ambiente são resolvidas
+description: Regras exatas de resolução de variáveis e secrets no Rustploy - precedência entre projeto, serviço e job, quando o valor é lido, o que chega ao container (runtime), o que não chega ao docker build e como o Compose usa o arquivo .env.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Esta página descreve **o que o daemon faz** com as variáveis e os secrets entre
+você salvar um valor e o container ler. Para o passo a passo de uso, veja
+[Variáveis de ambiente e secrets](/guias/variaveis-e-secrets/).
+
+## As camadas e a precedência
+
+Há três camadas. Em cada uma, uma chave igual **sobrescreve** a da camada de baixo:
+
+| Camada | Onde se edita | Vale para | Precedência |
+|---|---|---|---|
+| **Projeto** | projeto → **Variáveis** | todos os serviços e jobs do projeto | menor |
+| **Serviço** | serviço → **Environment** | só aquele serviço (e jobs que o têm como gatilho) | média |
+| **Job** | o formulário do job | só aquele job | maior |
+
+O resultado é **uma lista plana de pares `CHAVE=valor`**: a mesma chave não aparece
+duas vezes, e nomes diferem por maiúsculas e minúsculas (`Api_Key` e `API_KEY`
+são variáveis distintas).
+
+Um **job** parte do mesmo resultado que o serviço **gatilho** teria (projeto mais
+serviço) e aplica as variáveis do próprio job por cima. Num job **autônomo**
+(sem gatilho), a base são só as variáveis do projeto.
+
+## Como um secret vira valor
+
+Uma variável é de um de dois tipos: **comum** (`Plain`, o texto) ou **secret**
+(uma referência ao nome de um secret, escrita `secret:NOME` ou `<secret:NOME>`).
+
+Na hora de montar a lista, o daemon troca cada referência pelo valor decifrado.
+Três regras:
+
+1. **O secret é do projeto.** Um serviço só enxerga os secrets do **seu próprio projeto**. Um secret com o mesmo nome em outro projeto é outro secret.
+2. **Secret inexistente vira texto vazio, sem erro.** Se você apaga um secret ou erra o nome, a variável chega **vazia**, o deploy **não falha** e a aplicação sobe sem o valor. Confira o nome com atenção.
+3. A resolução é sempre **em texto puro** dentro do daemon: o container não sabe que o valor veio de um secret.
+
+## Quando o valor é lido
+
+A lista é montada **a cada deploy**, na etapa que cria o container (ou sobe a
+stack). Daí três consequências:
+
+- **Editar uma variável não muda um container que já está rodando.** Faça um novo **Deploy**.
+- **Reload não aplica variáveis novas.** O Reload reinicia o container existente, que mantém o ambiente com que foi criado.
+- **Trocar o valor de um secret** também exige novo deploy dos serviços que o usam.
+
+## O que cada tipo de serviço recebe
+
+### Aplicação (Registry, Git, zip): só em tempo de execução
+
+O daemon entrega a lista como o **ambiente do container**, na criação do container
+de *staging*. **Nada além da sua lista é acrescentado**: o Rustploy não injeta
+`PORT` nem nenhuma outra variável. Se o seu app lê a porta de `PORT`, defina-a.
+
+<Aside type="danger" title="Não há variáveis em tempo de build">
+  Para serviços de **Git** ou **zip**, o `docker build` roda **sem** as variáveis do
+  projeto ou do serviço. Não há *build args*. Um `ARG TOKEN` no seu `Dockerfile`
+  chega **vazio**, e um `RUN` que dependa de variável no build não a vê.
+</Aside>
+
+O que fazer quando o build precisa de um valor:
+
+- **Prefira ler o valor em tempo de execução.** O container já recebe a lista inteira quando sobe.
+- Se for inevitável, use uma **stack Compose** e passe o valor por `build.args` (veja abaixo).
+- Não grave segredos no repositório nem no `Dockerfile`: eles ficam na imagem.
+
+### Compose: via arquivo `.env`
+
+Antes de rodar `docker compose up -d --build`, o daemon escreve um arquivo `.env`
+com a lista completa e o passa com `--env-file .env`. O Docker Compose usa esse
+arquivo para **substituir `${VAR}` dentro do YAML**. Isso é **diferente** de
+entregar a variável ao container:
+
+| Você quer... | Escreva no YAML |
+|---|---|
+| a variável **dentro do container** | `environment: [DATABASE_URL]` (repassa a de mesmo nome) ou `environment: ["DATABASE_URL=${DATABASE_URL}"]` |
+| todas as variáveis no container | `env_file: [.env]` no serviço |
+| usá-la **no build** | `build: { context: ., args: [TOKEN=${TOKEN}] }` |
+| usá-la em qualquer campo (imagem, portas…) | `image: app:${TAG}` |
+
+Uma variável da lista que **ninguém referencia** no YAML não chega a nenhum
+container.
+
+<Aside type="caution" title="O .env fica em disco durante o deploy">
+  Os valores **já decifrados** (inclusive os de secrets) são gravados no `.env` do
+  diretório de trabalho do deploy e **apagados ao fim** do `compose up`. Eles
+  estão em texto puro no disco do servidor durante esse intervalo. O mesmo vale para
+  a execução de um **job**.
+</Aside>
+
+O Rustploy também reescreve o YAML para ligar a stack à rede do projeto, mas não
+mexe nas suas variáveis.
+
+### Job e verificação de pré-deploy
+
+Um [job](/guias/jobs/) é uma stack Compose efêmera: vale tudo da seção anterior.
+A lista tem a precedência **projeto, serviço gatilho, job**. Um job de
+[pré-deploy](/guias/pre-deploy/) recebe as variáveis do **serviço gatilho que ele
+tem configurado**, não as do serviço que está sendo implantado, a menos que sejam o
+mesmo.
+
+## Resumo
+
+| | Onde a lista chega | Em tempo de build | Quando é lida |
+|---|---|---|---|
+| Aplicação (Registry/Git/zip) | ambiente do container | **não** | a cada deploy |
+| Compose | `.env` para substituir `${VAR}`; vira ambiente do container só se o YAML pedir | sim, via `build.args` | a cada deploy |
+| Job | igual ao Compose | sim, via `build.args` | a cada execução |
+
+## O que **não** passa por esta resolução
+
+- O **token de clone** do Git (campo *Credentials*) é lido do secret só na hora do clone e **não** entra no ambiente do container.
+- O `${VAR}` do **manifesto de Infra as Code** é resolvido na importação, pelo arquivo `variáveis.toml`, e não por esta lista. Veja [Infra as Code](/guias/infra-as-code/).
+- Variáveis geradas por **templates** (senhas, chaves) são calculadas na criação do serviço e gravadas como variáveis **comuns**, não como secrets: ficam em texto no banco e vão no `variáveis.toml` de uma exportação. Se quiser cifrá-las, crie um secret com o valor e troque a variável por `secret:NOME`.
