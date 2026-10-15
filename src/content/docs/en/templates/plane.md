@@ -1,0 +1,238 @@
+---
+title: Host Plane with Rustploy
+description: "Modern, agile project and sprint management system (Jira alternative). Create Plane in one click on Rustploy: 13 containers, generated variables, domain and automatic HTTPS."
+sidebar:
+  hidden: true
+---
+
+**Plane**: Modern, agile project and sprint management system (Jira alternative). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+
+## Summary
+
+| | |
+|---|---|
+| **Identifier** | `plane` |
+| **Containers** | 13 (`web`, `space`, `admin`, `live`, `api`, `worker`, `beat-worker`, `migrator`, `plane-db`, `plane-redis`, `plane-mq`, `plane-minio`, `proxy`) |
+| **Images** | `makeplane/plane-frontend:${APP_RELEASE:-v0.27.1}`, `makeplane/plane-space:${APP_RELEASE:-v0.27.1}`, `makeplane/plane-admin:${APP_RELEASE:-v0.27.1}`, `makeplane/plane-live:${APP_RELEASE:-v0.27.1}`, `makeplane/plane-backend:${APP_RELEASE:-v0.27.1}`, `postgres:17-alpine`, `valkey/valkey:7.2.5-alpine`, `rabbitmq:3.13.6-management-alpine`, `minio/minio:latest`, `makeplane/plane-proxy:${APP_RELEASE:-v0.27.1}` |
+| **UI port** | 80, on service `proxy` |
+| **Type in Rustploy** | Compose stack |
+
+## How to create it
+
+1. In the project, click **+ Novo serviço → Template** (New service → Template).
+2. Search for **Plane** and select it.
+3. Name the service and review the variables. Passwords and keys come already generated.
+4. Create it and run **Deploy**.
+5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).
+
+## Environment variables
+
+**Template variables** (values computed at creation):
+
+| Variable | Value |
+|---|---|
+| `main_domain` | *domain (generated; replace it with yours)* |
+| `db_password` | *random password, 32 characters* |
+| `minio_password` | *random password, 32 characters* |
+| `rabbitmq_user` | *generated username* |
+| `rabbitmq_pass` | *random password, 32 characters* |
+| `secret_key` | *random base64 key (48 bytes)* |
+
+**Delivered to the container:**
+
+| Variable | Value |
+|---|---|
+| `Domain` | *domain (generated; replace it with yours)* |
+| `WEB_URL` | ${Domain} |
+| `PGHOST` | plane-db |
+| `PGDATABASE` | plane |
+| `POSTGRES_USER` | *generated username* |
+| `POSTGRES_PASSWORD` | ${db_password} |
+| `POSTGRES_DB` | plane |
+| `POSTGRES_PORT` | 5432 |
+| `PGDATA` | /var/lib/postgresql/data |
+| `REDIS_HOST` | plane-redis |
+| `REDIS_PORT` | 6379 |
+| `REDIS_URL` | redis://plane-redis:6379/ |
+| `MINIO_ROOT_USER` | access-key |
+| `MINIO_ROOT_PASSWORD` | ${minio_password} |
+| `AWS_REGION` |  |
+| `AWS_ACCESS_KEY_ID` | ${MINIO_ROOT_USER} |
+| `AWS_SECRET_ACCESS_KEY` | ${minio_password} |
+| `AWS_S3_ENDPOINT_URL` | http://plane-minio:9000 |
+| `AWS_S3_BUCKET_NAME` | uploads |
+| `NGINX_PORT` | 80 |
+| `BUCKET_NAME` | uploads |
+| `FILE_SIZE_LIMIT` | 5242880 |
+| `RABBITMQ_HOST` | plane-mq |
+| `RABBITMQ_PORT` | 5672 |
+| `RABBITMQ_DEFAULT_USER` | rabbitmq_user |
+| `RABBITMQ_DEFAULT_PASS` | ${rabbitmq_pass} |
+| `RABBITMQ_DEFAULT_VHOST` | plane |
+| `RABBITMQ_VHOST` | plane |
+| `API_BASE_URL` | http://api:8000 |
+| `DEBUG` | 0 |
+| `SENTRY_DSN` |  |
+| `SENTRY_ENVIRONMENT` | production |
+| `CORS_ALLOWED_ORIGINS` | https://${Domain} |
+| `GUNICORN_WORKERS` | 1 |
+| `USE_MINIO` | 1 |
+| `DATABASE_URL` | postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@plane-db/plane |
+| `SECRET_KEY` | ${secret_key} |
+| `AMQP_URL` | amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@plane-mq:5672/plane |
+| `API_KEY_RATE_LIMIT` | 60/minute |
+| `MINIO_ENDPOINT_SSL` | 0 |
+
+## Domains
+
+| Service | Port | Host |
+|---|---|---|
+| `proxy` | 80 | ${main_domain} |
+
+## The template docker-compose.yml
+
+```yaml
+version: "3.8"
+
+services:
+  web:
+    image: makeplane/plane-frontend:${APP_RELEASE:-v0.27.1}
+    command: node web/server.js web
+    depends_on:
+      - api
+      - worker
+    env_file:
+      - .env
+
+  space:
+    image: makeplane/plane-space:${APP_RELEASE:-v0.27.1}
+    command: node space/server.js space
+    depends_on:
+      - api
+      - worker
+      - web
+    env_file:
+      - .env
+
+  admin:
+    image: makeplane/plane-admin:${APP_RELEASE:-v0.27.1}
+    command: node admin/server.js admin
+    depends_on:
+      - api
+      - web
+    env_file:
+      - .env
+
+  live:
+    image: makeplane/plane-live:${APP_RELEASE:-v0.27.1}
+    command: node live/dist/server.js live
+    depends_on:
+      - api
+      - web
+    env_file:
+      - .env
+
+  api:
+    image: makeplane/plane-backend:${APP_RELEASE:-v0.27.1}
+    command: ./bin/docker-entrypoint-api.sh
+    volumes:
+      - logs_api:/code/plane/logs
+    depends_on:
+      - plane-db
+      - plane-redis
+      - plane-mq
+    env_file:
+      - .env
+
+  worker:
+    image: makeplane/plane-backend:${APP_RELEASE:-v0.27.1}
+    command: ./bin/docker-entrypoint-worker.sh
+    volumes:
+      - logs_worker:/code/plane/logs
+    depends_on:
+      - api
+      - plane-db
+      - plane-redis
+      - plane-mq
+    env_file:
+      - .env
+
+  beat-worker:
+    image: makeplane/plane-backend:${APP_RELEASE:-v0.27.1}
+    command: ./bin/docker-entrypoint-beat.sh
+    volumes:
+      - logs_beat-worker:/code/plane/logs
+    depends_on:
+      - api
+      - plane-db
+      - plane-redis
+      - plane-mq
+    env_file:
+      - .env
+
+  migrator:
+    image: makeplane/plane-backend:${APP_RELEASE:-v0.27.1}
+    command: ./bin/docker-entrypoint-migrator.sh
+    volumes:
+      - logs_migrator:/code/plane/logs
+    depends_on:
+      - plane-db
+      - plane-redis
+    env_file:
+      - .env
+
+  plane-db:
+    image: postgres:17-alpine
+    command: postgres -c 'max_connections=1000'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  plane-redis:
+    image: valkey/valkey:7.2.5-alpine
+    volumes:
+      - redisdata:/data
+    env_file:
+      - .env
+
+  plane-mq:
+    image: rabbitmq:3.13.6-management-alpine
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    env_file:
+      - .env
+
+  plane-minio:
+    image: minio/minio:latest
+    command: server /export --console-address ":9090"
+    volumes:
+      - uploads:/export
+    env_file:
+      - .env
+
+  proxy:
+    image: makeplane/plane-proxy:${APP_RELEASE:-v0.27.1}
+    depends_on:
+      - web
+      - api
+      - space
+    env_file:
+      - .env
+
+volumes:
+  pgdata:
+  redisdata:
+  uploads:
+  logs_api:
+  logs_worker:
+  logs_beat-worker:
+  logs_migrator:
+  rabbitmq_data:
+```
+
+## See also
+
+- [One-click templates](/en/guias/templates/)
+- [Docker Compose stacks](/en/guias/compose/)
+- [Diagnosing a 502](/en/guias/diagnosticar-502/)

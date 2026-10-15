@@ -1,0 +1,109 @@
+---
+title: How environment variables are resolved
+description: The exact rules for resolving variables and secrets in Rustploy - precedence among project, service and job, when the value is read, what reaches the container (runtime), what does not reach docker build, and how Compose uses the .env file.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This page describes **what the daemon does** with variables and secrets between you saving a value and the
+container reading it. For the step-by-step usage, see
+[Environment variables and secrets](/en/guias/variaveis-e-secrets/).
+
+## The layers and precedence
+
+There are three layers. In each one, an identical key **overrides** the layer below:
+
+| Layer | Where it is edited | Applies to | Precedence |
+|---|---|---|---|
+| **Project** | project → **Variáveis** | all services and jobs of the project | lowest |
+| **Service** | service → **Environment** | only that service (and jobs that have it as their trigger) | middle |
+| **Job** | the job form | only that job | highest |
+
+The result is **a flat list of `KEY=value` pairs**: the same key does not appear twice, and names are case
+sensitive (`Api_Key` and `API_KEY` are different variables).
+
+A **job** starts from the same result the **trigger** service would have (project plus service) and applies the
+job's own variables on top. In a **standalone** job (no trigger), the base is just the project's variables.
+
+## How a secret becomes a value
+
+A variable is one of two kinds: **plain** (`Plain`, the text) or **secret** (a reference to a secret's name,
+written `secret:NAME` or `<secret:NAME>`).
+
+When building the list, the daemon replaces each reference with the decrypted value. Three rules:
+
+1. **The secret belongs to the project.** A service only sees the secrets of **its own project**. A secret with the same name in another project is a different secret.
+2. **A missing secret becomes empty text, with no error.** If you delete a secret or mistype the name, the variable arrives **empty**, the deploy **does not fail** and the application starts without the value. Check the name carefully.
+3. Resolution is always **in plain text** inside the daemon: the container does not know the value came from a secret.
+
+## When the value is read
+
+The list is built **on every deploy**, at the step that creates the container (or brings up the stack). Three
+consequences follow:
+
+- **Editing a variable does not change a container that is already running.** Run a new **Deploy**.
+- **Reload does not apply new variables.** Reload restarts the existing container, which keeps the environment it was created with.
+- **Changing a secret's value** also requires a new deploy of the services that use it.
+
+## What each kind of service receives
+
+### Application (Registry, Git, zip): runtime only
+
+The daemon hands the list over as the **container's environment**, when creating the *staging* container.
+**Nothing beyond your list is added**: Rustploy does not inject `PORT` or any other variable. If your app
+reads its port from `PORT`, define it.
+
+<Aside type="danger" title="There are no build-time variables">
+  For **Git** or **zip** services, `docker build` runs **without** the project or service variables. There are
+  no *build args*. An `ARG TOKEN` in your `Dockerfile` arrives **empty**, and a `RUN` that depends on a
+  variable at build time does not see it.
+</Aside>
+
+What to do when the build needs a value:
+
+- **Prefer reading the value at runtime.** The container already receives the whole list when it starts.
+- If unavoidable, use a **Compose stack** and pass the value through `build.args` (see below).
+- Do not store secrets in the repository or in the `Dockerfile`: they end up in the image.
+
+### Compose: via the `.env` file
+
+Before running `docker compose up -d --build`, the daemon writes a `.env` file with the full list and passes it
+with `--env-file .env`. Docker Compose uses that file to **substitute `${VAR}` inside the YAML**. That is
+**different** from handing the variable to the container:
+
+| You want... | Write in the YAML |
+|---|---|
+| the variable **inside the container** | `environment: [DATABASE_URL]` (passes through the one with the same name) or `environment: ["DATABASE_URL=${DATABASE_URL}"]` |
+| all variables in the container | `env_file: [.env]` on the service |
+| to use it **at build time** | `build: { context: ., args: [TOKEN=${TOKEN}] }` |
+| to use it in any field (image, ports…) | `image: app:${TAG}` |
+
+A variable in the list that **nobody references** in the YAML reaches no container.
+
+<Aside type="caution" title="The .env stays on disk during the deploy">
+  The **already decrypted** values (including those from secrets) are written to the `.env` in the deploy's
+  working directory and **deleted at the end** of `compose up`. They sit in plain text on the server's disk
+  during that interval. The same applies to running a **job**.
+</Aside>
+
+Rustploy also rewrites the YAML to attach the stack to the project network, but it does not touch your variables.
+
+### Job and pre-deploy check
+
+A [job](/en/guias/jobs/) is an ephemeral Compose stack: everything in the previous section applies. The list has the
+precedence **project, trigger service, job**. A [pre-deploy](/en/guias/pre-deploy/) job receives the variables of the
+**trigger service it is configured with**, not those of the service being deployed, unless they are the same.
+
+## Summary
+
+| | Where the list arrives | At build time | When it is read |
+|---|---|---|---|
+| Application (Registry/Git/zip) | the container's environment | **no** | on every deploy |
+| Compose | `.env` to substitute `${VAR}`; it becomes the container's environment only if the YAML asks | yes, via `build.args` | on every deploy |
+| Job | same as Compose | yes, via `build.args` | on every run |
+
+## What does **not** go through this resolution
+
+- The Git **clone token** (the *Credentials* field) is read from the secret only at clone time and does **not** enter the container's environment.
+- The `${VAR}` in the **Infrastructure as Code manifest** is resolved at import, from the variables TOML file, and not by this list. See [Infrastructure as Code](/en/guias/infra-as-code/).
+- Variables generated by **templates** (passwords, keys) are computed when the service is created and stored as **plain** variables, not secrets: they stay as text in the database and go into an export's variables TOML. If you want to encrypt them, create a secret with the value and swap the variable for `secret:NAME`.

@@ -1,0 +1,86 @@
+---
+title: Overview of the desktop app
+description: What the Rustploy desktop app window looks like - top bar, side menu, the Stop All button, search, the status and uptime indicators and how to navigate between screens.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import deployments from '../../../../assets/ui/deployments.png';
+
+The Rustploy desktop app (Linux and Windows) shows the **same server** as the
+[web UI](/en/instalacao/instalar-clientes/#web-ui-nothing-to-install), and both talk to the same API. This section walks
+through the app's screens, one by one.
+
+<Aside type="note" title="The app interface is in Portuguese">
+  The desktop app's labels are in Portuguese, with a few English terms. This documentation shows each label **exactly as it
+  appears on screen**, with a translation in parentheses where it helps, so you can match the text you see.
+</Aside>
+
+<Shot
+  src={deployments}
+  alt="The desktop app's Deployments screen, with the side menu on the left, the top bar and an empty deployments table."
+  caption="The home screen after signing in: Deployments."
+/>
+
+## The window
+
+| Area | What it has |
+|---|---|
+| **Top bar** | the ☰ button (shows or hides the menu), a search field, the connected server with the daemon version, **Stop All** and **Disconnect** |
+| **Side menu** | the app's screens, in two groups, plus **Settings** and **Support** |
+| **Central area** | the content of the chosen screen |
+
+Some actions open **separate windows**, with their own title bar, rather than a panel inside the main one: **Novo
+projeto** (New project), **Novo serviço** (New service), **Novo token** (New token) for the registry, **Novo job** (New job)
+and the **logs** window. You can move and resize them. The app remembers the window size from last time.
+
+## The side menu
+
+| Group | Screen | What for |
+|---|---|---|
+| **DEPLOYMENT OPS** | **Deployments** | the recent deploys of all projects |
+| | **Deploy Engine** | the queue and deploys in progress ([screen](/en/interface/deploy-engine/)) |
+| | **Monitoring** | CPU, memory, disk and load of the server and containers ([screen](/en/interface/monitoring/)) |
+| | **Schedules** | the scheduled jobs ([screen](/en/interface/schedules/)) |
+| | **Ingress** | the proxy's active routes ([screen](/en/interface/ingress/)) |
+| | **Docker** | containers, images, volumes, networks and the [registry](/en/interface/docker-e-registry/) |
+| **MANAGEMENT** | **Projects** | the [projects](/en/interface/projetos/) and their services (the number is the count) |
+| (footer) | **Settings** | [settings](/en/interface/configuracoes/) |
+| | **Support** | the project's repository address |
+
+## The top bar
+
+- **☰** hides or shows the side menu, to gain space.
+- **Search** (`Search deployments, nodes…`): filters the screen's lists as you type.
+- **The connected server** appears with the address, the port and the daemon version (`daemon v0.1.1`). With several saved servers, this is where you check which one you are on.
+- **Disconnect** ends the session and returns to the [login](/en/interface/entrar/).
+
+### Stop All
+
+<Aside type="danger" title="It stops everything">
+  **Stop All** stops **all of Rustploy's services**, across all projects. The app asks for confirmation (*"Parar todos
+  os serviços?"*, Stop all services?). They only come back with a new **Deploy**. Use it for maintenance, not day to day.
+</Aside>
+
+## The Deployments screen
+
+It is the home screen. At the top, two indicators:
+
+| Indicator | Means |
+|---|---|
+| **STATUS** `0/7` | services **running** out of the **total** number of services |
+| **UPTIME** `18h 53m` | how long the **daemon** has been up |
+
+The table lists deploys with **SERVIÇO** (service), **PROJETO** (project), **ESTADO** (state), **DURAÇÃO** (duration) and
+**INÍCIO** (start). Empty, it shows *"Nenhum deployment ainda."* (No deployments yet.)
+
+### Limpar parados/falhos
+
+The red **Limpar parados/falhos** (Clear stopped/failed) button deletes from the history every deploy in state
+**Stopped** or **Failed**, **with the build logs**. Deploys in progress are not affected. The action is **irreversible** and
+asks for confirmation.
+
+## Notifications
+
+The app tells you when a deploy finishes, even with the window closed: closing the last window **minimizes the app to the
+system tray** instead of quitting, and the connection to the server stays alive. To open it again, use the tray icon.

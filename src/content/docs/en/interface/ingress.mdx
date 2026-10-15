@@ -1,0 +1,63 @@
+---
+title: Ingress in the desktop app
+description: The desktop app's Ingress screen in Rustploy - the reverse proxy's active routes (domain, service, target port, TLS) and the host TCP ports, and how to use it to diagnose a 502.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import ingress from '../../../../assets/ui/ingress.png';
+
+<Shot
+  src={ingress}
+  alt="The Ingress screen with the table of domain routes, with the domains blurred, and the table of host TCP ports."
+  caption="The Ingress screen. The domains were blurred in this image."
+/>
+
+**Ingress** (side menu) shows what Rustploy's reverse proxy is serving **right now**. Containers do not publish ports: what
+receives traffic on ports 80 and 443 is the proxy, and it forwards by domain name. See
+[How the ingress works](/en/conceitos/rede-e-nomes/#no-container-publishes-a-port).
+
+Two indicators at the top: **ROUTES** (domain routes) and **PORTAS DE HOST** (open TCP ports).
+
+## Domain routes
+
+| Column | Means |
+|---|---|
+| **DOMÍNIO** (Domain) | the name the proxy serves |
+| **SERVIÇO** (Service) | the target service |
+| **UPSTREAM** | the **container port** the traffic goes to (`:3000`) |
+| **TLS** | indicates whether the route uses HTTPS |
+
+The table scrolls when there are many routes. Each row is one route of a service: a service with several domains appears on several
+rows. Routes **only exist for services that are up**: a stopped service, or one whose deploy failed before promoting, has no row.
+
+## Host TCP ports
+
+**PORTAS TCP DE HOST (N)** (host TCP ports) lists the services that have a port open on the server, such as databases and brokers:
+
+| Column | Means |
+|---|---|
+| **SERVIÇO** | the service |
+| **PROJETO** | its project |
+| **PORTA HOST** | the port on the server (in the `[external_ports]` range, default 20000–20999) |
+| **PORTA CONTAINER** | the target port inside the container |
+
+With none, the screen says *"Nenhum serviço com porta de host configurada."* (No service with a host port configured.) To open a
+port, use the [service's Domains tab](/en/interface/servico-configuracao/#host-tcp-port).
+
+<Aside type="caution">
+  Every port in this list is **reachable from the internet** (opened in the firewall), protected only by the service's password.
+  Check that all of them should really be open.
+</Aside>
+
+## Using it to diagnose a 502
+
+A domain that returns **502** has a route on the proxy, but the container did not respond. This screen helps separate the cases:
+
+| What you see | What it means |
+|---|---|
+| the domain **is not** in the list | no deploy registered the route. Check the service status and the last deploy |
+| the domain is there, with the wrong **UPSTREAM** | the domain's port is not the port the app listens on. Fix it on the **Domains** tab |
+| the domain is there and the port is right | the container is not responding. Check the [runtime log](/en/interface/logs/) and the healthcheck |
+
+The full step by step, with the AI agent's tools, is in [Diagnose a 502 error](/en/guias/diagnosticar-502/).

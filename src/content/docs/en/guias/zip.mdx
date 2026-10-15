@@ -1,0 +1,37 @@
+---
+title: Deploy from a zip
+description: How to ship code without Git in Rustploy - upload a .zip with the Dockerfile at the root through the General tab, the API or curl (100 MiB limit).
+---
+
+The **Archive** source is for shipping code that is not in a repository. You upload a `.zip` and Rustploy
+unpacks it, builds with your `Dockerfile` and starts it.
+
+## Zip rules
+
+- The **`Dockerfile` must be at the root** of the zip.
+- Maximum size: **100 MiB**.
+
+## In the interface
+
+1. Open the service (an **Application** service).
+2. On the **General** tab, choose the **Zip** provider.
+3. Enter the **port** and click **Enviar zip** (Upload zip).
+4. Click **Deploy**.
+
+## Through the API
+
+The body is the **binary** file, not JSON:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" \
+  -H "x-rustploy-filename: app.zip" \
+  --data-binary @app.zip \
+  https://SERVER:9797/api/services/svc_…/archive
+```
+
+The `x-rustploy-filename` header is optional.
+
+## When to prefer Git
+
+If you want a deploy on every commit, use [Git](/en/guias/git/) with a [webhook](/en/guias/webhooks/). The zip is a
+manual upload: every new piece of code needs a new upload.

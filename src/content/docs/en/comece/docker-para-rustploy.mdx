@@ -1,0 +1,45 @@
+---
+title: From Docker to Rustploy
+description: A table that translates Docker commands and concepts (run, network, compose, proxy) into Rustploy concepts (project, service, deploy, ingress).
+---
+
+If you know Docker, Rustploy is what you would do by hand, automated. This page is the translation.
+
+## Concepts
+
+| In Docker you... | In Rustploy that is... |
+|---|---|
+| Create a bridge network for a set of containers | A **project**. Each project has its own network; projects cannot see each other |
+| `docker run` an image | A **service** with a *Registry* source |
+| `docker build` a repository and then `run` | A service with a *Git* source (or *Archive*, a zip) |
+| `docker compose up` | A service with a *Compose* source |
+| Stop the old one, start the new one, adjust nginx | A **deploy** |
+| `-p 8080:80` | **Nothing.** Containers do not publish ports; the *ingress* routes by domain |
+| Configure nginx/Traefik + certbot | The service's **domains**; TLS is automatic (ACME) |
+| `--env-file` | **Environment variables** (project or service) and **secrets** |
+| `HEALTHCHECK` in the Dockerfile | The service's **healthcheck** (HTTP, TCP or Docker's own), used to decide the swap |
+| `docker logs -f` | The **Logs** tab (live runtime) and the **build log** (stored) |
+| `docker system prune` | Manual or scheduled **cleanup** |
+| `cron` + `docker compose run` | A **job** (Schedules) |
+
+## Why no port is published
+
+In plain Docker, replacing a container that holds port `8080` means taking it down before starting the
+new one, and there is a window of unavailability. In Rustploy the internal proxy holds ports 80 and 443.
+It forwards to the container's IP on the project network. Changing versions means changing a pointer in
+the route table, an atomic operation.
+
+## How your app finds the database
+
+Inside a project, services reach each other by name on the project network:
+
+- **Application service** (image, Git, zip): answers as `rp_<name>`, where `<name>` is the service name.
+- **Compose service**: answers by the service name *inside the YAML* (the key under `services:`).
+
+Details in [Networking and names](/en/conceitos/rede-e-nomes/).
+
+## Where Rustploy differs from plain Docker
+
+- **Volumes**: Rustploy only uses *bind mounts* (`/path/on/host:/path/in/container`). It never creates a named volume.
+- **Runtime logs are not stored.** `docker logs` works while the container exists; when a deploy swaps versions, the old container disappears together with its log. The **build** log is stored.
+- **One deploy at a time.** There is a global queue; the others wait.

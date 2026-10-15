@@ -1,0 +1,61 @@
+---
+title: Service and sources
+description: A Rustploy service has one of four sources - Registry, Git, Archive (zip) or Compose. How to choose between them, what each does on deploy and what the service configures besides the source.
+---
+
+A **service** is something that runs inside a project: an application, a database, a broker or a whole
+stack. What defines *where it comes from* is the **source**.
+
+## The four sources
+
+| Source | You provide | On deploy Rustploy... | Use when |
+|---|---|---|---|
+| **Registry** | an image (`nginx:latest`, `ghcr.io/org/app:1.2`) | pulls the image | you already have the image, or use a third party's |
+| **Git** | repository URL and branch | clones, builds with your `Dockerfile`, starts | the code is in a repository |
+| **Archive** | a `.zip` with the `Dockerfile` at the root | unpacks and builds | you want to ship code without Git (100 MiB cap) |
+| **Compose** | a Docker Compose file | runs the stack's `docker compose up` | databases, brokers, or several containers that go together |
+
+### How to choose
+
+- Have a repository with a `Dockerfile`? **Git**.
+- Have the image in a registry? **Registry**.
+- Need several containers together, or use a template? **Compose**.
+- Only have the code on your machine? **Archive**.
+
+There are no *buildpacks*: building from source requires a `Dockerfile`.
+
+## Service types in the wizard
+
+The **Novo serviço** (New service) wizard offers six options:
+
+| Option | What it creates |
+|---|---|
+| **Application** | an application service, from Git or Registry |
+| **Database** | a ready-made database (Postgres, MySQL, MariaDB, MongoDB, Redis), as a Compose stack |
+| **Broker** | Kafka, RabbitMQ or NATS, as a Compose stack |
+| **Compose** | your stack, by pasting the YAML |
+| **Template** | an app from the catalog (more than 380 applications) |
+| **Importar** (Import) | recreates a service exported from another server |
+
+## What else a service configures
+
+| Field | What for |
+|---|---|
+| **Port** | the port *inside* the container the proxy sends traffic to |
+| **Domains** | from one to several, each with its own port and with or without TLS |
+| **Environment variables** | the service's own, added to the project's |
+| **Volumes** | only *bind mounts* (`/host:/container[:ro]`) |
+| **Healthcheck** | decides whether the new container may receive traffic |
+| **Replicas** | how many containers of the same service |
+| **Resources** | CPU shares and a memory limit |
+| **Command and arguments** | overrides the image's `CMD` |
+
+## Compose: which container gets the domain
+
+A Compose stack has several containers, but only **one** serves the domain. Rustploy picks, in this order:
+
+1. the service marked as the **ingress target** (the name inside the YAML);
+2. the container that exposes the port the domain asks for;
+3. the first in alphabetical order (deterministic, with a warning in the log).
+
+If the domain returns 502 on a Compose stack, it is almost always the target pick or the domain's port.

@@ -1,0 +1,40 @@
+---
+title: One-click application templates
+description: How to create ready-made applications in Rustploy (n8n, Plausible, Uptime Kuma and hundreds more) from the template catalog, with generated variables and the domain set in the wizard.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+The **template** catalog brings more than 380 open source applications already configured (in Dokploy's
+blueprint format): analytics, automation, wikis, databases, monitoring tools, and so on.
+
+## Use a template
+
+<Steps>
+1. In the project, **+ Novo serviço → Template** (New service → Template).
+2. Use the **search** to find the application by name or description.
+3. Select the template.
+4. Give the service a **name** and review the **variables**: the wizard already fills in generated passwords and secrets, and you can edit the rest.
+5. Create it and run the **Deploy**.
+</Steps>
+
+## What a template defines
+
+- the **compose** with the containers needed (application, database, cache…);
+- the **environment variables**, with password and key generators;
+- the **domain** and the **port** of the container that serves the interface;
+- the **volumes** (bind mounts).
+
+The result is an ordinary **Compose** service: you edit it, reconfigure the domain and redeploy like any other.
+See [Docker Compose stacks](/en/guias/compose/).
+
+## After creating
+
+1. Point a domain on the **Domains** tab, with [DNS and TLS](/en/guias/dominios-e-tls/).
+2. Note the generated credentials on the **Environment** tab.
+3. [Back up](/en/guias/backup/) the volumes, if the application stores data.
+
+## If the domain returns 502
+
+In a stack with several containers the domain goes to just one. If it is the wrong one, set the ingress
+target. See [Diagnose a 502 error](/en/guias/diagnosticar-502/).

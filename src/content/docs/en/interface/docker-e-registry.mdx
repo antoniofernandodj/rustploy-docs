@@ -1,0 +1,80 @@
+---
+title: Docker and Registry in the desktop app
+description: The desktop app's Docker screen in Rustploy - the server's containers, images, volumes and networks - and the Registry sub-tab for the built-in registry's repositories, access tokens, docker login and the garbage collector.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import registry from '../../../../assets/ui/docker-registry.png';
+import novoToken from '../../../../assets/ui/novo-token-registry.png';
+import tokenCriado from '../../../../assets/ui/token-registry-criado.png';
+
+The **Docker** screen (side menu) shows the Docker of the **whole server**, not just what belongs to Rustploy. At the top, four
+counters: **CONTAINERS**, **IMAGENS** (Images), **VOLUMES** and **NETWORKS**. Below, a sub-tab for each, plus the **Registry**.
+
+| Sub-tab | Shows |
+|---|---|
+| **Containers** | all of them, running and stopped |
+| **Images** | the images and whether they are in use |
+| **Volumes** | Docker volumes (Rustploy only uses *bind mounts*, so these are not its own) |
+| **Networks** | the networks, with the projects' ones identified |
+| **Registry** | the built-in Docker registry |
+
+Each list has the remove action. Docker **refuses** to remove what is in use. To clean up in one go, see
+[Docker cleanup](/en/guias/limpeza-docker/).
+
+## Registry
+
+<Shot
+  src={registry}
+  alt="The Registry sub-tab showing the registry's status, the empty repository table, the access tokens and the Novo token button."
+  caption="The Registry sub-tab, with no repositories or tokens."
+/>
+
+The top reports the state: *"Registry ativo em 127.0.0.1:5100 · 0 repositório(s)"* (Registry active at 127.0.0.1:5100, 0 repositories). If
+the registry is off, the screen warns you; turn it on under `[registry]` in
+[`config.toml`](/en/instalacao/config-toml/#registry-optional).
+
+| Element | What it does |
+|---|---|
+| The **REPOSITÓRIO / TAGS / TAMANHO / CRIADO / AÇÃO** table | the published repositories and their tags. Empty, it shows *"Faça `docker push` para o registry embutido."* (Do a `docker push` to the built-in registry.) |
+| **Executar GC** (Run GC) | the *garbage collector*: removes manifests with no tag and blobs nobody uses |
+| **TOKENS DE ACESSO (N)** (access tokens) | the `docker login` credentials |
+| **+ Novo token** | creates a token |
+
+Content is only created by `docker push`: the screen does not upload images.
+
+### Create a token
+
+With no token at all, **no push or pull is authenticated**: create one before using the registry. Click **+ Novo token**.
+
+<Shot
+  src={novoToken}
+  alt="The New token window with the Name field and the choice of scope between read-only (pull) and read and write (push)."
+  caption="The New token window."
+/>
+
+| Field | |
+|---|---|
+| **NOME** (Name) | for example `ci-deploy` |
+| **ESCOPO** (Scope) | **Somente leitura (pull)** (read-only) or **Leitura e escrita (push)** (read and write) |
+
+Click **Criar token** (Create token).
+
+<Shot
+  src={tokenCriado}
+  alt="The Token created window with the warning that the secret cannot be recovered and the docker login command with the secret blurred."
+  caption="The docker login command, shown only once. (The secret was blurred in this image.)"
+/>
+
+<Aside type="danger" title="The secret appears once">
+  The window shows the full **`docker login` command**, with the secret, and warns: *"O segredo não pode ser recuperado depois de fechar
+  esta janela."* (The secret cannot be recovered after you close this window.) Click **Copiar** (Copy) before **Fechar** (Close). If you
+  lose it, delete the token and create another.
+</Aside>
+
+The token appears in the **TOKENS DE ACESSO** table with **NOME**, **ESCOPO**, **CRIADO** (created) and **ÚLTIMO USO** (last used; `nunca`,
+never, until the first time). The red **×** revokes it immediately.
+
+Use a **push** token in CI and **pull** where you only download. The full flow, with a domain and HTTPS, is in
+[Built-in registry](/en/guias/registry/).

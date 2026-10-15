@@ -1,0 +1,34 @@
+---
+title: Glossary
+description: Definition of every Rustploy term - project, service, source, deploy, ingress, staging, drain, connection token, job and shared server.
+---
+
+**Project.** Groups services in a dedicated Docker network and holds shared environment variables and secrets. ID prefix `prj_`.
+
+**Service.** Something that runs: an application, a database, a broker or a Compose stack. ID `svc_`. It has a *source*, a port, domains, variables, volumes and a healthcheck.
+
+**Source.** Where the service comes from: `Registry` (a ready-made image), `Git` (a repository with a Dockerfile), `Archive` (a zip with a Dockerfile at the root) or `Compose` (a compose file).
+
+**Deploy (deployment).** One run of deploying a service. ID `dep_`. It goes through states until `Live` or `Failed`.
+
+**Staging.** The new container, started alongside the current one while it is tested. Name `rp_<id8>_<name>_staging_<deploy>`, where `<id8>` is the first 8 characters of the service ID.
+
+**Live.** The container that is receiving traffic. Name `rp_<id8>_<name>`. On the project network it also answers to the alias `rp_<name>`.
+
+**Drain.** A short pause, after the route swap, for in-flight connections on the old container to finish (`drain_secs`, default 10 s).
+
+**Ingress.** The built-in reverse proxy. It keeps the route table in memory: domain to container, and external TCP port to container.
+
+**Healthcheck.** The test that decides whether the new container may receive traffic: `Http`, `Tcp`, `DockerNative` or `None`.
+
+**Secret.** A value encrypted at rest (`age`) and referenced in an environment variable as `secret:NAME`.
+
+**Job.** A run-once task (an ephemeral compose), manual or scheduled.
+
+**Template.** A ready-made application from the catalog (Dokploy format), created in one click by the wizard.
+
+**Shared server.** A database server (Postgres, MySQL, MariaDB or MongoDB) that several projects use, each with its own database and user.
+
+**Connection token.** A base64 string of `host:port::token`: the daemon's address and the API token together. It is what you paste into the login screen and into the MCP command.
+
+**MCP.** Model Context Protocol: the standard that lets an AI agent call tools. The daemon serves one at `POST /mcp`.

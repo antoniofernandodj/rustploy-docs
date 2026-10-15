@@ -1,0 +1,101 @@
+---
+title: Domains, healthcheck and advanced options of a service
+description: The Domains, Healthcheck and Advanced tabs of the service screen in the Rustploy desktop app - adding a domain with TLS, the host TCP port, healthcheck types, replicas, the run command and the pre-deploy queue.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import dominios from '../../../../assets/ui/servico-dominios.png';
+import healthcheck from '../../../../assets/ui/servico-healthcheck.png';
+import avancado from '../../../../assets/ui/servico-avancado.png';
+import fila from '../../../../assets/ui/servico-avancado-fila.png';
+
+These are tabs of the [service screen](/en/interface/servico/). After changing any of them, **run a new Deploy** for the change to
+take effect in the container.
+
+## Domains
+
+<Shot
+  src={dominios}
+  alt="The Domains tab with no domains, with the fields to add a domain, the container port, the HTTPS/TLS switch and the host TCP port section."
+  caption="The Domains tab of a service with no domain."
+/>
+
+**DOMÍNIOS (N)** lists the service's routes. The screen text reminds you: *"Cada domínio pode apontar para uma porta de container
+diferente."* (Each domain can point to a different container port.)
+
+To **add** one:
+
+1. Under **ADICIONAR DOMÍNIO** (add domain), type the name (`app.example.com`).
+2. Under **PORTA DO CONTAINER (opcional)** (container port, optional), give the port of the app that receives this domain. Blank means the **service's default**.
+3. Turn on **HTTPS / TLS** for an automatic certificate.
+4. Click **Adicionar domínio** (Add domain).
+
+DNS must already point at the server, and ACME must be on for HTTPS: see [Domains and automatic HTTPS](/en/guias/dominios-e-tls/).
+
+### Host TCP port
+
+The **PORTA TCP DO HOST (passthrough, opcional)** block is for when the service is **not HTTP** (a database, a broker): it opens a
+TCP port on the **server** that forwards straight to the container, without going through domain routing.
+
+| Button | Effect |
+|---|---|
+| **Salvar porta** (Save port) | uses the number you typed. The firewall helper only opens ports in the `[external_ports]` range |
+| **Automática** (Automatic) | Rustploy picks a free port from the range (default 20000–20999) and opens it in the firewall |
+
+The result appears on the **Connection** tab, under **Host port** and **External URL**. This makes the service reachable from the
+**internet**: use a strong password. See [Server security](/en/operacao/seguranca-do-servidor/#the-firewall-helper).
+
+## Healthcheck
+
+<Shot
+  src={healthcheck}
+  alt="The Healthcheck tab with the None, Tcp, Http and Docker types, and the interval, timeout, retries and start period fields."
+  caption="The Healthcheck tab, with the Tcp type selected."
+/>
+
+Choose the type under **KIND**: **None**, **Tcp**, **Http** or **Docker**. With **Http**, the path and the expected status also appear.
+
+| Field | Screen default | Meaning |
+|---|---|---|
+| **INTERVAL (s)** | 5 | pause between attempts |
+| **TIMEOUT (s)** | 3 | how long each attempt may take |
+| **RETRIES** | 10 | maximum attempts |
+| **START PERIOD (s)** | 5 | wait before the first one |
+
+Click **Save**. What each type means and how to choose is in [Healthcheck](/en/guias/healthcheck/). A new service starts with **None**:
+configure one before using it in production.
+
+## Advanced
+
+<Shot
+  src={avancado}
+  alt="The Advanced tab with the replicas and run command fields, and the start of the pre-deploy queue."
+  caption="The Advanced tab: replicas, command and pre-deploy queue."
+/>
+
+| Field | What it does |
+|---|---|
+| **REPLICAS** | how many containers of the service run. All get the same name on the network and DNS spreads requests |
+| **RUN COMMAND** | overrides the image's command. Blank means the `(padrão da imagem)` (image default). **Run args atuais** shows the stored arguments |
+
+Click **Save**.
+
+### The pre-deploy queue
+
+<Shot
+  src={fila}
+  alt="The end of the Advanced tab with the empty pre-deploy queue, the job selector and the Adicionar à fila button."
+  caption="The pre-deploy queue, empty."
+/>
+
+**FILA DE PRÉ-DEPLOY (N)** runs [jobs](/en/interface/schedules/) **in order** before each deploy, *"manual or webhook, one at a time. If any one's
+exit code is different from 0, the queue stops and the deploy does not happen, and the following checks do not run."* With none, the
+screen says *"Nenhum check configurado — deploy segue direto."* (No check configured, the deploy goes straight through.)
+
+1. First create the job in **Schedules**.
+2. Under **ADICIONAR À FILA** (add to queue), pick the job (*"escolher job…"*).
+3. Click **Adicionar à fila**.
+4. To **reorder**, drag by each row's **⋮** handle.
+
+The typical case is running the database migration before swapping the version. Details in [Pre-deploy checks](/en/guias/pre-deploy/).

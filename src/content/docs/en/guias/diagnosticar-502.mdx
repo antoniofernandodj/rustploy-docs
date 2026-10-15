@@ -1,0 +1,57 @@
+---
+title: Diagnose a 502 error
+description: A step-by-step guide to finding out why a Rustploy domain returns 502 - reading the ingress route table, reconciling routes without a redeploy, and checking the port, healthcheck and ingress target on Compose stacks.
+---
+
+A **502** comes from Rustploy's proxy: it received the request, found the route, but the target container did
+not respond. The certificate and DNS are fine, because otherwise you would not even reach the proxy.
+
+## 1. Look at the route table
+
+The proxy keeps routes in memory. Over MCP, ask an agent, or call the `ingress_routes` tool. Through the API:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" https://SERVER:9797/api/rpc \
+  -d '"IngressRoutes"'
+```
+
+Interpret it:
+
+| What you see | It means | What to do |
+|---|---|---|
+| the domain **does not appear** | no deploy registered the route (service stopped, or the deploy failed before promoting) | check the service status and the last deploy |
+| `backends` **empty** | the route exists, with no destination | step 2 |
+| `backends` pointing at the **wrong port** | the domain's port is not the app's | step 3 |
+
+The dashboard's **Ingress** screen shows the same routes, by domain ([how to read it](/en/interface/ingress/)).
+
+## 2. Reconcile the routes
+
+Reconciliation re-reads the containers that exist in Docker and rewrites the table, **with no redeploy** and
+without recreating anything. The daemon already does this by itself every 30 seconds and at boot, but you can
+force it:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" https://SERVER:9797/api/rpc \
+  -d '{"IngressReconcile":{"service_id":"svc_…"}}'
+```
+
+(or the `ingress_reconcile` MCP tool). If it is still wrong after that, the problem is not the table: it is the
+service's configuration.
+
+## 3. Check the configuration
+
+- Is the **domain's port** (on the **Domains** tab) the port the app listens on *inside* the container? It is the most common mistake.
+- **Does the app listen on `0.0.0.0`?** An app that only listens on `127.0.0.1` is not reachable over the container network.
+- **Is the healthcheck** passing? Check the service status and the **Logs** tab.
+- **Compose stack**: the domain may be going to the wrong container. Set the **ingress target** (the name, inside the YAML, of the service that serves the domain).
+
+## 4. Look at the logs
+
+The service's **Logs** tab: did the app crash on start? A database connection error? Remember that the old
+container's log disappears when versions swap.
+
+## With an AI agent
+
+This is the case where MCP helps most. See the [prompt recipes](/en/agentes/receitas/): "domain X is returning
+502, find out why".

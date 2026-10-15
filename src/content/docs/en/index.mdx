@@ -8,5 +8,28 @@ hero:
     - text: What is Rustploy
       link: /en/comece/o-que-e/
       icon: right-arrow
+    - text: Connect an AI agent
+      link: /en/agentes/visao-geral/
+      variant: minimal
 ---
-Teste.
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="For people who already know Docker" icon="rocket">
+    You do not learn another container tool. You learn what Rustploy does *around* Docker.
+    Start with the [Docker → Rustploy map](/en/comece/docker-para-rustploy/).
+  </Card>
+  <Card title="Zero-downtime deploys" icon="random">
+    The new container starts alongside the old one, passes its healthcheck, and only then does the
+    proxy switch the route. If it fails, it rolls back by itself.
+  </Card>
+  <Card title="Genuinely light" icon="seti:rust">
+    Daemon, reverse proxy, TLS (ACME), SQLite database and OCI registry in one process.
+    Target: under 50 MB of RAM at idle.
+  </Card>
+  <Card title="Operable by AI" icon="star">
+    The daemon speaks MCP. Claude Code lists services, triggers a deploy, waits for the result and
+    diagnoses a 502. [See how to connect](/en/agentes/conectar-claude-code/).
+  </Card>
+</CardGrid>

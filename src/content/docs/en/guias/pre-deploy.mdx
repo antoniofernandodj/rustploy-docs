@@ -1,0 +1,31 @@
+---
+title: Pre-deploy checks
+description: How to run jobs in order before every Rustploy deploy - migrations, tests, static analysis - and only continue if all of them exit with code 0.
+---
+
+**Pre-deploy** runs a queue of [jobs](/en/guias/jobs/) before the deploy starts the new container. If all of them
+finish with **code 0**, the deploy continues. If any one fails, the deploy **stops** and ends as **Failed**; the
+container that was online is not touched.
+
+The classic case is the **database migration**: run it as a job before swapping the application's version.
+
+## Configure
+
+1. Create the jobs (for example `migrate-db`, `tests`) in the same project.
+2. On the service, open the **Advanced** tab.
+3. Under **FILA DE PRÉ-DEPLOY** (pre-deploy queue), use **ADICIONAR À FILA** (add to queue) to pick the jobs.
+4. Order them: in the **desktop app**, drag by the **⋮** handle on the row; in the **web UI**, use **↑** and **↓**. Remove with **✕**.
+
+## How it works
+
+- Jobs run **in queue order**.
+- The **first failure stops everything**: the following ones do not run.
+- An empty queue: the deploy goes straight through.
+- The jobs' output appears in the **deploy log**, along with the rest of the build.
+- The deploy state is **PreDeployCheck**. See [the lifecycle](/en/conceitos/ciclo-de-vida/).
+
+## Cautions
+
+- A job that **never finishes** blocks the deploy. Give it an end.
+- A pre-deploy job is the same object as in **Schedules**: you can also schedule it or run it by hand.
+- [Warm](/en/guias/jobs/#warm-a-job) the job so the first deploy does not wait for its build.

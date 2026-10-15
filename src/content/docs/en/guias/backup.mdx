@@ -1,0 +1,46 @@
+---
+title: Backup and restore
+description: What to back up on a Rustploy server - the daemon's SQLite database, the secrets master key, config.toml, certificates, the data of the services' databases - and how to automate it with jobs.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Two sets of data need a backup: **Rustploy's own state** and **your applications' data**.
+
+## 1. Rustploy's state
+
+| What | Where | Why |
+|---|---|---|
+| The daemon's database (projects, services, deploys, jobs) | `/var/lib/rustploy/db` | it is the platform's entire state |
+| **Master key** | `/etc/rustploy/master.key` | without it, stored secrets **cannot be decrypted** |
+| Configuration | `/etc/rustploy/config.toml` | API token, domains, ACME |
+| TLS certificates | `<db_path>/certs/` | avoids reissuing (Let's Encrypt rate-limits) |
+| Built-in registry | `<db_path>/registry/` | only if you use it |
+
+<Aside type="danger" title="The master key is irreplaceable">
+  Keep `master.key` **off the server**, in a vault. A database backup without the key leaves every secret unreadable.
+</Aside>
+
+Make the copy with the daemon stopped, or use a consistent copy of SQLite.
+
+### A cheaper shortcut: the manifest
+
+The [Infrastructure as Code manifest](/en/guias/infra-as-code/) recreates projects and services on another server. It
+does **not** carry secrets or data. It complements the database backup, it does not replace it.
+
+### Variable backup
+
+The daemon already writes, every 60 s, snapshots of the variables to `<db_path>/env_backups/`. It protects against
+a wrong edit, not against losing the server: copy that folder too.
+
+## 2. Your applications' data
+
+Rustploy **does not back up the data in databases or volumes**. That is up to you.
+
+- **Databases:** use a scheduled [job](/en/guias/jobs/) that runs `pg_dump`, `mysqldump` or `mongodump` and writes to a host path (a bind mount), and then copy that path off the server. The example in the jobs guide is a Postgres backup.
+- **Volumes (bind mounts):** they are host folders. Include them in your server backup.
+- **The VPS provider's snapshots** are a useful extra layer.
+
+## Test the restore
+
+A backup that was never restored is a hypothesis. Restore on a test server now and then.

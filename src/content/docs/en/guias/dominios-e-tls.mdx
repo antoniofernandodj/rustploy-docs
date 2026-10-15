@@ -1,0 +1,75 @@
+---
+title: Domains and automatic HTTPS
+description: How to point domains at a service in Rustploy - DNS, the Domains tab, each domain's port, TLS with Let's Encrypt (ACME), what happens on first access and how to fix certificate problems.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+A service can have **several domains**, each with its own container port and with or without TLS. Rustploy's
+proxy (the ingress) routes by domain name.
+
+## First: DNS and ACME
+
+<Steps>
+1. Create the domain's DNS `A` (or `AAAA`) record pointing at the server's IP. Rustploy **does not manage DNS**.
+2. For HTTPS, turn on ACME in `config.toml` and restart the daemon:
+
+   ```toml
+   [ingress.acme]
+   enabled = true
+   email   = "you@example.com"
+   ```
+
+3. Make sure ports **80** and **443** are reachable from the internet.
+</Steps>
+
+## Add a domain
+
+On the service's **Domains** tab:
+
+- **dominio.com**: the name (`app.mysite.com`);
+- **porta (opcional)** (port, optional): the container port that receives the traffic. Blank uses the service's port;
+- **TLS**: tick it for HTTPS.
+
+Click **Adicionar** (Add). The list shows each route as `https → :8080` or `http → :80`: the public scheme
+and the container port.
+
+You can point several domains at the same service, even at **different ports** of the same container.
+
+## How the certificate is issued
+
+When a service with a **TLS** domain finishes a deploy (`Live`), the daemon requests the certificate from
+Let's Encrypt in the background, using the HTTP-01 challenge, and loads it without restarting. So:
+
+- the **first access** may take a few seconds, or fail right after the first deploy, until the certificate is issued;
+- **renewal** is automatic, in the background;
+- certificates live in `<db_path>/certs/<domain>/`.
+
+<Aside type="caution" title="If the certificate is not issued">
+  The causes, from most to least common: DNS does not point at the server yet; `ingress.acme.enabled` is
+  `false` or has no `email`; port 80 is blocked (Let's Encrypt needs it); or the domain was never attempted
+  because the service did not reach `Live`.
+</Aside>
+
+## Without TLS
+
+Without ticking **TLS**, the domain answers over HTTP on the ingress port (`80` by default), with no
+certificate. It suits tests and internal networks.
+
+## Host TCP port (databases and brokers)
+
+Services that are **not HTTP** do not use a domain: they get a **TCP port on the server** that forwards straight
+to the container. On the **Domains** tab, the **PORTA TCP DO HOST** (host TCP port) block has **Salvar porta**
+(Save port, you pick the number) and **Automática** (Automatic, Rustploy picks one from the `[external_ports]`
+range, default 20000–20999, and opens it in the firewall). The port appears under **Host port** and
+**External URL** on the **Connection** tab. This exposes the service to the internet: use a strong password.
+See [Server security](/en/operacao/seguranca-do-servidor/).
+
+## Is the server returning 502?
+
+See [Diagnose a 502 error](/en/guias/diagnosticar-502/).
+
+## Compose stack: which container gets the domain
+
+In a stack with several containers, the domain goes to **just one**. See
+[Service and sources](/en/conceitos/servico-e-fontes/#compose-which-container-gets-the-domain).

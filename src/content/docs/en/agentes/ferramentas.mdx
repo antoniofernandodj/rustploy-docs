@@ -1,0 +1,98 @@
+---
+title: MCP tools reference
+description: The nine tools of Rustploy's MCP server (status, list_services, list_deploys, deploy, build_logs, ingress_routes, ingress_reconcile, rpc, manual), with arguments and examples.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The MCP server exposes nine tools. They cover the frequent paths already worked out; for everything else there is `rpc`.
+
+| Tool | Arguments | What for |
+|---|---|---|
+| `status` | | the daemon's version and uptime, and the deploy queue |
+| `list_services` | | project → service index: `service_id`, name, status, source, port |
+| `list_deploys` | `limit` (1 to 200, default 20) | the latest deploys, with the outcome resolved |
+| `deploy` | `service_id` **or** `service` (name), `wait`, `timeout_s`, `log_tail` | triggers and **waits** for the result |
+| `build_logs` | `deployment_id`, `after`, `limit` | build log paginated by cursor |
+| `ingress_routes` | | the proxy's live route table |
+| `ingress_reconcile` | `service_id` (optional) | recomputes routes without a redeploy |
+| `rpc` | `command` | any protocol command |
+| `manual` | | the full manual the daemon serves to agents |
+
+## `deploy`
+
+The most-used tool. It triggers the deploy and only answers when it finishes.
+
+```json
+{ "name": "deploy", "arguments": { "service": "api", "wait": true } }
+```
+
+The response of a deploy that failed:
+
+```json
+{
+  "deployment_id": "dep_01M11Z99…",
+  "state": "Failed",
+  "ok": false,
+  "error": "docker build error: Cannot locate specified Dockerfile: Dockerfile",
+  "log_tail": ["…"],
+  "log_cursor": 6,
+  "waited": true,
+  "timed_out": false
+}
+```
+
+- **`ok`**: `true` is `Live`; `false` is `Failed`; `null` is "still running" or a final state with no outcome (`Stopped`, stopped on purpose, and `Pruning`, replaced by a newer deploy). Do not treat those two as failures.
+- A service name is unique **per project**. When ambiguous, the tool refuses and lists the candidates as `project=service_id`.
+- `wait: false` returns right away; follow with `list_deploys` and `build_logs`.
+- `timeout_s` defaults to 900 (cap 3600). `log_tail` defaults to 40 (cap 500).
+- To keep reading the log, call `build_logs` with `after = log_cursor` and then with each response's `next_after`.
+
+## `ingress_routes` and `ingress_reconcile`
+
+They are for diagnosing a **502**. The error comes from Rustploy's proxy: the route exists and the backend did not respond.
+
+| What you see in the table | It means |
+|---|---|
+| domain **missing** | no deploy registered the route (service stopped, or the deploy failed before promoting) |
+| `backends` **empty** | a route with no destination; a 502 is guaranteed |
+| `backends` on the **wrong port** | the classic Compose-stack case: the ingress target points at the wrong container or port |
+
+`ingress_reconcile` re-reads the containers that exist and rewrites the routes without recreating anything. If the
+error persists after it, the problem is in the service's configuration (ingress target, domain port), not in the table.
+
+## `rpc`
+
+Runs any protocol `Command`. The encoding is *externally tagged*: a variant with fields is a one-key object, a
+variant without fields is the bare string.
+
+```json
+{ "name": "rpc", "arguments": { "command": { "ServiceGet": { "id": "svc_…" } } } }
+```
+
+```json
+{ "name": "rpc", "arguments": { "command": "ProjectList" } }
+```
+
+:::caution
+`ServiceUpdate` **replaces** the whole service, it is not a patch. Do a `ServiceGet`, change the field and send
+back the complete spec; an omitted field is a deleted field.
+:::
+
+## Calling without an MCP client
+
+MCP is JSON-RPC 2.0, so you can use `curl`:
+
+```bash
+export RP=https://SERVER:PORT RPT=<access_token>
+
+curl -s -H "Authorization: Bearer $RPT" -H "Content-Type: application/json" \
+  $RP/mcp -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+
+curl -s -H "Authorization: Bearer $RPT" -H "Content-Type: application/json" \
+  $RP/mcp -d '{"jsonrpc":"2.0","id":2,"method":"tools/call",
+               "params":{"name":"list_services","arguments":{}}}'
+```
+
+The result of `tools/call` comes in `result.content[0].text` and already decoded in `result.structuredContent`. A
+tool error comes with `result.isError: true`.

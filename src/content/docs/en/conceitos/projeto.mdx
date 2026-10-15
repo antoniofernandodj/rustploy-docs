@@ -1,0 +1,40 @@
+---
+title: Project
+description: The project is Rustploy's unit of isolation - a Docker network of its own, and environment variables and secrets shared among its services. Containers of different projects cannot see each other.
+---
+
+A **project** groups services that work together: the API, the database and the worker of one system.
+
+## What a project gives you
+
+- **A dedicated bridge network.** All the project's services join it and reach each other by name. Containers of different projects **cannot see each other**.
+- **Project environment variables**, inherited by all services. A service variable with the same name wins.
+- **Project secrets**, encrypted values you reference in variables.
+- **Jobs**, scheduled or manual tasks that run on the project's network.
+
+## Identifiers
+
+Every object has an ID with a prefix that tells its type, followed by a ULID:
+
+| Prefix | Object |
+|---|---|
+| `prj_` | project |
+| `svc_` | service |
+| `dep_` | deploy |
+| `arc_` | uploaded zip file |
+
+You see them in the API and in the agent tools.
+
+## Name and renaming
+
+Renaming the project (**Editar projeto**, Edit project) does not change its network or recreate anything:
+the network name is recorded when it is created.
+
+:::note
+Infrastructure as Code manifests match project and service **by name**. An old manifest applied after
+a rename creates a new project instead of updating the existing one.
+:::
+
+## Delete
+
+You can only delete a project that has no services. Remove the services first.

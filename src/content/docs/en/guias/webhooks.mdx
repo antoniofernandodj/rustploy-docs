@@ -1,0 +1,102 @@
+---
+title: Deploy webhooks (CI/CD)
+description: How to trigger a Rustploy deploy with a POST to a secret URL - from GitHub, GitLab, Gitea, Docker Hub, GitHub Actions or curl - with branch filtering, token security and how to confirm the deploy happened.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Every **Application** service (Registry or Git) has a secret URL. A `POST` to it triggers a deploy of the
+service. **Compose** services have no webhook.
+
+```text
+POST {base}/webhook/{service_id}/{token}
+```
+
+## Where to find the URL
+
+On the service's **Deployments** tab: the URL appears at the top, with **Copiar** (Copy) and **Regenerar**
+(Regenerate). The token only exists from the service's **first deploy**.
+
+**Regenerate** invalidates the old URL immediately: register the new one with the provider.
+
+## Requirement: the API port must be reachable
+
+The webhook is served on the **same port as the API** (`9797` by default). For GitHub, GitLab or Docker Hub to
+reach it, that port must be accessible from the internet. The URL's base comes from `[api]`: with `domain`, it
+is `https://<domain>[:port]`; without a domain, the server's outbound IP.
+
+<Aside type="note">
+  The `/webhook/…` path is public (authentication is the token in the URL), but that does **not open the API**:
+  everything under `/api/*` still requires the Bearer token.
+</Aside>
+
+## Test with curl
+
+```bash
+curl -X POST https://rustploy.mysite.com:9797/webhook/svc_…/a3f8e2c1…
+```
+
+| Response | Meaning |
+|---|---|
+| `200 deploy triggered` | request **accepted** |
+| `401 invalid token` | wrong token, nonexistent service or a service that has no token yet |
+| `404 not found` | incomplete path |
+| `405 method not allowed` | a method other than POST (a browser does GET) |
+
+<Aside type="caution" title="200 does not mean it deployed">
+  If a deploy is already in progress for the service, the trigger is dropped **after** the `200`. Confirm on
+  the **Deployments** tab, not by the HTTP status.
+</Aside>
+
+## GitHub
+
+<Steps>
+1. In the repository: **Settings → Webhooks → Add webhook**.
+2. **Payload URL**: the webhook URL.
+3. **Content type**: `application/json`.
+4. **Secret**: blank (authentication is the token in the URL).
+5. Event: **Just the push event**.
+</Steps>
+
+## GitLab
+
+**Settings → Webhooks**: paste the URL, leave the **Secret token** blank and tick **Push events**.
+
+## Gitea
+
+**Settings → Webhooks → Add Webhook → Gitea**: **Target URL** with the webhook URL, method `POST`, **Content Type** `application/json`.
+
+## Docker Hub
+
+In the Docker Hub repository, **Webhooks**: give it a name and paste the URL. It suits **Registry** sources:
+when you publish a new image, Rustploy pulls it and swaps the container.
+
+## Branch filter
+
+If the service has a **Git** source and a configured branch, Rustploy reads the payload's `ref` (GitHub, Gitea
+and Gogs send `refs/heads/<branch>`) and **ignores pushes to other branches**. For finer filters (tags only,
+certain paths only), use a GitHub Action.
+
+## GitHub Actions
+
+```yaml
+# .github/workflows/deploy.yml
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy
+        run: curl -fsS -X POST ${{ secrets.RUSTPLOY_WEBHOOK_URL }}
+```
+
+Store the URL as a repository *secret*: whoever has it can trigger deploys.
+
+## Security
+
+- The token has 48 hexadecimal characters (192 bits), unique per service.
+- The comparison is constant-time, and the endpoint does not reveal whether a service exists: an invalid token is always `401`.
+- Use HTTPS (`[api].domain`) in production, so the token does not travel in the clear.

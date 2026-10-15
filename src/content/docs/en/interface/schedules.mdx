@@ -1,0 +1,102 @@
+---
+title: Schedules and New job in the desktop app
+description: The desktop app's Schedules screen in Rustploy and the New job window - choosing the project, the compose source (pasted or Git), main service, variables and the manual, interval, daily or weekly recurrence.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import schedules from '../../../../assets/ui/schedules-novo-job.png';
+import compose from '../../../../assets/ui/novo-job-compose.png';
+import git from '../../../../assets/ui/novo-job-git.png';
+import recorrencia from '../../../../assets/ui/novo-job-recorrencia.png';
+
+**Schedules** (side menu) lists *run-once docker-compose tasks, scheduled or manual, from all projects*. The same jobs of a project
+appear on its **Jobs** tab. What a job is and how it works is in [Jobs and scheduled tasks](/en/guias/jobs/).
+
+## The list
+
+<Shot
+  src={schedules}
+  alt="The Schedules screen with an empty jobs table and the first step of the New job window, which asks you to choose the project."
+  caption="Schedules, with no jobs, and the New job window open on the project choice."
+/>
+
+At the top, the **JOBS** counter and the **+ Novo job** (New job) button. The table's columns:
+
+| Column | Shows |
+|---|---|
+| **NOME** (Name) | the job's name |
+| **PROJETO / GATILHO** (Project / trigger) | the project and the trigger service (or *standalone*) |
+| **ÚLTIMA EXECUÇÃO** (Last run) | when it last ran |
+| **RECORRÊNCIA** (Recurrence) | the schedule |
+| **PRÓXIMA EXECUÇÃO** (Next run) | the next firing, **in your time zone** |
+| **AQUECIMENTO** (Warming) | `quente` (warm), `frio` (cold) or `aquecendo…` (warming…) (see [Warm a job](/en/guias/jobs/#warm-a-job)) |
+| **AÇÕES** (Actions) | the **⋯** panel with *Rodar agora* (run now), *Cancelar execução*, *Aquecer*, *Ver logs*, *Editar* and *Remover* |
+
+With no jobs: *"Nenhum job cadastrado ainda."* (No job registered yet.)
+
+## Create a job
+
+Click **+ Novo job**. The window has steps:
+
+1. **ESCOLHA O PROJETO** (choose the project). *"O job sobe um stack docker-compose próprio; o projeto define a rede."* (The job starts a docker-compose stack of its own; the project defines the network.) Click **Selecionar ›**.
+2. **Trigger service**, or **Nenhum (autônomo)** (None, standalone). The trigger only lends its environment variables.
+3. **The form**, described below. The title shows *"NOVO JOB — project / service"* (or *"nenhum (autônomo)"*).
+
+### Compose source: Compose
+
+<Shot
+  src={compose}
+  alt="The New job form with the Compose source, an example YAML with the busybox image, the main service field and the environment variables field."
+  caption="The New job form, with the Compose source."
+/>
+
+| Field | What it is |
+|---|---|
+| **NOME** | for example `backup-db` |
+| **FONTE DO COMPOSE** | **Compose** (paste the YAML) or **Git** |
+| **DOCKER-COMPOSE.YML** | the YAML. The screen brings a minimal example with `busybox` |
+| **MAIN SERVICE** | the **name of the service inside the compose above** whose exit code decides whether the job succeeded |
+| **VARIÁVEIS DE AMBIENTE (opcional)** | `KEY=VALUE`, one per line, with `#` for comments. *"Sobrescrevem as do projeto/serviço gatilho por cima."* (They override the project's/trigger service's on top.) |
+
+### Compose source: Git
+
+<Shot
+  src={git}
+  alt="The New job form with the Git source: account, repository and branch selectors, and the compose path in the repository."
+  caption="The New job form, with the Git source."
+/>
+
+*"Selecione a conta conectada, o repositório e a branch. O repo precisa já ter um docker-compose.yml no caminho informado."* (Select the
+connected account, the repository and the branch. The repo must already have a docker-compose.yml at the given path.) Choose the **CONTA GIT**
+(Git account), the **REPOSITÓRIO** and the **BRANCH**, and check the **CAMINHO DO COMPOSE NO REPO** (compose path in the repo; default
+`docker-compose.yml`). With no accounts, connect one in [Settings → Git](/en/interface/configuracoes/#git). The job **clones the repository on
+every run**.
+
+### Recurrence
+
+<Shot
+  src={recorrencia}
+  alt="The end of the New job form with the recurrence Manual, Intervalo, Diária or Semanal and the Voltar and Criar job buttons."
+  caption="The end of the form: the recurrence."
+/>
+
+| Option | Fields |
+|---|---|
+| **Manual** | none: it only runs when you tell it to |
+| **Intervalo** (Interval) | every N hours |
+| **Diária** (Daily) | a time |
+| **Semanal** (Weekly) | a weekday and a time |
+
+<Aside type="caution" title="The time is in UTC">
+  The time you enter is **UTC**. The **PRÓXIMA EXECUÇÃO** column shows it in your time zone: use it to check.
+</Aside>
+
+Click **Criar job** (Create job). **‹ Voltar** goes back to the previous step.
+
+## After creating
+
+- **Rodar agora** runs it immediately; **Ver logs** shows the output; **Cancelar execução** interrupts.
+- If the job uses large images or a build, use **Aquecer** before the first run.
+- To run the job **before every deploy**, add it to the service's pre-deploy queue: see
+  [Domains, healthcheck and advanced options](/en/interface/servico-configuracao/#the-pre-deploy-queue).

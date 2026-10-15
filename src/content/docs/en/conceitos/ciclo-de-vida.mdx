@@ -1,0 +1,78 @@
+---
+title: The lifecycle of a deploy
+description: The states a Rustploy deploy goes through (Pending to Live), the path by source type, what happens on failure and where to find the cause of the error.
+---
+
+A **deploy** is a state machine. Each transition is recorded and shown on the service's **Deployments** tab.
+
+## The happy path
+
+```text
+Pending → PreDeployCheck → ResolvingDeps
+            ├─ PullingImage ──────────┐   (Registry source)
+            ├─ CloningRepo → BuildingImage ─┤   (Git or Archive source)
+            └─ ComposingUp ───────────┤   (Compose source)
+                                       ▼
+        Staging → HealthcheckPolling → SwappingIn → Draining → Promoting → Live
+```
+
+| State | What happens |
+|---|---|
+| **Pending** | the deploy entered the queue (one at a time on the whole server) |
+| **PreDeployCheck** | runs the configured check jobs; if any fails, the deploy stops |
+| **ResolvingDeps** | picks the path from the service's source (pull, clone and build, or compose) |
+| **PullingImage** | pulls the image from the registry |
+| **CloningRepo** | clones the repository |
+| **BuildingImage** | builds the image with your `Dockerfile` |
+| **ComposingUp** | brings up the Compose stack |
+| **Staging** | starts the new container alongside the current one |
+| **HealthcheckPolling** | tests the new container's health |
+| **SwappingIn** | switches the proxy route to the new one (atomic) and stops the old containers |
+| **Draining** | waits `drain_secs` (10 s by default) for in-flight connections to finish |
+| **Promoting** | removes the old containers and renames the new one to its final name |
+| **Live** | done, serving traffic |
+
+Final states: `Live`, `Stopped` (stopped on purpose), `Failed` and `Pruning` (replaced by a newer deploy).
+
+## On failure
+
+Any error triggers **RollingBack**: the new container is discarded, the old one stays online and the deploy
+ends as **Failed**. A deploy that fails **does not take down what was already running**.
+
+### Where the cause is
+
+The error's cause goes to four places:
+
+1. the **deploy log** (Deployments tab → open the deploy), with the line `==> Erro em [<State>]: …`;
+2. the deploy's **state history**, on the transition into `RollingBack`;
+3. the **notification** on screen and, in the desktop app, the system notification;
+4. the **service status**, which shows the first line of the error.
+
+Start with the deploy log.
+
+## The healthcheck decides the swap
+
+Rustploy runs its own health test (it does not depend on the Dockerfile's `HEALTHCHECK`):
+
+- **Http**: makes a request to the configured path and compares the status.
+- **Tcp**: only checks that the port accepts connections.
+- **Docker**: reads the health state Docker itself computed.
+- **None**: does not test; the container just has to be up.
+
+If the container stops during the test, the deploy aborts immediately.
+
+## The queue
+
+Only **one deploy runs at a time** on the server. The others wait in the queue, which you see on the **Deploy
+Engine** screen (Fila, Executando and Histórico tabs). You can promote a deploy ("cut the line"), reorder it,
+pause the whole queue and abort a running deploy.
+
+## If the daemon restarts mid-way
+
+On startup, the daemon resumes what was in progress: before the route swap it is a safe *rollback*; a swap in
+progress is checked in Docker; `Promoting` is completed.
+
+## Logs: what is stored
+
+- **Build log** and deploy log: stored.
+- **Container runtime log**: read from Docker **live** and **not persisted**. When a deploy swaps versions the old container is removed, and its log goes with it.

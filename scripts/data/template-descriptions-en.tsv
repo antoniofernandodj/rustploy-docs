@@ -1,0 +1,383 @@
+Ackee	Privacy-focused analytics for websites.
+Activepieces	No-code automation (alternative to Zapier and Make).
+Actual Budget	Fast, private personal finance manager.
+AdGuard Home	Network-wide DNS ad and tracker blocker.
+Adminer	Lightweight database manager (MySQL, Postgres, SQLite, etc.).
+AdventureLog	Activity tracker with Strava integration.
+Affine Pro	Collaborative note-taking and project management platform (Notion/Miro style).
+Agent DVR	Complete video surveillance and monitoring system with AI.
+Akaunting	Open-source accounting software for small businesses.
+AList	Aggregates multiple file storages behind WebDAV.
+AllTube	Web GUI for downloading videos with youtube-dl.
+Ampache	Streaming and management hub for music and video.
+AnonUpload	Anonymous, secure file sharing (no database).
+Anse	Web interface for chatting with AI through the OpenAI-compatible API.
+Answer	Question-and-answer platform (private StackOverflow style).
+Anubis	Protects websites by blocking malicious bots.
+AnythingLLM	Private chatbot to talk to your local documents.
+Anytype	Offline-first, encrypted personal knowledge base.
+App Flowy	Privacy-focused open-source alternative to Notion.
+Apprise API	Universal API for sending notifications to dozens of services.
+Appsmith	Low-code builder for internal tools and admin panels.
+Appwrite	Complete Backend-as-a-Service (BaaS) platform on Docker.
+Aptabase	Self-hosted platform for web traffic analytics.
+ArangoDB	Native multi-model database (documents, graphs, key-value).
+Argilla	Platform for data curation and Machine Learning workflows.
+Audiobookshelf	Media server dedicated to audiobooks and podcasts.
+Authelia	Single Sign-On (SSO) provider with multi-factor authentication (2FA).
+Authentik	Integrated identity and access manager (SAML, OAuth2, OIDC).
+Authorizer	Low-code solution for user authentication and authorization.
+Automachtisch	Workflow automation (open-source alternative to Zapier).
+Autobase	Open-source alternative to cloud-managed databases.
+AzuraCast	Complete all-in-one panel for managing web radio stations.
+BabyBuddy	Routine tracker for baby care and development.
+Backrest	Web interface for managing and automating backups with restic.
+Baikal	Lightweight server for Calendar (CalDAV) and Contacts (CardDAV) sync.
+Barrage	Minimalist, mobile-first web interface for the Deluge torrent client.
+Baserow	Relational database with a spreadsheet interface (Airtable alternative).
+Bazarr	Automatic subtitle manager integrated with Sonarr/Radarr.
+BentoPDF	Lightweight microservice that generates PDF files via an HTTP API.
+Beszel	Lightweight server monitor with container stats and alerts.
+BigCapital	Corporate ERP and accounting system (QuickBooks alternative).
+Blender	Complete suite for 3D creation, modeling and rendering.
+Blinko	Modern app for quick notes and flow organization.
+Bluesky PDS	Personal Data Server (PDS) for the decentralized Bluesky network.
+bolt.diy	Tool to run, edit and deploy full-stack apps using any LLM.
+Booklore	MariaDB-based application for managing book-related data.
+BookStack	Wiki platform for corporate documentation and manuals.
+Borgitory	Web interface to view and manage BorgBackup repositories.
+Botpress	Platform for building and orchestrating conversational AI agents.
+Browserless	Remote, headless Chrome/Puppeteer execution in Docker containers.
+Budget Board	Financial budgeting app with a PostgreSQL backend.
+Budibase	Low-code platform for quickly building forms and internal portals.
+Bugsink	Self-hosted software error tracker compatible with the Sentry SDK.
+Bytebase	Tool for controlling and managing the database lifecycle.
+ByteStash	Private code snippet repository and organizer.
+Calcom	Meeting scheduler (Calendly alternative).
+Calibre	Complete e-book library manager and organizer.
+Calibre-Web	Modern interface to read and browse Calibre e-books in the browser.
+Cap.so	Complete environment for web applications with MySQL and S3 support.
+Carbone	High-performance engine that generates documents from JSON data.
+Casdoor	Identity and access management (IAM) hub supporting multiple protocols.
+Change Detection	Smart monitor that detects changes in web pages.
+Chatwoot	Omnichannel customer support platform (Live Chat, WhatsApp, social networks).
+Checkcle	Enterprise security tool for runtime auditing and compliance.
+Checkmate	Real-time monitor of hardware, server uptime and incidents.
+Chevereto	Robust platform for hosting and sharing images and videos.
+Chibisafe	High-performance personal file vault in the cloud.
+Chief-Onboarding	System for managing and onboarding new employees.
+ChirpStack	Open-source network server for managing LoRaWAN IoT devices.
+Chromium	Open-source browser packaged to run in a container.
+ClassicPress	Creator-focused CMS (stable WordPress fork with the classic editor).
+ClickHouse	Extremely fast column-oriented analytical (OLAP) database.
+Cloud9	Complete cloud IDE for real-time collaborative coding.
+Cloud Commander	Web file manager with built-in terminal and editor.
+Cloudflare DDNS	Robust script that automatically updates Dynamic DNS on Cloudflare.
+Cloudflared	Daemon that securely connects local services to the internet via Cloudflare Tunnel.
+Cloudreve	Multi-cloud file management and sharing system.
+Cockpit	Headless CMS with an API-driven architecture for content delivery.
+Coder	Enterprise cloud development environment (CDE).
+CodeX Docs	Engineering hub with unified tools such as Editor.js and Hawk.so.
+Colanode Server	Local-first collaboration tool (Notion/Slack alternative).
+Collabora Office	Powerful online office suite based on LibreOffice.
+CommaFeed	Minimalist RSS feed aggregator running on PostgreSQL.
+Commento	Privacy-focused comment widget with Markdown support.
+Commento++	Lightweight comment box for static sites with spam moderation.
+Conduit	Ultra-fast Matrix chat server written in Rust.
+Conduwuit	Optimized, feature-rich version of the Conduit Matrix server.
+Confluence	Corporate space for sharing knowledge and project documentation.
+ConvertX	Utility service for bulk media file conversion.
+Convex	Reactive database that simplifies building real-time web applications.
+CookieCloud	Encrypted browser cookie synchronizer across devices.
+Coral	Advanced journalistic comment platform with AI-assisted moderation.
+CouchDB	Document-based NoSQL database with excellent synchronization.
+Crawl4AI	AI-optimized web crawler with Markdown and LLM extraction.
+Crowdsec	Collaborative security system against malicious IPs.
+Cup	Lightweight GUI for managing local Docker containers.
+CyberChef	Web Swiss Army knife for encryption, encoding and data analysis.
+Dashy	Customizable personal dashboard with status monitoring and widgets.
+DataLens	Scalable Business Intelligence (BI) and data visualization tool.
+Directory Lister	Simple PHP script for listing and browsing web directories.
+Directus	Headless CMS and instant API wrapper for SQL.
+Discord Tickets	Enterprise bot for managing and opening tickets on Discord.
+Discourse	Modern platform for discussion forums and communities.
+Docling Serve	API service for AI-based document conversion.
+Docmost	Open-source collaborative wiki for team documentation.
+Documenso	Platform for digital document signing (DocuSign alternative).
+Docuseal	Document management system focused on electronic signatures.
+Dokploy Prometheus Monitoring Extension	Official extension that exports metrics to Grafana.
+Dolibarr	Unified ERP and CRM software package for business management.
+Domain Locker	Automatic monitor and tracker of web domain expiration.
+Double Zero (00)	Dashboard for sending email campaigns through AWS SES.
+Docker Registry	Official distribution server for storing Docker images.
+Dozzle	Lightweight, real-time viewer for Docker container logs.
+Dragonfly	High-performance drop-in replacement for Redis.
+draw.io	Advanced tool for drawing diagrams and whiteboards.
+Drawnix	Application for rendering and managing visual assets.
+drizzle gateway	Native database gateway of the Drizzle ORM ecosystem.
+DumbAssets	Static asset tracker that needs no database.
+DumbBudget	Minimalist PIN-protected finance tracker (no database).
+DumbDrop	Temporary, anonymous one-time file sharing.
+DumbPad	Simple password-protected web notepad.
+Easy!Appointments	Web system for customer bookings and appointments.
+Elasticsearch	Distributed full-text search and real-time analytics engine.
+Emby	Private media server for streaming movies, shows and music.
+EMQX	Massively scalable MQTT broker for IoT and connected vehicles.
+Enshrouded	Dedicated server for the multiplayer game Enshrouded via Steam.
+ERPNext	Complete open-source integrated business management system.
+Etherpad	Real-time collaborative multi-user text editor.
+Evershop	Complete, modular e-commerce and online store solution.
+Evolution API	WhatsApp API focused on automation for small businesses.
+Excalidraw	Virtual whiteboard for hand-drawn sketches and diagrams.
+EZBookkeeping	Accounting manager for personal finances and micro-businesses.
+File Browser	Full-featured web file manager with user control.
+Filestash	Web client that connects multiple storages to identity providers.
+Firecrawl	Web scraping API that turns any URL into clean Markdown for LLMs.
+FiveM Server	Custom GTA V multiplayer server integrated with txAdmin.
+Flagsmith	Feature flag and remote configuration management tool.
+FlareSolverr	Proxy to bypass Cloudflare and DDoS-GUARD protections.
+Flatnotes	Notepad that saves files directly as plain Markdown.
+Flatnotes (TOTP)	Flatnotes with a two-factor authentication (2FA) layer.
+Flowise	Visual no-code interface for building and orchestrating LLM chains.
+FMD Server	Control panel to locate Android devices through Find My Device.
+Focalboard	Kanban-style task manager (Trello/Asana alternative).
+Fonoster	Twilio alternative for cloud telephony, SIP and WebRTC.
+Forgejo	Lightweight, independent platform for hosting Git code.
+Formbricks	Modular tool for building and analyzing user surveys.
+Frappe HR	Complete open-source module for Human Resources and Payroll.
+FreeScout	Help desk and customer support hub (HelpScout and Zendesk alternative).
+FreshRSS	Fast, lightweight, customizable RSS feed aggregator and reader.
+Garage S3	Distributed object storage compatible with the AWS S3 API.
+Garage S3 with Web UI	Garage S3 installation already equipped with a web control interface.
+Ghost	Professional, modern platform for publishing blogs and newsletters.
+Gitea Mirror	Automatic synchronizer of GitHub repositories to Gitea instances.
+Gitea (MySQL)	Gitea Git server configured with a MySQL database.
+Gitea (PostgreSQL)	Gitea Git server configured with a PostgreSQL database.
+Gitea (SQLite)	Simplified Gitea running in a single container with SQLite.
+Gitingest	Utility app integrated with S3, Sentry and Prometheus metrics collection.
+GitLab CE	Robust, complete DevOps platform for the code lifecycle and CI/CD.
+Glance	Unified feed that gathers RSS feeds, weather, bookmarks and monitoring.
+Glitchtip	Centralized, simplified application error collector (Sentry alternative).
+GLPI Project	Complete software for IT asset management and service desk.
+Gotenberg	Scalable stateless API in Docker dedicated to converting files to PDF.
+Grafana	Observability suite for building analytical dashboards.
+Grimoire	Ultra-fast bookmark organizer and saver.
+Grist	Smart open-source spreadsheet integrated with a relational database structure.
+Habitica	Gamification of routines and daily tasks in RPG format.
+HeyForm	Visual builder for conversational forms, polls and quizzes.
+Hi.events	Integrated ticket sales and local event management platform.
+Hoarder	Smart bookmark app with AI-based auto-tagging.
+Homarr	Modern home-app dashboard integrated with Docker.
+Home Assistant	The definitive open-source ecosystem for private home automation.
+Homebridge	Emulator that brings Apple HomeKit compatibility to legacy devices.
+Hoppscotch (AIO + Migrations)	Complete API testing suite (Postman alternative) with automatic migration.
+HortusFox	Plant, photo and routine management system for plant lovers.
+Huly	All-in-one project and team manager (Jira, Linear and Slack alternative).
+i18n Blog (Kuno)	Internationalized blog platform built with Go and Next.js.
+I Hate Money	Web utility for splitting shared bills and group expenses.
+imgproxy	Fast image processing server optimized with Nginx.
+Immich	High-performance backup server for phone photos and videos.
+Infisical	Unified platform for managing secrets, keys and environment variables.
+InfluxDB	Database optimized for time series and infrastructure metrics.
+Inngest	Engine for orchestrating and running event-driven serverless workflows.
+InstantDB	Real-time database with instant state sync across clients.
+InvoiceShelf	Invoice issuer and finance manager for freelancers.
+IPFS (Kubo)	Decentralized peer-to-peer node for file storage and networking.
+IT Tools	Huge collection of small online utilities essential for developers.
+Java Runtime (Multi-Version)	Preconfigured environment supporting Java 8, 11, 16, 17 and 21.
+Jellyfin	Completely free, open-source media hub and video streaming.
+Jenkins	Classic open-source automation server for CI/CD pipelines.
+Kaneo	Clean, simplified project management platform.
+KaraKeep	Rebrand of the AI-powered bookmark and note app (formerly Hoarder).
+Kener	Modern open-source status page for infrastructure monitoring.
+Kestra	Declarative orchestrator for data flows and complex business logic.
+Keycloak	Robust enterprise identity management and authentication provider.
+Kimai	Multi-user time-tracking system for working hours.
+KitchenOwl	Smart organizer for recipes and grocery lists.
+Kokoro TTS	FastAPI wrapper in Docker for speech synthesis with the Kokoro-82M model.
+Kokoro Web	User-friendly interface for generating audio with Kokoro AI.
+Komari Monitor	Lightweight web dashboard for a quick view of hardware performance.
+Kutt	Modern URL shortener with custom domain support and analytics.
+Langflow	Low-code interface for building RAG pipelines and AI agents.
+Lavalink	Standalone Java-based audio and music streaming server.
+Letterfeed	Smart converter that turns emailed newsletters into RSS feeds.
+LibreChat	Advanced, unified interface for chatting with multiple AI providers (Ollama, OpenAI, Anthropic).
+Libredesk	Help desk and customer support hub packaged as a single binary.
+LibreTranslate	Self-hosted machine translation API with no external dependencies.
+Linkding	Fast bookmark manager with a minimalist, distraction-free interface.
+LinkStack	Highly customizable "Link in Bio" platform to aggregate social networks.
+Linkwarden	Link manager focused on full archiving and preservation of web pages.
+Listmonk	High-performance email marketing campaign and newsletter manager.
+LiteLLM	Lightweight proxy that unifies calls to multiple LLMs under the OpenAI API standard.
+Livekit	Real-time infrastructure for video and audio streaming over WebRTC.
+Lobe Chat	Modern, modular AI chat framework with voice plugin support.
+Lodestone	Intuitive management panel for Minecraft and other multiplayer game servers.
+Logto	Modern CIAM platform for customer and workforce authentication.
+Lowcoder	Fast visual builder for enterprise applications and data dashboards.
+MacOS (dockerized)	macOS instance running virtualized inside Docker.
+Mage AI	Modern data engineering tool to build, run and monitor pipelines.
+Mailpit	Local fake SMTP server for testing and inspecting development emails.
+Mattermost	Enterprise chat and technical collaboration platform focused on DevOps.
+Mautic	Complete digital marketing automation and lead management system.
+Maybe	Modern private app for tracking finances and household expenses.
+MAZANOKE	Agile, minimalist platform for hosting and sharing photo albums.
+MCSManager	Distributed web panel for managing Minecraft servers and game instances.
+Mealie (sqlite version)	Structured recipe manager with automatic import from websites.
+MediaCMS	Modern CMS for video streaming, channels and media sharing.
+MediaFetch	Simplified web interface for downloading audio/video, powered by yt-dlp.
+Meilisearch	Open-source full-text search engine focused on extreme speed and user experience.
+Memos	Quick-notes hub inspired by Twitter, with a focus on privacy.
+Metabase	Easy Business Intelligence platform for quickly building reports and dashboards.
+MeTube	Web downloader for YouTube videos using the yt-dlp engine.
+Minepanel	Docker panel for creating, monitoring and controlling Minecraft instances.
+Minio	Distributed object storage server 100% compatible with the AWS S3 API.
+Misaka Danmu Server	Server dedicated to managing floating comments (danmaku) for streams.
+Mixpost	Centralized platform for scheduling and automatically posting to social networks.
+Moltbot	WhatsApp gateway and CLI agent integrated with artificial intelligence.
+Morphos	Microservice focused on lightweight distributed orchestration tasks.
+Movary	Personal tracker of watched movie history integrated with the TMDB database.
+MuleSoft ESB Runtime Community Edition	Java-based enterprise service bus (ESB) for API integrations.
+Mumble	Ultra-low-latency voice communication server for cooperative gaming.
+n8n	Advanced low-code platform for task automation and complex integration flows.
+n8n + Worker + Runner (com Redis/Postgres/Ollama)	Scalable n8n stack with distributed processing and local AI support.
+n8n com Postgres	n8n installation using dedicated PostgreSQL for stable production environments.
+Navidrome	Lightweight audio streaming server compatible with the Subsonic protocol.
+Neko	Shared virtual browser running directly inside a Docker container (via WebRTC/VNC).
+Netdata	Real-time infrastructure analytics monitor with per-second detailed metrics.
+Networking Toolbox	Web panel with dozens of quick utilities for network testing.
+Nextcloud	Complete cloud productivity suite (Files, Calendar, Chat, Documents).
+Nginx	The classic, very-high-performance web server and reverse proxy.
+NocoDB	Turns any relational database (Postgres/MySQL) into a smart Airtable-style interface.
+Notifuse	Open-source hub for creating, sending and tracking newsletter metrics.
+NTFY	Utility service that sends push notifications to phones or desktops via simple HTTP requests.
+Obsidian LiveSync	Preconfigured CouchDB server for real-time sync of Obsidian notes.
+Odoo	Modular, integrated open-source ERP system for business management.
+Omni-Tools	Toolbox of utilities grouped into a single, stable web panel.
+OneDev	Git server integrated with Kanban boards and native CI/CD pipelines.
+One Time Secret	Secure sharing of secrets and passwords through links that self-destruct after viewing.
+Ontime	Rundown, countdown and schedule manager for live broadcast events.
+Open Fiesta	AI chat inference interface supporting multiple backends (Ollama/Gemini).
+Open Journal Systems (OJS)	Complete system for managing and publishing academic journals.
+Open Notebook	Notebook integrated with SurrealDB and AI-assisted utilities.
+Open WebUI	Complete ChatGPT-style web interface for local LLM models (Ollama), including Ollama itself.
+Openclaw	Alternative CLI gateway focused on the WhatsApp automated-messaging ecosystem.
+OpenGist	Self-hosted alternative to GitHub Gist for public or private code snippet sharing.
+OpenHands	Central environment for orchestrating and deploying autonomous AI agents.
+Openinary	Open-source alternative to Cloudinary for dynamic media processing.
+OpenPanel	Privacy-focused web analytics, a clean replacement for Google Analytics or Mixpanel.
+OpenResty Manager	Advanced graphical admin panel for OpenResty/Nginx servers with SSL management.
+OpenSpeedTest	Internal HTML5 bandwidth and local network performance tester.
+Otter Wiki	Python and Flask wiki engine focused on simplicity, with Markdown writing.
+Outline	Modern, extremely clean corporate knowledge base for agile teams.
+Owncast	Standalone live video streaming server with built-in interactive chat.
+Palmr	Minimalist platform for sharing large files (WeTransfer alternative).
+Parseable	Log analytics and observability system built natively for object storage.
+Passbolt	Open-source password and credential manager focused on technical team collaboration.
+Pastefy	Private text repository (Pastebin) with syntax highlighting and OAuth2 login.
+Paymenter	Billing, automatic invoicing and customer area for hosting providers.
+PeerDB	Analytical data synchronizer between databases with fast routines and dedicated APIs.
+Penpot	Advanced vector design and web prototyping tool (open-source Figma alternative).
+Peppermint	Unified environment for documentation, design and quick API endpoint testing.
+pgAdmin	The official and most popular graphical interface for managing PostgreSQL databases.
+Photoprism	AI-powered smart photo organizer with automatic object and face recognition.
+Phpmyadmin	The classic, friendly web manager for MySQL and MariaDB databases.
+Picsur	Simplified image hosting server built on PostgreSQL.
+Pinchflat	Interface to download and automate downloading entire YouTube channels via yt-dlp.
+Plane	Modern, agile project and sprint management system (Jira alternative).
+Plark	Fast, self-hosted visual builder for corporate websites.
+Plausible	Lightweight, cookie-free web traffic analyzer focused on user privacy.
+Plunk	Integrated platform for managing transactional and marketing email sends.
+Pocket ID	Simple OIDC authenticator that protects services using native passkeys.
+PocketBase	Single-file embedded backend with SQLite, authentication, realtime and a dashboard.
+Poke	Private video-sharing platform that preserves anonymity.
+Portainer	The classic, indispensable visual panel for managing Docker and Swarm instances.
+Poste.io	Complete corporate mail server (SMTP, IMAP, antivirus) in a single stable image.
+PostgreSQL com PgDog	Postgres instance coupled with PgDog for load balancing and multi-threaded proxying.
+Postgresus	Utility for continuous automation and scheduling of PostgreSQL database backups.
+Postiz	Platform for scheduling, analyzing and publishing content across multiple channels.
+Prometheus	Time series database and monitoring hub that scrapes metrics.
+Pterodactyl	Advanced, robust panel for managing large numbers of game servers in Docker.
+Pulse	Responsive panel for centralized monitoring of Proxmox VE and Docker environments.
+Pyrodactyl	Lightweight, secure and fast alternative built on the Pterodactyl panel base.
+qBittorrent	Classic BitTorrent client with its native web management interface.
+qBittorrent Web UI	Modern alternative interface based on React/Hono to control qBittorrent instances.
+Qdrant	Vector database focused on similarity search and high-performance embedding storage.
+Quant-UX	Advanced tool for prototyping and analyzing user behavior and UX tests.
+RabbitMQ	Multi-protocol messaging broker widely used for asynchronous communication.
+Reactive Resume	Modern resume builder based on structured sections with clean export.
+Rocketchat	Complete ecosystem for corporate chat and internal communication.
+Rote	Personal note system built on native API calls.
+Roundcube	Traditional PHP-based webmail client for IMAP mailboxes.
+RSS-Bridge	PHP utility that generates structured RSS feeds for platforms that lack them.
+RSSHub	Dynamic RSS feed generator pluggable into thousands of web services and social networks.
+RustDesk	Remote access and screen control server (open alternative to TeamViewer/AnyDesk).
+RustFS	S3-compatible distributed file system written in Rust, with very high performance.
+ruTorrent	Robust classic web interface for the stable rTorrent client.
+Rybbit	Alternative web analytics aiming to be more readable and clean than classic Google Analytics.
+Ryot	Unified system to log and catalog consumed media (books, movies, games).
+Scrutiny	Hard drive health monitoring interface with S.M.A.R.T. reports.
+Scrypted	Security video processing hub with very high frame rates and NVR integration.
+Seafile	Private cloud for file storage, sync and sharing with an enterprise focus.
+SearXNG	Private metasearch engine that aggregates Google/Bing results without tracking data.
+SeaweedFS	Fast distributed file system with POSIX mount and WebDAV support.
+Shlink	Self-hosted corporate link shortener built to run under your own domains.
+SigNoz	Complete APM, trace and log platform (Datadog alternative).
+SilverBullet	Extensible notepad that works as a dynamic personal knowledge base.
+Slash	Fast internal shortener for organizing favorite link paths.
+Snapp	Agile server for capturing, uploading and sharing screenshots and images with access control.
+Soketi	Ultra-fast WebSockets server built on Node.js (compatible with the Laravel Pusher ecosystem).
+Spacedrive	Cross-platform file manager built on a virtual distributed file system (VDFS) in Rust.
+Stack Auth	Simplified user authentication provider (open alternative to Clerk/Auth0).
+Stalwart	Complete modern mail server written in Rust with JMAP, IMAP and native encryption support.
+Statping-NG	Visual uptime and page health monitor with elegant status dashboards.
+Stirling PDF	A definitive web suite with dozens of utilities for modifying and editing PDFs.
+Storyden	Modern forum and structured discussion board platform for engaged communities.
+Strapi	Market-leading JavaScript-based headless CMS for quickly building content APIs.
+StreamFlow	Platform for relaying real-time video streams (restreaming) to multiple channels (YouTube/Facebook).
+Supabase	The most robust open-source alternative to Firebase (full PostgreSQL-based stack).
+Superset (Unofficial)	Advanced enterprise platform for exploring, transforming and visualizing data.
+SurrealDB	Modern multi-model database (relational, graph, document, vector), unified.
+Syncthing	Continuous, decentralized real-time directory sync across multiple computers.
+Tailscale Exit nodes	Template configured to act as an internet traffic exit node in Tailscale mesh networks.
+Teable	Postgres-based database with a very high-performance visual spreadsheet interface.
+Tianji	Unified dashboard combining web traffic analytics with server uptime monitoring.
+Tolgee	Web platform for managing and translating software localization strings.
+Tooljet	Low-code builder for internal tools natively connectable to multiple databases.
+Tor Browser	Tor browser instance accessible directly through a VNC-based web interface (noVNC).
+TrailBase	Fast application server in Rust and SQLite with a native WebAssembly runtime.
+Trigger.dev	Platform for developers to build long-running, code-based background job workflows.
+Trilium	Hierarchically structured note editor for building large knowledge bases.
+TriliumNext	Maintained, updated fork of the Trilium Notes hierarchical organizer, with improvements.
+TRMNL BYOS Laravel	Self-hosted Laravel application for managing TRMNL e-ink screens.
+Tuwunel	High-performance Matrix server in Rust (official successor to Conduwuit for enterprise use).
+Twenty CRM	Modern customer and sales management system (open alternative to Salesforce).
+Typebot	Visual builder for conversation flows and interactive chatbots using draggable blocks.
+Typecho	Lightweight, minimalist and fast PHP CMS for publishing simple blogs.
+Typesense	Fast, fault-tolerant search engine built for real-time search in applications.
+Umami	The classic, popular privacy-focused web analytics, a clean alternative to Google Analytics.
+Unifi Network	Centralized management and control system for Ubiquiti wireless enterprise networks.
+Unleash	Robust enterprise platform for managing feature flags and rollout strategies.
+Upsnap	Simple dashboard integrated with PocketBase to send Wake-on-LAN packets and monitor network devices.
+Uptime Kuma	Visual uptime monitor for services and network ports with Telegram/Discord alerts.
+useSend	Open platform for bulk and transactional email sending (Resend and SendGrid alternative).
+Valkey	The official Redis fork maintained by the Linux Foundation and major cloud providers.
+Vault	HashiCorp security vault for strict management of secrets and dynamic access.
+Vaultwarden	Lightweight Rust implementation compatible with the whole Bitwarden app suite.
+Verdaccio	Local, private proxy server for Node.js (npm) repositories and packages.
+Vikunja	Complete task and to-do list organizer with Kanban and Gantt views.
+Wallos	Personal tracker for monitoring monthly subscriptions and recurring expenses.
+Wanderer	Maps and geolocation platform built on PocketBase and Meilisearch.
+Web-Check	All-in-one web analyzer that gathers infrastructure, DNS and security data about any domain.
+WG-Easy	Simple, friendly graphical interface to install and manage WireGuard-based VPN servers.
+Wiki.js	One of the most complete and extensible tools for building modern wikis and documentation.
+Windmill	Platform for developers to build robust internal workflows from scripts (Retool alternative).
+Windows (dockerized)	Virtualized Windows operating system environment running encapsulated inside Docker.
+Wordpress	The world's most widely used CMS for building and managing websites and blogs.
+WuzAPI	Lightweight RESTful API for multi-device integration and automation with WhatsApp accounts.
+XSSHunter	Advanced tool for security researchers focused on finding Blind XSS flaws.
+Yamtrack	Personal manager for watched anime and manga, built on a Redis database.
+YOURLS	Classic PHP system for creating private link shorteners under the user's full control.
+yt-dlp-webui	Simple web GUI that maps the options of the yt-dlp terminal utility.
+Zabbix	Robust enterprise monitor for networks, servers and services with PostgreSQL support.
+Zipline	Fast file upload server optimized for integration with tools such as ShareX.
+Zitadel	Next-generation identity and access management provider with native multi-tenancy support.

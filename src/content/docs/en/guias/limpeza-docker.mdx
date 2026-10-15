@@ -1,0 +1,59 @@
+---
+title: Docker cleanup
+description: How to free disk space on a Rustploy server - the Docker inventory, manual removal of unused containers, images, volumes and networks, and the scheduled automatic cleanup with retention periods.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Over time Docker piles up old images, stopped containers and build cache. On a small VPS that fills the disk.
+Rustploy helps in two ways.
+
+## See what exists
+
+The **Docker** screen lists the **whole host**, not just what belongs to Rustploy: **Containers**, **Images**,
+**Volumes** and **Networks**, with an indication of use. The link to a project and service is best effort: images
+by tag, networks by the recorded name; volumes have no link.
+
+Each row has a remove action. Docker **refuses** to remove what is in use, and the error appears on screen.
+
+## Clean by hand
+
+The cleanup buttons remove everything that is not in use, by type: stopped containers, images, volumes, networks
+and build cache.
+
+## Automatic cleanup
+
+In **Settings → Manutenção** (Maintenance), **LIMPEZA AUTOMÁTICA** (automatic cleanup):
+
+<Steps>
+1. Tick **Ativar limpeza automática** (Enable automatic cleanup).
+2. Choose the **FREQUÊNCIA** (frequency): **A cada N horas** (every N hours), **Todo dia** (every day) or **Toda semana** (every week), with the **HORÁRIO** (time).
+3. Under **O QUE LIMPAR** (what to clean), tick the types.
+4. Click **Salvar** (Save). **Executar agora** (Run now) runs it immediately.
+</Steps>
+
+<Aside type="caution" title="The time is in UTC">
+  As with jobs, the **HORÁRIO** is in UTC. The default is 03:00 UTC. The **Próxima execução agendada** (next
+  scheduled run) line shows the time in your time zone (in Brazil, `03:00` appears as `00:00`): use it to check.
+</Aside>
+
+| Option | Effect |
+|---|---|
+| **Containers parados** (stopped containers) | removes the stopped ones |
+| **Imagens sem uso** (unused images) | by default only *dangling* ones (no tag). **incluir todas as não usadas** (include all unused) also removes tagged ones |
+| **SÓ IMAGENS CRIADAS HÁ MAIS DE (HORAS)** (only images created more than N hours ago) | default **168 h** (7 days). `0` does not filter. Docker looks at the **creation** date, not the last use |
+| **Redes sem uso** (unused networks) | removes networks with no containers |
+| **Cache de build** | removes unused cache |
+| **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** (keep cache used in the last N hours) | default **168 h**. `0` deletes all unused cache. With a period, the cache of a recent deploy or job survives and the next build does not start from scratch |
+| **Volumes sem uso** (unused volumes) | **careful**: see below |
+
+<Aside type="danger" title="Volumes may hold data">
+  Rustploy only uses *bind mounts*, so a Docker named volume is not its own: it may belong to a database you
+  started yourself. Removing it deletes the data. Leave **Volumes** unticked unless you are sure.
+</Aside>
+
+Automatic cleanup comes **off** and with no type ticked.
+
+## Relationship with jobs
+
+Cleaning the build cache can leave a [job](/en/guias/jobs/#warm-a-job) **cold**. The cache retention period exists to avoid that.

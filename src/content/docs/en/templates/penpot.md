@@ -1,0 +1,262 @@
+---
+title: Host Penpot with Rustploy
+description: "Advanced vector design and web prototyping tool (open-source Figma alternative). Create Penpot in one click on Rustploy: 6 containers, generated variables, domain and automatic HTTPS."
+sidebar:
+  hidden: true
+---
+
+**Penpot**: Advanced vector design and web prototyping tool (open-source Figma alternative). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+
+## Summary
+
+| | |
+|---|---|
+| **Identifier** | `penpot` |
+| **Containers** | 6 (`penpot-frontend`, `penpot-backend`, `penpot-exporter`, `penpot-postgres`, `penpot-redis`, `penpot-mailcatch`) |
+| **Images** | `penpotapp/frontend:2.6.1`, `penpotapp/backend:2.6.1`, `penpotapp/exporter:2.6.1`, `postgres:15`, `redis:7.2`, `sj26/mailcatcher:latest` |
+| **UI port** | 8080, on service `penpot-frontend` |
+| **Type in Rustploy** | Compose stack |
+
+## How to create it
+
+1. In the project, click **+ Novo serviço → Template** (New service → Template).
+2. Search for **Penpot** and select it.
+3. Name the service and review the variables. Passwords and keys come already generated.
+4. Create it and run **Deploy**.
+5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).
+
+## Environment variables
+
+**Template variables** (values computed at creation):
+
+| Variable | Value |
+|---|---|
+| `main_domain` | *domain (generated; replace it with yours)* |
+
+**Delivered to the container:**
+
+| Variable | Value |
+|---|---|
+| `DOMAIN_NAME` | ${main_domain} |
+
+## Domains
+
+| Service | Port | Host |
+|---|---|---|
+| `penpot-frontend` | 8080 | ${main_domain} |
+
+## The template docker-compose.yml
+
+```yaml
+## Common flags:
+# demo-users
+# email-verification
+# log-emails
+# log-invitation-tokens
+# login-with-github
+# login-with-gitlab
+# login-with-google
+# login-with-ldap
+# login-with-oidc
+# login-with-password
+# prepl-server
+# registration
+# secure-session-cookies
+# smtp
+# smtp-debug
+# telemetry
+# webhooks
+##
+## You can read more about all available flags and other
+## environment variables here:
+## https://help.penpot.app/technical-guide/configuration/#advanced-configuration
+#
+# WARNING: if you're exposing Penpot to the internet, you should remove the flags
+# 'disable-secure-session-cookies' and 'disable-email-verification'
+
+volumes:
+  penpot_postgres_v15:
+  penpot_assets:
+  penpot_traefik:
+  # penpot_minio:
+
+services:
+
+  penpot-frontend:
+    image: "penpotapp/frontend:2.6.1"
+    restart: always
+    ports:
+      - 8080
+      - 9001
+
+    volumes:
+      - penpot_assets:/opt/data/assets
+
+    depends_on:
+      - penpot-backend
+      - penpot-exporter
+
+
+
+    environment:
+      PENPOT_FLAGS: disable-email-verification enable-smtp enable-prepl-server disable-secure-session-cookies
+
+  penpot-backend:
+    image: "penpotapp/backend:2.6.1"
+    restart: always
+
+    volumes:
+      - penpot_assets:/opt/data/assets
+
+    depends_on:
+      - penpot-postgres
+      - penpot-redis
+
+
+
+    ## Configuration envronment variables for the backend
+    ## container.
+
+    environment:
+      PENPOT_PUBLIC_URI: http://${DOMAIN_NAME}
+      PENPOT_FLAGS: disable-email-verification enable-smtp enable-prepl-server disable-secure-session-cookies
+
+      ## Penpot SECRET KEY. It serves as a master key from which other keys for subsystems
+      ## (eg http sessions, or invitations) are derived.
+      ##
+      ## If you leave it commented, all created sessions and invitations will
+      ## become invalid on container restart.
+      ##
+      ## If you going to uncomment this, we recommend to use a trully randomly generated
+      ## 512 bits base64 encoded string here.  You can generate one with:
+      ##
+      ## python3 -c "import secrets; print(secrets.token_urlsafe(64))"
+
+      # PENPOT_SECRET_KEY: my-insecure-key
+
+      ## The PREPL host. Mainly used for external programatic access to penpot backend
+      ## (example: admin). By default it will listen on `localhost` but if you are going to use
+      ## the `admin`, you will need to uncomment this and set the host to `0.0.0.0`.
+
+      # PENPOT_PREPL_HOST: 0.0.0.0
+
+      ## Database connection parameters. Don't touch them unless you are using custom
+      ## postgresql connection parameters.
+
+      PENPOT_DATABASE_URI: postgresql://penpot-postgres/penpot
+      PENPOT_DATABASE_USERNAME: penpot
+      PENPOT_DATABASE_PASSWORD: penpot
+
+      ## Redis is used for the websockets notifications. Don't touch unless the redis
+      ## container has different parameters or different name.
+
+      PENPOT_REDIS_URI: redis://penpot-redis/0
+
+      ## Default configuration for assets storage: using filesystem based with all files
+      ## stored in a docker volume.
+
+      PENPOT_ASSETS_STORAGE_BACKEND: assets-fs
+      PENPOT_STORAGE_ASSETS_FS_DIRECTORY: /opt/data/assets
+
+      ## Also can be configured to to use a S3 compatible storage
+      ## service like MiniIO. Look below for minio service setup.
+
+      # AWS_ACCESS_KEY_ID: <KEY_ID>
+      # AWS_SECRET_ACCESS_KEY: <ACCESS_KEY>
+      # PENPOT_ASSETS_STORAGE_BACKEND: assets-s3
+      # PENPOT_STORAGE_ASSETS_S3_ENDPOINT: http://penpot-minio:9000
+      # PENPOT_STORAGE_ASSETS_S3_BUCKET: <BUKET_NAME>
+
+      ## Telemetry. When enabled, a periodical process will send anonymous data about this
+      ## instance. Telemetry data will enable us to learn how the application is used,
+      ## based on real scenarios. If you want to help us, please leave it enabled. You can
+      ## audit what data we send with the code available on github.
+
+      PENPOT_TELEMETRY_ENABLED: true
+
+      ## Example SMTP/Email configuration. By default, emails are sent to the mailcatch
+      ## service, but for production usage it is recommended to setup a real SMTP
+      ## provider. Emails are used to confirm user registrations & invitations. Look below
+      ## how the mailcatch service is configured.
+
+      PENPOT_SMTP_DEFAULT_FROM: no-reply@example.com
+      PENPOT_SMTP_DEFAULT_REPLY_TO: no-reply@example.com
+      PENPOT_SMTP_HOST: penpot-mailcatch
+      PENPOT_SMTP_PORT: 1025
+      PENPOT_SMTP_USERNAME:
+      PENPOT_SMTP_PASSWORD:
+      PENPOT_SMTP_TLS: false
+      PENPOT_SMTP_SSL: false
+
+  penpot-exporter:
+    image: "penpotapp/exporter:2.6.1"
+    restart: always
+
+
+    environment:
+      # Don't touch it; this uses an internal docker network to
+      # communicate with the frontend.
+      PENPOT_PUBLIC_URI: http://penpot-frontend
+
+      ## Redis is used for the websockets notifications.
+      PENPOT_REDIS_URI: redis://penpot-redis/0
+
+  penpot-postgres:
+    image: "postgres:15"
+    restart: always
+    stop_signal: SIGINT
+
+    volumes:
+      - penpot_postgres_v15:/var/lib/postgresql/data
+
+
+
+    environment:
+      - POSTGRES_INITDB_ARGS=--data-checksums
+      - POSTGRES_DB=penpot
+      - POSTGRES_USER=penpot
+      - POSTGRES_PASSWORD=penpot
+
+  penpot-redis:
+    image: redis:7.2
+    restart: always
+
+
+  ## A mailcatch service, used as temporal SMTP server. You can access via HTTP to the
+  ## port 1080 for read all emails the penpot platform has sent. Should be only used as a
+  ## temporal solution while no real SMTP provider is configured.
+
+  penpot-mailcatch:
+    image: sj26/mailcatcher:latest
+    restart: always
+    expose:
+      - '1025'
+    ports:
+      - 1080
+
+
+  ## Example configuration of MiniIO (S3 compatible object storage service); If you don't
+  ## have preference, then just use filesystem, this is here just for the completeness.
+
+  # minio:
+  #   image: "minio/minio:latest"
+  #   command: minio server /mnt/data --console-address ":9001"
+  #   restart: always
+  #
+  #   volumes:
+  #     - "penpot_minio:/mnt/data"
+  #
+  #   environment:
+  #     - MINIO_ROOT_USER=minioadmin
+  #     - MINIO_ROOT_PASSWORD=minioadmin
+  #
+  #   ports:
+  #     - 9000:9000
+  #     - 9001:9001
+```
+
+## See also
+
+- [One-click templates](/en/guias/templates/)
+- [Docker Compose stacks](/en/guias/compose/)
+- [Diagnosing a 502](/en/guias/diagnosticar-502/)

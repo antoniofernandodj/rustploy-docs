@@ -1,0 +1,115 @@
+---
+title: Connect Claude Code to Rustploy
+description: A step-by-step guide to registering Rustploy's MCP in Claude Code with claude mcp add, validating with claude mcp list, using several servers and fixing the common problems.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## The short path
+
+You have an open session in the desktop app or web UI:
+
+<Steps>
+1. Go to **Settings → Web Server → "Conectar um agente (Claude Code)" (Connect an agent) → Copiar (Copy)**. The command already comes with the URL and token filled in.
+
+2. Run it in the terminal of the machine where Claude Code is:
+
+   ```bash
+   claude mcp add --transport http --scope user rustploy https://HOST:PORT/mcp \
+     --header "Authorization: Bearer <API token>"
+   ```
+
+3. Confirm:
+
+   ```bash
+   claude mcp list    # rustploy should show as ✔ Connected
+   ```
+
+4. Open a **new session** of Claude Code. The tools do not appear in the session where the command ran. Use `/mcp` to check.
+</Steps>
+
+## The path with validation (only with the connection token)
+
+If you only have the [connection token](/en/instalacao/primeiro-acesso/), paste this prompt into Claude Code,
+replacing `<CONNECTION_TOKEN>`, `<HOST>` and `<PORT>`. The agent checks the address, validates it on the
+server, registers the MCP and runs only a read test.
+
+```text
+I want to connect this Claude Code to the MCP of my Rustploy server (a PaaS).
+
+Connection token: <CONNECTION_TOKEN>
+HOST: <HOST>
+PORT: <PORT>
+
+It is the base64 of `host:port::api_token`. Do this in order:
+
+1. Decode the token (`echo '<token>' | base64 -d`). Split the host:port and the
+   API token at the first `::`. Check that host:port matches HOST:PORT; if it
+   differs, tell me and stop. Do not repeat the API token in the conversation.
+
+2. Validate with the server login, trying https and then http:
+   curl -s https://<HOST>:<PORT>/api/login -d '{"key":"<CONNECTION_TOKEN>"}'
+   200 returns `server` and `ai_agent.mcp`; 400 is a malformed token; 401 is a
+   token from another server. On 400 or 401, tell me and stop.
+
+3. Register the MCP with the URL from `ai_agent.mcp` and the `access_token`:
+   claude mcp add --transport http --scope user rustploy <MCP_URL> --header "Authorization: Bearer <access_token>"
+
+4. Run `claude mcp list` and confirm "rustploy" is Connected.
+
+5. Do a read-only test through curl (JSON-RPC): initialize, tools/list and
+   tools/call of `status`. Summarize the daemon version, how many services are
+   running and the deploy queue.
+
+Rules: in this setup do not change the server (no deploy, delete, prune, stop
+or ServiceUpdate). In future sessions, ask for my confirmation before any
+destructive command. Warn me that the tools only show up in a new session.
+```
+
+## More than one server
+
+The name `rustploy` is just a label. Give each server its own:
+
+```bash
+claude mcp add --transport http --scope user rustploy-production https://prod.example.com:9797/mcp --header "Authorization: Bearer <token A>"
+claude mcp add --transport http --scope user rustploy-staging    https://stg.example.com:9797/mcp  --header "Authorization: Bearer <token B>"
+```
+
+The tools become `mcp__rustploy-production__deploy`, `mcp__rustploy-staging__deploy` and so on. Each daemon
+identifies itself in the handshake as `Rustploy daemon em <host:port>` and asks for confirmation before changing
+anything when more than one is registered.
+
+To tie the server to a repository, use `--scope project`. The registration goes into a versioned `.mcp.json`,
+so the token comes in through an environment variable:
+
+```json
+{
+  "mcpServers": {
+    "rustploy": {
+      "type": "http",
+      "url": "https://prod.example.com:9797/mcp",
+      "headers": { "Authorization": "Bearer ${RUSTPLOY_TOKEN}" }
+    }
+  }
+}
+```
+
+## Common problems
+
+| Symptom | Likely cause |
+|---|---|
+| `curl` over https gives a TLS error and http works | the daemon has no `[api].domain`, so it does not terminate TLS. Use `http://` |
+| `curl` over http does not respond and https works | the daemon has `[api].domain` and only speaks TLS on that port |
+| `/api/login` or `/mcp` returns `404` | the daemon predates MCP. Update `rustployd` |
+| `401` on `/mcp` | the API token was changed in `config.toml`. Get the connection token again |
+| `claude mcp list` shows `✗ Failed to connect` | port closed in the firewall, or the wrong host/scheme in `claude mcp add` |
+| the tools do not appear | the session was opened before `claude mcp add`. Open a new one |
+| the decoded host is an internal IP | without `[api].domain` the daemon used its outbound IP. Set `api.domain` and restart |
+
+## Replace or remove
+
+```bash
+claude mcp remove rustploy --scope user
+```
+
+After changing the token on the VPS, remove and run `add` again with the new token.

@@ -1,0 +1,126 @@
+---
+title: Deploy Engine in the desktop app
+description: The desktop app's Deploy Engine screen in Rustploy - the 24-hour indicators, the running deploy with its steps and the abort button, the queue with pause, promote and reorder, and the 24-hour history.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import executando from '../../../../assets/ui/deploy-engine-executando.png';
+import fila from '../../../../assets/ui/deploy-engine-fila.png';
+import historico from '../../../../assets/ui/deploy-engine-historico.png';
+
+**Deploy Engine** (side menu) is the control panel for the server's deploys: what is running, what is waiting and what happened in
+the last 24 hours. Remember that Rustploy runs **one deploy at a time**; the rest wait in the queue. How it works is in
+[The deploy queue](/en/guias/fila-de-deploys/).
+
+## The indicators
+
+At the top, five cards:
+
+| Card | Shows |
+|---|---|
+| **ATIVOS** (Active) | deploys running now |
+| **SUCESSO 24H** (Success 24h) | deploys that reached `Live` in the last 24 hours |
+| **FALHAS 24H** (Failures 24h) | deploys that failed in the last 24 hours |
+| **TOTAL 24H** | all deploys of the last 24 hours |
+| **UPTIME** | how long the daemon has been up |
+
+Below, three tabs, each with its count in parentheses: **Fila** (Queue), **Executando** (Running) and **Histórico 24h** (History).
+
+## Executando (Running)
+
+<Shot
+  src={executando}
+  alt="The Running tab showing a deploy in progress with service, project, state, times, the Detalhes and abort buttons, and the pipeline steps row."
+  caption="The Running tab, with a deploy in progress."
+/>
+
+**EXECUTANDO AGORA (N)** (running now) lists the active deploy. The columns:
+
+| Column | Means |
+|---|---|
+| **SERVIÇO** (Service) | the service (click to open it) |
+| **PROJETO** (Project) | its project |
+| **ESTADO** (State) | the current state of the [state machine](/en/conceitos/ciclo-de-vida/), such as `BUILDING` |
+| **TOTAL** | how long the deploy has taken so far |
+| **FASE** (Phase) | how long it has been in the current step |
+
+To the right of the row:
+
+| Button | Effect |
+|---|---|
+| **Detalhes** (Details) | opens the deploy panel: the steps and the transition history, with each one's duration and message |
+| **■** (red) | **aborts** the running deploy |
+
+Under the row, the **steps strip** shows the deploy's path:
+
+```text
+Fila · Checks · Deps · Obter · Staging · Health · Swap · Live
+```
+
+| Step | States it groups |
+|---|---|
+| **Fila** (Queue) | `Pending` |
+| **Checks** | `PreDeployCheck` ([pre-deploy checks](/en/guias/pre-deploy/)) |
+| **Deps** | `ResolvingDeps` |
+| **Obter** (Fetch) | `PullingImage`, `CloningRepo`, `BuildingImage`, `ComposingUp` |
+| **Staging** | `Staging` |
+| **Health** | `HealthcheckPolling` |
+| **Swap** | `SwappingIn`, `Draining`, `Promoting` |
+| **Live** | `Live` |
+
+Each step shows as completed (**✓**), current (**●**), pending (**○**) or failed (**✕**). With nothing running, the tab says
+*"Nenhum deploy em andamento."* (No deploy in progress.)
+
+<Aside type="caution" title="Aborting does not undo anything">
+  **■** interrupts the deploy's task **immediately**, without running the rollback. The deploy ends as **Failed** (*"aborted by
+  user"*) and the **service is left with status `Error`** (*"deploy aborted by user"*) until you run a new **Deploy**. If the deploy had
+  already created a *staging* container, it may be left over in Docker: check on the [Docker](/en/interface/docker-e-registry/) screen.
+</Aside>
+
+## Fila (Queue)
+
+<Shot
+  src={fila}
+  alt="The Queue tab with two deploys waiting, numbered, each with the move-to-top and cancel buttons, and the Pausar fila button."
+  caption="The Queue tab, with two deploys waiting."
+/>
+
+**NA FILA (N)** (in the queue) lists the deploys in the order they will run, such as `1. app` and `2. frontend-dev`, with each one's
+project. With nothing: *"Nenhum deploy na fila."* (No deploy in the queue.)
+
+| Control | Effect |
+|---|---|
+| **⋮** (handle on the left) | **drag** to reorder the queue |
+| **↑ topo** (to top) | moves the deploy to the **front** of the queue ("cut the line") |
+| **✕** (red) | **cancels** the queued deploy. The service returns to status `Stopped`; if the old container is still running, the daemon fixes the status within 30 s |
+| **Pausar fila** (Pause queue) | the queue stops starting new deploys. What is already running finishes |
+| **Retomar fila** (Resume queue) | appears in place of *Pausar* when the queue is paused |
+
+With the queue paused, the tab shows *"Fila pausada — deploys esperam até você retomar."* (Queue paused: deploys wait until you resume.)
+[Jobs](/en/interface/schedules/) join the same queue.
+
+## Histórico 24h (History)
+
+<Shot
+  src={historico}
+  alt="The 24h History tab with the table of finished deploys, showing service, project, LIVE or FAILED state, duration and start time."
+  caption="The 24h History tab."
+/>
+
+**HISTÓRICO 24H (N)** lists recently finished deploys:
+
+| Column | Means |
+|---|---|
+| (icon) | **✓** it worked, **×** it failed |
+| **SERVIÇO** | the service. Click to open it |
+| **PROJETO** | its project |
+| **ESTADO** | `LIVE` (green) or `FAILED` (red) |
+| **DURAÇÃO** (Duration) | how long the deploy took |
+| **INÍCIO** (Start) | the time it began |
+
+When a deploy's service **has already been removed**, the row shows the **service id** (`svc_…`) and has no project. With no deploys:
+*"Nenhum deploy concluído nas últimas 24h."* (No deploy finished in the last 24h.)
+
+To find out **why a deploy failed**, open the service and use **≡** on the **Deployments** tab to see the
+[build log](/en/interface/logs/#build-logs).

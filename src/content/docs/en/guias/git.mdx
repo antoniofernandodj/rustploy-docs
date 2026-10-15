@@ -1,0 +1,86 @@
+---
+title: Deploy from a Git repository
+description: How to create a Rustploy service from a Git repository with a Dockerfile - public repositories, private ones with a token or secret, a GitHub/Gitea account connected by OAuth or PAT, branch, Dockerfile and build context.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+With the **Git** source, Rustploy clones the repository, builds the image with your `Dockerfile` and starts the container.
+
+<Aside type="note" title="You need git on the server">
+  Cloning uses the server's `git` command. Install it (`sudo apt-get install git`) if it is not there yet.
+  Without it the deploy fails with "falha ao iniciar git" (failed to start git).
+</Aside>
+
+## Public repository
+
+<Steps>
+1. In the project, **+ Novo serviço → Application** (New service).
+2. Under **Origem** (Source), choose **Git**, paste the URL (`https://github.com/user/repo.git`) and the **branch**.
+3. Give the **port** the app listens on inside the container and **Criar Application** (Create Application).
+4. Run the **Deploy**.
+</Steps>
+
+The repository must have a `Dockerfile`. There are no *buildpacks*.
+
+## Private repository
+
+There are two paths. The second is the recommended one.
+
+### Option A: a token stored as a secret
+
+1. Generate a *Personal Access Token* at the provider, with read access to the repository.
+2. In the project, on the **Secrets** tab, create a secret (for example `GITHUB_TOKEN`) with the token as its value.
+3. On the service's **General** tab, fill **CREDENTIALS (secret)** with the secret's **name**, `GITHUB_TOKEN`, not with the value.
+4. Use the **HTTPS** URL.
+
+Rustploy builds the clone URL with the token (`https://x-token-auth:<token>@…`) in memory only, and the log
+shows `***` in its place. If the provider requires a real username, fill in **USERNAME**.
+
+<Aside type="caution">
+  SSH URLs (`git@github.com:…`) do not use the credentials field. Use HTTPS.
+</Aside>
+
+### Option B: connect the account (OAuth or token)
+
+In **Settings → Git**, connect a **GitHub** or **Gitea** account once and reuse it across all services.
+
+<Steps>
+1. Choose the provider (**GitHub** or **Gitea**). For GitHub Enterprise or your own Gitea, fill in **BASE URL**.
+2. Choose the method:
+   - **OAuth2**: create an OAuth application at the provider, paste the **REDIRECT URI** the screen shows, and enter the **CLIENT ID** and **CLIENT SECRET**.
+   - **Token (PAT)**: paste a *Personal Access Token* with the `repo` scope.
+3. Click **Conectar conta** (Connect account). With OAuth, authorize in the browser.
+</Steps>
+
+Then, on the service's **General** tab, choose the **Gitea/GitHub** provider: the screen lists your accounts,
+repositories and branches to pick from.
+
+<Aside type="caution" title="OAuth and the API port">
+  The OAuth callback arrives at the API port (`9797`). It must be reachable by your browser at the address in
+  the **REDIRECT URI**.
+</Aside>
+
+## Branch, Dockerfile and context
+
+| Field | What it does | Default |
+|---|---|---|
+| **BRANCH** | the branch that is cloned | `main` |
+| **DOCKERFILE** | the Dockerfile path, relative to the context | `Dockerfile` |
+| **CONTEXT PATH** | the folder sent to Docker as the build context | `.` |
+
+In a monorepo, point **CONTEXT PATH** at the app folder (`apps/web`) and **DOCKERFILE** at the file inside it.
+Rustploy checks that the Dockerfile exists before calling Docker.
+
+### Fields the screen shows but that do not have an effect yet
+
+<Aside type="caution">
+  **BUILD PATH (root)**, **WATCH PATHS** and **BUILD STAGE** are stored on the service, but the deploy does
+  **not use them yet**: the clone is always from the root, there is no path filtering, and the build does not
+  pick a multi-stage *target*. For multi-stage, end your `Dockerfile` at the stage you want. The same goes for
+  Git submodules: they are not downloaded.
+</Aside>
+
+## Automatic deploy on every push
+
+See [Deploy webhooks](/en/guias/webhooks/). If the service has a branch configured, pushes to other branches are ignored.

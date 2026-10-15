@@ -1,0 +1,99 @@
+---
+title: Jobs and scheduled tasks (Schedules)
+description: How to create jobs in Rustploy - run-once tasks in Docker Compose, manual or scheduled (interval, daily, weekly), with variables, a Git source, logs, cancellation and cache warming.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+A **job** is a task that runs until it finishes and then goes away: a backup, a migration, a report, a cleanup.
+It is not a service that stays online. Each run starts its own Docker Compose stack, on the **project's
+network**, and removes it at the end.
+
+Jobs appear on the **Schedules** screen (all projects) and on each project's **Jobs** tab.
+
+## Create a job
+
+<Steps>
+1. In **Schedules** (or on the project's **Jobs** tab), click **+ Novo job** (New job).
+2. Choose the **project**.
+3. Choose the **trigger service**, or **Nenhum (autônomo)** (None, standalone). The trigger only lends its environment variables to the job; the job **does not run inside** its container.
+4. Fill in the form and confirm.
+</Steps>
+
+### The form
+
+| Field | What it is |
+|---|---|
+| **NOME** (Name) | for example `daily-backup` |
+| **FONTE DO COMPOSE** (Compose source) | **Compose** (you paste the YAML) or **Git** (the job clones a repository and runs its `docker-compose.yml` on every run) |
+| **MAIN SERVICE** | the compose service whose **exit code** decides whether the job succeeded (`docker compose up --exit-code-from`) |
+| **VARIÁVEIS DE AMBIENTE** (Environment variables) | the job's own, in `.env` format. They have the **highest precedence**, above the project's and the trigger service's |
+| **Quando** (When) | **Manual**, **Intervalo** (Interval), **Diário** (Daily) or **Semanal** (Weekly) |
+
+With the **Git** source, choose the account (connected in **Settings → Git**), the repository, the branch and
+the **compose path** inside it.
+
+### Example
+
+```yaml
+services:
+  job:
+    image: postgres:16
+    command: pg_dump -h rp_database -U app -f /backup/dump.sql app
+    volumes:
+      - /var/backups:/backup
+```
+
+With `MAIN SERVICE` = `job`. If `pg_dump` exits with a code other than 0, the run counts as a failure.
+
+## Scheduling
+
+| Type | Fields |
+|---|---|
+| **Manual** | no schedule: it only fires when you ask |
+| **Intervalo** | **A CADA (HORAS)** (every N hours) |
+| **Diário** | **HORÁRIO** (time) |
+| **Semanal** | **DIA DA SEMANA** (weekday) and **HORÁRIO** |
+
+<Aside type="caution" title="The time is in UTC">
+  The daemon interprets the **HORÁRIO** in **UTC**, with no conversion to your time zone, and the field does
+  not say so. In Brazil (UTC−3), "03:00" fires at 00:00 local time. Add your offset when you choose. Where the
+  screen shows the **next run**, it is in local time: use it to check.
+</Aside>
+
+## A job's actions
+
+The **⋯** button on the row opens the actions panel:
+
+| Action | Effect |
+|---|---|
+| **▶ Rodar agora** (Run now) | runs right away, outside the schedule |
+| **■ Cancelar execução** (Cancel run) | interrupts the run in progress |
+| **◐ Aquecer** (Warm) | prepares the job without running it (see below) |
+| **≡ Ver logs** (View logs) | output (stdout and stderr) of the runs |
+| **✎ Editar** (Edit) | changes the job |
+| **✕ Remover** (Remove) | deletes the job |
+
+Jobs and deploys share the **same queue**: one at a time on the server. A manual job may wait its turn behind a deploy.
+
+## Warm a job
+
+A job's first run downloads images and builds everything from scratch. That can happen at the worst moment
+(in the middle of a deploy waiting on a *migrator*, or at night). **Warming** downloads the images and builds the
+cache **without running** the task.
+
+The job shows as **quente** (warm), **frio** (cold) or **aquecendo…** (warming…). It is **cold** when:
+
+- it was never warmed;
+- the definition changed (compose, repository, branch or path);
+- an image disappeared from the host;
+- the build cache was deleted by a Docker cleanup.
+
+## If the daemon restarts
+
+Runs in progress (or waiting in the queue) become **interrupted**: they are marked as failed, with code `-1` and
+a line in the log explaining. The scheduler fires them again at the next time.
+
+## Using a job as a pre-deploy check
+
+See [Pre-deploy](/en/guias/pre-deploy/).

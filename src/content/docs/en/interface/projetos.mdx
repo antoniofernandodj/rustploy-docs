@@ -1,0 +1,110 @@
+---
+title: Projects in the desktop app
+description: How to list, create, open and edit projects in the Rustploy desktop app, and use a project's Services, Variables, Secrets and Jobs tabs.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import projects from '../../../../assets/ui/projects.png';
+import novoProjeto from '../../../../assets/ui/novo-projeto.png';
+import variaveis from '../../../../assets/ui/variaveis.png';
+import variaveisEditando from '../../../../assets/ui/variaveis-editando.png';
+
+A [project](/en/conceitos/projeto/) groups services on a network of their own. The **Projects** screen (side menu, **MANAGEMENT**
+group) lists them all.
+
+<Shot
+  src={projects}
+  alt="The Projects screen with a project card showing the service count and the Abrir button."
+  caption="The Projects screen: one card per project."
+/>
+
+## The list
+
+At the top, two indicators: **SERVICES** (the total number of services across all projects) and **PROJECTS**. Each card shows:
+
+- the project's **name**;
+- the count, such as `7 serviço(s) · 0 rodando` (7 services, 0 running);
+- **Abrir ›** (Open) to enter the project;
+- when the project **has services**, the notice *"Não removível: tem serviços"* (Not removable: it has services). To delete a project, first remove all its services.
+
+## Create a project
+
+Click **+ Novo projeto** (New project). It opens a separate window:
+
+<Shot
+  src={novoProjeto}
+  alt="The New project window with the Name and Description fields and the Cancelar and Criar projeto buttons."
+  caption="The New project window."
+/>
+
+| Field | |
+|---|---|
+| **NOME** (Name) | required |
+| **DESCRIÇÃO (OPCIONAL)** (Description, optional) | free text |
+
+Confirm with **Criar projeto** (Create project). Rustploy creates the project's Docker network the first time it is needed.
+
+## Inside a project
+
+**Abrir ›** takes you to the project screen. At the top, **‹ Projetos** returns to the list, and on the right are **+ Novo serviço**
+(opens the [wizard](/en/interface/novo-servico/)) and **Editar projeto** (Edit project: name and description).
+
+Four tabs:
+
+| Tab | What it has |
+|---|---|
+| **Serviços** | a card per service, with the name, port, status, CPU and memory, and buttons to stop, remove and export |
+| **Variáveis (N)** | the project's environment variables |
+| **Secrets (N)** | the project's encrypted values |
+| **Jobs (N)** | the project's [jobs](/en/guias/jobs/) |
+
+The number in parentheses is each tab's item count.
+
+### The service card
+
+**Abrir ›** opens the [service screen](/en/interface/servico/), where the deploy, domain, healthcheck and logs live. The card's buttons:
+
+| Button | Effect |
+|---|---|
+| **■** | **stops** the service (asks for confirmation; traffic is interrupted until a new deploy) |
+| **×** (red) | removes the service |
+| **⇪** | exports the service to recreate it on another server ([copy a service](/en/guias/infra-as-code/)) |
+
+## Project variables
+
+<Shot
+  src={variaveis}
+  alt="A project's Variables tab with one variable listed and the KEY and value fields to add another."
+  caption="The Variables tab, with one variable already registered."
+/>
+
+The text at the top reminds you of the rule: *"Herdadas por todos os serviços deste projeto no deploy — as do serviço têm
+precedência."* (Inherited by all of this project's services at deploy time; the service's own take precedence.) See the
+details in [How environment variables are resolved](/en/conceitos/variaveis-de-ambiente/).
+
+To **add** one:
+
+1. Type the name in **KEY** and the value in **value**.
+2. Click **Adicionar** (Add).
+
+<Shot
+  src={variaveisEditando}
+  alt="The Variables tab with the name env_var and the value valueOfVar typed into the fields, before clicking Adicionar."
+  caption="Filling in a variable before adding it."
+/>
+
+| Control | What it does |
+|---|---|
+| **usar secret** (use secret) | instead of typing the value, points the variable at a project **secret** |
+| red **×** on the row | removes the variable |
+| **.env** | opens the editor in text, in `.env` format (one `KEY=value` per line, with comments) |
+| **Exportar** (Export) | opens the same editor already filled with the current variables, to copy |
+
+<Aside type="note">
+  Variables and secrets only reach the container **on the next deploy**. After changing something, run **Deploy** on the
+  affected services. **Reload** does not apply them.
+</Aside>
+
+**Secrets** have their own tab: enter the name and the value; the value is encrypted and **is never shown again**. See
+[Environment variables and secrets](/en/guias/variaveis-e-secrets/).

@@ -1,0 +1,71 @@
+---
+title: Install the clients (desktop app and web UI)
+description: The three ways to operate Rustploy - the web UI in the browser, the desktop app for Linux (.deb) and Windows (portable zip), and AI agents over MCP.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The clients are interchangeable: they talk to the same API and sign in with the same
+[connection token](/en/instalacao/primeiro-acesso/).
+
+## Web UI: nothing to install
+
+The daemon already serves the interface on the API port. Open it in the browser:
+
+```text
+http://YOUR_SERVER:9797
+```
+
+(or `https://` if you configured `[api].domain`). Paste the connection token. The web UI is a PWA: the
+browser offers to install it as an app.
+
+## Desktop app
+
+A native, light application, with a system tray icon and a notification when a deploy finishes. It
+**does not need to be on the same machine as the daemon**.
+
+### From crates.io (Linux, Windows, macOS)
+
+With the Rust toolchain installed, the shortest way:
+
+```bash
+cargo install rustploy-gui
+rustploy-gui
+```
+
+### Linux (.deb)
+
+Build the package from the repository and install it:
+
+```bash
+make deb-gui          # produces dist/*.deb
+sudo dpkg -i dist/rustploy-gui_*.deb
+```
+
+Then open **Rustploy** in the application menu or run `rustploy-gui`.
+
+### Windows (portable zip)
+
+The repository builds a portable `.zip` with `make rustploy-gui-windows-dist` (the result is
+`dist/rustploy-gui-windows.zip`). Unzip it and run `rustploy-gui.exe`.
+
+<Aside type="note">
+  The Windows executable does not yet have a signature that SmartScreen recognizes right away. If the
+  warning appears, use "More info → Run anyway".
+</Aside>
+
+## AI agents
+
+To operate through an agent such as Claude Code, see
+[Operate Rustploy with AI agents](/en/agentes/visao-geral/).
+
+## Which one to use?
+
+| | Web UI | Desktop app |
+|---|---|---|
+| Installation | none | a package |
+| System notifications | no | yes, even with the window closed |
+| Several saved servers | no | yes |
+| Works on a phone | yes (PWA) | no |
+
+Both cover the day to day. Some features only exist through the API or MCP.

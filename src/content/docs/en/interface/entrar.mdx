@@ -1,0 +1,50 @@
+---
+title: Sign in to the server
+description: How to sign in to the Rustploy desktop app with the connection token, use the saved-servers list, forget a server and what the connection states mean.
+---
+
+import Shot from '../../../../components/Shot.astro';
+import login from '../../../../assets/ui/login.png';
+
+<Shot
+  src={login}
+  alt="The Rustploy login screen with the saved-servers list, the connection token field and the Connect button."
+  caption="The login screen."
+/>
+
+The login screen has **a single field**: the **connection token**. It already carries the server's address and the API
+token, so you type neither host nor port. To find out where to get it, see [First access](/en/instalacao/primeiro-acesso/).
+
+## Sign in
+
+1. Paste the token into the field *"cole o token de conexão"* (paste the connection token).
+2. Click **Connect**.
+
+The app does not know whether the server speaks **HTTPS** or **HTTP**: it tries the secure one first and, if the
+connection fails, the other. If the server has no domain configured, the login goes over HTTP. See the warning in
+[Server security](/en/operacao/seguranca-do-servidor/).
+
+The text at the bottom of the card (`desconectado`, disconnected) shows the connection state and error messages, such as an
+invalid token or an unreachable server.
+
+## Saved servers
+
+After the first successful login, the app **remembers the server**. Next time, pick it from the **servidores salvos** (saved
+servers) list (it shows `host:port`) and click **Connect**: you do not have to paste the token again.
+
+To work with **several servers**, sign in to each once. They all appear in the list, and the
+[top bar](/en/interface/visao-geral/#the-top-bar) shows which one you are on.
+
+**Esquecer este servidor** (Forget this server) removes from the list the server whose token is in the field and clears the
+field.
+
+## If the login fails
+
+| Message or symptom | What to do |
+|---|---|
+| a token with the wrong format | the token is the whole base64 text, with no spaces or quotes. Paste it again |
+| a token from another installation | the token was changed on the server. Get the new one with `rustployd access-key` |
+| nothing responds | port `9797` is closed in the firewall, or the address is wrong |
+
+More causes in [Connect Claude Code](/en/agentes/conectar-claude-code/#common-problems): they are the same, because the token and
+the port are the same.

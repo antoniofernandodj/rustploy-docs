@@ -1,0 +1,165 @@
+---
+title: The service screen
+description: A tour of a service's screen in the Rustploy desktop app - the Deploy, Reload, Rebuild, Stop and Export buttons, the side panel, and the General, Connection, Environment, Deployments and Logs tabs, with the deploy webhook.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import db from '../../../../assets/ui/servico-db-geral.png';
+import git from '../../../../assets/ui/servico-geral-git.png';
+import connection from '../../../../assets/ui/servico-connection.png';
+import deployments from '../../../../assets/ui/servico-deployments.png';
+
+In **Projects → (project) → Serviços**, a card's **Abrir ›** (Open) button takes you to the service screen. This is where you
+deploy and configure everything.
+
+## The header
+
+At the top: **‹ project-name** (back to the project), the **service name** and, just below, the **status** (`Stopped`,
+`Running`, `Deploying`, `Degraded`, `Error`…). On the right are the action buttons:
+
+| Button | What it does |
+|---|---|
+| **Deploy** | starts a deploy of the service (it joins the [queue](/en/guias/fila-de-deploys/)) |
+| **Reload** | **restarts** the container that is running, with no redeploy. It does not apply new variables |
+| **Rebuild** | today does **exactly the same as Deploy** |
+| **Stop** | stops the service. It asks for confirmation: traffic stays interrupted until a new deploy |
+| **Exportar serviço** (Export service) | generates a file to recreate the service on another server |
+
+<Aside type="note" title="Rebuild and Deploy">
+  In the desktop app, **Rebuild** calls the same function as **Deploy**: deploying a Git or zip service already rebuilds the
+  image. Use **Deploy**.
+</Aside>
+
+There is no rollback button on the service screen. To go back a version, redeploy the previous one (see the
+[tutorial](/en/tutorial/primeiro-deploy/#8-go-back-a-version)).
+
+## The side panel
+
+Two panels sit on the right:
+
+| Panel | Shows |
+|---|---|
+| **STATUS / UPTIME / SERVICES** | the service's status and two **global** numbers |
+| **LOGS** | the button to open the runtime logs in a window |
+
+<Aside type="caution" title="UPTIME and SERVICES are the server's, not the service's">
+  **UPTIME** is how long the **daemon** has been up, and **SERVICES** is the count of running services out of the total (`0/7`),
+  across all projects. Neither describes the open service. Only the **STATUS** is its own.
+</Aside>
+
+## The tabs
+
+The tabs depend on the service type. An **Application** service has **General**, **Connection**, **Environment**, **Domains**,
+**Deployments**, **Healthcheck**, **Logs** and **Advanced**. A database or **Compose** stack also gets **Migrar** (Migrate: move the
+data to a [shared server](/en/guias/migrar-banco/)). A shared database server has the **Databases** tab.
+
+This page covers the first five. **Domains**, **Healthcheck** and **Advanced** are in
+[Domains, healthcheck and advanced options](/en/interface/servico-configuracao/).
+
+### General
+
+The top is always **NOME DO SERVIÇO** (service name), with the **Renomear** (Rename) button. The text under the field warns about the effect,
+and it **varies by type**:
+
+- **Compose:** *"A stack e os volumes do Docker não mudam com o nome: os dados continuam os mesmos."* (The stack and Docker volumes do not change with the name: the data stays the same.)
+- **Application:** *"O hostname interno (`rp_<nome>`) só passa a valer no próximo deploy. Outros serviços que usam o nome antigo em variáveis de ambiente precisam ser atualizados."* (The internal hostname only takes effect on the next deploy. Other services that use the old name in environment variables need to be updated.)
+
+#### A Compose service
+
+<Shot
+  src={db}
+  alt="The General tab of a Compose service with the name field, the compose YAML editor and the Salvar compose and Cancelar buttons."
+  caption="General of a Compose service (a Postgres database created by the wizard)."
+/>
+
+The **DOCKER COMPOSE (YAML)** editor shows the stack's compose. *"Edite o compose do serviço. Salvar aplica no próximo deploy."*
+(Edit the service's compose. Saving applies on the next deploy.) Use **Salvar compose** (Save compose), or **Cancelar** to discard. The variables
+appear as `${POSTGRES_PASSWORD}`: the values come from the **Environment** tab. See [Docker Compose stacks](/en/guias/compose/).
+
+#### An Application service
+
+<Shot
+  src={git}
+  alt="The General tab of an Application service with the choice of Git or Zip provider, the repository URL or image field, branch, port, username and credentials."
+  caption="General of an Application service, with no source configured yet."
+/>
+
+A service just created by the wizard starts **empty**: this is where you set the source.
+
+| Field | What it is |
+|---|---|
+| **PROVIDER** | **Git** (a plain URL) or **Zip** (upload). With an account connected in [Settings → Git](/en/interface/configuracoes/#git), the account's tab also appears |
+| **SOURCE — REPOSITORY URL / IMAGE** | the repository URL **or** the registry image, in the same field |
+| **BRANCH** | the branch (default `main`) |
+| **PORT** | the app's port **inside** the container |
+| **USERNAME** | the clone user, only if the provider requires it |
+| **CREDENTIALS (secret)** | the **name** of a project secret holding the clone token |
+
+The text under the main field gives the rule: *"URL de repositório vira Git; caso contrário é imagem de registry."* (A repository
+URL becomes Git; otherwise it is a registry image.) That is, `github.com/user/repo` is cloned and built, and `nginx:latest` is pulled.
+Scroll the tab to see the other fields (**Dockerfile**, build context and more). The details and the fields that do not have an effect
+yet are in [Deploy from a Git repository](/en/guias/git/).
+
+### Connection
+
+<Shot
+  src={connection}
+  alt="The Connection tab listing container port, host port, domain, TLS, external URL and internal URL, each with a Copiar button."
+  caption="The Connection tab of a service with no domain or external port yet."
+/>
+
+Values ready to copy:
+
+| Row | Means |
+|---|---|
+| **Container port** | the app's port inside the container |
+| **Host port** | the TCP port opened on the server, if any (see [Domains](/en/interface/servico-configuracao/#host-tcp-port)) |
+| **Domain** | the configured domain |
+| **TLS** | `disabled` or on |
+| **External URL** | the URL from **outside** the server, when there is an external port |
+| **Internal URL** | the URL **inside the project network**, such as `http://rp_api:80`. It is the one other services in the project use |
+
+Below, **CONTAINERS (N)** lists the service's running containers. For databases, the **Internal URL** is the connection
+string you put in `DATABASE_URL`.
+
+### Environment
+
+The **service's** variables, in the same format as the [project variables](/en/interface/projetos/#project-variables): **KEY** and
+**value**, **Adicionar** (Add), **✕** to remove, the **.env** button to edit as text and **Exportar**. The count appears as *"N
+variável(eis)"* (N variable(s)). The service's own **take precedence** over the project's. Full rules in
+[How environment variables are resolved](/en/conceitos/variaveis-de-ambiente/).
+
+### Deployments
+
+<Shot
+  src={deployments}
+  alt="The Deployments tab with the deploy webhook block explaining that the token is born on the first deploy, and an empty deploy list."
+  caption="The Deployments tab of a service that has not had a deploy yet."
+/>
+
+Two blocks:
+
+**WEBHOOK DE DEPLOY** (deploy webhook). *"O token nasce no primeiro deploy deste serviço — rode um deploy para a URL aparecer. Um POST
+nesta URL dispara um deploy. O corpo é ignorado: o token na própria URL é a autenticação. Regenerar invalida a URL anterior."* (The token
+is born on this service's first deploy, so run a deploy for the URL to appear. A POST to this URL triggers a deploy. The body is ignored:
+the token in the URL itself is the authentication. Regenerating invalidates the previous URL.) After the first deploy the URL appears
+here, with **Copiar** and **Regenerar**. See [Deploy webhooks](/en/guias/webhooks/). Compose services have no webhook.
+
+**The deploy list**, with each one's **id**, **duration**, **start** and **image**. On each row:
+
+| Button | Effect |
+|---|---|
+| **≡** | opens the deploy's **build log** in a window |
+| **✕** | removes the deploy's record (only those that have already finished) |
+
+Empty, it shows *"Nenhum deploy ainda."* (No deploys yet.) The cause of a failed deploy is in the build log: see
+[The lifecycle of a deploy](/en/conceitos/ciclo-de-vida/#where-the-cause-is).
+
+### Logs
+
+The **Abrir logs em janela** (Open logs in a window) button opens the container's **runtime logs** in a window of their own, isolated
+from the rest of the app, so the interface does not freeze under heavy volume. The same shortcut exists in the **LOGS** side panel
+(**Logs de runtime**). The build log opens from the **Deployments** tab. Both windows are in [Log windows](/en/interface/logs/).
+
+The runtime log is read from Docker **live** and **is not stored**: when a deploy swaps the container, the old log goes with it.

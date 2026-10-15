@@ -1,0 +1,67 @@
+---
+title: Databases and message brokers
+description: How to create Postgres, MySQL, MariaDB, MongoDB, Redis, Kafka, RabbitMQ and NATS in Rustploy with the wizard - generated credentials, internal connection URL, external URL with automatic port and firewall, and backups.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The **Novo serviço** (New service) wizard creates ready-made databases and brokers, with generated credentials
+and a connection URL. They are Docker Compose stacks underneath.
+
+## What exists
+
+| Type | Options | Default image | Port |
+|---|---|---|---|
+| **Database** | PostgreSQL | `postgres:18` | 5432 |
+| | MySQL | `mysql:8` | 3306 |
+| | MariaDB | `mariadb:11` | 3306 |
+| | MongoDB | `mongo:8` | 27017 |
+| | Redis | `redis:7` | 6379 |
+| **Broker** | Kafka | `apache/kafka:3.9.0` | 9092 |
+| | RabbitMQ | `rabbitmq:4-management` | 5672 |
+| | NATS | `nats:2` | 4222 |
+
+<Aside type="caution" title="MongoDB 8 and new kernels">
+  The `mongo:8` image does not start on Linux kernels 6.19 or newer (a known problem in MongoDB itself). On
+  those servers, change the image to `mongo:7` in the form.
+</Aside>
+
+## Create
+
+<Steps>
+1. In the project, **+ Novo serviço**, and choose **Database** (or **Broker**).
+2. Pick the engine.
+3. Fill in the form. The service name is the only required field; user and password are **generated** if you leave them blank. Depending on the engine you also see **database name**, **user**, **password**, **root password**, the **image** and, on MongoDB, **Use Replica Sets**.
+4. Create it and run the **Deploy**.
+</Steps>
+
+## How the application connects
+
+Open the service's **Connection** tab: it shows the **internal host** and **connection URL**, ready to copy. Use
+the internal URL in the environment variables of applications in the **same project**.
+
+To wire up the application, put the URL in a variable (for example `DATABASE_URL`) and redeploy it. Prefer
+storing the password as a [secret](/en/guias/variaveis-e-secrets/).
+
+If several projects need the same database, see the [shared database](/en/guias/banco-compartilhado/).
+
+## Access from outside the server
+
+By default the database is **only reachable from inside** the project. In the **desktop app**, the form has the
+option **"Gerar URL de conexão externa (porta e firewall automáticos)"** (Generate external connection URL,
+automatic port and firewall). When you tick it, Rustploy:
+
+1. allocates a free port from the `[external_ports]` range (default 20000–20999);
+2. opens it in `ufw`, through the `rustployd-fw` helper;
+3. shows the **External URL** on the **Connection** tab.
+
+<Aside type="caution">
+  This makes the database reachable from the **internet**, protected only by its password. Use a strong
+  password, and consider restricting by IP in the firewall. The web UI does not yet offer this option in the wizard.
+</Aside>
+
+The **Ingress** screen lists the external TCP ports in use.
+
+## Backup
+
+Rustploy **does not back up the data** in databases. See [Backup](/en/guias/backup/).

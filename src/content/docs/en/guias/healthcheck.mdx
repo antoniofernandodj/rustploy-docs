@@ -1,0 +1,54 @@
+---
+title: Healthcheck
+description: How to configure a service's healthcheck in Rustploy (None, Tcp, Http, Docker), what interval, timeout, retries and start period mean, and how to choose values.
+---
+
+The healthcheck decides whether the new container may receive traffic. It is what makes swapping versions
+safe: if it does not pass, the deploy fails and the old container stays online.
+
+Configure it on the service's **Healthcheck** tab and click **Save**.
+
+:::caution
+A new service starts with the healthcheck set to **None**: the deploy only checks that the container started,
+not that the app responds. Configure one before using it in production.
+:::
+
+## Types
+
+| Type | What it tests | Use when |
+|---|---|---|
+| **None** | nothing; the container just has to be up | services with no endpoint, or when getting started |
+| **Tcp** | the port accepts a connection | databases, brokers and apps with no health route |
+| **Http** | a request to the **HTTP PATH** returns the **EXPECTED STATUS** | web applications (the best test) |
+| **Docker** | the health state computed by the image's `HEALTHCHECK` | the image already defines a `HEALTHCHECK` |
+
+The **Http** test uses the container's IP on the project network and the service's port.
+
+## The timings
+
+| Field | Meaning |
+|---|---|
+| **START PERIOD (s)** | initial wait before the first test (the app's boot time) |
+| **INTERVAL (s)** | pause between one attempt and the next |
+| **TIMEOUT (s)** | how long each attempt may take |
+| **RETRIES** | maximum number of attempts |
+
+The deploy waits the **START PERIOD**, tries up to **RETRIES** times and, if none passes, fails with
+`healthcheck failed after N retries`. If the container stops in the middle of the test, the deploy aborts
+immediately.
+
+An app that takes 40 s to start needs `START PERIOD + INTERVAL × RETRIES` to cover those 40 s with room to spare.
+
+## A recipe for a web application
+
+```text
+KIND            Http
+HTTP PATH       /health        (or / if there is no health route)
+EXPECTED STATUS 200
+START PERIOD    5
+INTERVAL        5
+TIMEOUT         3
+RETRIES         10
+```
+
+These are the screen's initial values. Adjust them to your app's boot time.

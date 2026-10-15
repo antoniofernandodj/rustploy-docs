@@ -1,0 +1,65 @@
+---
+title: Log windows (runtime and build)
+description: The desktop app's log window in Rustploy - a service's live runtime logs and a deploy's build logs, with copy all, jump to top and bottom, and the limits of what is stored.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import runtime from '../../../../assets/ui/logs-runtime.png';
+import build from '../../../../assets/ui/logs-build.png';
+
+Logs open in a **window of their own**, isolated from the rest of the app: that way a service that writes a lot does not freeze the
+interface. The window is the same for both kinds of log.
+
+## Runtime logs
+
+<Shot
+  src={runtime}
+  alt="The backend service's Logs window with the container's live log lines. The user and tenant identifiers were blurred."
+  caption="The runtime log window. The identifiers were blurred in this image."
+/>
+
+It is the output (stdout and stderr) of the **running container**. To open it:
+
+- on the service screen, the **Logs → Abrir logs em janela** (Open logs in a window) tab; or
+- the **Logs de runtime** button in the side panel.
+
+The title is `Logs · service-name`. At the top, the counter (*"15 linhas · ao vivo"*, 15 lines, live) and three buttons:
+
+| Button | Effect |
+|---|---|
+| **↑** | goes to the **top** |
+| **↓** | goes to the **bottom** |
+| **Copiar tudo** (Copy all) | copies all the content |
+
+When it opens, the window shows the last lines already emitted (the *tail*) and **keeps appending** new ones in real time. The text is
+**selectable**, so you can copy a snippet with the mouse. Each line starts with a time (`HH:MM:SS`) that Rustploy adds, followed by the
+line as the container emitted it (here, already carrying the app's own timestamp).
+
+With no output, the window says *"(sem logs ainda — aguardando o serviço emitir saída)"* (no logs yet, waiting for the service to emit output).
+
+## Build logs
+
+<Shot
+  src={build}
+  alt="A deploy's Build logs window showing the docker build steps, from Step 1 to Step 7, with the cache-use indication."
+  caption="A deploy's build log window."
+/>
+
+It is the output of a deploy's **build** (the `docker build` steps, the clone, the pull). To open it, go to **Deployments** on the service
+screen and click **≡** on the deploy's row. The title is `Build logs · dep_…`, with the deploy's id.
+
+A deploy still in progress shows the build **live**. One that failed carries, at the end, the line `==> Erro em [State]: …` with the
+**cause**. See [Where the cause of a failure is](/en/conceitos/ciclo-de-vida/#where-the-cause-is).
+
+## What is stored
+
+<Aside type="caution" title="Runtime is not stored; build is">
+  The **build log is stored** in the database and can be opened later. The **runtime log is not**: it is read from Docker live. When a
+  deploy swaps the container, the old one's log disappears. If you need application log history, ship it off the server (for example
+  with a template such as Loki or Grafana from the [catalog](/en/templates/)).
+</Aside>
+
+The window keeps at most **6,000 lines** on screen: past that, it discards the oldest and keeps the 4,000 most recent.
+
+The logs of a [job](/en/interface/schedules/) run open in the same window, through the job's **Ver logs** action.

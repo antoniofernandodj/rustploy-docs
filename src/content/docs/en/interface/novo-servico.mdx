@@ -1,0 +1,111 @@
+---
+title: Create a service (the New service wizard)
+description: A step-by-step guide to the desktop app's New service wizard in Rustploy - Application, Database, Broker, Compose, Template and Import - with the database form (Postgres) and the template search.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import tipos from '../../../../assets/ui/novo-servico-tipos.png';
+import banco from '../../../../assets/ui/novo-servico-banco.png';
+import postgres from '../../../../assets/ui/novo-servico-postgres.png';
+import template from '../../../../assets/ui/novo-servico-template.png';
+
+In an open project, click **+ Novo serviço** (New service). The wizard opens in a window of its own, **Novo serviço — project name**,
+with **‹ Voltar** (Back) and **Cancelar** (Cancel) at the top. Creating a service **does not deploy**: once it exists, open the
+service and click **Deploy**.
+
+## Choose the type
+
+<Shot
+  src={tipos}
+  alt="The New service window with the six types: Application, Database, Broker, Compose, Template and Importar."
+  caption="First step: the service type."
+/>
+
+| Type | Description on screen | When to use |
+|---|---|---|
+| **Application** | "Web app via Git ou imagem" (web app via Git or image) | your code or a ready-made image. See [Git](/en/guias/git/) and [zip](/en/guias/zip/) |
+| **Database** | "Banco de dados gerenciado" (managed database) | Postgres, MySQL, MariaDB, MongoDB or Redis |
+| **Broker** | "Mensageria: Kafka, RabbitMQ, NATS" (messaging) | queues and events |
+| **Compose** | "Stack Docker Compose" | several containers together. See [Compose](/en/guias/compose/) |
+| **Template** | "A partir de um preset" (from a preset) | ready-made apps from the [catalog](/en/templates/) |
+| **Importar** | "Recriar um serviço exportado de outro servidor" (recreate a service exported from another server) | bring a service from one Rustploy to another |
+
+Click **Selecionar ›** (Select) on the type's row.
+
+## Database
+
+<Shot
+  src={banco}
+  alt="The list of databases: MongoDB, PostgreSQL, MariaDB, MySQL and Redis, each with its default image."
+  caption="Picking the database, with each one's default image."
+/>
+
+| Database | Default image |
+|---|---|
+| MongoDB | `mongo:8` |
+| PostgreSQL | `postgres:18` |
+| MariaDB | `mariadb:11` |
+| MySQL | `mysql:8` |
+| Redis | `redis:7` |
+
+<Aside type="caution" title="mongo:8 on new kernels">
+  The `mongo:8` image does not start on Linux kernels 6.19 or newer. On those servers, change the image to `mongo:7` in the form.
+</Aside>
+
+### The form
+
+<Shot
+  src={postgres}
+  alt="The New PostgreSQL form with the Name, Database name, User, generated Password fields, the external URL option and the Docker image."
+  caption="The PostgreSQL form."
+/>
+
+| Field | What it is |
+|---|---|
+| **NOME** (Name) | the **service** name in Rustploy (e.g. `my-database`) |
+| **DATABASE NAME** | the database created inside the server (default `app`) |
+| **USER** | the user (default `postgres`) |
+| **PASSWORD** | **generated** for you, and you can change it |
+| **Gerar URL de conexão externa** (Generate external connection URL) | tick it to reach the database from **outside the server** (see below) |
+| **DOCKER IMAGE** | the image, e.g. `postgres:18` |
+
+Click **Criar PostgreSQL** (Create PostgreSQL). The fields change by database: MySQL and MariaDB also ask for the root password, and
+MongoDB has **Use Replica Sets**.
+
+<Aside type="caution" title="Note the password">
+  The password shown is the one that will apply. Copy it before creating, or look it up afterwards on the service's **Environment** tab.
+</Aside>
+
+#### External connection URL
+
+Ticking **"Gerar URL de conexão externa (porta e firewall automáticos)"** (generate external connection URL, automatic port and
+firewall), Rustploy allocates a free port from the `[external_ports]` range (default 20000–20999), opens that port in `ufw` and
+shows the **External URL** on the service's **Connection** tab. This makes the database reachable from the **internet**, protected
+only by its password. Use a strong password. Without it, the database is only reachable from inside the project. Details in
+[Databases and brokers](/en/guias/bancos-e-brokers/).
+
+## Template
+
+<Shot
+  src={template}
+  alt="The template list with logo, name and an Escolher button, and a search field at the top."
+  caption="The template catalog, with search."
+/>
+
+Use the **BUSCAR** (Search) field (*"buscar templates…"*) to filter the catalog by name or description. Each row has the logo, the name
+and **Escolher ›** (Choose). Then you name the service and review the variables (passwords already come generated). There are more than
+380 applications: see the [catalog](/en/templates/).
+
+## Application, Broker, Compose and Import
+
+- **Application**: the wizard asks only for the **NOME** (and, optionally, the **APP NAME**, used in place of the name) and creates the service **empty**. The source (**Git**, image or zip), the port and the domain are configured afterwards, on the service's **General** tab. See [Git](/en/guias/git/).
+- **Broker**: Kafka, RabbitMQ or NATS, with generated user and password. See [Databases and brokers](/en/guias/bancos-e-brokers/).
+- **Compose**: name, port, domain and the stack's YAML.
+- **Importar** (Import): pick the file exported from another server. The service is created **without a deploy** and nothing is overwritten.
+
+## After creating
+
+1. Open the service (**Abrir ›** on the card).
+2. Configure the [healthcheck](/en/guias/healthcheck/), the [domain](/en/guias/dominios-e-tls/) and the variables.
+3. Click **Deploy**.

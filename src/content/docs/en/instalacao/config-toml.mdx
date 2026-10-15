@@ -1,0 +1,184 @@
+---
+title: The config.toml file
+description: Reference for rustployd's config.toml, checked against the code - where it lives, which sections are required, what happens when the file has an error, every key with its default, and the RUSTPLOY_* environment variables that override it.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`rustployd` reads its configuration from a TOML file. In the `.deb` package it lives at
+`/etc/rustploy/config.toml`, already complete.
+
+## Where it is looked up
+
+In order, the **first file that exists and is valid**:
+
+1. the path in `$RUSTPLOY_CONFIG`;
+2. `/etc/rustploy/config.toml`;
+3. `~/.config/rustploy/config.toml`.
+
+If none works, the built-in defaults apply (see the *no file* column below).
+
+<Aside type="danger" title="An error in the file shows up nowhere">
+  If the file is not valid TOML, **or** a required section is missing, **or** a value has the wrong
+  type (for example `port = "9797"` with quotes), the daemon **silently ignores the whole file**, with
+  no log warning, and moves on to the next path or to the defaults. A typo can, in practice, start the
+  daemon **without your token and without your domain**. After editing, check that the daemon read what
+  you wrote (see [Check](#check-what-the-daemon-read)).
+</Aside>
+
+### Required and optional sections
+
+| Section | Required? |
+|---|---|
+| `[daemon]`, `[ingress]` with `[ingress.acme]`, `[docker]`, `[deploy]`, `[metrics]`, `[secrets]` | **yes**, and all their keys (except `acme.email`) |
+| `[api]`, `[env_backup]`, `[external_ports]`, `[registry]` | no: when absent, they use the default. Inside them, **each key** is optional |
+
+That is why `[registry]` with just `enabled = true` is enough. But inside `[ingress]`, omitting
+`https_port` invalidates the whole file.
+
+## Defaults
+
+There are **two** sets of defaults. The **package** one is what you see in the freshly installed
+`/etc/rustploy/config.toml`. The **no file** one is the code's, when no file is read:
+
+| Key | `.deb` package | No file |
+|---|---|---|
+| `ingress.http_port` | **80** | **8080** |
+| `ingress.https_port` | 443 | 443 |
+| `ingress.acme.enabled` | **false** | **true** |
+| `ingress.acme.email` | empty | absent |
+
+So with no file, ACME is **on** (and without an email), and HTTP listens on 8080.
+
+## Key by key
+
+### `[daemon]`
+
+| Key | Default | |
+|---|---|---|
+| `db_path` | `/var/lib/rustploy/db` | directory of the SQLite database and data (builds, certificates, registry) |
+| `log_level` | `info` | the log is structured JSON |
+
+Under systemd, the unit sets `RUSTPLOY_DB_PATH`, which **takes priority** over the file. Editing
+`db_path` in the file changes nothing in that case.
+
+### `[api]` (optional)
+
+| Key | Default | |
+|---|---|---|
+| `enabled` | `true` | turning it off also turns off webhooks, the web UI and MCP |
+| `bind_address` | `127.0.0.1` | |
+| `port` | `9797` | |
+| `token` | none | the API token |
+| `domain` | none | with a domain, the API terminates TLS **on its own port** (ACME) |
+| `max_connections` | `32` | |
+
+<Aside type="caution">
+  **Safety guard:** the daemon refuses to start with a `bind_address` that is not loopback and no
+  `token`.
+</Aside>
+
+In the `.deb`, the `[api]` block comes **commented out**: to use it, uncomment and fill it in.
+
+### `[ingress]` and `[ingress.acme]`
+
+| Key | | |
+|---|---|---|
+| `http_port` | required | the HTTP proxy port (it also receives the Let's Encrypt challenge) |
+| `https_port` | required | |
+| `bind_address` | required | |
+| `acme.enabled` | required | turn on automatic certificate issuance |
+| `acme.email` | optional | Let's Encrypt email |
+| `acme.directory` | required | CA URL (default `https://acme-v02.api.letsencrypt.org/directory`) |
+
+The ACME email can also be set in **Settings → Web Server**. The value from that screen **takes
+precedence** over the file and requires restarting the daemon.
+
+### `[docker]`
+
+| Key | Default |
+|---|---|
+| `socket_path` | `/var/run/docker.sock` |
+
+### `[deploy]`
+
+| Key | Default | |
+|---|---|---|
+| `drain_secs` | `10` | wait, after the route swap, before removing the old container |
+| `image_cache` | `2` | |
+
+### `[metrics]`
+
+| Key | Default |
+|---|---|
+| `interval_secs` | `2` |
+| `history_points` | `60` |
+
+### `[secrets]`
+
+| Key | Default | |
+|---|---|---|
+| `master_key_path` | `/etc/rustploy/master.key` | the key that encrypts secrets. **Back it up.** |
+
+### `[external_ports]` (optional)
+
+| Key | Default | |
+|---|---|---|
+| `range_start` | `20000` | |
+| `range_end` | `20999` | |
+
+The range Rustploy uses to expose databases and brokers. It is also the **only** range `rustployd-fw`
+agrees to open in `ufw`.
+
+### `[registry]` (optional)
+
+| Key | Default | |
+|---|---|---|
+| `enabled` | `false` | |
+| `port` | `5100` | the listener listens **on loopback only** |
+| `domain` | none | exposes the registry publicly (ingress route + certificate) |
+| `storage_dir` | `<db_path>/registry/` | |
+
+The domain set in **Settings → Web Server** takes precedence over the file's.
+
+### `[env_backup]` (optional)
+
+| Key | Default | |
+|---|---|---|
+| `dir` | `<db_path>/env_backups/` | |
+| `interval_secs` | `60` | |
+
+## Environment variables
+
+They **override** the file (and the defaults):
+
+| Variable | Overrides |
+|---|---|
+| `RUSTPLOY_CONFIG` | the file path |
+| `RUSTPLOY_DB_PATH` | `daemon.db_path` |
+| `RUSTPLOY_LOG_LEVEL` | `daemon.log_level` (`RUST_LOG` is also read) |
+| `RUSTPLOY_HTTP_PORT` | `ingress.http_port` |
+| `RUSTPLOY_API_ENABLED` | `api.enabled` (`1`, `true`, `yes` or `on` turn it on; any other value turns it off) |
+| `RUSTPLOY_API_BIND` | `api.bind_address` |
+| `RUSTPLOY_API_PORT` | `api.port` |
+| `RUSTPLOY_API_TOKEN` | `api.token` (empty = no token) |
+| `RUSTPLOY_API_DOMAIN` | `api.domain` |
+| `RUSTPLOY_REGISTRY_ENABLED` | `registry.enabled` |
+| `RUSTPLOY_REGISTRY_PORT` | `registry.port` |
+| `RUSTPLOY_REGISTRY_DOMAIN` | `registry.domain` |
+| `RUSTPLOY_REGISTRY_STORAGE_DIR` | `registry.storage_dir` |
+
+With the `.deb`, the systemd unit also reads `/etc/rustploy/environment` (optional). It is the right
+place for variables such as `RUSTPLOY_API_TOKEN` when you do not want the token in `config.toml`. In that
+case the daemon **does not write** the `connection_token` into the file: use `rustployd access-key`.
+
+## Check what the daemon read
+
+```bash
+sudo systemctl restart rustployd
+sudo rustployd access-key        # prints the connection token
+journalctl -u rustployd -n 30    # check the port and the domain
+```
+
+If `access-key` answers "sem `[api].token` configurado" (no `[api].token` configured) after you set one,
+the file **was not read**: look for a typo, missing quotes or a missing required section.

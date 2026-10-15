@@ -1,0 +1,37 @@
+---
+title: Update Rustploy
+description: How to update the Rustploy daemon and clients without losing data - what is preserved on upgrade, how to reinstall the package and how the daemon resumes interrupted deploys.
+---
+
+## Update the daemon
+
+Install the new `.deb` over the old one:
+
+```bash
+sudo dpkg -i rustployd_<new-version>_*.deb
+```
+
+The package restarts the service by itself. What is preserved:
+
+- **Your data**, in `/var/lib/rustploy` (the SQLite database, builds, the registry, variable backups).
+- **The configuration**, `/etc/rustploy/config.toml`. It is marked as a package configuration file: `dpkg` asks before overwriting it if you edited it.
+- **The master key** for secrets, at `/etc/rustploy/master.key`.
+
+Your services' containers **keep running** during the daemon update: they belong to Docker, not to the
+Rustploy process.
+
+## What happens if a deploy was in progress
+
+On startup the daemon looks for deploys in a non-terminal state and decides by the state they stopped in:
+before the route swap the old container is still alive, so it is a safe *rollback*; a swap in progress is
+inspected in Docker; `Promoting` is completed. The proxy's route table is rebuilt from Docker.
+
+## Update the clients
+
+- **Web UI**: it ships with the daemon. If the browser shows the old version, force a reload (`Ctrl+Shift+R`), because the files are served with a long cache.
+- **Desktop app**: install the new `.deb` or replace the portable zip's folder.
+
+:::tip
+Back up `/etc/rustploy/master.key` and `/var/lib/rustploy` before big updates. Without the master key,
+stored secrets cannot be decrypted.
+:::

@@ -1,0 +1,54 @@
+---
+title: Networking and names
+description: How a project's services see each other in Rustploy - network per project, DNS names for Application (rp_name) and Compose (YAML key) services, container names and why no container publishes a port.
+---
+
+## One network per project
+
+Each project has a dedicated Docker bridge network, created the first time it is needed. All the project's
+services join it. Inside it, Docker's DNS resolves service names. Between different projects there is
+**no route**.
+
+## How one service calls another
+
+| Whose service is being called | Name to use |
+|---|---|
+| **Application** (Registry, Git, Zip) | `rp_<service name>` |
+| **Compose** | the service key **inside the YAML**, under `services:` |
+
+Example: an API (Application `api`) that uses a Postgres created by the **Database** wizard points to the
+Postgres host shown on the database's **Connection** tab. That tab shows the **internal** host and
+connection URL ready to copy.
+
+With replicas, all of them get the same alias and Docker's DNS spreads requests among them.
+
+### Renaming
+
+Renaming an Application service changes the `rp_<name>` alias **on the next deploy**, and the old name
+stops resolving. Whoever called it through an environment variable needs to be updated. On a Compose
+service, the internal name is the YAML key, so renaming the service in Rustploy does not change it.
+
+## Container names
+
+For **Application**:
+
+| Container | Name |
+|---|---|
+| in production | `rp_<id8>_<name>` (plus `_r1`, `_r2`… for replicas) |
+| during a deploy | `rp_<id8>_<name>_staging_<deploy>` |
+
+`<id8>` is the first 8 characters of the service ID. They prevent collisions, because container names are
+unique across the whole server and two projects may each have a service called `api`.
+
+To find a container, Rustploy uses *labels*, not the name. In `docker ps`, its containers carry the label
+`rustploy.managed=true`.
+
+## No container publishes a port
+
+In plain Docker you would use `-p 8080:80`. Not here. What listens on the server's ports 80 and 443 is the
+internal proxy (the **ingress**), and it forwards to the container's IP on the project network. That is what
+makes it possible to swap versions with no window of unavailability.
+
+The **exception** is databases and brokers you decide to expose: Rustploy allocates an external port in the
+configured range (`[external_ports]`, default 20000–20999) and, if the firewall helper is active, opens it in
+`ufw`.

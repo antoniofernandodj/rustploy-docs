@@ -1,0 +1,49 @@
+---
+title: Prompt recipes for operating the server
+description: Ready-made prompts for Claude Code to operate Rustploy over MCP - deploy with failure diagnosis, a domain with a 502, deploy history and a server audit.
+---
+
+Each recipe is a request in natural language and what the agent does underneath. In all of them, the agent already
+knows the tools from the handshake `instructions`.
+
+## Deploy and find out why it failed
+
+> Deploy the `api` service and tell me whether it worked. If it failed, explain the cause.
+
+The agent calls `deploy` with `wait: true`. If `ok` is `false`, it reads the `error` field and the `log_tail`; if it
+needs more, it continues with `build_logs`.
+
+## The domain is returning 502
+
+> `app.mysite.com` is returning 502. Find out why.
+
+`ingress_routes` shows whether the route exists and where it points. If `backends` is empty or on the wrong port,
+`ingress_reconcile` tries to fix it. If that does not solve it, the agent inspects the service with `rpc`
+(`ServiceGet`) and checks the domain's port and the ingress target.
+
+## What happened in the latest deploys
+
+> Summarize the last 10 deploys: which failed and why.
+
+`list_deploys` with `limit: 10` already returns the resolved outcome of each.
+
+## Quick audit
+
+> List all services and tell me which are not `Running`.
+
+`list_services` returns each one's status.
+
+## Create a service from a template
+
+> Create in the `blog` project a service from the `ghost` template.
+
+The agent uses `rpc` with `WizardCatalog` to find the template and `WizardCreate` to create it. Ask it to show you
+what it will create **before** running it.
+
+## Good practices when asking
+
+- Say the **server** when more than one is registered (`rustploy-production`).
+- For destructive operations, ask the agent to **describe and wait** for your confirmation.
+- Ask for "read-only" when you only want to diagnose.
+
+Before releasing an agent on production, read the [security](/en/agentes/seguranca/) page.

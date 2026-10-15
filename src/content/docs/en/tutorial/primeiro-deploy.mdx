@@ -1,0 +1,138 @@
+---
+title: Your first deploy
+description: An end-to-end tutorial - create a project, run a Docker image as a service, follow the deploy, point a domain with HTTPS, do a second deploy and go back a version.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+In about 15 minutes you will put an application online, watch the zero-downtime swap happen and go
+back a version. We will use the public `nginx` image, so you do not depend on any code of yours.
+
+**Before you start** you need the [daemon installed](/en/instalacao/instalar-daemon/) and a
+[client](/en/instalacao/instalar-clientes/). The button names below are the web UI's. In the
+[desktop app](/en/interface/visao-geral/) the **Application** wizard only asks for the name: the source,
+port and domain are configured afterwards, on the service's **General** tab.
+
+## 1. Sign in
+
+Open the dashboard and paste the [connection token](/en/instalacao/primeiro-acesso/). You land on the
+**Deployments** screen, still empty.
+
+## 2. Create a project
+
+A project is the group of services that see each other on a network of their own.
+
+<Steps>
+1. In the side menu, open **Projects**.
+2. Click **+ Novo projeto** (New project), name it `tutorial` and confirm.
+3. Click the project's card to open it.
+</Steps>
+
+## 3. Create a service
+
+<Steps>
+1. On the project's **Serviços** (Services) tab, click **+ Novo serviço** (New service).
+2. Under *Escolha o tipo de serviço* (Choose the service type), select **Application**.
+3. Fill in:
+   - **Nome** (Name): `site`
+   - **Origem** (Source): the **Registry** tab, with the image `nginx:latest`
+   - **Porta** (Port): `80`, the port nginx listens on *inside* the container
+   - **Domínio** (Domain): leave it blank for now
+4. Click **Criar Application** (Create Application).
+</Steps>
+
+The service was **created, but it is not online yet**: creating does not deploy. You landed on the
+service screen, with the tabs **General, Connection, Environment, Domains, Deployments, Healthcheck,
+Logs and Advanced**.
+
+## 4. Configure the healthcheck
+
+The healthcheck is what authorizes the swap. Without it, Rustploy only guarantees that the container
+started, not that the application responds.
+
+<Steps>
+1. Open the **Healthcheck** tab.
+2. Under **KIND** choose **Http**.
+3. Under **HTTP PATH** use `/` and under **EXPECTED STATUS** `200`.
+4. Click **Save**.
+</Steps>
+
+A new service starts with the healthcheck set to **None**. Always configure one before real use.
+
+## 5. Deploy
+
+Click **Deploy** at the top of the service. Open the **Deployments** tab and follow the states. For a
+registry image, the path is:
+
+```text
+Pending → PullingImage → Staging → HealthcheckPolling → SwappingIn → Draining → Promoting → Live
+```
+
+In short: Rustploy pulls the image, starts a container **alongside** the old one (the *staging*), tests
+the healthcheck, swaps the proxy route and, only then, removes the old container (if any). When the
+state reaches **Live**, the service is online. The service status becomes **Running**.
+
+See what the container writes on the **Logs** tab.
+
+## 6. Point a domain
+
+<Aside type="caution" title="DNS first">
+  Create a DNS `A` record for your domain (for example `site.mysite.com`) pointing at the server's IP
+  **before** this step. For HTTPS, [ACME must be on](/en/instalacao/instalar-daemon/#turn-on-https) and
+  port 80 reachable.
+</Aside>
+
+<Steps>
+1. Open the **Domains** tab.
+2. Type the domain in `dominio.com`. Leave the port blank (it uses the service's port, `80`).
+3. Tick **TLS** for automatic HTTPS and click **Adicionar** (Add).
+</Steps>
+
+Visit `https://site.mysite.com`. The first visit may take a few seconds while the certificate is
+issued. Without TLS ticked, the service answers over HTTP on the ingress port (80 by default).
+
+Each domain appears in the list as `https → :80` or `http → :80`: the public scheme and the container
+port the traffic goes to.
+
+## 7. Do a second deploy and watch the swap
+
+Change something that makes a difference, for example the image to `nginx:alpine` on the **General**
+tab, save, and click **Deploy** again.
+
+This time the old container keeps serving while the new one starts and passes its healthcheck. The route
+only changes at the **SwappingIn** step, all at once; then comes **Draining** (a short wait, 10 s by
+default, for in-flight connections to finish) and, at **Promoting**, the removal of the old one. If the
+new one's healthcheck failed, the state would go to **RollingBack** and the old one would stay online.
+
+## 8. Go back a version
+
+Today the reliable way back is to **redeploy the previous version**: on the **General** tab, put back
+the image (or branch, or commit) that worked and click **Deploy**. Like every deploy, it only swaps the
+route after passing the healthcheck.
+
+<Aside type="caution" title="The Rollback button">
+  The service's **Rollback** button only locates the previous deploy; it does not redeploy. Do not
+  count on it to go back a version.
+</Aside>
+
+## What you learned
+
+- A project groups services on a network.
+- Creating a service does not deploy; **Deploy** does.
+- The healthcheck decides whether the swap happens.
+- The proxy switches the route all at once, with no window of unavailability.
+- Domain and TLS live on the **Domains** tab.
+
+## If something went wrong
+
+| Symptom | What to look at |
+|---|---|
+| The deploy ended in **Failed** | **Deployments** tab: the cause appears in the deploy's log. See [The lifecycle of a deploy](/en/conceitos/ciclo-de-vida/) |
+| The domain returns **502** | The proxy has the route, but the container did not respond. Check the domain's **port** and the healthcheck. An AI agent can help: [diagnose 502](/en/agentes/receitas/) |
+| The certificate is not issued | DNS does not point at the server yet, ACME is off, or port 80 is closed |
+| Nothing answers on the domain, over HTTP | Check that the service is **Running** and that the ingress `http_port` is the port you opened |
+
+## Next steps
+
+- Understand [what a service is and its sources](/en/conceitos/servico-e-fontes/).
+- Learn how services [see each other](/en/conceitos/rede-e-nomes/).

@@ -1,0 +1,40 @@
+---
+title: Monitoring in the desktop app
+description: The desktop app's Monitoring screen in Rustploy - the server's CPU, memory, disk and load, and the table of CPU, memory and network per container.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import monitoring from '../../../../assets/ui/monitoring.png';
+
+<Shot
+  src={monitoring}
+  alt="The Monitoring screen with the server's CPU, memory, disk and load indicators and an empty container table."
+  caption="The Monitoring screen, with no container running."
+/>
+
+**Monitoring** (side menu) shows the **usage right now**, of the server and of each container.
+
+## The four indicators
+
+| Indicator | Shows |
+|---|---|
+| **CPU** | the server's total CPU use |
+| **MEMORY** | memory in use out of the total (`447 MB / 3.8 GB`) |
+| **DISK** | disk used out of the total, of the **largest mount point** (`9.2 GB / 49.0 GB`) |
+| **LOAD** | the system load average over 1, 5 and 15 minutes (`0.00 0.00 0.00`) |
+
+## The container table
+
+One row per running service container, with **CONTAINER**, **PROJETO**, **CPU**, **MEM**, **RX** and **TX** (network received and
+sent). With nothing running, the screen says *"Nenhuma métrica ainda — aguardando o primeiro container em execução."* (No metrics
+yet, waiting for the first running container.) The per-container numbers only appear from the first collection cycle after the
+container starts.
+
+<Aside type="note" title="Only the present">
+  The screen shows the current value, refreshed every 2 seconds. **There is no chart or history.** For that, use an external tool,
+  such as Beszel or Uptime Kuma from the [template catalog](/en/templates/).
+</Aside>
+
+How the watchdog uses these metrics and what happens when a service degrades or the server reboots:
+[Monitoring, service health and automatic restart](/en/operacao/monitoramento-e-saude/).

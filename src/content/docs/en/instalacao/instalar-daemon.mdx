@@ -1,0 +1,138 @@
+---
+title: Install the daemon on the VPS
+description: How to install rustployd on a Debian or Ubuntu server from the .deb package, enable remote access with a token and check that the service came up.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The supported installation path today is the `rustployd` **`.deb`** package, for Debian, Ubuntu and
+derivatives. It creates the `rustploy` user, installs the systemd service and starts the daemon.
+
+<Aside type="note" title="Releases and the install script">
+  The repository publishes binaries to *GitHub Releases* when a `v*` tag is created, and `install.sh`
+  downloads from there. Until a release is published, use the `.deb` below.
+</Aside>
+
+## What the package installs
+
+| Item | Where |
+|---|---|
+| Daemon | `/usr/bin/rustployd` |
+| Firewall helper (root) | `/usr/libexec/rustployd-fw` |
+| Configuration | `/etc/rustploy/config.toml` |
+| systemd services | `rustployd.service`, `rustployd-fw.socket`, `rustployd-fw.service` |
+| Database and data | `/var/lib/rustploy` |
+
+The package depends on `docker.io` or `docker-ce`. The service runs as the `rustploy` system user,
+which joins the `docker` group.
+
+## From crates.io
+
+If you prefer to compile on the machine itself, the daemon's crate is called `rustploy` (the installed
+binary is `rustployd`):
+
+```bash
+cargo install rustploy
+```
+
+This only installs the binaries in `~/.cargo/bin`. It does not create the user, the systemd service or
+`config.toml`: for a production server, prefer the `.deb` below.
+
+## Build the package
+
+On a machine with the Rust toolchain and `cargo-deb`:
+
+```bash
+git clone --recurse-submodules https://github.com/antoniofernandodj/rustploy.git
+cd rustploy
+cargo install cargo-deb
+make deb-rustploy
+# produces rustploy-daemon/target/debian/rustployd_<version>_<arch>.deb
+```
+
+Copy the `.deb` to the server and install it:
+
+```bash
+sudo dpkg -i rustployd_*.deb
+sudo apt-get install -f     # only if a dependency is missing
+```
+
+## Check
+
+```bash
+systemctl status rustployd
+journalctl -u rustployd -f
+```
+
+By default the API listens on `127.0.0.1:9797`, **with no token**. That is fine for testing on the VPS
+itself, but it does not yet let any remote client in.
+
+## Enable remote access
+
+<Steps>
+1. Generate a strong token:
+
+   ```bash
+   openssl rand -hex 32
+   ```
+
+2. Edit `/etc/rustploy/config.toml` and open the `[api]` section:
+
+   ```toml
+   [api]
+   bind_address = "0.0.0.0"
+   port         = 9797
+   token        = "<the token you generated>"
+   ```
+
+   The daemon refuses to start with a public `bind_address` and no `token`.
+
+3. Restart:
+
+   ```bash
+   sudo systemctl restart rustployd
+   ```
+
+4. Get the [connection token](/en/instalacao/primeiro-acesso/):
+
+   ```bash
+   sudo rustployd access-key
+   ```
+
+5. Open port 9797 in the provider's firewall and, if you use `ufw`, in `ufw`.
+</Steps>
+
+<Aside type="caution">
+  If `config.toml` has an error, the daemon **silently ignores it** and starts with the defaults. If
+  step 4 says there is no token, the file was not read. See
+  [The config.toml file](/en/instalacao/config-toml/#check-what-the-daemon-read).
+</Aside>
+
+<Aside type="caution">
+  Without `[api].domain`, port 9797 speaks **plain HTTP** and the token travels unencrypted. For real
+  use, configure a domain (see below) or close the port to the internet and reach it over a VPN or an
+  SSH tunnel.
+</Aside>
+
+## Turn on HTTPS
+
+Point your domains' DNS at the server and turn on ACME:
+
+```toml
+[ingress.acme]
+enabled = true
+email   = "you@example.com"
+```
+
+For the dashboard to use HTTPS too, set the API domain:
+
+```toml
+[api]
+domain = "rustploy.mysite.com"
+```
+
+Restart the daemon. The full reference is in [The config.toml file](/en/instalacao/config-toml/).
+
+## Next step
+
+[Install a client](/en/instalacao/instalar-clientes/) or go straight to the web UI.

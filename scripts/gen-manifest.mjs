@@ -3,7 +3,7 @@
 // o texto de cada campo vem de NOTES abaixo. Sem o agregador ao lado, mantém a
 // página já commitada. Campo novo no código aparece na tabela sem nota; nota de
 // campo que sumiu do código quebra o build (para não envelhecer em silêncio).
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 
 const root = new URL('../../', import.meta.url);
 const manifestFile = new URL('rustploy-shared/src/manifest.rs', root);
@@ -71,7 +71,7 @@ const friendly = (rust) => {
 };
 
 // Texto de cada campo (a doc do Rust é curta ou está em outro idioma de comentário).
-const NOTES = {
+const NOTES_PT = {
   'ServerManifest.apiVersion': 'Sempre `rustploy/v1`. Opcional; hoje não é validado.',
   'ServerManifest.projects': 'Os projetos. Cada item é um projeto declarado ali mesmo. (`include:` não é aceito pela importação do daemon.)',
   'ProjectManifest.apiVersion': 'Sempre `rustploy/v1`. Opcional.',
@@ -137,6 +137,86 @@ const NOTES = {
   'GitProviderDoc.oauth_client_id': 'Só para `oauth`. O *client secret* **nunca** é exportado.',
 };
 
+const NOTES_EN = {
+  'ServerManifest.apiVersion': 'Always `rustploy/v1`. Optional; not validated today.',
+  'ServerManifest.projects': 'The projects. Each item is a project declared right there. (`include:` is not accepted by the daemon import.)',
+  'ProjectManifest.apiVersion': 'Always `rustploy/v1`. Optional.',
+  'ProjectManifest.project': 'Name, description and variables of the project.',
+  'ProjectManifest.services': 'The project services.',
+  'ProjectMeta.name': 'Required and cannot be empty. **It is the matching key**: a project with this name is updated, otherwise it is created.',
+  'ProjectMeta.description': 'Project description.',
+  'ProjectMeta.env': 'Variables inherited by every service. A `secret:NAME` value references a project secret; `${KEY}` is resolved from the variables file.',
+  'ServiceManifest.name': 'Required. **Matching key** within the project.',
+  'ServiceManifest.source': 'Required. Where the service comes from (see `source`).',
+  'ServiceManifest.port': 'App port **inside** the container. If omitted, it is `0` (no error, but the service will have no useful port).',
+  'ServiceManifest.host_port': 'TCP port opened on the server. `0` asks for automatic allocation (reuses the port already allocated to the service with the same name).',
+  'ServiceManifest.domain': '**Legacy** domain (just one). Prefer `domains`.',
+  'ServiceManifest.tls': 'TLS for the legacy `domain`.',
+  'ServiceManifest.domains': 'Domain routes: each one with `domain`, `port` and `tls`.',
+  'ServiceManifest.env': 'Service variables. A `secret:NAME` value references a secret; `${KEY}` comes from the variables file.',
+  'ServiceManifest.env_comments': 'Comments from the `.env` editor, each anchored to a key.',
+  'ServiceManifest.volumes': 'Each item is `host:container` or `host:container:ro`. **An invalid item is silently dropped.**',
+  'ServiceManifest.healthcheck': 'Healthcheck. If omitted, the service has **no** healthcheck (`none`).',
+  'ServiceManifest.replicas': 'Number of containers. Default and minimum `1` (`0` becomes `1`).',
+  'ServiceManifest.resources': 'CPU and memory limits.',
+  'ServiceManifest.command': 'Overrides the image command.',
+  'ServiceManifest.args': 'Command arguments.',
+  'ServiceManifest.db': 'Database type: `postgres`, `mongodb`, `mariadb`, `mysql` or `redis`.',
+  'ServiceManifest.shared': 'Marks the service as a **shared database server**. The authorized projects live in the daemon, not in the manifest.',
+  'SourceManifest.registry': 'Registry image (`nginx:latest`).',
+  'SourceManifest.git': 'Git repository with a Dockerfile.',
+  'SourceManifest.compose': 'The YAML of a Compose stack, as text.',
+  'SourceManifest.compose_ingress': 'In Compose stacks, the service **inside the YAML** that receives the domain. Without it the daemon finds it by the domain port.',
+  'GitManifest.url': 'Required. Repository URL.',
+  'GitManifest.branch': 'Default `main`.',
+  'GitManifest.root_path': 'Stored, but the deploy does **not use it** yet. Default `.`.',
+  'GitManifest.dockerfile': 'Dockerfile path, relative to the context. Default `Dockerfile`.',
+  'GitManifest.context': 'Folder sent as the build context. Default `.`.',
+  'GitManifest.build_stage': 'Stored, but the deploy does **not use it** yet.',
+  'GitManifest.submodules': 'Stored, but the deploy does **not use it** yet.',
+  'GitManifest.watch_paths': 'Stored, but the deploy does **not use it** yet.',
+  'GitManifest.username': 'Clone user, if the provider requires one.',
+  'GitManifest.credentials': 'The **name** of a project secret holding the clone token.',
+  'GitManifest.provider': 'The **name** of a connected Git account. If it does not exist at the destination (or in the variables file), the import **aborts**.',
+  'HealthcheckManifest.type': '`none`, `tcp`, `http` or `docker` (uppercase works). **If omitted, it is `tcp`**, and any unknown value also becomes `tcp`.',
+  'HealthcheckManifest.path': '`http` only. Default `/`.',
+  'HealthcheckManifest.status': '`http` only. Expected status, default `200`.',
+  'HealthcheckManifest.interval': 'Seconds between attempts. Default `5`.',
+  'HealthcheckManifest.timeout': 'Seconds per attempt. Default `3`.',
+  'HealthcheckManifest.retries': 'Attempts. Default `10`.',
+  'HealthcheckManifest.start_period': 'Seconds before the first attempt. Default `5`.',
+  'ResourcesManifest.cpu_shares': 'CPU weight. `0` = no limit.',
+  'ResourcesManifest.mem': 'Memory limit: `1024`, `256k`, `256m` or `2g`.',
+  'DomainRoute.domain': 'Required. The domain name.',
+  'DomainRoute.port': 'Container port for this domain. If omitted, the service `port` applies.',
+  'DomainRoute.tls': 'Automatic HTTPS (ACME).',
+  'EnvComment.text': 'The full line, including the `#`.',
+  'EnvComment.before_key': 'The key that comes right after the comment. If omitted, it is a loose comment at the end.',
+  'EnvDoc.project': 'One `[project."NAME"]` table per project.',
+  'EnvDoc.git_provider': 'One `[git_provider."NAME"]` table per referenced Git account.',
+  'ProjectEnvDoc.env': 'Values of the **project** variables.',
+  'ProjectEnvDoc.service': 'One `[project."NAME".service."SERVICE"]` table per service.',
+  'ServiceEnvDoc.env': 'Values of the **service** variables.',
+  'GitProviderDoc.kind': '`gitea` or `github`.',
+  'GitProviderDoc.base_url': 'Provider base URL (empty on github.com).',
+  'GitProviderDoc.auth_mode': '`oauth` or `pat`.',
+  'GitProviderDoc.oauth_client_id': '`oauth` only. The *client secret* is **never** exported.',
+};
+
+const TITLES_EN = {
+  ServerManifest: 'Root manifest', ProjectManifest: 'Single-project manifest', ProjectMeta: '`project`', ServiceManifest: 'Item of `services`',
+  SourceManifest: '`source` (use **one** of the keys)', GitManifest: '`source.git`', HealthcheckManifest: '`healthcheck`', ResourcesManifest: '`resources`',
+  DomainRoute: 'Item of `domains`', EnvComment: 'Item of `env_comments`', EnvDoc: 'Variables file (TOML)', ProjectEnvDoc: '`[project."NAME"]` in the TOML',
+  ServiceEnvDoc: '`[project."NAME".service."SERVICE"]` in the TOML', GitProviderDoc: '`[git_provider."NAME"]` in the TOML',
+};
+
+const FRIENDLY_EN = {
+  texto: 'text', 'verdadeiro/falso': 'true/false', inteiro: 'integer', 'lista de textos': 'list of texts', 'mapa texto → texto': 'map text → text',
+  'lista de rotas de domínio': 'list of domain routes', 'lista de comentários': 'list of comments', 'lista de serviços': 'list of services', 'lista de projetos': 'list of projects',
+  'objeto `source`': '`source` object', 'objeto `git`': '`git` object', 'objeto `healthcheck`': '`healthcheck` object', 'objeto `resources`': '`resources` object', 'objeto `project`': '`project` object',
+  'tabelas por projeto': 'tables per project', 'tabelas por provedor': 'tables per provider', 'tabelas por serviço': 'tables per service',
+};
+
 const structs = [
   ['ServerManifest', manifestLines, 'Manifesto raiz'],
   ['ProjectManifest', manifestLines, 'Manifesto de um projeto'],
@@ -155,34 +235,44 @@ const structs = [
 ];
 
 const seenNotes = new Set();
-const defaultOf = (f) => {
+const defaultOf = (f, en) => {
   if (f.defaultFn === 'one') return '`1`';
   if (f.defaultFn === 'default_hc_type') return '`tcp`';
-  if (f.hasDefault) return f.rust.startsWith('Option<') ? 'ausente' : f.rust === 'bool' ? '`false`' : /^u(16|32|64)$/.test(f.rust) ? '`0`' : f.rust.startsWith('Vec') || f.rust.startsWith('BTreeMap') ? 'vazio' : '—';
+  if (f.hasDefault) return f.rust.startsWith('Option<') ? (en ? 'absent' : 'ausente') : f.rust === 'bool' ? '`false`' : /^u(16|32|64)$/.test(f.rust) ? '`0`' : f.rust.startsWith('Vec') || f.rust.startsWith('BTreeMap') ? (en ? 'empty' : 'vazio') : '—';
   return '—';
 };
 const required = (f) => !f.rust.startsWith('Option<') && !f.hasDefault;
 
-let tables = '';
-for (const [name, lines, title] of structs) {
-  const fields = parseStruct(lines, name);
-  tables += `### ${title}\n\n`;
-  tables += '| Campo | Tipo | Obrigatório | Padrão | |\n|---|---|---|---|---|\n';
-  for (const f of fields) {
-    const key = `${name}.${f.name}`;
-    seenNotes.add(key);
-    const note = (NOTES[key] ?? f.doc ?? '').replace(/\|/g, '\\|');
-    tables += `| \`${f.name}\` | ${friendly(f.rust)} | ${required(f) ? 'sim' : 'não'} | ${defaultOf(f)} | ${note} |\n`;
+function buildTables(locale) {
+  const en = locale === 'en';
+  const notes = en ? NOTES_EN : NOTES_PT;
+  let tables = '';
+  for (const [name, lines, titlePt] of structs) {
+    const fields = parseStruct(lines, name);
+    tables += `### ${en ? TITLES_EN[name] : titlePt}\n\n`;
+    tables += en ? '| Field | Type | Required | Default | |\n|---|---|---|---|---|\n' : '| Campo | Tipo | Obrigatório | Padrão | |\n|---|---|---|---|---|\n';
+    for (const f of fields) {
+      const key = `${name}.${f.name}`;
+      seenNotes.add(key);
+      const note = (notes[key] ?? f.doc ?? '').replace(/\|/g, '\\|');
+      const type = friendly(f.rust);
+      tables += `| \`${f.name}\` | ${en ? FRIENDLY_EN[type] ?? type : type} | ${required(f) ? (en ? 'yes' : 'sim') : (en ? 'no' : 'não')} | ${defaultOf(f, en)} | ${note} |\n`;
+    }
+    tables += '\n';
   }
-  tables += '\n';
+  return tables;
 }
-const orphan = Object.keys(NOTES).filter((k) => !seenNotes.has(k));
-if (orphan.length) {
-  console.error('gen-manifest: notas de campos que não existem mais no código:', orphan.join(', '));
-  process.exit(1);
+const tablesPt = buildTables('pt');
+const tablesEn = buildTables('en');
+for (const [label, notes] of [['pt', NOTES_PT], ['en', NOTES_EN]]) {
+  const orphan = Object.keys(notes).filter((k) => !seenNotes.has(k));
+  if (orphan.length) {
+    console.error(`gen-manifest (${label}): notas de campos que não existem mais no código:`, orphan.join(', '));
+    process.exit(1);
+  }
 }
 
-const page = `---
+const pagePt = (tables) => `---
 title: Referência do manifesto (rustploy.yml)
 description: "Referência completa do manifesto YAML de Infra as Code do Rustploy: todos os campos de projeto, serviço, origem, healthcheck e domínios, o arquivo de variáveis TOML, as regras de importação (casamento por nome, prune, deploy) e os erros."
 ---
@@ -385,5 +475,211 @@ Para copiar **um serviço** entre servidores, incluindo o que o manifesto não l
 **Exportar serviço** e **Importar** na tela do serviço.
 `;
 
-writeFileSync(outFile, page);
-console.log(`gen-manifest: página gerada (${structs.length} structs)`);
+const pageEn = (tables) => `---
+title: Manifest reference (rustploy.yml)
+description: "Complete reference for the Rustploy Infrastructure as Code YAML manifest: every project, service, source, healthcheck and domain field, the TOML variables file, the import rules (matching by name, prune, deploy) and the errors."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The **manifest** describes projects and services in YAML. The **variables** file (TOML) holds
+the variable values. To export, import and for the limits of the flow, see
+[Infra as Code](/en/guias/infra-as-code/). This page is the **field reference**, generated from
+the \`rustploy-shared\` code.
+
+## The two shapes
+
+| Shape | Top-level key | Use when |
+|---|---|---|
+| **Root** | \`projects:\` (list) | several projects, or what the export produces |
+| **Single project** | \`project:\` and \`services:\` | just one project |
+
+With neither \`projects:\` nor \`project:\` at the top, the import rejects the file
+(*"manifesto inválido: esperado a chave \`project:\` ou \`projects:\` no topo"*, that is, "invalid manifest: expected a \`project:\` or \`projects:\` key at the top").
+
+## Complete example
+
+This example was validated against the daemon parser:
+
+\`\`\`yaml
+apiVersion: rustploy/v1
+projects:
+  - project:
+      name: loja
+      description: Online store
+      env:
+        LOG_LEVEL: info
+        SMTP_PASSWORD: secret:SMTP_PASSWORD
+    services:
+      - name: web
+        source:
+          git:
+            url: https://github.com/acme/loja-web.git
+            branch: main
+            dockerfile: Dockerfile
+            context: .
+            provider: my-github
+        port: 3000
+        domains:
+          - { domain: shop.example.com, port: 3000, tls: true }
+        env:
+          API_URL: http://rp_api:8080
+          SESSION_KEY: \${SESSION_KEY}
+        volumes:
+          - /srv/loja/uploads:/app/uploads
+          - /srv/loja/config:/app/config:ro
+        healthcheck:
+          type: http
+          path: /health
+          status: 200
+          interval: 5
+          timeout: 3
+          retries: 10
+          start_period: 5
+        replicas: 2
+        resources:
+          cpu_shares: 512
+          mem: 512m
+      - name: api
+        source:
+          registry: ghcr.io/acme/loja-api:1.4.0
+        port: 8080
+        command: ./server
+        args: ["--workers", "4"]
+      - name: cache
+        source:
+          registry: redis:7
+        port: 6379
+        host_port: 0
+      - name: banco
+        source:
+          compose: |
+            services:
+              rp_banco:
+                image: postgres:18
+                environment:
+                  POSTGRES_PASSWORD: \${POSTGRES_PASSWORD}
+        port: 5432
+        env:
+          POSTGRES_PASSWORD: \${POSTGRES_PASSWORD}
+        db: postgres
+        shared: true
+\`\`\`
+
+And the variables file that goes with it (\`variáveis.toml\`, or \`rustploy.vars.toml\` in the desktop app zip):
+
+\`\`\`toml
+[project."loja".service."web".env]
+SESSION_KEY = "a-long-random-value"
+
+[project."loja".service."banco".env]
+POSTGRES_PASSWORD = "another-strong-password"
+
+[git_provider."my-github"]
+kind = "github"
+base_url = ""
+auth_mode = "pat"
+\`\`\`
+
+## Fields
+
+The tables below come straight from the code types. **Required** says whether the field must be
+present for the file to be accepted.
+
+${tables}
+## Variables: \`\${KEY}\` and \`secret:NAME\`
+
+An \`env\` value can take three forms:
+
+| Form | Meaning |
+|---|---|
+| \`text\` | plain value, stored as is |
+| \`\${KEY}\` | the value comes from the **variables file** |
+| \`secret:NAME\` | reference to a **project secret** (the value does not go in the manifest) |
+
+\`\${KEY}\` is looked up **with scope**:
+
+- in the **project** \`env\`: only in the \`[project."NAME".env]\` table;
+- in a **service** \`env\`: first in \`[project."NAME".service."SERVICE".env]\` and, if not found, in \`[project."NAME".env]\`.
+
+If any \`\${KEY}\` is left without a value, the import **aborts before applying anything** and lists
+each missing one with its scope (\`loja/web: SESSION_KEY\`). In a Compose service, a \`\${KEY}\` **inside the compose YAML is not touched** by the import: declare the variable in the service \`env\` (as in \`banco\` in the example) and Compose reads it from the \`.env\` at deploy time. \`secret:NAME\` references are **not created** by the
+import: create the secrets in the destination project, otherwise the variable arrives empty. See
+[How variables are resolved](/en/conceitos/variaveis-de-ambiente/).
+
+## What the import does
+
+The import **reconciles** the manifest with what already exists, matching everything **by name**.
+
+| Situation | Result |
+|---|---|
+| no project with that name | it is **created** |
+| project exists and the description changed | it is **updated** |
+| project exists and the manifest has \`env\` | the project variables are **replaced** (and the project \`.env\` comments erased) |
+| project exists and the manifest has **no** \`env\` | the existing variables are **preserved** |
+| no service with that name | it is **created** |
+| service exists and is identical | stays \`unchanged\` |
+| service exists and differs | its **entire** spec is replaced by the manifest one |
+| service exists and the manifest has no \`env\` | the service variables are **preserved** |
+| \`prune\` on | the project services that are **not in** the manifest are **removed** |
+| \`deploy\` on | created or changed services go into the deploy queue |
+| \`host_port: 0\` | reuses the port already allocated to the service with the same name, or allocates a new one and opens it in the firewall |
+
+<Aside type="danger" title="Updating a service erases what the manifest does not describe">
+  The service spec is **replaced** by the manifest one. Everything the manifest **cannot**
+  represent goes back to the default: notably the **pre-deploy queue**, which does not exist in the manifest.
+  Importing over a service that has pre-deploy configured **resets that queue**. The same goes
+  for options you set only through the screen. Export before importing to see what the manifest covers.
+</Aside>
+
+The **Git providers** in the variables file that do not yet exist at the destination are created
+**pending**, with no token or *client secret*: finish the authentication in **Settings → Git**.
+A provider that already exists with the same name is **left alone**.
+
+## Behaviors that surprise
+
+Tested against the real parser:
+
+| You write | What happens |
+|---|---|
+| a field with a **typo** (\`replica: 5\`, \`domian: …\`) | it is **silently ignored**: the parser does not reject unknown fields |
+| two keys in \`source\` (\`registry\` and \`git\`) | the **first** in the order \`registry\`, \`git\`, \`compose\` wins; no error |
+| no key in \`source\` | the service ends up with an **empty** image and the deploy is refused |
+| \`source\` missing | error (required field) |
+| \`port\` missing | it is \`0\`, no error |
+| \`healthcheck: { path: /health }\` without \`type\` | it is \`tcp\`; the \`path\` is ignored |
+| a volume without \`:\` or with an empty side | it is **dropped**; \`/a:/b:rw\` counts as read-write |
+| \`replicas: 0\` | becomes \`1\` |
+| service with a **zip** (Archive) source on export | comes out as \`registry: ""\` (empty image): it **does not fit** the manifest |
+
+## Errors
+
+| Code | When |
+|---|---|
+| \`InvalidManifest\` | invalid YAML, no \`project:\`/\`projects:\` at the top, a project without a name, or a missing required field |
+| \`InvalidEnvVars\` | the variables file is not valid TOML |
+| \`MissingEnvVars\` | a \`\${KEY}\` was left without a value (the response lists each one, with its scope) |
+| \`InvalidGitProvider\` | unknown \`kind\` or \`auth_mode\` in \`[git_provider]\` |
+| unresolved provider | a \`source.git.provider\` names an account that exists neither at the destination nor in the variables file |
+| \`include: não suportado\` | an item of \`projects:\` uses \`include:\`, which only worked in the old CLI |
+
+<Aside type="tip" title="Opaque error message in the root shape">
+  In the **root** shape, any error *inside* a project shows up as
+  *"data did not match any variant of untagged enum ProjectEntry"*, without saying which field. To
+  see the real error, validate the project in the **single** shape (\`project:\` and \`services:\` at the top):
+  the message becomes something like \`\`services[0]: missing field \`source\` at line 4 column 5\`\`.
+</Aside>
+
+## What does not fit in the manifest
+
+Jobs (Schedules), the pre-deploy queue, secret values, managed databases and the
+shared-database authorizations, zip-source services and Git accounts with credentials.
+To copy **one service** between servers, including what the manifest does not carry, use
+**Exportar serviço** (Export service) and **Importar** (Import) on the service screen.
+`;
+
+const outFileEn = new URL('../src/content/docs/en/referencia/manifesto.mdx', import.meta.url);
+mkdirSync(new URL('./', outFileEn), { recursive: true });
+writeFileSync(outFile, pagePt(tablesPt));
+writeFileSync(outFileEn, pageEn(tablesEn));
+console.log(`gen-manifest: páginas pt e en geradas (${structs.length} structs)`);

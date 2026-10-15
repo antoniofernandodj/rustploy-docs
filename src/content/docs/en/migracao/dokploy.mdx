@@ -1,0 +1,138 @@
+---
+title: Migrate from Dokploy to Rustploy
+description: How to use Rustploy's importer to copy projects, Git applications, Compose stacks, variables and domains from Dokploy - what is converted, what is not, the overwrite risks and the post-migration checklist.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The **importer** (`rustploy-import`) reads Dokploy's PostgreSQL database and creates the equivalent projects and
+services in Rustploy. It copies the **configuration**: it does not move data, volumes or containers, and it does
+not deploy.
+
+<Aside type="danger" title="Read 'Risks' before running for real">
+  The real import writes straight to Rustploy's database and can **delete services and variables that already
+  exist** there. Use `--dry-run` first and take a backup.
+</Aside>
+
+## What it converts
+
+| In Dokploy | In Rustploy |
+|---|---|
+| Project | Project (new ID) |
+| **Git**, **GitHub** or **Gitea** application | **Git**-source service (URL, branch, Dockerfile, context) |
+| **Docker Compose** | **Compose** service (the whole YAML) |
+| The application's or compose's environment variables | **Plain** service variables |
+| Domain, port and HTTPS | The service's domain, port and TLS |
+
+All services arrive **stopped**. Nothing is deployed.
+
+## What does **not** come over
+
+| Item | Status |
+|---|---|
+| **Docker image applications** | **not converted**: they become an **empty** Git service (no URL). Recreate them by hand |
+| Dokploy **databases** (Postgres, MySQL, Redis…) | not read. Recreate with the [wizard](/en/guias/bancos-e-brokers/) and restore the data |
+| **Secrets** | variables become plain; recreate the [secrets](/en/guias/variaveis-e-secrets/) |
+| **Git credentials** for a private repository | do not come over. Configure in **Settings → Git** |
+| **Volumes** | not mapped |
+| **More than one domain** per service | only the **first** domain is carried over |
+| **Shared project variables** | there is no equivalent read |
+| Deploy history, non-Dockerfile builds (Nixpacks, buildpacks) | no. Build types other than Dockerfile raise a warning and are treated as Dockerfile |
+| Dokploy backups, schedules, notifications | no |
+
+The **data** in your databases and volumes stays where it is: migrate it with `pg_dump`/restore and file copies.
+
+<Aside type="note">
+  The importer reads Dokploy's current schema, in which applications and composes belong to an **environment**
+  inside the project. Old Dokploy versions, without that table, fail on read.
+</Aside>
+
+## Before you start
+
+1. `rustploy-import` **is not in the `.deb` package or the tarball**. Compile it:
+
+   ```bash
+   cd rustploy-daemon
+   cargo build --release -p rustploy-import
+   # binary: target/release/rustploy-import
+   ```
+
+2. **Dokploy's Postgres** must be reachable from where you run the importer. By default it does not expose a port on the host: publish the port or run the importer inside the same Docker network.
+3. Rustploy must be installed and have **started at least once**, so that the `/var/lib/rustploy/db/rustploy.db` database exists.
+4. Take a **backup** of `/var/lib/rustploy/db`.
+
+## Step by step
+
+<Steps>
+1. **Simulate.** It writes nothing:
+
+   ```bash
+   rustploy-import dokploy \
+     --pg-url "postgresql://user:password@HOST:5432/dokploy" \
+     --dry-run
+   ```
+
+   It prints how many projects, applications and composes it found and the list of **warnings** (blocking,
+   warnings and information).
+
+2. **Read the warnings.** A **blocking** warning (for example, an application that points at a nonexistent
+   project) **stops** the migration.
+
+3. **Review the SQL, if you want.** Instead of writing, generate a file:
+
+   ```bash
+   rustploy-import dokploy --pg-url "…" --output-sql migration.sql --yes
+   ```
+
+4. **Import for real**, as the user that has access to Rustploy's database:
+
+   ```bash
+   sudo -u rustploy rustploy-import dokploy --pg-url "…" --yes
+   ```
+
+   Without `--yes` it only warns and **does nothing**.
+
+5. **Restart the daemon** so it recognizes the new services:
+
+   ```bash
+   sudo systemctl restart rustployd
+   ```
+</Steps>
+
+### Options
+
+| Option | Effect |
+|---|---|
+| `--pg-url` | Dokploy's Postgres URL (default `postgresql://dokploy:dokploy@localhost:5432/dokploy`) |
+| `--dry-run` | only simulates |
+| `--yes` | confirms the write |
+| `--output-sql FILE` | writes an SQL file instead of writing to the database |
+| `--gitea-url URL` | the URL base for **Gitea**-type applications (without it, `https://gitea.example.com` is used) |
+
+The `--auto-detect-docker` option exists, but **does nothing yet**.
+
+## Risks
+
+<Aside type="danger">
+  The direct write has destructive behavior, by design:
+
+  - **A project with the same name:** is **updated**, and the **project variables are replaced by an empty list**.
+  - **A service with the same name:** the importer runs `DELETE FROM service WHERE name = …` **without filtering by project**. That deletes **any service of the same name in any project** of Rustploy, and then creates the new one.
+
+  If the destination server **already has services**, check the names first. Prefer importing into a **new, empty**
+  Rustploy, or use `--output-sql` and apply only what you reviewed.
+</Aside>
+
+## After importing: checklist
+
+1. **Secrets:** recreate the ones that existed and swap the corresponding variables for `secret:NAME`.
+2. **Docker images:** recreate the image applications that became empty Git services.
+3. **Databases:** create them and restore the data.
+4. **Private repositories:** connect the account in **Settings → Git** and pick it on each service.
+5. **Compose:** the importer replaces `dokploy-network` with `rp_net` in the YAML. **Review the networks**: Rustploy already attaches the stack to the project network by itself, so references to Dokploy's external networks can be removed.
+6. **Domains:** add the extras and check port and TLS on the **Domains** tab. Point DNS at the new server.
+7. **Healthcheck:** services arrive with the healthcheck set to **None**. [Configure it](/en/guias/healthcheck/).
+8. **Volumes:** declare them on the services.
+9. **Deploy:** deploy one service at a time and check.
+
+Keep Dokploy up until you have validated everything. Switching DNS is the cutover point.

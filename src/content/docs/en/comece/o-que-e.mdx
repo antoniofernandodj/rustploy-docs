@@ -1,0 +1,50 @@
+---
+title: What is Rustploy
+description: Rustploy is a single-node, self-hosted PaaS written in Rust. A single daemon deploys Docker containers, routes domains with TLS and exposes an API, a web UI and MCP.
+---
+
+Rustploy is a deployment platform (PaaS) for **a single Linux machine with Docker**. You describe a
+service (an image, a Git repository, a zip or a Compose stack) and it takes care of the rest: build,
+container, network, domain, HTTPS certificate, zero-downtime swap and logs.
+
+## What runs on your VPS
+
+One process, `rustployd`, bundles what other platforms split into several components:
+
+| Piece | What it does |
+|---|---|
+| Deploy engine | A state machine: clones, builds, starts, checks health, swaps the route |
+| Ingress | Built-in HTTP/HTTPS reverse proxy, with ACME certificates (Let's Encrypt) |
+| HTTP/JSON + SSE API | The channel for every client, on port `9797` by default |
+| Database | Embedded SQLite; no Postgres needed for the PaaS itself |
+| OCI registry | Optional: `docker push` straight to your server |
+| Web UI | Served by the daemon on the same port as the API, installable as a PWA |
+| MCP server | `POST /mcp`: AI agents operate the server |
+
+A second small binary, `rustployd-fw`, runs as root only to open and close ports in `ufw`. It is
+optional and refuses any port outside the configured range.
+
+## Three ways to operate it
+
+- **Desktop app** (Linux and Windows), native and light.
+- **Web UI**, in the browser, with nothing to install.
+- **API and MCP**, for scripts and AI agents.
+
+All three talk to the same API. No function is exclusive to one screen. In some cases, though, only the
+API or MCP reaches a feature.
+
+## When to use it
+
+- One or a few VPS machines (1–4 GB of RAM), where the PaaS overhead matters.
+- You already use Docker and want deploys, domains and HTTPS without wiring it all by hand.
+- You want an AI to be able to deploy and diagnose problems.
+
+## When not to use it
+
+- **More than one host.** Rustploy does not manage a cluster.
+- **Hundreds of containers** or a need for Kubernetes.
+- **Builds without a Dockerfile.** There are no buildpacks; building from source uses your `Dockerfile`.
+
+## Next step
+
+If you know Docker, read the [Docker → Rustploy map](/en/comece/docker-para-rustploy/).

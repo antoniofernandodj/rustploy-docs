@@ -1,0 +1,34 @@
+---
+title: The deploy queue
+description: How Rustploy's global deploy queue works (one at a time), and how to promote, reorder, pause and abort deploys on the Deploy Engine screen.
+---
+
+Rustploy runs **one deploy at a time** on the whole server. This protects a small VPS from several simultaneous
+builds. The rest wait in the **queue**.
+
+## The Deploy Engine screen
+
+In the side menu, **Deploy Engine**, with three tabs:
+
+| Tab | Shows |
+|---|---|
+| **Fila** (Queue) | the deploys waiting, in order |
+| **Executando** (Running) | the active deploy and the state it is in |
+| **Histórico** (History) | recent deploys and the outcome of each |
+
+## What you can do
+
+| Action | Effect |
+|---|---|
+| **Promote** (cut the line) | moves a queued deploy to the front |
+| **Reorder** | sets the exact order of the queue |
+| **Pause / resume** | the queue stops starting new deploys (the running one finishes) |
+| **Cancel** a queued one | removes it from the queue |
+| **Abort** the running one | interrupts the task immediately, **with no rollback**: the deploy ends `Failed` and the service is left in `Error` until a new Deploy |
+
+Jobs and deploys share the same queue.
+
+## Through the agent
+
+The MCP `status` tool shows the queue. The commands are `DeployQueuePromote`, `DeployQueueReorder`,
+`DeployQueuePause` and `DeployAbort`, through `rpc`.

@@ -16,7 +16,7 @@ Nas variáveis dos templates, estes marcadores viram valores na hora de criar o 
 | `${base64:N}` | chave aleatória em base64 |
 | `${hash:N}` | hash aleatório |
 | `${uuid}` | UUID aleatório |
-| `${email}` e `${username}` | e-mail e usuário gerados |
+| `${email}` / `${username}` | e-mail e usuário gerados |
 | `${jwt}` | JWT gerado |
 
 ## Todos os templates

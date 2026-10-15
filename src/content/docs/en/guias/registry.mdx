@@ -1,0 +1,73 @@
+---
+title: Built-in Docker registry
+description: How to turn on the Docker (OCI) registry built into Rustploy's daemon, expose it on a domain with HTTPS, create push and pull tokens, docker login and push, use the image in a service and clean up with the garbage collector.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+`rustployd` ships a **Docker registry** (OCI Distribution API v2). Your CI does `docker push` straight to your
+server, and a service uses the image: no Docker Hub, no separate registry.
+
+## Turn it on
+
+In `config.toml`:
+
+```toml
+[registry]
+enabled = true
+port    = 5100
+```
+
+Restart the daemon. By default the registry listens on **loopback** only (`127.0.0.1:5100`).
+
+## Expose it on a domain with HTTPS
+
+To push from another machine, give the registry a domain:
+
+1. Point a DNS record at the server.
+2. In **Settings → Web Server**, fill in **DOMÍNIO DO REGISTRY (EXPOSIÇÃO PÚBLICA)** (registry domain, public exposure), for example `registry.mysite.com`, and save. Restart the daemon. (ACME must be [on](/en/guias/dominios-e-tls/).)
+
+The daemon registers the route on the ingress and issues the certificate, so `docker` on any machine talks to it
+without configuring `insecure-registries`.
+
+## Tokens
+
+Every registry route requires authentication (Basic), even on loopback. Create tokens in **Docker → Registry**:
+
+<Steps>
+1. Click **+ Novo token** (New token).
+2. Give it a name and choose the scope: **pull** (download only) or **push** (publish, and also download).
+3. Confirm. The screen shows the **`docker login` command** with the secret.
+</Steps>
+
+<Aside type="danger">
+  The secret appears **only once**. Copy the command before finishing. If you lose it, revoke the token and
+  create another.
+</Aside>
+
+Use a **push** token in CI and **pull** wherever you only download.
+
+## Publish an image
+
+```bash
+docker login registry.mysite.com -u <token-name> -p <secret>
+docker build -t registry.mysite.com/app:v1 .
+docker push registry.mysite.com/app:v1
+```
+
+## Use the image in a service
+
+Create a **Registry**-source service with the image `registry.mysite.com/app:v1`. Rustploy pulls the image from
+its own registry with an internal credential, with nothing for you to configure.
+
+## View and clean up
+
+The **Docker → Registry** sub-tab lists **repositories and tags** (digest, size, date) and lets you remove tags
+and repositories.
+
+Removing a tag does not free disk by itself. The **garbage collector** (the **Executar GC** button) deletes
+manifests with no tag, and the blobs nobody uses any more. If another tag points at the same digest, it stays valid.
+
+<Aside type="note">
+  Content is only created by `docker push`: the screen does not upload images.
+</Aside>

@@ -1,0 +1,48 @@
+---
+title: Docker Compose stacks
+description: How to run a Docker Compose stack in Rustploy - pasting the YAML, what Rustploy injects (the project network), internal names, domain and ingress target, and how to edit the stack afterwards.
+---
+
+The **Compose** source runs a whole stack with `docker compose up`. It is the type used by databases, brokers
+and templates, and it fits any set of containers that go together.
+
+## Create
+
+**+ Novo serviço → Compose** (New service → Compose). Fill in:
+
+- the stack's **Nome** (Name);
+- the **Porta** (Port) of the container that serves the domain (in stacks with several containers, the port of the one that serves HTTP);
+- the **Domínio** (Domain), optional;
+- **Docker Compose (YAML)** with your file.
+
+Then edit the YAML on the service's **General** tab (**Salvar compose**, Save compose) and run **Deploy**.
+
+## What Rustploy does with your YAML
+
+Before `docker compose up`, the daemon **injects the project network** into every service of the stack. You
+**do not need to declare any network**. As a result:
+
+- the stack's containers see the project's other services;
+- the other services reach the stack by the **service name inside the YAML** (the key under `services:`).
+
+## Do not publish ports
+
+Do not use `ports:` to put the app on the internet: Rustploy's proxy routes by domain. Use the service's **domain**.
+
+For databases and brokers that need external access, use the wizard's expose option: Rustploy allocates a port
+in the `[external_ports]` range.
+
+## Which container gets the domain
+
+In a stack with several containers only **one** serves the domain. The pick, in order:
+
+1. the service defined as the **ingress target**;
+2. the container that exposes the domain's port;
+3. the first in alphabetical order.
+
+If the domain gives a 502 on a stack, start there: [Diagnose a 502 error](/en/guias/diagnosticar-502/).
+
+## Volumes
+
+Rustploy only uses *bind mounts* in the services it creates. In your Compose stack, since the YAML is yours,
+you decide the volumes.

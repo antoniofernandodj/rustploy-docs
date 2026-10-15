@@ -1,0 +1,55 @@
+---
+title: Migrate a database to the shared server
+description: How to move the data of an old database (a project's Compose service) to a database on a shared server in Rustploy, with a controlled stop, environment variable swap, rollback and discarding the old database.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The migration wizard moves the data of a database **inside a project** to a database on a
+[shared server](/en/guias/banco-compartilhado/), swaps the environment variable and lets you **go back**.
+
+<Aside type="caution" title="The migration involves downtime">
+  The services that use the old database are **stopped** during the copy, and come back at the end. Plan a
+  maintenance window.
+</Aside>
+
+## Before
+
+- A shared server of the **same engine** exists, and you already created the destination database on it **for the same project**, ticking **"Não mexer em env var (vou migrar os dados antes)"**.
+- Have a backup (see [Backup](/en/guias/backup/)).
+
+## Migrate
+
+<Steps>
+1. Open the **old** database service and go to the **Migrar** (Migrate) tab.
+2. Under **DATABASE DE ORIGEM** (source database), enter the database name inside that server.
+3. Choose the **DESTINO** (destination, the database created on the shared server).
+4. Under **ENV VAR A TROCAR** (env var to swap), enter the variable (default `DATABASE_URL` or `MONGODB_URI`).
+5. Click **Migrar**.
+</Steps>
+
+The **ANDAMENTO** (progress) panel shows each step. The process runs in the background, so you can leave the
+screen and come back with **Atualizar** (Refresh).
+
+### What it does
+
+Rustploy checks the destination (it **must be empty**), stops the consumer services, copies the data with dump
+and restore (using the destination server's image, piped), swaps the variable **everywhere it exists** (project
+and services), restarts the consumers and **stops** the old database, without deleting it.
+
+## Go back
+
+With the migration finished and the old database still kept, **Reverter** (Revert) restores the variable and
+restarts the old database and the consumers.
+
+## Discard
+
+After an observation period, **Descartar banco antigo** (Discard old database) removes its service and
+containers, **with the data**. Its Docker volumes may be left over: [Docker cleanup](/en/guias/limpeza-docker/)
+collects them.
+
+## Limits
+
+- The destination's disk space is **not** checked beforehand.
+- Postgres extensions that require a superuser make the restore fail; the migration aborts and rolls back, but the destination may be left with leftovers. Delete the database and try again.
+- "Start the services" only queues the redeploy; check each one's healthcheck.

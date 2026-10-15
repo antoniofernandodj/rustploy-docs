@@ -1,0 +1,61 @@
+---
+title: A shared database across projects
+description: How to use a single database server (Postgres, MySQL, MariaDB or MongoDB) for several projects in Rustploy, with a database and user per project, isolation by permissions and the connection string delivered in an environment variable.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Giving each project its own database duplicates memory, backups and upgrades. The **shared server** is **one**
+database (per engine) used by several projects, each with its own **database** and its own **user**. Isolation
+becomes a matter of database permissions, as with RDS or Atlas.
+
+Projects normally cannot see each other on the network. Rustploy opens a controlled exception: it connects the
+database server to the network of each authorized project, with a name (alias) that does not collide with the
+ones inside the project.
+
+## How it works
+
+1. You mark a **wizard-created database** as **shared**.
+2. On that server's **Databases** tab, you create a database for a project.
+3. Rustploy creates the database and the user, **authorizes** the project, connects the networks and writes the **connection string** into one of the project's environment variables (by default `DATABASE_URL` or `MONGODB_URI`).
+
+## Step by step
+
+<Steps>
+1. Create a **Database** service (Postgres, MySQL, MariaDB or MongoDB), preferably in a project of its own for infrastructure (for example `infra`). Run the deploy.
+2. Open the service and click **Compartilhar** (Share). The **Databases** tab appears.
+3. Under **NOVO DATABASE** (new database), enter:
+   - the database **name** (and the user's): `a-z`, `0-9` and `_`, up to 32 characters;
+   - the **env var** that will receive the URL (optional: it uses `DATABASE_URL` or `MONGODB_URI`);
+   - the **connection limit** (optional; does not apply to MongoDB);
+   - the **query timeout**, in ms (optional; Postgres only);
+   - the **consumer project**, from a selector.
+4. Click **Criar database** (Create database).
+5. In the consumer project, **run a new deploy** so the application reads the variable.
+</Steps>
+
+The list shows, per database, the project, the variable and the **URL** with a **Copiar** (Copy) button.
+
+## Isolation
+
+Each database has a user **with no access to the others**. One database's user is refused on another. Consumer
+projects receive only their own connection string.
+
+## Variable conflict
+
+If the project already has the variable (for example a `DATABASE_URL` pointing at the old database), creation is
+**refused**, unless you authorize overwriting. Tick **"Não mexer em env var (vou migrar os dados antes)"** (Do not
+touch the env var, I will migrate the data first) when you want to create the database without touching the
+application: it is the first step of a [migration](/en/guias/migrar-banco/).
+
+## Remove a database
+
+Removing **deletes the database and the user, with the data**. There is no way to recover it.
+
+## Limits
+
+<Aside type="caution">
+  - The query timeout only exists on Postgres; the connection limit does not exist on MongoDB.
+  - `mongo:8` does not start on Linux kernels 6.19 or newer (a problem in MongoDB itself). Use `mongo:7` on those servers.
+  - Rustploy **does not back up the database's data**. Make your own (see [Backup](/en/guias/backup/)).
+</Aside>

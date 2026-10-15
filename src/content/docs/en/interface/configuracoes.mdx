@@ -1,0 +1,141 @@
+---
+title: Settings in the desktop app
+description: The four Settings tabs of the Rustploy desktop app - Web Server (API URL, connection token and the AI agent command), Git (GitHub and Gitea accounts), Infrastructure as Code (export and import zip) and Maintenance (automatic Docker cleanup).
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import web from '../../../../assets/ui/settings-web-server.png';
+import git from '../../../../assets/ui/settings-git.png';
+import gitOauth from '../../../../assets/ui/settings-git-oauth.png';
+import iac from '../../../../assets/ui/settings-iac.png';
+import manutencao from '../../../../assets/ui/settings-manutencao.png';
+import manutencaoFim from '../../../../assets/ui/settings-manutencao-fim.png';
+
+**Settings** (at the foot of the side menu) has four tabs: **Web Server**, **Git**, **Infra as Code** and **Manutenção** (Maintenance).
+
+## Web Server
+
+<Shot
+  src={web}
+  alt="The Web Server tab with the API's public URL, the connection token and the command to connect a Claude Code agent. The addresses and the token were blurred."
+  caption="The Web Server tab. The values were blurred in this image."
+/>
+
+Three blocks, each with **Copiar** (Copy):
+
+| Block | What it is |
+|---|---|
+| **URL PÚBLICA DA API** (the API's public URL) | the base of the services' **webhooks** and of the OAuth callback. It comes from `[api].domain` and the port. To change it, set `api.domain` and restart the daemon |
+| **TOKEN DE CONEXÃO** (connection token) | the base64 text of `host:port::token`, what you paste on the [login](/en/interface/entrar/) and what an AI agent uses. It is also in `[api].connection_token` in `config.toml` |
+| **CONECTAR UM AGENTE (CLAUDE CODE)** (connect an agent) | copies the `claude mcp add …/mcp` command with the token already in it. Paste it in the terminal. See [Connect Claude Code](/en/agentes/conectar-claude-code/) |
+
+<Aside type="danger">
+  The connection token is **worth as much as the administrator token**. Do not share it, and do not publish screenshots of this screen
+  without blurring.
+</Aside>
+
+Further down, scroll the screen, are the **E-MAIL LET'S ENCRYPT (HTTPS AUTOMÁTICO)** (Let's Encrypt email, automatic HTTPS) and the
+**DOMÍNIO DO REGISTRY (EXPOSIÇÃO PÚBLICA)** (registry domain, public exposure). Both require restarting the daemon.
+
+## Git
+
+<Shot
+  src={git}
+  alt="The Git tab with no connected accounts, with the choice between Gitea and GitHub, the Name and Base URL fields, the OAuth2 or token method and the Client ID and Client Secret fields."
+  caption="The Git tab: connecting an account."
+/>
+
+Here you connect **GitHub** or **Gitea** accounts once and use them across all services and jobs. **CONTAS CONECTADAS (N)** (connected
+accounts) lists the existing ones.
+
+To **connect**:
+
+1. Choose **Gitea** or **GitHub**.
+2. Enter a **NOME** (just a label) and, for Gitea or GitHub Enterprise, the **BASE URL**. On GitHub.com leave it blank.
+3. Choose the **MÉTODO** (method): **OAuth2** or **Token (PAT)**.
+4. With **OAuth2**, enter the **CLIENT ID** and **CLIENT SECRET** of an OAuth application created at the provider.
+5. Click **Conectar conta** (Connect account).
+
+<Shot
+  src={gitOauth}
+  alt="The lower part of the Git tab showing the Redirect URI with a Copiar button, the instruction for Gitea and the Conectar conta and Atualizar lista buttons. The URI was blurred."
+  caption="The end of the form: the Redirect URI. (Blurred in this image.)"
+/>
+
+With OAuth, the screen shows the **REDIRECT URI**: copy it with **Copiar** and paste it into the provider's OAuth application (on Gitea:
+*Settings → Applications*; on GitHub: *Settings → Developer settings → OAuth Apps*, the *Authorization callback URL* field). When you click
+**Conectar conta**, the browser opens for you to authorize.
+
+With **Token (PAT)**, paste a *Personal Access Token* with read access to the repositories (the `repo` scope). **Atualizar lista**
+(Refresh list) reloads the accounts.
+
+Details and the use in services: [Deploy from a Git repository](/en/guias/git/).
+
+## Infra as Code
+
+<Shot
+  src={iac}
+  alt="The Infra as Code tab with the Export and Import blocks, the prune and trigger-deploy options and the buttons to export and import a zip file."
+  caption="The Infra as Code tab."
+/>
+
+| Block | What it does |
+|---|---|
+| **Exportar para um .zip…** (Export to a .zip) | writes a `.zip` with `rustploy.yml` and `rustploy.vars.toml` wherever you choose. Variable values live only in the TOML; **secrets never leave the daemon** |
+| **Importar de um .zip…** (Import from a .zip) | reads a `.zip` of the same format, with **exactly one** `.yml` and one `.toml` at the root |
+
+Import options:
+
+| Option | Effect |
+|---|---|
+| **Remover serviços ausentes do manifesto (prune)** | deletes the services that are not in the manifest |
+| **Disparar deploy dos serviços criados/alterados** | deploys after syncing |
+
+If the value of a variable used in the YAML is missing, the import is **cancelled before applying anything**, and the message says which variable is
+missing, labelled with its scope (for example `Chiquitos/api: APP_PORT`, where `Chiquitos` is a project name and `api` a service). Details in
+[Infrastructure as Code](/en/guias/infra-as-code/).
+
+## Manutenção (Maintenance)
+
+<Shot
+  src={manutencao}
+  alt="The Maintenance tab with automatic cleanup on, a daily frequency at 03:00, and the stopped containers and unused images options ticked."
+  caption="The Maintenance tab, start of the form."
+/>
+
+This is where the **automatic Docker cleanup** lives. It comes **off** and **removes nothing** until you tick at least one resource and turn it on.
+
+1. Turn on **Ativar limpeza automática** (Enable automatic cleanup).
+2. Under **FREQUÊNCIA** (frequency), choose **A cada N horas** (every N hours), **Todo dia** (every day) or **Toda semana** (every week) and the **HORÁRIO** (time).
+3. Under **O QUE LIMPAR** (what to clean), tick the types.
+4. Click **Salvar** (Save). **Executar agora** (Run now) runs it immediately.
+
+<Aside type="caution" title="The time you type is UTC">
+  The **HORÁRIO** field is in **UTC**. The **Próxima execução agendada** (next scheduled run) line shows the time in **your time zone**: in the image
+  above, `03:00` appears as `15/10 00:00` (UTC−3). Use that line to check.
+</Aside>
+
+<Shot
+  src={manutencaoFim}
+  alt="The end of the Maintenance tab with unused networks and build cache ticked, the red volumes warning, the Salvar and Executar agora buttons and the last run."
+  caption="The Maintenance tab, end: volumes, buttons and last run."
+/>
+
+| Option | Effect |
+|---|---|
+| **Containers parados** (stopped containers) | removes stopped containers |
+| **Imagens sem uso** (unused images) | by default only *dangling* ones. **incluir todas as não usadas** (include all unused) also includes tagged ones |
+| **SÓ IMAGENS CRIADAS HÁ MAIS DE (HORAS)** | default **168**. `0` does not filter. Docker looks at the creation date, not the last use |
+| **Redes sem uso** (unused networks) | removes networks with no containers |
+| **Cache de build** | removes unused cache |
+| **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | default **168**. `0` deletes all unused cache |
+| **Volumes sem uso** (unused volumes) | **careful** |
+
+<Aside type="danger" title="Volumes">
+  *"Volumes sem uso criados por fora do rustploy podem conter dado que ninguém recriaria sozinho."* (Unused volumes created outside rustploy may
+  hold data nobody would recreate by themselves.) Leave it unticked unless you are sure.
+</Aside>
+
+At the bottom, **ÚLTIMA EXECUÇÃO** (last run) shows when it ran and what it freed (containers, images, networks, build cache). More in
+[Docker cleanup](/en/guias/limpeza-docker/).

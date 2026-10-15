@@ -1,0 +1,87 @@
+---
+title: Monitoring, service health and automatic restart
+description: What Rustploy's Monitoring screen shows (CPU, memory, disk, load and network per container), how the watchdog watches services, restarts containers that fall over and marks Degraded or Error, and what happens after the server reboots.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## The Monitoring screen
+
+**Monitoring** (side menu) shows the usage **right now**, refreshed every 2 seconds:
+
+| Block | What it measures |
+|---|---|
+| **CPU** | total CPU use of the server |
+| **MEMORY** | memory in use |
+| **DISK** | disk of the **largest mount point** (usually `/`) |
+| **LOAD** | the system load average (1, 5 and 15 minutes) |
+
+Below, one row per running service **container**: **CPU**, **memory** and network traffic received and sent. A
+container's CPU is relative to the total capacity of the CPUs (a container using 2 cores of 4 shows 200% on a
+one-core scale).
+
+<Aside type="note" title="Only the present, no history">
+  Metrics are not stored. The screen shows the current value and there is **no chart or history**: on reload, the
+  per-container numbers reappear with each new collection cycle. The `[metrics].history_points` key in
+  `config.toml` exists, but today it **has no effect**. For history and alerts, use an external tool (for
+  example Beszel or Uptime Kuma, both in the [template catalog](/en/templates/)).
+</Aside>
+
+The collection interval is `[metrics].interval_secs` (default 2 s).
+
+## The watchdog: who watches the services
+
+A loop inside the daemon checks, every **5 seconds**, every service with status **Running** or **Degraded**. For
+each one, at the pace of the service's healthcheck **INTERVAL**:
+
+1. **Is the container running?** If not, the watchdog tries to **start it again** (up to **3 attempts**, waiting 3 s between them) and marks the service **Degraded**. If the container was **removed**, or the 3 attempts fail, it triggers a **redeploy**.
+2. **Does the healthcheck pass?** It uses the same type configured on the **Healthcheck** tab (Http, Tcp, Docker).
+
+The status progression when the healthcheck **fails**:
+
+| Consecutive failures | Service status |
+|---|---|
+| 1 | **Degraded** |
+| up to `RETRIES` − 1 | stays Degraded, only logged in the daemon log |
+| `RETRIES` (default 10) | **Error** (`healthcheck falhou Nx`) and the service **leaves the watch** |
+
+If the healthcheck passes again before reaching `RETRIES`, the service returns to **Running**. A service in
+**Error** is no longer watched: you have to act (fix it and run **Deploy**).
+
+With the healthcheck set to **None**, the watchdog only checks that the container is up.
+
+### Why Rustploy restarts instead of Docker
+
+Containers are created with Docker's restart policy set to **`no`**: the watchdog, not `dockerd`, decides to bring
+them back. That lets it count attempts, change the status and fall back to a redeploy instead of looping on restarts.
+
+## After the server reboots
+
+<Aside type="caution" title="Services do not come back by themselves">
+  According to the code, on startup the daemon **reconciles** each service's status with Docker and marks as
+  **Stopped** those with no running container. Since containers have restart policy `no`, after **rebooting the
+  machine** the services stay **stopped** until you **Deploy** (or restart) each one. The plan to "start everything
+  at boot" (`plano-dependencias-e-autostart`) has **not been implemented** yet. Verify on your server before
+  relying on this in production.
+</Aside>
+
+What the daemon **does** on startup:
+
+- requeues the deploys that were waiting and resumes those that were mid route swap;
+- rebuilds the proxy's **route table** from the containers that exist in Docker;
+- reopens the external ports and reconnects shared database servers to their authorized networks;
+- repeats that reconciliation **every 30 seconds**.
+
+To bring everything back at once after a reboot, use an AI agent with the `deploy` tool or call `DeployStart` for
+each service through the API.
+
+## The daemon's own logs
+
+`rustployd` logs JSON to the systemd **journal**:
+
+```bash
+journalctl -u rustployd -f
+journalctl -u rustployd --since "1 hour ago" | grep -i watchdog
+```
+
+The level comes from `[daemon].log_level` or from `RUST_LOG` (see [`config.toml`](/en/instalacao/config-toml/)).

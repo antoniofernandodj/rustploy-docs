@@ -23,9 +23,10 @@ npm run build      # gera dist/ (HTML estático, sitemap, llms.txt, índice Page
 | Script | Lê | Gera |
 |---|---|---|
 | `scripts/sync-manual.mjs` | `rustploy-daemon/.../agent/manual.md` | `agentes/manual.md` |
-| `scripts/gen-templates.mjs` | `rustploy-shared/templates/blueprints/` e `docs/services.md` | uma página por template em `templates/` |
-| `scripts/gen-manifest.mjs` | `rustploy-shared/src/manifest.rs` e `models.rs` | `referencia/manifesto.mdx` (as tabelas; as notas por campo ficam no script e quebram o build se o campo sumir) |
-| `scripts/gen-protocol.mjs` | `rustploy-shared/src/protocol.rs` e `docs/indice/comandos.md` | `referencia/{comandos,respostas,eventos,paridade}.md` |
+| `scripts/gen-templates.mjs` | `rustploy-shared/templates/blueprints/` e `docs/services.md` | uma página por template em `templates/` e `en/templates/` (descrições em inglês: `scripts/data/template-descriptions-en.tsv`) |
+| `scripts/gen-manifest.mjs` | `rustploy-shared/src/manifest.rs` e `models.rs` | `referencia/manifesto.mdx` e `en/referencia/manifesto.mdx` (as tabelas; as notas por campo ficam no script e quebram o build se o campo sumir) |
+| `scripts/gen-faq.mjs` | `scripts/data/faq.mjs` | `faq.mdx` e `en/faq.mdx`, com JSON-LD `FAQPage` |
+| `scripts/gen-protocol.mjs` | `rustploy-shared/src/protocol.rs` e `docs/indice/comandos.md` | `referencia/{comandos,respostas,eventos,paridade}.md`, em pt e en (traduções das docs do Rust: `scripts/data/protocol-en.mjs`) |
 
 Sem o agregador ao lado (clone só deste repo) os scripts não fazem nada e o build
 usa as páginas já commitadas. **Não edite essas páginas à mão.**

@@ -1,0 +1,125 @@
+---
+title: Infrastructure as Code (YAML manifest)
+description: How to export and import all of Rustploy's projects and services as a versionable YAML manifest, with a variables TOML file, to recreate a server, clone environments and do GitOps.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Rustploy describes projects and services in a **YAML manifest**: you can export the current state, keep it in Git
+and import it on another server.
+
+## The pair of files
+
+The export produces **two** files:
+
+| File | Contents |
+|---|---|
+| `rustploy.yml` | projects and services. Variable values **never** appear: `${NAME}` goes in their place |
+| `variáveis.toml` (the variables file) | the real values of plain variables, organized by project and service, plus the non-secret data of Git accounts |
+
+**Secrets never leave the daemon**: in the YAML they stay as `secret:NAME`, with no value. The YAML can go into
+Git without worry; the TOML has values, so **treat it as a secret**.
+
+## Export
+
+**Settings → Infra as Code.**
+
+- **Web UI:** **Exportar tudo** (Export all) shows the two texts to copy.
+- **Desktop app:** **Exportar para um .zip…** (Export to a .zip) writes a `.zip` with `rustploy.yml` and `rustploy.vars.toml` (the same variables TOML, under another name).
+
+## Import
+
+**Settings → Infra as Code → Importar** (Import). In the web UI, paste the `rustploy.yml` and the `variáveis.toml`. In the desktop app, **Importar de um .zip…** reads a zip with **exactly one** `.yml` and one `.toml` at the root.
+Two options:
+
+| Option | Effect |
+|---|---|
+| **Remover serviços ausentes do manifesto (prune)** | deletes the project's services that are not in the manifest |
+| **Disparar deploy dos serviços criados/alterados** | does the rollout after syncing |
+
+By default the import is **additive and idempotent**: it matches projects and services **by name**, creates the
+missing ones, updates the changed ones and **deletes nothing**. Running it twice gives the same result. The
+**RESULTADO** (result) panel lists what was created, updated or left as it was.
+
+<Aside type="caution" title="Matching is by name">
+  If you renamed a project or service, an old manifest creates a **new** one instead of updating the existing one.
+</Aside>
+
+`${NAME}` variables with no value in the TOML abort the import, listing what is missing. Nothing is applied
+halfway.
+
+## Format
+
+```yaml
+apiVersion: rustploy/v1
+projects:
+  - project:
+      name: my-app
+      description: API and front
+      env:
+        LOG_LEVEL: info
+        DB_PASS: ${DB_PASS}
+    services:
+      - name: web
+        source:
+          git:
+            url: https://github.com/acme/web.git
+            branch: main
+            dockerfile: Dockerfile
+        port: 3000
+        domains:
+          - { domain: app.example.com, port: 3000, tls: true }
+        env:
+          API_KEY: secret:API_KEY
+        healthcheck: { type: http, path: /health, status: 200 }
+        replicas: 2
+      - name: cache
+        source:
+          registry: redis:7
+        port: 6379
+```
+
+### Service fields
+
+| Field | Note |
+|---|---|
+| `source` | `registry: <image>`, `git: {…}` or `compose: <yaml>`. Use **one**: if there is more than one, the first in that order wins |
+| `source.compose_ingress` | the compose service that receives the domain |
+| `port`, `host_port` | container port; external (TCP) port |
+| `domains` | a list of `{domain, port, tls}` |
+| `env` | a map; a `secret:NAME` value references a secret |
+| `volumes` | a `host:container[:ro]` list |
+| `healthcheck` | `type: none \| tcp \| http \| docker`, `path`, `status`, `interval`, `timeout`, `retries`, `start_period` |
+| `replicas`, `resources` | `resources: { cpu_shares, mem: 256m }` |
+| `command`, `args` | overrides the image's command |
+| `db`, `shared` | the database type and the shared-server flag |
+
+`source.git` accepts `url`, `branch`, `dockerfile`, `context`, `username`, `credentials` and `provider` (the
+**name** of the connected Git account).
+
+The `include:` of a `projects:` item (which pointed to another file) is **not accepted** by the daemon's import:
+declare the projects in the file itself.
+
+All the fields, with type, default and the rules for each, are in the [Manifest reference](/en/referencia/manifesto/).
+
+## Careful when importing over what already exists
+
+<Aside type="danger">
+  A service that already exists and differs from the manifest has its **whole spec replaced**. What the manifest
+  does not describe goes back to the default: in particular the **pre-deploy queue**, which is not part of the
+  manifest. **Jobs** are not either. Before importing on a server that has services, export and compare. The
+  details, rule by rule, are in [What the import does](/en/referencia/manifesto/#what-the-import-does).
+</Aside>
+
+## Limits
+
+- A **zip** (Archive) source service **does not fit** in the manifest.
+- Git accounts: the TOML only carries the non-secret data. After importing, **complete the authentication** (OAuth or token) in **Settings → Git**.
+- There is no command line: the `rustploy apply` CLI was removed together with the TUI. Import and export go through the screen or the API (`ManifestImport`, `ManifestExportAll`).
+
+## Through the API
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" https://SERVER:9797/api/rpc \
+  -d '"ManifestExportAll"'
+```

@@ -1,0 +1,36 @@
+---
+title: Security when using agents
+description: Rustploy's token is an administrator's, with no scope and no confirmation on destructive commands. What that means when you give an AI agent access and how to protect yourself.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="danger" title="Read before connecting an agent">
+  The API token is a **single, unscoped bearer**. Whoever has it creates projects, reads decrypted secrets, starts
+  containers and takes stacks down. There is no read-only mode.
+</Aside>
+
+## What the agent can do
+
+Everything the administrator can. The agent **sees** the token, because it is what authenticates. Destructive
+commands **do not ask for confirmation** on the server: `ServiceDelete`, `Prune*`, `Remove*`, `StopAllManaged`,
+`RegistryRepoDelete`.
+
+## How to protect yourself
+
+- **Paste the token only on machines that are yours.** The connection token is worth as much as the administrator's.
+- **Ask for confirmation in the prompt.** Tell the agent to describe and wait before any destructive action (see the [connection](/en/agentes/conectar-claude-code/) prompt).
+- **One server, one name.** With several servers, name each MCP and say which to use. The daemon already asks for confirmation before changing anything when more than one is registered.
+- **Expose the API with TLS.** Set `[api].domain` so the API port terminates HTTPS.
+- **Restrict the network.** If possible, leave port 9797 reachable only over a VPN or from known IPs.
+
+## If the token leaks
+
+1. Change `[api].token` in `config.toml`.
+2. Restart the daemon. The `connection_token` rewrites itself.
+3. Remove and register the MCP again on the legitimate machines.
+
+## What does not exist yet
+
+A scoped token (read-only, deploy-only, administrator). The place where it would go is a single `if` in the API's
+authentication gate. Until then, the barrier is your network and your discipline in using it.
