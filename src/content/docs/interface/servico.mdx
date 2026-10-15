@@ -1,0 +1,175 @@
+---
+title: A tela do serviço
+description: Tour da tela de um serviço no app desktop do Rustploy - botões Deploy, Reload, Rebuild, Stop e Exportar, o painel lateral, e as abas General, Connection, Environment, Deployments e Logs, com o webhook de deploy.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import db from '../../../assets/ui/servico-db-geral.png';
+import git from '../../../assets/ui/servico-geral-git.png';
+import connection from '../../../assets/ui/servico-connection.png';
+import deployments from '../../../assets/ui/servico-deployments.png';
+
+Em **Projects → (projeto) → Serviços**, o botão **Abrir ›** de um cartão leva à tela do
+serviço. É aqui que você faz o deploy e configura tudo.
+
+## O cabeçalho
+
+Em cima: **‹ nome-do-projeto** (volta ao projeto), o **nome do serviço** e, logo abaixo,
+o **status** (`Stopped`, `Running`, `Deploying`, `Degraded`, `Error`…). À direita ficam
+os botões de ação:
+
+| Botão | O que faz |
+|---|---|
+| **Deploy** | inicia um deploy do serviço (entra na [fila](/guias/fila-de-deploys/)) |
+| **Reload** | **reinicia** o container que está no ar, sem redeploy. Não aplica variáveis novas |
+| **Rebuild** | hoje faz **exatamente o mesmo que Deploy** |
+| **Stop** | para o serviço. Pede confirmação: o tráfego fica interrompido até um novo deploy |
+| **Exportar serviço** | gera um arquivo para recriar o serviço em outro servidor |
+
+<Aside type="note" title="Rebuild e Deploy">
+  No app desktop, **Rebuild** chama a mesma função de **Deploy**: o deploy de um
+  serviço de Git ou zip já refaz o build da imagem. Use **Deploy**.
+</Aside>
+
+Não há botão de rollback na tela do serviço. Para voltar uma versão, redeploye a
+anterior (veja o [tutorial](/tutorial/primeiro-deploy/#8-volte-uma-versão)).
+
+## O painel lateral
+
+À direita ficam dois painéis:
+
+| Painel | Mostra |
+|---|---|
+| **STATUS / UPTIME / SERVICES** | o status do serviço e dois números **globais** |
+| **LOGS** | o botão para abrir os logs de runtime numa janela |
+
+<Aside type="caution" title="UPTIME e SERVICES são do servidor, não do serviço">
+  **UPTIME** é há quanto tempo o **daemon** está no ar, e **SERVICES** é a contagem
+  de serviços rodando sobre o total (`0/7`), de todos os projetos. Nenhum dos dois
+  descreve o serviço aberto. Só o **STATUS** é dele.
+</Aside>
+
+## As abas
+
+As abas dependem do tipo de serviço. Um serviço **Application** tem **General**,
+**Connection**, **Environment**, **Domains**, **Deployments**, **Healthcheck**, **Logs** e
+**Advanced**. Um banco ou stack **Compose** ganha ainda **Migrar** (levar os dados para
+um [servidor compartilhado](/guias/migrar-banco/)). Um servidor de banco compartilhado tem a aba
+**Databases**.
+
+Esta página cobre as cinco primeiras. **Domains**, **Healthcheck** e **Advanced** estão em
+[Configurar domínios, healthcheck e opções avançadas](/interface/servico-configuracao/).
+
+### General
+
+O topo é sempre **NOME DO SERVIÇO**, com o botão **Renomear**. O texto abaixo do campo
+avisa o efeito, e ele **varia por tipo**:
+
+- **Compose:** *"A stack e os volumes do Docker não mudam com o nome: os dados continuam os mesmos."*
+- **Application:** *"O hostname interno (`rp_<nome>`) só passa a valer no próximo deploy. Outros serviços que usam o nome antigo em variáveis de ambiente precisam ser atualizados."*
+
+#### Serviço Compose
+
+<Shot
+  src={db}
+  alt="Aba General de um serviço Compose com o campo de nome, o editor do YAML do compose e os botões Salvar compose e Cancelar."
+  caption="General de um serviço Compose (um banco Postgres criado pelo assistente)."
+/>
+
+O editor **DOCKER COMPOSE (YAML)** mostra o compose da stack. *"Edite o compose do serviço.
+Salvar aplica no próximo deploy."* Use **Salvar compose** (ou **Cancelar** para descartar). As
+variáveis aparecem como `${POSTGRES_PASSWORD}`: os valores vêm da aba **Environment**.
+Veja [Stacks Docker Compose](/guias/compose/).
+
+#### Serviço Application
+
+<Shot
+  src={git}
+  alt="Aba General de um serviço Application com a escolha de provider Git ou Zip, o campo de URL do repositório ou imagem, branch, porta, username e credentials."
+  caption="General de um serviço Application, ainda sem origem configurada."
+/>
+
+Um serviço recém-criado pelo assistente nasce **vazio**: é aqui que você define a origem.
+
+| Campo | O que é |
+|---|---|
+| **PROVIDER** | **Git** (URL crua) ou **Zip** (upload). Com uma conta conectada em [Settings → Git](/interface/configuracoes/#git), aparece também a aba da conta |
+| **SOURCE — REPOSITORY URL / IMAGE** | a URL do repositório **ou** a imagem do registry, no mesmo campo |
+| **BRANCH** | a branch (padrão `main`) |
+| **PORT** | a porta do app **dentro** do container |
+| **USERNAME** | usuário do clone, só se o provedor exigir |
+| **CREDENTIALS (secret)** | o **nome** de um secret do projeto com o token de clone |
+
+O texto abaixo do campo principal dá a regra: *"URL de repositório vira Git; caso
+contrário é imagem de registry."* Ou seja, `github.com/user/repo` é clonado e construído,
+e `nginx:latest` é baixado. Role a aba para ver os demais campos (**Dockerfile**,
+contexto de build e outros). Os detalhes e os campos que ainda não têm efeito estão em
+[Fazer deploy a partir de Git](/guias/git/).
+
+### Connection
+
+<Shot
+  src={connection}
+  alt="Aba Connection listando porta do container, porta do host, domínio, TLS, URL externa e URL interna, cada uma com botão Copiar."
+  caption="Aba Connection de um serviço ainda sem domínio nem porta externa."
+/>
+
+Valores prontos para copiar:
+
+| Linha | Significa |
+|---|---|
+| **Container port** | a porta do app dentro do container |
+| **Host port** | a porta TCP aberta no servidor, se houver (veja [Domains](/interface/servico-configuracao/#porta-tcp-do-host)) |
+| **Domain** | o domínio configurado |
+| **TLS** | `disabled` ou ligado |
+| **External URL** | a URL de **fora** do servidor, quando há porta externa |
+| **Internal URL** | a URL **dentro da rede do projeto**, como `http://rp_api:80`. É a que outros serviços do projeto usam |
+
+Abaixo, **CONTAINERS (N)** lista os containers em execução do serviço. Para bancos, a
+**Internal URL** é a connection string que você coloca em `DATABASE_URL`.
+
+### Environment
+
+As variáveis **do serviço**, no mesmo formato das [variáveis do projeto](/interface/projetos/#variáveis-do-projeto):
+**KEY** e **value**, **Adicionar**, **✕** para remover, o botão **.env** para editar em
+texto e **Exportar**. A contagem aparece como *"N variável(eis)"*. As do serviço
+**têm precedência** sobre as do projeto. Regras completas em
+[Como as variáveis são resolvidas](/conceitos/variaveis-de-ambiente/).
+
+### Deployments
+
+<Shot
+  src={deployments}
+  alt="Aba Deployments com o bloco do webhook de deploy explicando que o token nasce no primeiro deploy, e a lista de deploys vazia."
+  caption="Aba Deployments de um serviço que ainda não teve deploy."
+/>
+
+Dois blocos:
+
+**WEBHOOK DE DEPLOY.** *"O token nasce no primeiro deploy deste serviço — rode um deploy para
+a URL aparecer. Um POST nesta URL dispara um deploy. O corpo é ignorado: o token na própria
+URL é a autenticação. Regenerar invalida a URL anterior."* Depois do primeiro deploy a URL
+aparece aqui, com **Copiar** e **Regenerar**. Veja [Webhooks de deploy](/guias/webhooks/).
+Serviços Compose não têm webhook.
+
+**A lista de deploys**, com o **id**, a **duração**, o **início** e a **imagem** de cada um.
+Em cada linha:
+
+| Botão | Efeito |
+|---|---|
+| **≡** | abre o **build log** do deploy numa janela |
+| **✕** | remove o registro do deploy (só os que já terminaram) |
+
+Vazia, mostra *"Nenhum deploy ainda."* A causa de um deploy que falhou está no build log:
+veja [O ciclo de vida de um deploy](/conceitos/ciclo-de-vida/#onde-está-a-causa).
+
+### Logs
+
+O botão **Abrir logs em janela** abre os **logs de runtime** do container numa janela
+própria, isolada do resto do app, para não travar a interface com muito volume. O mesmo
+atalho existe no painel **LOGS** da lateral (**Logs de runtime**). O build log abre pela
+aba **Deployments**.
+
+O log de runtime é lido do Docker **ao vivo** e **não é guardado**: quando o container é
+trocado por um deploy, o log antigo vai junto.

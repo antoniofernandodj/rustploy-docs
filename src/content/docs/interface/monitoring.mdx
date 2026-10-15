@@ -1,0 +1,41 @@
+---
+title: Monitoring no app desktop
+description: A tela Monitoring do app desktop do Rustploy - CPU, memória, disco e carga do servidor, e a tabela de CPU, memória e rede por container.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import monitoring from '../../../assets/ui/monitoring.png';
+
+<Shot
+  src={monitoring}
+  alt="Tela Monitoring com os indicadores de CPU, memória, disco e carga do servidor e a tabela de containers vazia."
+  caption="Tela Monitoring, sem nenhum container rodando."
+/>
+
+**Monitoring** (menu lateral) mostra o **uso agora**, do servidor e de cada container.
+
+## Os quatro indicadores
+
+| Indicador | Mostra |
+|---|---|
+| **CPU** | uso total de CPU do servidor |
+| **MEMORY** | memória em uso sobre o total (`447 MB / 3.8 GB`) |
+| **DISK** | disco usado sobre o total, do **maior ponto de montagem** (`9.2 GB / 49.0 GB`) |
+| **LOAD** | carga média do sistema em 1, 5 e 15 minutos (`0.00 0.00 0.00`) |
+
+## A tabela de containers
+
+Uma linha por container de serviço no ar, com **CONTAINER**, **PROJETO**, **CPU**, **MEM**, **RX** e
+**TX** (rede recebida e enviada). Sem nada rodando, a tela diz *"Nenhuma métrica ainda —
+aguardando o primeiro container em execução."* Os números por container só aparecem a partir
+do primeiro ciclo de coleta depois de o container subir.
+
+<Aside type="note" title="Só o presente">
+  A tela mostra o valor atual, atualizado a cada 2 segundos. **Não há gráfico nem
+  histórico.** Para isso use uma ferramenta externa, como Beszel ou Uptime Kuma do
+  [catálogo de templates](/templates/).
+</Aside>
+
+Como o watchdog usa estas métricas e o que acontece quando um serviço degrada ou o servidor
+reinicia: [Monitoramento, saúde e reinício automático](/operacao/monitoramento-e-saude/).

@@ -1,0 +1,108 @@
+---
+title: Domínios, healthcheck e opções avançadas do serviço
+description: As abas Domains, Healthcheck e Advanced da tela do serviço no app desktop do Rustploy - adicionar domínio com TLS, porta TCP do host, tipos de healthcheck, réplicas, comando de execução e a fila de pré-deploy.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import dominios from '../../../assets/ui/servico-dominios.png';
+import healthcheck from '../../../assets/ui/servico-healthcheck.png';
+import avancado from '../../../assets/ui/servico-avancado.png';
+import fila from '../../../assets/ui/servico-avancado-fila.png';
+
+Estas são abas da [tela do serviço](/interface/servico/). Depois de mexer em qualquer
+uma, **faça um novo Deploy** para a mudança valer no container.
+
+## Domains
+
+<Shot
+  src={dominios}
+  alt="Aba Domains sem domínios, com os campos para adicionar um domínio, a porta do container, a chave HTTPS/TLS e a seção de porta TCP do host."
+  caption="Aba Domains de um serviço sem domínio."
+/>
+
+**DOMÍNIOS (N)** lista as rotas do serviço. O texto da tela lembra: *"Cada domínio pode
+apontar para uma porta de container diferente."*
+
+Para **adicionar**:
+
+1. Em **ADICIONAR DOMÍNIO**, digite o nome (`app.exemplo.com`).
+2. Em **PORTA DO CONTAINER (opcional)**, informe a porta do app que recebe esse domínio. Em branco vale o **padrão do serviço**.
+3. Ligue **HTTPS / TLS** para certificado automático.
+4. Clique em **Adicionar domínio**.
+
+O DNS precisa já apontar para o servidor, e o ACME precisa estar ligado para o HTTPS:
+veja [Domínios e HTTPS automático](/guias/dominios-e-tls/).
+
+### Porta TCP do host
+
+O bloco **PORTA TCP DO HOST (passthrough, opcional)** serve para quando o serviço **não é
+HTTP** (um banco, um broker): ele abre uma porta TCP no **servidor** que repassa direto ao
+container, sem passar pelo roteamento por domínio.
+
+| Botão | Efeito |
+|---|---|
+| **Salvar porta** | usa o número que você digitou. O helper de firewall só abre portas da faixa `[external_ports]` |
+| **Automática** | o Rustploy escolhe uma porta livre da faixa (padrão 20000–20999) e a libera no firewall |
+
+O resultado aparece na aba **Connection**, em **Host port** e **External URL**. Isso deixa o
+serviço acessível pela **internet**: use senha forte. Veja
+[Segurança do servidor](/operacao/seguranca-do-servidor/#o-helper-de-firewall).
+
+## Healthcheck
+
+<Shot
+  src={healthcheck}
+  alt="Aba Healthcheck com os tipos None, Tcp, Http e Docker, e os campos de intervalo, timeout, retries e start period."
+  caption="Aba Healthcheck, com o tipo Tcp selecionado."
+/>
+
+Escolha o tipo em **KIND**: **None**, **Tcp**, **Http** ou **Docker**. Com **Http**, aparecem
+também o caminho e o status esperado.
+
+| Campo | Padrão da tela | Significado |
+|---|---|---|
+| **INTERVAL (s)** | 5 | pausa entre tentativas |
+| **TIMEOUT (s)** | 3 | quanto cada tentativa pode demorar |
+| **RETRIES** | 10 | máximo de tentativas |
+| **START PERIOD (s)** | 5 | espera antes da primeira |
+
+Clique em **Save**. O significado de cada tipo e como escolher está em
+[Healthcheck](/guias/healthcheck/). Um serviço novo nasce com **None**: configure um antes
+de usar em produção.
+
+## Advanced
+
+<Shot
+  src={avancado}
+  alt="Aba Advanced com os campos de réplicas e run command, e o início da fila de pré-deploy."
+  caption="Aba Advanced: réplicas, comando e fila de pré-deploy."
+/>
+
+| Campo | O que faz |
+|---|---|
+| **REPLICAS** | quantos containers do serviço rodam. Todos recebem o mesmo nome na rede e o DNS distribui |
+| **RUN COMMAND** | sobrescreve o comando da imagem. Em branco, vale o `(padrão da imagem)`. **Run args atuais** mostra os argumentos gravados |
+
+Clique em **Save**.
+
+### Fila de pré-deploy
+
+<Shot
+  src={fila}
+  alt="Final da aba Advanced com a fila de pré-deploy vazia, o seletor de jobs e o botão Adicionar à fila."
+  caption="Fila de pré-deploy, vazia."
+/>
+
+**FILA DE PRÉ-DEPLOY (N)** roda [jobs](/interface/schedules/) **em ordem** antes de cada
+deploy, *"manual ou webhook, um de cada vez. Se o exit code de algum for diferente de 0, a
+fila para e o deploy não acontece, e os checks seguintes não rodam."* Sem nenhum, a tela
+diz *"Nenhum check configurado — deploy segue direto."*
+
+1. Cadastre antes o job em **Schedules**.
+2. Em **ADICIONAR À FILA**, escolha o job (*"escolher job…"*).
+3. Clique em **Adicionar à fila**.
+4. Para **reordenar**, arraste pela alça **⋮** de cada linha.
+
+O caso típico é rodar a migração do banco antes de trocar a versão. Detalhes em
+[Verificação antes do deploy](/guias/pre-deploy/).

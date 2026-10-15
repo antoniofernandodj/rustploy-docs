@@ -59,6 +59,15 @@ carrega sem reiniciar. Por isso:
 Sem marcar **TLS**, o domínio responde em HTTP pela porta do ingress (`80` por
 padrão), sem certificado. Serve para testes e redes internas.
 
+## Porta TCP do host (bancos e brokers)
+
+Serviços que **não são HTTP** não usam domínio: eles ganham uma **porta TCP no servidor**
+que repassa direto ao container. Na aba **Domains**, o bloco **PORTA TCP DO HOST**
+tem **Salvar porta** (você escolhe o número) e **Automática** (o Rustploy escolhe uma
+da faixa `[external_ports]`, padrão 20000–20999, e a libera no firewall). A porta aparece
+em **Host port** e **External URL** na aba **Connection**. Isso expõe o serviço à internet:
+use senha forte. Veja [Segurança do servidor](/operacao/seguranca-do-servidor/).
+
 ## O servidor responde 502?
 
 Veja [Diagnosticar um 502](/guias/diagnosticar-502/).

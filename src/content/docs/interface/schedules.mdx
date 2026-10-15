@@ -1,0 +1,103 @@
+---
+title: Schedules e Novo job no app desktop
+description: A tela Schedules do app desktop do Rustploy e a janela Novo job - escolher projeto, fonte do compose (colado ou Git), main service, variáveis e a recorrência manual, por intervalo, diária ou semanal.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import schedules from '../../../assets/ui/schedules-novo-job.png';
+import compose from '../../../assets/ui/novo-job-compose.png';
+import git from '../../../assets/ui/novo-job-git.png';
+import recorrencia from '../../../assets/ui/novo-job-recorrencia.png';
+
+**Schedules** (menu lateral) lista as *tarefas one-shot em docker-compose, agendadas ou
+manuais, de todos os projetos*. Os mesmos jobs de um projeto aparecem na aba **Jobs** dele.
+O que é um job e como funciona está em [Jobs e tarefas agendadas](/guias/jobs/).
+
+## A lista
+
+<Shot
+  src={schedules}
+  alt="Tela Schedules com a tabela de jobs vazia e a primeira etapa da janela Novo job, que pede para escolher o projeto."
+  caption="Schedules, sem jobs, com a janela Novo job aberta na escolha do projeto."
+/>
+
+No topo, o contador **JOBS** e o botão **+ Novo job**. As colunas da tabela:
+
+| Coluna | Mostra |
+|---|---|
+| **NOME** | o nome do job |
+| **PROJETO / GATILHO** | o projeto e o serviço gatilho (ou *autônomo*) |
+| **ÚLTIMA EXECUÇÃO** | quando rodou pela última vez |
+| **RECORRÊNCIA** | o agendamento |
+| **PRÓXIMA EXECUÇÃO** | o próximo disparo, **no seu fuso** |
+| **AQUECIMENTO** | `quente`, `frio` ou `aquecendo…` (veja [Aquecer um job](/guias/jobs/#aquecer-um-job)) |
+| **AÇÕES** | o painel **⋯** com *Rodar agora*, *Cancelar execução*, *Aquecer*, *Ver logs*, *Editar* e *Remover* |
+
+Sem jobs: *"Nenhum job cadastrado ainda."*
+
+## Criar um job
+
+Clique em **+ Novo job**. A janela tem etapas:
+
+1. **ESCOLHA O PROJETO.** *"O job sobe um stack docker-compose próprio; o projeto define a rede."* Clique em **Selecionar ›**.
+2. **Serviço gatilho**, ou **Nenhum (autônomo)**. O gatilho só empresta as variáveis de ambiente dele.
+3. **O formulário**, descrito abaixo. O título mostra *"NOVO JOB — projeto / serviço"* (ou *"nenhum (autônomo)"*).
+
+### Fonte do compose: Compose
+
+<Shot
+  src={compose}
+  alt="Formulário do Novo job com a fonte Compose, um YAML de exemplo com a imagem busybox, o campo main service e o campo de variáveis de ambiente."
+  caption="Formulário do Novo job, com a fonte Compose."
+/>
+
+| Campo | O que é |
+|---|---|
+| **NOME** | por exemplo `backup-db` |
+| **FONTE DO COMPOSE** | **Compose** (cole o YAML) ou **Git** |
+| **DOCKER-COMPOSE.YML** | o YAML. A tela traz um exemplo mínimo com `busybox` |
+| **MAIN SERVICE** | o **nome do serviço dentro do compose acima** cujo código de saída decide se o job deu certo |
+| **VARIÁVEIS DE AMBIENTE (opcional)** | `KEY=VALUE`, uma por linha, com `#` para comentário. *"Sobrescrevem as do projeto/serviço gatilho por cima."* |
+
+### Fonte do compose: Git
+
+<Shot
+  src={git}
+  alt="Formulário do Novo job com a fonte Git: seletores de conta, repositório e branch, e o caminho do compose no repositório."
+  caption="Formulário do Novo job, com a fonte Git."
+/>
+
+*"Selecione a conta conectada, o repositório e a branch. O repo precisa já ter um
+docker-compose.yml no caminho informado."* Escolha a **CONTA GIT**, o **REPOSITÓRIO** e a **BRANCH**, e confira o **CAMINHO DO COMPOSE NO REPO** (padrão `docker-compose.yml`). Sem contas, conecte
+uma em [Settings → Git](/interface/configuracoes/#git). O job **clona o repositório a cada
+execução**.
+
+### Recorrência
+
+<Shot
+  src={recorrencia}
+  alt="Final do formulário do Novo job com a recorrência Manual, Intervalo, Diária ou Semanal e os botões Voltar e Criar job."
+  caption="Final do formulário: a recorrência."
+/>
+
+| Opção | Campos |
+|---|---|
+| **Manual** | nenhum: só roda quando você manda |
+| **Intervalo** | a cada N horas |
+| **Diária** | horário |
+| **Semanal** | dia da semana e horário |
+
+<Aside type="caution" title="O horário é em UTC">
+  O horário que você informa é **UTC**. A coluna **PRÓXIMA EXECUÇÃO** mostra no seu fuso:
+  use-a para conferir.
+</Aside>
+
+Clique em **Criar job**. **‹ Voltar** retorna à etapa anterior.
+
+## Depois de criar
+
+- **Rodar agora** executa na hora; **Ver logs** mostra a saída; **Cancelar execução** interrompe.
+- Se o job usa imagens grandes ou um build, use **Aquecer** antes da primeira execução.
+- Para rodar o job **antes de cada deploy**, adicione-o à fila de pré-deploy do serviço: veja
+  [Domínios, healthcheck e opções avançadas](/interface/servico-configuracao/#fila-de-pré-deploy).
