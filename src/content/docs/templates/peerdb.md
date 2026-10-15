@@ -1,0 +1,282 @@
+---
+title: Hospedar PeerDB com Rustploy
+description: "Sincronizador analítico de dados entre bases com rotinas rápidas e APIs dedicadas. Crie PeerDB em um clique no Rustploy: 10 containers, variáveis geradas, domínio e HTTPS automático."
+sidebar:
+  hidden: true
+---
+
+**PeerDB**: Sincronizador analítico de dados entre bases com rotinas rápidas e APIs dedicadas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+
+## Resumo
+
+| | |
+|---|---|
+| **Identificador** | `peerdb` |
+| **Containers** | 10 (`catalog`, `temporal`, `temporal-admin-tools`, `temporal-ui`, `flow-api`, `flow-snapshot-worker`, `flow-worker`, `peerdb`, `peerdb-ui`, `minio`) |
+| **Imagens** | `postgres:18-alpine@sha256:eca6fb2d91fda290eb8cfb8ba53dd0dcbf3508a08011e30adb039ea7c8e1e9f2`, `temporalio/auto-setup:1.29@sha256:5b3502a3b685f9eff1b925af90c57c9e3dbeccbef367cc28a2a9712c63379312`, `temporalio/admin-tools:1.25.2-tctl-1.18.1-cli-1.1.1@sha256:da0c7a7982b571857173ab8f058e7f139b3054800abb4dcb100445d29a563ee8`, `temporalio/ui:2.43.3@sha256:31f0d8c1ed0bfc49c9c20ea9613ee9dd5c52f5f989bacb8a30210f847028e9cd`, `ghcr.io/peerdb-io/flow-api:stable-v0.35.5`, `ghcr.io/peerdb-io/flow-snapshot-worker:stable-v0.35.5`, `ghcr.io/peerdb-io/flow-worker:stable-v0.35.5`, `ghcr.io/peerdb-io/peerdb-server:stable-v0.35.5`, `ghcr.io/peerdb-io/peerdb-ui:stable-v0.35.5`, `minio/minio:latest@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e` |
+| **Porta da interface** | 3000, no serviço `peerdb-ui` |
+| **Tipo no Rustploy** | Stack Compose |
+
+## Como criar
+
+1. No projeto, clique em **+ Novo serviço → Template**.
+2. Busque por **PeerDB** e selecione.
+3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
+4. Crie e faça o **Deploy**.
+5. Aponte o seu domínio em **Domains**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).
+
+## Variáveis de ambiente
+
+**Variáveis do template** (valores calculados na criação):
+
+| Variável | Valor |
+|---|---|
+| `main_domain` | *domínio (gerado; troque pelo seu)* |
+| `peerdb_password` | *senha aleatória de 32 caracteres* |
+| `postgres_password` | *senha aleatória de 32 caracteres* |
+| `minio_root_user` | _peerdb_minioadmin |
+| `minio_root_password` | *senha aleatória de 32 caracteres* |
+| `nextauth_secret` | *senha aleatória de 32 caracteres* |
+
+**Entregues ao container:**
+
+| Variável | Valor |
+|---|---|
+| `PEERDB_PASSWORD` | ${peerdb_password} |
+| `PEERDB_CATALOG_HOST` | catalog |
+| `PEERDB_CATALOG_PORT` | 5432 |
+| `PEERDB_CATALOG_USER` | postgres |
+| `PEERDB_CATALOG_PASSWORD` | ${postgres_password} |
+| `PEERDB_CATALOG_DATABASE` | postgres |
+| `PEERDB_FLOW_SERVER_ADDRESS` | grpc://flow-api:8112 |
+| `NEXTAUTH_URL` | http://localhost:3000 |
+| `NEXTAUTH_SECRET` | ${nextauth_secret} |
+| `DATABASE_URL` | postgres://postgres:${postgres_password}@catalog:5432/postgres |
+| `PEERDB_FLOW_SERVER_HTTP` | http://flow-api:8113 |
+| `PEERDB_EXPERIMENTAL_ENABLE_SCRIPTING` | true |
+| `MINIO_ROOT_USER` | ${minio_root_user} |
+| `MINIO_ROOT_PASSWORD` | ${minio_root_password} |
+| `PEERDB_CLICKHOUSE_AWS_REGION` | us-east-1 |
+| `PEERDB_CLICKHOUSE_AWS_ENDPOINT_URL_S3` | http://minio:9000 |
+| `PEERDB_CLICKHOUSE_AWS_S3_BUCKET_NAME` | peerdbbucket |
+| `PEERDB_ALLOWED_TARGETS` |  |
+| `PEERDB_CLICKHOUSE_ALLOWED_DOMAINS` |  |
+| `AWS_ACCESS_KEY_ID` |  |
+| `AWS_SECRET_ACCESS_KEY` |  |
+| `AWS_REGION` |  |
+| `AWS_ENDPOINT` |  |
+
+## Domínios
+
+| Serviço | Porta | Host |
+|---|---|---|
+| `peerdb-ui` | 3000 | ${main_domain} |
+| `minio` | 9001 | ${main_domain} |
+| `temporal-ui` | 8080 | ${main_domain} |
+
+## Arquivos de configuração
+
+O template grava estes arquivos no servidor e os monta nos containers:
+
+- `./postgresql.conf`
+- `./docker-entrypoint-initdb.d/pg-hba-replication.sh`
+- `./temporal-dynamicconfig/production-sql.yaml`
+- `./scripts/mirror-name-search.sh`
+
+## docker-compose.yml do template
+
+```yaml
+name: peerdb-quickstart
+
+x-minio-config: &minio-config
+  PEERDB_CLICKHOUSE_AWS_CREDENTIALS_AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+  PEERDB_CLICKHOUSE_AWS_CREDENTIALS_AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+  MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+  MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+  PEERDB_CLICKHOUSE_AWS_CREDENTIALS_AWS_REGION: ${PEERDB_CLICKHOUSE_AWS_REGION}
+  PEERDB_CLICKHOUSE_AWS_CREDENTIALS_AWS_ENDPOINT_URL_S3: ${PEERDB_CLICKHOUSE_AWS_ENDPOINT_URL_S3}
+  PEERDB_CLICKHOUSE_AWS_S3_BUCKET_NAME: ${PEERDB_CLICKHOUSE_AWS_S3_BUCKET_NAME}
+
+x-catalog-config: &catalog-config
+  PEERDB_CATALOG_HOST: ${PEERDB_CATALOG_HOST}
+  PEERDB_CATALOG_PORT: ${PEERDB_CATALOG_PORT}
+  PEERDB_CATALOG_USER: ${PEERDB_CATALOG_USER}
+  PEERDB_CATALOG_PASSWORD: ${PEERDB_CATALOG_PASSWORD}
+  PEERDB_CATALOG_DATABASE: ${PEERDB_CATALOG_DATABASE}
+
+x-flow-worker-env: &flow-worker-env
+  TEMPORAL_HOST_PORT: temporal:7233
+  TEMPORAL_CLIENT_CERT:
+  TEMPORAL_CLIENT_KEY:
+  PEERDB_TEMPORAL_NAMESPACE: default
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+  AWS_REGION: ${AWS_REGION:-}
+  AWS_ENDPOINT: ${AWS_ENDPOINT:-}
+
+services:
+  catalog:
+    image: postgres:18-alpine@sha256:eca6fb2d91fda290eb8cfb8ba53dd0dcbf3508a08011e30adb039ea7c8e1e9f2
+    command: -c config_file=/etc/postgresql.conf
+    restart: unless-stopped
+    expose:
+      - 5432
+    environment:
+      PGUSER: ${PEERDB_CATALOG_USER}
+      POSTGRES_PASSWORD: ${PEERDB_CATALOG_PASSWORD}
+      POSTGRES_DB: ${PEERDB_CATALOG_DATABASE}
+      POSTGRES_INITDB_ARGS: --locale=C.UTF-8
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../files/postgresql.conf:/etc/postgresql.conf
+      - ../files/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${PEERDB_CATALOG_DATABASE}", "-U", "${PEERDB_CATALOG_USER}"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
+
+  temporal:
+    restart: unless-stopped
+    depends_on:
+      catalog:
+        condition: service_healthy
+    environment:
+      DB: postgres12
+      DB_PORT: ${PEERDB_CATALOG_PORT}
+      POSTGRES_USER: ${PEERDB_CATALOG_USER}
+      POSTGRES_PWD: ${PEERDB_CATALOG_PASSWORD}
+      POSTGRES_SEEDS: catalog
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/production-sql.yaml
+    image: temporalio/auto-setup:1.29@sha256:5b3502a3b685f9eff1b925af90c57c9e3dbeccbef367cc28a2a9712c63379312
+    expose:
+      - 7233
+    volumes:
+      - ../files/temporal-dynamicconfig:/etc/temporal/config/dynamicconfig
+
+  temporal-admin-tools:
+    restart: unless-stopped
+    depends_on:
+      - temporal
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CLI_ADDRESS: temporal:7233
+      TEMPORAL_CLI_SHOW_STACKS: 1
+    image: temporalio/admin-tools:1.25.2-tctl-1.18.1-cli-1.1.1@sha256:da0c7a7982b571857173ab8f058e7f139b3054800abb4dcb100445d29a563ee8
+    stdin_open: true
+    tty: true
+    entrypoint: ["sh", "/etc/temporal/entrypoint.sh"]
+    healthcheck:
+      test: ["CMD", "tctl", "workflow", "list"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+    volumes:
+      - ../files/scripts/mirror-name-search.sh:/etc/temporal/entrypoint.sh
+
+  temporal-ui:
+    restart: unless-stopped
+    depends_on:
+      - temporal
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:3000
+      TEMPORAL_CSRF_COOKIE_INSECURE: "true"
+    image: temporalio/ui:2.43.3@sha256:31f0d8c1ed0bfc49c9c20ea9613ee9dd5c52f5f989bacb8a30210f847028e9cd
+    expose:
+      - 8080
+
+  flow-api:
+    image: ghcr.io/peerdb-io/flow-api:stable-v0.35.5
+    restart: unless-stopped
+    expose:
+      - 8112
+      - 8113
+    environment:
+      <<: [*catalog-config, *flow-worker-env, *minio-config]
+      PEERDB_ALLOWED_TARGETS: ${PEERDB_ALLOWED_TARGETS}
+    depends_on:
+      temporal-admin-tools:
+        condition: service_healthy
+
+  flow-snapshot-worker:
+    image: ghcr.io/peerdb-io/flow-snapshot-worker:stable-v0.35.5
+    restart: unless-stopped
+    environment:
+      <<: [*catalog-config, *flow-worker-env, *minio-config]
+    depends_on:
+      temporal-admin-tools:
+        condition: service_healthy
+
+  flow-worker:
+    image: ghcr.io/peerdb-io/flow-worker:stable-v0.35.5
+    restart: unless-stopped
+    environment:
+      <<: [*catalog-config, *flow-worker-env, *minio-config]
+    depends_on:
+      temporal-admin-tools:
+        condition: service_healthy
+
+  peerdb:
+    stop_signal: SIGINT
+    image: ghcr.io/peerdb-io/peerdb-server:stable-v0.35.5
+    restart: unless-stopped
+    environment:
+      <<: *catalog-config
+      PEERDB_PASSWORD: ${PEERDB_PASSWORD}
+      PEERDB_FLOW_SERVER_ADDRESS: ${PEERDB_FLOW_SERVER_ADDRESS}
+      RUST_LOG: info
+      RUST_BACKTRACE: 1
+    expose:
+      - 9900
+    depends_on:
+      catalog:
+        condition: service_healthy
+
+  peerdb-ui:
+    image: ghcr.io/peerdb-io/peerdb-ui:stable-v0.35.5
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      <<: *catalog-config
+      DATABASE_URL: ${DATABASE_URL}
+      PEERDB_FLOW_SERVER_HTTP: ${PEERDB_FLOW_SERVER_HTTP}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      PEERDB_ALLOWED_TARGETS: ${PEERDB_ALLOWED_TARGETS}
+      PEERDB_CLICKHOUSE_ALLOWED_DOMAINS: ${PEERDB_CLICKHOUSE_ALLOWED_DOMAINS}
+      PEERDB_EXPERIMENTAL_ENABLE_SCRIPTING: ${PEERDB_EXPERIMENTAL_ENABLE_SCRIPTING}
+    depends_on:
+      - flow-api
+
+  minio:
+    image: minio/minio:latest@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
+    restart: unless-stopped
+    volumes:
+      - minio-data:/data
+    expose:
+      - 9000
+      - 9001
+    environment:
+      <<: *minio-config
+    entrypoint: >
+      /bin/sh -c "
+      minio server /data --console-address=:9001 &
+      sleep 2;
+      mc alias set myminiopeerdb http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD;
+      mc mb myminiopeerdb/$$PEERDB_CLICKHOUSE_AWS_S3_BUCKET_NAME;
+      wait
+      "
+
+volumes:
+  pgdata:
+  minio-data:
+```
+
+## Veja também
+
+- [Templates de um clique](/guias/templates/)
+- [Stacks Docker Compose](/guias/compose/)
+- [Diagnosticar um 502](/guias/diagnosticar-502/)

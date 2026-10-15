@@ -1,0 +1,766 @@
+---
+title: Hospedar Supabase com Rustploy
+description: "A alternativa open-source mais robusta ao Firebase (Stack completa baseada em PostgreSQL). Crie Supabase em um clique no Rustploy: 13 containers, variáveis geradas, domínio e HTTPS automático."
+sidebar:
+  hidden: true
+---
+
+**Supabase**: A alternativa open-source mais robusta ao Firebase (Stack completa baseada em PostgreSQL). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+
+## Resumo
+
+| | |
+|---|---|
+| **Identificador** | `supabase` |
+| **Containers** | 13 (`studio`, `kong`, `auth`, `rest`, `realtime`, `storage`, `imgproxy`, `meta`, `functions`, `analytics`, `db`, `vector`, `supavisor`) |
+| **Imagens** | `supabase/studio:2026.08.03-sha-022b374`, `kong/kong:3.9.3`, `supabase/gotrue:v2.189.0`, `postgrest/postgrest:v14.12`, `supabase/realtime:v2.102.3`, `supabase/storage-api:v1.60.4`, `darthsim/imgproxy:v3.30.1`, `supabase/postgres-meta:v0.96.6`, `supabase/edge-runtime:v1.74.0`, `supabase/logflare:1.43.1`, `supabase/postgres:17.6.1.136`, `timberio/vector:0.53.0-alpine`, `supabase/supavisor:2.9.5` |
+| **Porta da interface** | 8000, no serviço `kong` |
+| **Tipo no Rustploy** | Stack Compose |
+
+## Como criar
+
+1. No projeto, clique em **+ Novo serviço → Template**.
+2. Busque por **Supabase** e selecione.
+3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
+4. Crie e faça o **Deploy**.
+5. Aponte o seu domínio em **Domains**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).
+
+## Variáveis de ambiente
+
+**Variáveis do template** (valores calculados na criação):
+
+| Variável | Valor |
+|---|---|
+| `main_domain` | *domínio (gerado; troque pelo seu)* |
+| `postgres_password` | *senha aleatória de 32 caracteres* |
+| `dashboard_password` | *senha aleatória de 32 caracteres* |
+| `logflare_public_access_token` | *senha aleatória de 32 caracteres* |
+| `logflare_private_access_token` | *senha aleatória de 32 caracteres* |
+| `pg_meta_crypto_key` | *senha aleatória de 32 caracteres* |
+| `s3_protocol_access_key_id` | *senha aleatória de 24 caracteres* |
+| `s3_protocol_access_key_secret` | *senha aleatória de 48 caracteres* |
+| `secret_key_base` | *senha aleatória de 64 caracteres* |
+| `vault_enc_key` | *senha aleatória de 32 caracteres* |
+| `realtime_db_enc_key` | *senha aleatória de 16 caracteres* |
+| `jwt_secret` | *senha aleatória de 32 caracteres* |
+| `pooler_tenant_id` | *UUID aleatório* |
+| `anon_key_payload` | {   "role": "anon",   "iss": "supabase",   "exp": ${timestamps:2030-01-01T00:00:00Z} }  |
+| `service_role_key_payload` | {   "role": "service_role",   "iss": "supabase",   "exp": ${timestamps:2030-01-01T00:00:00Z} }  |
+
+**Entregues ao container:**
+
+| Variável | Valor |
+|---|---|
+| `############` |  |
+| `# To get a proper working configuration you should at least take a look at:` |  |
+| `# - SUPABASE_PUBLIC_URL, API_EXTERNAL_URL should point to your supabase domain with correct http/https scheme` |  |
+| `# - SMTP_* are required for auth mail sending` |  |
+| `# - ADDITIONAL_REDIRECT_URLS, SITE_URL should point to application using supabase for authentication` |  |
+| `#   They are used for redirecting after login/signup and gotrue will check them before sending emails` |  |
+| `# - POSTGRES_PORT, POOLER_PROXY_PORT_TRANSACTION should be changed if you are already running other instances of supabase` |  |
+| `############` |  |
+| `` |  |
+| `############` |  |
+| `# Secrets` |  |
+| `# https://supabase.com/docs/guides/self-hosting/docker#securing-your-services` |  |
+| `# All of these are generated randomly when the service is created, so there is` |  |
+| `# nothing to change by hand before going into production.` |  |
+| `# Go to https://supabase.com/docs/guides/self-hosting for more information` |  |
+| `############` |  |
+| `` |  |
+| `SUPABASE_HOST` | ${main_domain} |
+| `POSTGRES_PASSWORD` | ${postgres_password} |
+| `JWT_SECRET` | *JWT gerado* |
+| `ANON_KEY` | *JWT gerado* |
+| `SERVICE_ROLE_KEY` | *JWT gerado* |
+| `DASHBOARD_USERNAME` | supabase |
+| `DASHBOARD_PASSWORD` | ${dashboard_password} |
+| `SECRET_KEY_BASE` | ${secret_key_base} |
+| `VAULT_ENC_KEY` | ${vault_enc_key} |
+| `REALTIME_DB_ENC_KEY` | ${realtime_db_enc_key} |
+| `PG_META_CRYPTO_KEY` | ${pg_meta_crypto_key} |
+| `LOGFLARE_PUBLIC_ACCESS_TOKEN` | ${logflare_public_access_token} |
+| `LOGFLARE_PRIVATE_ACCESS_TOKEN` | ${logflare_private_access_token} |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# Database - You can change these to any PostgreSQL database that has logical replication enabled.` |  |
+| `############` |  |
+| `` |  |
+| `POSTGRES_HOST` | db |
+| `POSTGRES_DB` | postgres |
+| `POSTGRES_PORT` | 5432 |
+| `POSTGRES_USER` | postgres |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# Supavisor -- Database pooler` |  |
+| `############` |  |
+| `POOLER_PROXY_PORT_TRANSACTION` | 6543 |
+| `POOLER_DEFAULT_POOL_SIZE` | 20 |
+| `POOLER_MAX_CLIENT_CONN` | 100 |
+| `POOLER_TENANT_ID` | ${pooler_tenant_id} |
+| `POOLER_DB_POOL_SIZE` | 5 |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# API Proxy - Configuration for the Kong Reverse proxy.` |  |
+| `# Kong is not published on the host: the ingress routes the domain to kong:8000,` |  |
+| `# so these ports only matter inside the compose network.` |  |
+| `############` |  |
+| `` |  |
+| `KONG_HTTP_PORT` | 8000 |
+| `KONG_HTTPS_PORT` | 8443 |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# API - Configuration for PostgREST.` |  |
+| `############` |  |
+| `` |  |
+| `PGRST_DB_SCHEMAS` | public,storage,graphql_public |
+| `PGRST_DB_MAX_ROWS` | 1000 |
+| `PGRST_DB_EXTRA_SEARCH_PATH` | public |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# Auth - Configuration for the GoTrue authentication server.` |  |
+| `############` |  |
+| `` |  |
+| `## General` |  |
+| `SITE_URL` | http://localhost:3000 |
+| `ADDITIONAL_REDIRECT_URLS` | https://${main_domain}/*,http://localhost:3000/* |
+| `JWT_EXPIRY` | 3600 |
+| `DISABLE_SIGNUP` | false |
+| `# Full external URL of the Auth service, used to construct OAuth callbacks,` |  |
+| `# SAML endpoints and email links.` |  |
+| `API_EXTERNAL_URL` | https://${main_domain}/auth/v1 |
+| `` |  |
+| `## Mailer Config` |  |
+| `MAILER_URLPATHS_CONFIRMATION` | "/auth/v1/verify" |
+| `MAILER_URLPATHS_INVITE` | "/auth/v1/verify" |
+| `MAILER_URLPATHS_RECOVERY` | "/auth/v1/verify" |
+| `MAILER_URLPATHS_EMAIL_CHANGE` | "/auth/v1/verify" |
+| `` |  |
+| `## Email auth` |  |
+| `ENABLE_EMAIL_SIGNUP` | true |
+| `ENABLE_EMAIL_AUTOCONFIRM` | false |
+| `SMTP_ADMIN_EMAIL` | admin@example.com |
+| `SMTP_HOST` | supabase-mail |
+| `SMTP_PORT` | 2500 |
+| `SMTP_USER` | fake_mail_user |
+| `SMTP_PASS` | fake_mail_password |
+| `SMTP_SENDER_NAME` | fake_sender |
+| `ENABLE_ANONYMOUS_USERS` | false |
+| `` |  |
+| `## Phone auth` |  |
+| `ENABLE_PHONE_SIGNUP` | true |
+| `ENABLE_PHONE_AUTOCONFIRM` | true |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# Studio - Configuration for the Dashboard` |  |
+| `############` |  |
+| `` |  |
+| `STUDIO_DEFAULT_ORGANIZATION` | Default Organization |
+| `STUDIO_DEFAULT_PROJECT` | Default Project |
+| `` |  |
+| `SUPABASE_PUBLIC_URL` | https://${main_domain} |
+| `` |  |
+| `############` |  |
+| `# Storage - local file backend (default). Edit docker-compose.yml storage env for S3/MinIO.` |  |
+| `############` |  |
+| `` |  |
+| `GLOBAL_S3_BUCKET` | stub |
+| `REGION` | stub |
+| `STORAGE_TENANT_ID` | stub |
+| `S3_PROTOCOL_ACCESS_KEY_ID` | ${s3_protocol_access_key_id} |
+| `S3_PROTOCOL_ACCESS_KEY_SECRET` | ${s3_protocol_access_key_secret} |
+| `` |  |
+| `IMGPROXY_AUTO_WEBP` | true |
+| `` |  |
+| `# Add your OpenAI API key to enable SQL Editor Assistant` |  |
+| `OPENAI_API_KEY` |  |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# Functions - Configuration for Functions` |  |
+| `############` |  |
+| `# NOTE: VERIFY_JWT applies to all functions. Per-function VERIFY_JWT is not supported yet.` |  |
+| `FUNCTIONS_VERIFY_JWT` | false |
+| `` |  |
+| `` |  |
+| `############` |  |
+| `# Logs - Configuration for Logflare` |  |
+| `############` |  |
+| `` |  |
+| `# Docker socket location - this value will differ depending on your OS` |  |
+| `DOCKER_SOCKET_LOCATION` | /var/run/docker.sock |
+| `` |  |
+| `# Google Cloud Project details` |  |
+| `GOOGLE_PROJECT_ID` | GOOGLE_PROJECT_ID |
+| `GOOGLE_PROJECT_NUMBER` | GOOGLE_PROJECT_NUMBER |
+
+## Domínios
+
+| Serviço | Porta | Host |
+|---|---|---|
+| `kong` | 8000 | ${main_domain} |
+
+## Arquivos de configuração
+
+O template grava estes arquivos no servidor e os monta nos containers:
+
+- `/volumes/api/kong-entrypoint.sh`
+- `/volumes/api/kong.yml`
+- `/volumes/db/_supabase.sql`
+- `/volumes/db/jwt.sql`
+- `/volumes/db/logs.sql`
+- `/volumes/db/pooler.sql`
+- `/volumes/db/realtime.sql`
+- `/volumes/db/roles.sql`
+- `/volumes/db/webhooks.sql`
+- `/volumes/functions/hello/index.ts`
+- `/volumes/functions/main/index.ts`
+- `/volumes/logs/vector.yml`
+- `/volumes/pooler/pooler.exs`
+
+## docker-compose.yml do template
+
+```yaml
+# Self-hosted Supabase, tracking the official compose from
+# https://github.com/supabase/supabase/tree/master/docker (2026-08-11):
+# `docker-compose.yml` + the `kong` and `logs` overrides merged into a single
+# file, since rustploy deploys one compose per service.
+#
+# rustploy notes:
+#   - Kong is the API gateway and is *not* published on the host: the ingress
+#     routes the service domain to `kong:8000` (see `[[config.domains]]`).
+#     Upstream also ships an Envoy gateway (`docker-compose.envoy.yml`); Kong is
+#     the officially supported alternative and the one wired up here.
+#   - No `container_name:` anywhere — several instances of this template have to
+#     coexist on one host, so vector routes logs by the
+#     `com.docker.compose.service` label instead of by container name.
+#   - Storage uses the local file backend; edit the `storage` service env to
+#     switch to S3/MinIO.
+
+name: supabase
+
+services:
+
+  studio:
+    image: supabase/studio:2026.08.03-sha-022b374
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://localhost:3000/api/platform/profile').then((r) => {if (r.status !== 200) throw new Error(r.status)})\""
+        ]
+      timeout: 10s
+      interval: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      analytics:
+        condition: service_healthy
+    environment:
+      HOSTNAME: "0.0.0.0"
+
+      STUDIO_PG_META_URL: http://meta:8080
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      # See: https://supabase.com/docs/guides/self-hosting/remove-superuser-access
+      POSTGRES_USER_READ_WRITE: postgres
+
+      PG_META_CRYPTO_KEY: ${PG_META_CRYPTO_KEY}
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
+      PGRST_DB_MAX_ROWS: ${PGRST_DB_MAX_ROWS:-1000}
+      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:-public}
+
+      DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION}
+      DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+
+      SUPABASE_URL: http://kong:8000
+      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      AUTH_JWT_SECRET: ${JWT_SECRET}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:-}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY:-}
+
+      # From the `logs` override (analytics + vector are merged into this file).
+      LOGFLARE_PRIVATE_ACCESS_TOKEN: ${LOGFLARE_PRIVATE_ACCESS_TOKEN}
+      LOGFLARE_URL: http://analytics:4000
+      ENABLED_FEATURES_LOGS_ALL: "true"
+
+      SNIPPETS_MANAGEMENT_FOLDER: /app/snippets
+      EDGE_FUNCTIONS_MANAGEMENT_FOLDER: /app/edge-functions
+    volumes:
+      - ../files/volumes/snippets:/app/snippets:Z
+      - ../files/volumes/functions:/app/edge-functions:Z
+
+  # API gateway. Upstream renamed this service to `api-gw` (aliased as
+  # `kong`/`envoy`); here it keeps the plain `kong` name, which is the hostname
+  # the edge functions, kong.yml and the ingress all resolve.
+  kong:
+    image: kong/kong:3.9.3
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      studio:
+        condition: service_healthy
+    expose:
+      - 8000
+      - 8443
+    volumes:
+      - ../files/volumes/api/kong.yml:/home/kong/temp.yml:ro,z
+      - ../files/volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
+      KONG_ROUTER_FLAVOR: expressions
+      # https://github.com/supabase/cli/issues/14
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_DNS_NOT_FOUND_TTL: 1
+      KONG_DNS_VALID_TTL: 5
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth,request-termination,ip-restriction,post-function
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+      KONG_PROXY_ACCESS_LOG: /dev/stdout combined
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:-}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY:-}
+      ANON_KEY_ASYMMETRIC: ${ANON_KEY_ASYMMETRIC:-}
+      SERVICE_ROLE_KEY_ASYMMETRIC: ${SERVICE_ROLE_KEY_ASYMMETRIC:-}
+      DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
+    entrypoint: ["/bin/sh", "/home/kong/kong-entrypoint.sh"]
+
+  auth:
+    image: supabase/gotrue:v2.189.0
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9999/health"
+        ]
+      timeout: 5s
+      interval: 5s
+      retries: 3
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      GOTRUE_MAILER_EXTERNAL_HOSTS: kong,${SUPABASE_HOST}
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: ${API_EXTERNAL_URL}
+
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+
+      GOTRUE_SITE_URL: ${SITE_URL}
+      GOTRUE_URI_ALLOW_LIST: ${ADDITIONAL_REDIRECT_URLS}
+      GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
+
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${JWT_EXPIRY}
+      # Legacy symmetric HS256 key (this template does not issue asymmetric
+      # keys, so GOTRUE_JWT_KEYS stays unset, as upstream now ships it).
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_JWT_ISSUER: ${API_EXTERNAL_URL}
+
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: ${ENABLE_EMAIL_SIGNUP}
+      GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: ${ENABLE_ANONYMOUS_USERS}
+      GOTRUE_MAILER_AUTOCONFIRM: ${ENABLE_EMAIL_AUTOCONFIRM}
+
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL}
+      GOTRUE_SMTP_HOST: ${SMTP_HOST}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT}
+      GOTRUE_SMTP_USER: ${SMTP_USER}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS}
+      GOTRUE_SMTP_SENDER_NAME: ${SMTP_SENDER_NAME}
+      GOTRUE_MAILER_URLPATHS_INVITE: ${MAILER_URLPATHS_INVITE}
+      GOTRUE_MAILER_URLPATHS_CONFIRMATION: ${MAILER_URLPATHS_CONFIRMATION}
+      GOTRUE_MAILER_URLPATHS_RECOVERY: ${MAILER_URLPATHS_RECOVERY}
+      GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: ${MAILER_URLPATHS_EMAIL_CHANGE}
+
+      GOTRUE_EXTERNAL_PHONE_ENABLED: ${ENABLE_PHONE_SIGNUP}
+      GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
+
+  rest:
+    image: postgrest/postgrest:v14.12
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "postgrest", "--ready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
+      PGRST_DB_MAX_ROWS: ${PGRST_DB_MAX_ROWS:-1000}
+      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:-public}
+      PGRST_DB_ANON_ROLE: anon
+
+      # Needed by the `postgrest --ready` healthcheck above.
+      PGRST_ADMIN_SERVER_PORT: 3001
+      PGRST_ADMIN_SERVER_HOST: localhost
+
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
+    command:
+      [
+        "postgrest"
+      ]
+
+  realtime:
+    image: supabase/realtime:v2.102.3
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -sSfL --head -o /dev/null -H \"Authorization: Bearer ${ANON_KEY}\" http://localhost:4000/api/tenants/realtime-dev/health"
+        ]
+      timeout: 5s
+      interval: 30s
+      retries: 3
+      start_period: 10s
+    environment:
+      PORT: 4000
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USER: supabase_admin
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      DB_AFTER_CONNECT_QUERY: 'SET search_path TO _realtime'
+      DB_ENC_KEY: ${REALTIME_DB_ENC_KEY:-supabaserealtime}
+      API_JWT_SECRET: ${JWT_SECRET}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      METRICS_JWT_SECRET: ${JWT_SECRET}
+      ERL_AFLAGS: -proto_dist inet_tcp
+      DNS_NODES: "''"
+      RLIMIT_NOFILE: "10000"
+      APP_NAME: realtime
+      SEED_SELF_HOST: "true"
+      RUN_JANITOR: "true"
+      DISABLE_HEALTHCHECK_LOGGING: "true"
+
+  storage:
+    image: supabase/storage-api:v1.60.4
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+      imgproxy:
+        condition: service_started
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://storage:5000/status"
+        ]
+      timeout: 5s
+      interval: 5s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ../files/volumes/storage:/var/lib/storage:z
+    environment:
+      ANON_KEY: ${ANON_KEY}
+      SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      POSTGREST_URL: http://rest:3000
+      AUTH_JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgres://supabase_storage_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      STORAGE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
+      REQUEST_ALLOW_X_FORWARDED_PATH: "true"
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+      GLOBAL_S3_BUCKET: ${GLOBAL_S3_BUCKET}
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: ${STORAGE_TENANT_ID}
+      REGION: ${REGION}
+      ENABLE_IMAGE_TRANSFORMATION: "true"
+      IMGPROXY_URL: http://imgproxy:5001
+      S3_PROTOCOL_ACCESS_KEY_ID: ${S3_PROTOCOL_ACCESS_KEY_ID}
+      S3_PROTOCOL_ACCESS_KEY_SECRET: ${S3_PROTOCOL_ACCESS_KEY_SECRET}
+
+  imgproxy:
+    image: darthsim/imgproxy:v3.30.1
+    restart: unless-stopped
+    volumes:
+      - ../files/volumes/storage:/var/lib/storage:z
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "imgproxy",
+          "health"
+        ]
+      timeout: 5s
+      interval: 5s
+      retries: 3
+    environment:
+      IMGPROXY_BIND: ":5001"
+      IMGPROXY_LOCAL_FILESYSTEM_ROOT: /
+      IMGPROXY_USE_ETAG: "true"
+      IMGPROXY_AUTO_WEBP: ${IMGPROXY_AUTO_WEBP}
+      IMGPROXY_MAX_SRC_RESOLUTION: 16.8
+
+  meta:
+    image: supabase/postgres-meta:v0.96.6
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: ${POSTGRES_HOST}
+      PG_META_DB_PORT: ${POSTGRES_PORT}
+      PG_META_DB_NAME: ${POSTGRES_DB}
+      # See: https://supabase.com/docs/guides/self-hosting/remove-superuser-access
+      PG_META_DB_USER: postgres
+      PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      CRYPTO_KEY: ${PG_META_CRYPTO_KEY}
+
+  functions:
+    image: supabase/edge-runtime:v1.74.0
+    restart: unless-stopped
+    volumes:
+      - ../files/volumes/functions:/home/deno/functions:Z
+      - deno-cache:/root/.cache/deno
+    depends_on:
+      kong:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/127.0.0.1/9000'"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    environment:
+      # Legacy symmetric HS256 key
+      JWT_SECRET: ${JWT_SECRET}
+      SUPABASE_URL: http://kong:8000
+      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      SUPABASE_PUBLISHABLE_KEYS: "{\"default\":\"${SUPABASE_PUBLISHABLE_KEY:-}\"}"
+      SUPABASE_SECRET_KEYS: "{\"default\":\"${SUPABASE_SECRET_KEY:-}\"}"
+      SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      VERIFY_JWT: "${FUNCTIONS_VERIFY_JWT}"
+    command:
+      [
+        "start",
+        "--main-service",
+        "/home/deno/functions/main"
+      ]
+
+  analytics:
+    image: supabase/logflare:1.43.1
+    restart: unless-stopped
+    expose:
+      - 4000
+    # First boot: Logflare seeds _analytics in Postgres; allow extra time before marking unhealthy.
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -sSfL -o /dev/null http://localhost:4000/health"
+        ]
+      timeout: 10s
+      interval: 5s
+      retries: 15
+      start_period: 90s
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LOGFLARE_NODE_HOST: 127.0.0.1
+      DB_USERNAME: supabase_admin
+      DB_DATABASE: _supabase
+      DB_HOSTNAME: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_SCHEMA: _analytics
+      LOGFLARE_PUBLIC_ACCESS_TOKEN: ${LOGFLARE_PUBLIC_ACCESS_TOKEN}
+      LOGFLARE_PRIVATE_ACCESS_TOKEN: ${LOGFLARE_PRIVATE_ACCESS_TOKEN}
+      LOGFLARE_SINGLE_TENANT: "true"
+      LOGFLARE_SUPABASE_MODE: "true"
+      LOGFLARE_MIN_CLUSTER_SIZE: 1
+      POSTGRES_BACKEND_URL: postgresql://supabase_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/_supabase
+      POSTGRES_BACKEND_SCHEMA: _analytics
+      LOGFLARE_FEATURE_FLAG_OVERRIDE: multibackend=true
+
+  db:
+    image: supabase/postgres:17.6.1.136
+    restart: unless-stopped
+    volumes:
+      - ../files/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
+      - ../files/volumes/db/webhooks.sql:/docker-entrypoint-initdb.d/init-scripts/98-webhooks.sql:Z
+      - ../files/volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
+      - ../files/volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
+      - ../files/volumes/db/data:/var/lib/postgresql/data:Z
+      - ../files/volumes/db/_supabase.sql:/docker-entrypoint-initdb.d/migrations/97-_supabase.sql:Z
+      - ../files/volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
+      - ../files/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
+      - db-config:/etc/postgresql-custom
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "postgres",
+          "-h",
+          "localhost"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
+    depends_on:
+      vector:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: /var/run/postgresql
+      PGPORT: ${POSTGRES_PORT}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXP: ${JWT_EXPIRY}
+    command:
+      [
+        "postgres",
+        "-c",
+        "config_file=/etc/postgresql/postgresql.conf",
+        "-c",
+        "log_min_messages=fatal"
+      ]
+
+  vector:
+    image: timberio/vector:0.53.0-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/volumes/logs/vector.yml:/etc/vector/vector.yml:ro,z
+      - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro,z
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://vector:9001/health"
+        ]
+      timeout: 5s
+      interval: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      LOGFLARE_PUBLIC_ACCESS_TOKEN: ${LOGFLARE_PUBLIC_ACCESS_TOKEN}
+    command:
+      [
+        "--config",
+        "/etc/vector/vector.yml"
+      ]
+    security_opt:
+      - "label=disable"
+
+  supavisor:
+    image: supabase/supavisor:2.9.5
+    restart: unless-stopped
+    expose:
+      - "5432"
+      - "6543"
+    volumes:
+      - ../files/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-sSfL",
+          "--head",
+          "-o",
+          "/dev/null",
+          "http://127.0.0.1:4000/api/health"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_URL: ecto://supabase_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/_supabase
+      CLUSTER_POSTGRES: "true"
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      VAULT_ENC_KEY: ${VAULT_ENC_KEY}
+      API_JWT_SECRET: ${JWT_SECRET}
+      METRICS_JWT_SECRET: ${JWT_SECRET}
+      REGION: local
+      ERL_AFLAGS: -proto_dist inet_tcp
+      POOLER_TENANT_ID: ${POOLER_TENANT_ID}
+      POOLER_DEFAULT_POOL_SIZE: ${POOLER_DEFAULT_POOL_SIZE}
+      POOLER_MAX_CLIENT_CONN: ${POOLER_MAX_CLIENT_CONN}
+      POOLER_POOL_MODE: transaction
+      DB_POOL_SIZE: ${POOLER_DB_POOL_SIZE}
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "/app/bin/migrate && /app/bin/supavisor eval \"$$(cat /etc/pooler/pooler.exs)\" && /app/bin/server"
+      ]
+
+volumes:
+  db-config:
+  deno-cache:
+```
+
+## Veja também
+
+- [Templates de um clique](/guias/templates/)
+- [Stacks Docker Compose](/guias/compose/)
+- [Diagnosticar um 502](/guias/diagnosticar-502/)

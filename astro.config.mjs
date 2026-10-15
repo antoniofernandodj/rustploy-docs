@@ -71,6 +71,13 @@ export default defineConfig({
           { slug: 'guias/limpeza-docker' },
           { slug: 'guias/backup' },
         ]},
+        { label: 'Referência', items: [
+          { slug: 'referencia/comandos' },
+          { slug: 'referencia/respostas' },
+          { slug: 'referencia/eventos' },
+          { slug: 'referencia/paridade' },
+          { slug: 'templates' },
+        ]},
         { label: 'Conceitos', items: [
           { slug: 'conceitos/projeto' },
           { slug: 'conceitos/servico-e-fontes' },
@@ -89,6 +96,12 @@ export default defineConfig({
       plugins: [
         starlightLlmsTxt({
           projectName: 'Rustploy',
+          // As ~386 páginas de template ficam fora do llms-full.txt (afogariam o
+          // resto) e formam um conjunto próprio em /_llms-txt/templates.txt.
+          exclude: ['templates/**'],
+          customSets: [
+            { label: 'Templates', paths: ['templates/**'], description: 'Catálogo de aplicações prontas, com containers, imagens, porta e variáveis de cada uma' },
+          ],
           description:
             'Rustploy é um PaaS self-hosted de nó único em Rust: projetos, serviços em container, deploy zero-downtime, ingress com TLS (ACME), registry OCI embutido, jobs agendados, GUI desktop, web UI e servidor MCP.',
         }),

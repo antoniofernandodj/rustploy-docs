@@ -1,0 +1,1035 @@
+---
+title: Hospedar Appwrite com Rustploy
+description: "Plataforma Backend-as-a-Service (BaaS) completa em Docker. Crie Appwrite em um clique no Rustploy: 25 containers, variáveis geradas, domínio e HTTPS automático."
+sidebar:
+  hidden: true
+---
+
+**Appwrite**: Plataforma Backend-as-a-Service (BaaS) completa em Docker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+
+## Resumo
+
+| | |
+|---|---|
+| **Identificador** | `appwrite` |
+| **Containers** | 25 (`appwrite`, `appwrite-console`, `appwrite-realtime`, `appwrite-worker-audits`, `appwrite-worker-webhooks`, `appwrite-worker-deletes`, `appwrite-worker-databases`, `appwrite-worker-builds`, `appwrite-worker-certificates`, `appwrite-worker-functions`, `appwrite-worker-mails`, `appwrite-worker-messaging`, `appwrite-worker-migrations`, `appwrite-task-maintenance`, `appwrite-task-stats-resources`, `appwrite-worker-stats-resources`, `appwrite-worker-stats-usage`, `appwrite-task-scheduler-functions`, `appwrite-task-scheduler-executions`, `appwrite-task-scheduler-messages`, `appwrite-assistant`, `appwrite-browser`, `openruntimes-executor`, `mariadb`, `redis`) |
+| **Imagens** | `appwrite/appwrite:1.8.0`, `appwrite/console:7.4.7`, `appwrite/assistant:0.8.3`, `appwrite/browser:0.2.4`, `openruntimes/executor:0.7.22`, `mariadb:10.11`, `redis:7.2.4-alpine` |
+| **Porta da interface** | 80, no serviço `appwrite` |
+| **Tipo no Rustploy** | Stack Compose |
+
+## Como criar
+
+1. No projeto, clique em **+ Novo serviço → Template**.
+2. Busque por **Appwrite** e selecione.
+3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
+4. Crie e faça o **Deploy**.
+5. Aponte o seu domínio em **Domains**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).
+
+## Variáveis de ambiente
+
+**Variáveis do template** (valores calculados na criação):
+
+| Variável | Valor |
+|---|---|
+| `main_domain` | *domínio (gerado; troque pelo seu)* |
+| `functions_domain` | functions.${main_domain} |
+| `sites_domain` | sites.${main_domain} |
+| `openssl_key` | *senha aleatória de 32 caracteres* |
+| `db_root_pw` | *senha aleatória de 32 caracteres* |
+| `db_user_pw` | *senha aleatória de 32 caracteres* |
+| `executor_secret` | *senha aleatória de 32 caracteres* |
+
+**Entregues ao container:**
+
+| Variável | Valor |
+|---|---|
+| `_APP_ENV` | production |
+| `_APP_LOCALE` | en |
+| `_APP_OPTIONS_ABUSE` | enabled |
+| `_APP_OPTIONS_FORCE_HTTPS` | disabled |
+| `_APP_OPTIONS_FUNCTIONS_FORCE_HTTPS` | disabled |
+| `_APP_OPTIONS_ROUTER_FORCE_HTTPS` | disabled |
+| `_APP_OPTIONS_ROUTER_PROTECTION` | disabled |
+| `_APP_OPENSSL_KEY_V1` | ${openssl_key} |
+| `_APP_DOMAIN` | ${main_domain} |
+| `_APP_CUSTOM_DOMAIN_DENY_LIST` | example.com,test.com,app.example.com |
+| `_APP_DOMAIN_FUNCTIONS` | ${functions_domain} |
+| `_APP_DOMAIN_SITES` | ${sites_domain} |
+| `_APP_DOMAIN_TARGET` | localhost |
+| `_APP_DOMAIN_TARGET_CNAME` | localhost |
+| `_APP_DOMAIN_TARGET_AAAA` | ::1 |
+| `_APP_DOMAIN_TARGET_A` | 127.0.0.1 |
+| `_APP_DOMAIN_TARGET_CAA` |  |
+| `_APP_DNS` | 8.8.8.8 |
+| `_APP_CONSOLE_WHITELIST_ROOT` | enabled |
+| `_APP_CONSOLE_WHITELIST_EMAILS` |  |
+| `_APP_CONSOLE_WHITELIST_IPS` |  |
+| `_APP_CONSOLE_HOSTNAMES` |  |
+| `_APP_SYSTEM_EMAIL_NAME` | Appwrite |
+| `_APP_SYSTEM_EMAIL_ADDRESS` | noreply@appwrite.io |
+| `_APP_SYSTEM_TEAM_EMAIL` | team@appwrite.io |
+| `_APP_SYSTEM_RESPONSE_FORMAT` |  |
+| `_APP_SYSTEM_SECURITY_EMAIL_ADDRESS` | certs@appwrite.io |
+| `_APP_EMAIL_SECURITY` |  |
+| `_APP_EMAIL_CERTIFICATES` |  |
+| `_APP_USAGE_STATS` | enabled |
+| `_APP_LOGGING_PROVIDER` |  |
+| `_APP_LOGGING_CONFIG` |  |
+| `_APP_USAGE_AGGREGATION_INTERVAL` | 30 |
+| `_APP_USAGE_TIMESERIES_INTERVAL` | 30 |
+| `_APP_USAGE_DATABASE_INTERVAL` | 900 |
+| `_APP_WORKER_PER_CORE` | 6 |
+| `_APP_CONSOLE_SESSION_ALERTS` | disabled |
+| `_APP_COMPRESSION_ENABLED` | enabled |
+| `_APP_COMPRESSION_MIN_SIZE_BYTES` | 1024 |
+| `_APP_REDIS_HOST` | redis |
+| `_APP_REDIS_PORT` | 6379 |
+| `_APP_REDIS_USER` |  |
+| `_APP_REDIS_PASS` |  |
+| `_APP_DB_HOST` | mariadb |
+| `_APP_DB_PORT` | 3306 |
+| `_APP_DB_SCHEMA` | appwrite |
+| `_APP_DB_USER` | user |
+| `_APP_DB_PASS` | ${db_user_pw} |
+| `_APP_DB_ROOT_PASS` | ${db_root_pw} |
+| `_APP_INFLUXDB_HOST` | influxdb |
+| `_APP_INFLUXDB_PORT` | 8086 |
+| `_APP_STATSD_HOST` | telegraf |
+| `_APP_STATSD_PORT` | 8125 |
+| `_APP_SMTP_HOST` |  |
+| `_APP_SMTP_PORT` |  |
+| `_APP_SMTP_SECURE` |  |
+| `_APP_SMTP_USERNAME` |  |
+| `_APP_SMTP_PASSWORD` |  |
+| `_APP_SMS_PROVIDER` |  |
+| `_APP_SMS_FROM` |  |
+| `_APP_STORAGE_LIMIT` | 30000000 |
+| `_APP_STORAGE_PREVIEW_LIMIT` | 20000000 |
+| `_APP_STORAGE_ANTIVIRUS` | disabled |
+| `_APP_STORAGE_ANTIVIRUS_HOST` | clamav |
+| `_APP_STORAGE_ANTIVIRUS_PORT` | 3310 |
+| `_APP_STORAGE_DEVICE` | local |
+| `_APP_STORAGE_S3_ACCESS_KEY` |  |
+| `_APP_STORAGE_S3_SECRET` |  |
+| `_APP_STORAGE_S3_REGION` | us-east-1 |
+| `_APP_STORAGE_S3_BUCKET` |  |
+| `_APP_STORAGE_S3_ENDPOINT` |  |
+| `_APP_STORAGE_DO_SPACES_ACCESS_KEY` |  |
+| `_APP_STORAGE_DO_SPACES_SECRET` |  |
+| `_APP_STORAGE_DO_SPACES_REGION` | us-east-1 |
+| `_APP_STORAGE_DO_SPACES_BUCKET` |  |
+| `_APP_STORAGE_BACKBLAZE_ACCESS_KEY` |  |
+| `_APP_STORAGE_BACKBLAZE_SECRET` |  |
+| `_APP_STORAGE_BACKBLAZE_REGION` | us-west-004 |
+| `_APP_STORAGE_BACKBLAZE_BUCKET` |  |
+| `_APP_STORAGE_LINODE_ACCESS_KEY` |  |
+| `_APP_STORAGE_LINODE_SECRET` |  |
+| `_APP_STORAGE_LINODE_REGION` | eu-central-1 |
+| `_APP_STORAGE_LINODE_BUCKET` |  |
+| `_APP_STORAGE_WASABI_ACCESS_KEY` |  |
+| `_APP_STORAGE_WASABI_SECRET` |  |
+| `_APP_STORAGE_WASABI_REGION` | eu-central-1 |
+| `_APP_STORAGE_WASABI_BUCKET` |  |
+| `_APP_FUNCTIONS_SIZE_LIMIT` | 30000000 |
+| `_APP_COMPUTE_SIZE_LIMIT` | 30000000 |
+| `_APP_FUNCTIONS_BUILD_SIZE_LIMIT` | 2000000000 |
+| `_APP_FUNCTIONS_TIMEOUT` | 900 |
+| `_APP_FUNCTIONS_BUILD_TIMEOUT` | 900 |
+| `_APP_COMPUTE_BUILD_TIMEOUT` | 900 |
+| `_APP_FUNCTIONS_CONTAINERS` | 10 |
+| `_APP_FUNCTIONS_CPUS` | 0 |
+| `_APP_COMPUTE_CPUS` | 0 |
+| `_APP_FUNCTIONS_MEMORY` | 0 |
+| `_APP_COMPUTE_MEMORY` | 0 |
+| `_APP_FUNCTIONS_MEMORY_SWAP` | 0 |
+| `_APP_FUNCTIONS_RUNTIMES` | node-16.0,php-8.0,python-3.9,ruby-3.0 |
+| `_APP_EXECUTOR_SECRET` | ${executor_secret} |
+| `_APP_EXECUTOR_HOST` | http://exc1/v1 |
+| `_APP_EXECUTOR_RUNTIME_NETWORK` | appwrite_runtimes |
+| `_APP_FUNCTIONS_ENVS` | node-16.0,php-7.4,python-3.9,ruby-3.0 |
+| `_APP_FUNCTIONS_INACTIVE_THRESHOLD` | 60 |
+| `_APP_COMPUTE_INACTIVE_THRESHOLD` | 60 |
+| `DOCKERHUB_PULL_USERNAME` |  |
+| `DOCKERHUB_PULL_PASSWORD` |  |
+| `DOCKERHUB_PULL_EMAIL` |  |
+| `OPEN_RUNTIMES_NETWORK` | appwrite_runtimes |
+| `_APP_FUNCTIONS_RUNTIMES_NETWORK` | dokploy-network |
+| `_APP_COMPUTE_RUNTIMES_NETWORK` | dokploy-network |
+| `_APP_DOCKER_HUB_USERNAME` |  |
+| `_APP_DOCKER_HUB_PASSWORD` |  |
+| `_APP_FUNCTIONS_MAINTENANCE_INTERVAL` | 3600 |
+| `_APP_COMPUTE_MAINTENANCE_INTERVAL` | 3600 |
+| `_APP_SITES_TIMEOUT` | 900 |
+| `_APP_SITES_RUNTIMES` | static-1,node-22,flutter-3.29 |
+| `_APP_VCS_GITHUB_APP_NAME` |  |
+| `_APP_VCS_GITHUB_PRIVATE_KEY` |  |
+| `_APP_VCS_GITHUB_APP_ID` |  |
+| `_APP_VCS_GITHUB_CLIENT_ID` |  |
+| `_APP_VCS_GITHUB_CLIENT_SECRET` |  |
+| `_APP_VCS_GITHUB_WEBHOOK_SECRET` |  |
+| `_APP_MAINTENANCE_INTERVAL` | 86400 |
+| `_APP_MAINTENANCE_DELAY` | 0 |
+| `_APP_MAINTENANCE_START_TIME` | 00:00 |
+| `_APP_MAINTENANCE_RETENTION_CACHE` | 2592000 |
+| `_APP_MAINTENANCE_RETENTION_EXECUTION` | 1209600 |
+| `_APP_MAINTENANCE_RETENTION_AUDIT` | 1209600 |
+| `_APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE` | 15778800 |
+| `_APP_MAINTENANCE_RETENTION_ABUSE` | 86400 |
+| `_APP_MAINTENANCE_RETENTION_USAGE_HOURLY` | 8640000 |
+| `_APP_MAINTENANCE_RETENTION_SCHEDULES` | 86400 |
+| `_APP_GRAPHQL_MAX_BATCH_SIZE` | 10 |
+| `_APP_GRAPHQL_MAX_COMPLEXITY` | 250 |
+| `_APP_GRAPHQL_MAX_DEPTH` | 3 |
+| `_APP_MIGRATIONS_FIREBASE_CLIENT_ID` |  |
+| `_APP_MIGRATIONS_FIREBASE_CLIENT_SECRET` |  |
+| `_APP_ASSISTANT_OPENAI_API_KEY` |  |
+
+## Domínios
+
+| Serviço | Porta | Host |
+|---|---|---|
+| `appwrite` | 80 | ${main_domain} |
+| `appwrite` | 80 | ${sites_domain} |
+| `appwrite` | 80 | ${functions_domain} |
+| `appwrite-console` | 80 | ${main_domain} |
+| `appwrite-realtime` | 80 | ${main_domain} |
+
+## docker-compose.yml do template
+
+```yaml
+version: "3.8"
+
+x-logging: &x-logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+services:
+  appwrite:
+    image: appwrite/appwrite:1.8.0
+    <<: *x-logging
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=appwrite
+    volumes:
+      - appwrite-uploads:/storage/uploads:rw
+      - appwrite-imports:/storage/imports:rw
+      - appwrite-cache:/storage/cache:rw
+      - appwrite-config:/storage/config:rw
+      - appwrite-certificates:/storage/certificates:rw
+      - appwrite-functions:/storage/functions:rw
+      - appwrite-sites:/storage/sites:rw
+      - appwrite-builds:/storage/builds:rw
+    depends_on:
+      - mariadb
+      - redis
+    #      - clamav
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_LOCALE
+      - _APP_COMPRESSION_MIN_SIZE_BYTES
+      - _APP_CONSOLE_WHITELIST_ROOT
+      - _APP_CONSOLE_WHITELIST_EMAILS
+      - _APP_CONSOLE_SESSION_ALERTS
+      - _APP_CONSOLE_WHITELIST_IPS
+      - _APP_CONSOLE_HOSTNAMES
+      - _APP_SYSTEM_EMAIL_NAME
+      - _APP_SYSTEM_EMAIL_ADDRESS
+      - _APP_EMAIL_SECURITY
+      - _APP_SYSTEM_RESPONSE_FORMAT
+      - _APP_OPTIONS_ABUSE
+      - _APP_OPTIONS_ROUTER_PROTECTION
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_OPTIONS_ROUTER_FORCE_HTTPS
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DOMAIN
+      - _APP_DOMAIN_TARGET_CNAME
+      - _APP_DOMAIN_TARGET_AAAA
+      - _APP_DOMAIN_TARGET_A
+      - _APP_DOMAIN_TARGET_CAA
+      - _APP_DNS
+      - _APP_DOMAIN_FUNCTIONS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_SMTP_HOST
+      - _APP_SMTP_PORT
+      - _APP_SMTP_SECURE
+      - _APP_SMTP_USERNAME
+      - _APP_SMTP_PASSWORD
+      - _APP_USAGE_STATS
+      - _APP_STORAGE_LIMIT
+      - _APP_STORAGE_PREVIEW_LIMIT
+      - _APP_STORAGE_ANTIVIRUS
+      - _APP_STORAGE_ANTIVIRUS_HOST
+      - _APP_STORAGE_ANTIVIRUS_PORT
+      - _APP_STORAGE_DEVICE
+      - _APP_STORAGE_S3_ACCESS_KEY
+      - _APP_STORAGE_S3_SECRET
+      - _APP_STORAGE_S3_REGION
+      - _APP_STORAGE_S3_BUCKET
+      - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_DO_SPACES_ACCESS_KEY
+      - _APP_STORAGE_DO_SPACES_SECRET
+      - _APP_STORAGE_DO_SPACES_REGION
+      - _APP_STORAGE_DO_SPACES_BUCKET
+      - _APP_STORAGE_BACKBLAZE_ACCESS_KEY
+      - _APP_STORAGE_BACKBLAZE_SECRET
+      - _APP_STORAGE_BACKBLAZE_REGION
+      - _APP_STORAGE_BACKBLAZE_BUCKET
+      - _APP_STORAGE_LINODE_ACCESS_KEY
+      - _APP_STORAGE_LINODE_SECRET
+      - _APP_STORAGE_LINODE_REGION
+      - _APP_STORAGE_LINODE_BUCKET
+      - _APP_STORAGE_WASABI_ACCESS_KEY
+      - _APP_STORAGE_WASABI_SECRET
+      - _APP_STORAGE_WASABI_REGION
+      - _APP_STORAGE_WASABI_BUCKET
+      - _APP_COMPUTE_SIZE_LIMIT
+      - _APP_FUNCTIONS_TIMEOUT
+      - _APP_SITES_TIMEOUT
+      - _APP_COMPUTE_BUILD_TIMEOUT
+      - _APP_COMPUTE_CPUS
+      - _APP_COMPUTE_MEMORY
+      - _APP_FUNCTIONS_RUNTIMES
+      - _APP_SITES_RUNTIMES
+      - _APP_DOMAIN_SITES
+      - _APP_EXECUTOR_SECRET
+      - _APP_EXECUTOR_HOST
+      - _APP_LOGGING_CONFIG
+      - _APP_MAINTENANCE_INTERVAL
+      - _APP_MAINTENANCE_DELAY
+      - _APP_MAINTENANCE_START_TIME
+      - _APP_MAINTENANCE_RETENTION_EXECUTION
+      - _APP_MAINTENANCE_RETENTION_CACHE
+      - _APP_MAINTENANCE_RETENTION_ABUSE
+      - _APP_MAINTENANCE_RETENTION_AUDIT
+      - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
+      - _APP_MAINTENANCE_RETENTION_USAGE_HOURLY
+      - _APP_MAINTENANCE_RETENTION_SCHEDULES
+      - _APP_SMS_PROVIDER
+      - _APP_SMS_FROM
+      - _APP_GRAPHQL_MAX_BATCH_SIZE
+      - _APP_GRAPHQL_MAX_COMPLEXITY
+      - _APP_GRAPHQL_MAX_DEPTH
+      - _APP_VCS_GITHUB_APP_NAME
+      - _APP_VCS_GITHUB_PRIVATE_KEY
+      - _APP_VCS_GITHUB_APP_ID
+      - _APP_VCS_GITHUB_WEBHOOK_SECRET
+      - _APP_VCS_GITHUB_CLIENT_SECRET
+      - _APP_VCS_GITHUB_CLIENT_ID
+      - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
+      - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
+      - _APP_ASSISTANT_OPENAI_API_KEY
+  appwrite-console:
+    <<: *x-logging
+    image: appwrite/console:7.4.7
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.constraint-label-stack=appwrite"
+
+  appwrite-realtime:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: realtime
+    <<: *x-logging
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.constraint-label-stack=appwrite"
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPTIONS_ABUSE
+      - _APP_OPTIONS_ROUTER_PROTECTION
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_USAGE_STATS
+      - _APP_LOGGING_CONFIG
+
+  appwrite-worker-audits:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-audits
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_LOGGING_CONFIG
+
+  appwrite-worker-webhooks:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-webhooks
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_EMAIL_SECURITY
+      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_LOGGING_CONFIG
+
+  appwrite-worker-deletes:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-deletes
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    volumes:
+      - appwrite-uploads:/storage/uploads:rw
+      - appwrite-cache:/storage/cache:rw
+      - appwrite-functions:/storage/functions:rw
+      - appwrite-sites:/storage/sites:rw
+      - appwrite-builds:/storage/builds:rw
+      - appwrite-certificates:/storage/certificates:rw
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_STORAGE_DEVICE
+      - _APP_STORAGE_S3_ACCESS_KEY
+      - _APP_STORAGE_S3_SECRET
+      - _APP_STORAGE_S3_REGION
+      - _APP_STORAGE_S3_BUCKET
+      - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_DO_SPACES_ACCESS_KEY
+      - _APP_STORAGE_DO_SPACES_SECRET
+      - _APP_STORAGE_DO_SPACES_REGION
+      - _APP_STORAGE_DO_SPACES_BUCKET
+      - _APP_STORAGE_BACKBLAZE_ACCESS_KEY
+      - _APP_STORAGE_BACKBLAZE_SECRET
+      - _APP_STORAGE_BACKBLAZE_REGION
+      - _APP_STORAGE_BACKBLAZE_BUCKET
+      - _APP_STORAGE_LINODE_ACCESS_KEY
+      - _APP_STORAGE_LINODE_SECRET
+      - _APP_STORAGE_LINODE_REGION
+      - _APP_STORAGE_LINODE_BUCKET
+      - _APP_STORAGE_WASABI_ACCESS_KEY
+      - _APP_STORAGE_WASABI_SECRET
+      - _APP_STORAGE_WASABI_REGION
+      - _APP_STORAGE_WASABI_BUCKET
+      - _APP_LOGGING_CONFIG
+      - _APP_EXECUTOR_SECRET
+      - _APP_EXECUTOR_HOST
+      - _APP_MAINTENANCE_RETENTION_ABUSE
+      - _APP_MAINTENANCE_RETENTION_AUDIT
+      - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
+      - _APP_MAINTENANCE_RETENTION_EXECUTION
+      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+      - _APP_EMAIL_CERTIFICATES
+
+  appwrite-worker-databases:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-databases
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_LOGGING_CONFIG
+
+  appwrite-worker-builds:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-builds
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    volumes:
+      - appwrite-functions:/storage/functions:rw
+      - appwrite-sites:/storage/sites:rw
+      - appwrite-builds:/storage/builds:rw
+      - appwrite-uploads:/storage/uploads:rw
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_EXECUTOR_SECRET
+      - _APP_EXECUTOR_HOST
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_LOGGING_CONFIG
+      - _APP_VCS_GITHUB_APP_NAME
+      - _APP_VCS_GITHUB_PRIVATE_KEY
+      - _APP_VCS_GITHUB_APP_ID
+      - _APP_FUNCTIONS_TIMEOUT
+      - _APP_SITES_TIMEOUT
+      - _APP_COMPUTE_BUILD_TIMEOUT
+      - _APP_COMPUTE_CPUS
+      - _APP_COMPUTE_MEMORY
+      - _APP_COMPUTE_SIZE_LIMIT
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_OPTIONS_ROUTER_FORCE_HTTPS
+      - _APP_DOMAIN
+      - _APP_STORAGE_DEVICE
+      - _APP_STORAGE_S3_ACCESS_KEY
+      - _APP_STORAGE_S3_SECRET
+      - _APP_STORAGE_S3_REGION
+      - _APP_STORAGE_S3_BUCKET
+      - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_DO_SPACES_ACCESS_KEY
+      - _APP_STORAGE_DO_SPACES_SECRET
+      - _APP_STORAGE_DO_SPACES_REGION
+      - _APP_STORAGE_DO_SPACES_BUCKET
+      - _APP_STORAGE_BACKBLAZE_ACCESS_KEY
+      - _APP_STORAGE_BACKBLAZE_SECRET
+      - _APP_STORAGE_BACKBLAZE_REGION
+      - _APP_STORAGE_BACKBLAZE_BUCKET
+      - _APP_STORAGE_LINODE_ACCESS_KEY
+      - _APP_STORAGE_LINODE_SECRET
+      - _APP_STORAGE_LINODE_REGION
+      - _APP_STORAGE_LINODE_BUCKET
+      - _APP_STORAGE_WASABI_ACCESS_KEY
+      - _APP_STORAGE_WASABI_SECRET
+      - _APP_STORAGE_WASABI_REGION
+      - _APP_STORAGE_WASABI_BUCKET
+      - _APP_DOMAIN_SITES
+
+  appwrite-worker-certificates:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-certificates
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    volumes:
+      - appwrite-config:/storage/config:rw
+      - appwrite-certificates:/storage/certificates:rw
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DOMAIN
+      - _APP_DOMAIN_TARGET_CNAME
+      - _APP_DOMAIN_TARGET_AAAA
+      - _APP_DOMAIN_TARGET_A
+      - _APP_DOMAIN_TARGET_CAA
+      - _APP_DNS
+      - _APP_DOMAIN_FUNCTIONS
+      - _APP_EMAIL_CERTIFICATES
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_LOGGING_CONFIG
+
+  appwrite-worker-functions:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-functions
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+      - openruntimes-executor
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DOMAIN
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_FUNCTIONS_TIMEOUT
+      - _APP_SITES_TIMEOUT
+      - _APP_COMPUTE_BUILD_TIMEOUT
+      - _APP_COMPUTE_CPUS
+      - _APP_COMPUTE_MEMORY
+      - _APP_EXECUTOR_SECRET
+      - _APP_EXECUTOR_HOST
+      - _APP_USAGE_STATS
+      - _APP_DOCKER_HUB_USERNAME
+      - _APP_DOCKER_HUB_PASSWORD
+      - _APP_LOGGING_CONFIG
+
+  appwrite-worker-mails:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-mails
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_SYSTEM_EMAIL_NAME
+      - _APP_SYSTEM_EMAIL_ADDRESS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_SMTP_HOST
+      - _APP_SMTP_PORT
+      - _APP_SMTP_SECURE
+      - _APP_SMTP_USERNAME
+      - _APP_SMTP_PASSWORD
+      - _APP_LOGGING_CONFIG
+      - _APP_DOMAIN
+      - _APP_OPTIONS_FORCE_HTTPS
+
+  appwrite-worker-messaging:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-messaging
+    <<: *x-logging
+    restart: unless-stopped
+    volumes:
+      - appwrite-uploads:/storage/uploads:rw
+    depends_on:
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_LOGGING_CONFIG
+      - _APP_SMS_FROM
+      - _APP_SMS_PROVIDER
+      - _APP_STORAGE_DEVICE
+      - _APP_STORAGE_S3_ACCESS_KEY
+      - _APP_STORAGE_S3_SECRET
+      - _APP_STORAGE_S3_REGION
+      - _APP_STORAGE_S3_BUCKET
+      - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_DO_SPACES_ACCESS_KEY
+      - _APP_STORAGE_DO_SPACES_SECRET
+      - _APP_STORAGE_DO_SPACES_REGION
+      - _APP_STORAGE_DO_SPACES_BUCKET
+      - _APP_STORAGE_BACKBLAZE_ACCESS_KEY
+      - _APP_STORAGE_BACKBLAZE_SECRET
+      - _APP_STORAGE_BACKBLAZE_REGION
+      - _APP_STORAGE_BACKBLAZE_BUCKET
+      - _APP_STORAGE_LINODE_ACCESS_KEY
+      - _APP_STORAGE_LINODE_SECRET
+      - _APP_STORAGE_LINODE_REGION
+      - _APP_STORAGE_LINODE_BUCKET
+      - _APP_STORAGE_WASABI_ACCESS_KEY
+      - _APP_STORAGE_WASABI_SECRET
+      - _APP_STORAGE_WASABI_REGION
+      - _APP_STORAGE_WASABI_BUCKET
+
+  appwrite-worker-migrations:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-migrations
+    <<: *x-logging
+    restart: unless-stopped
+    volumes:
+      - appwrite-imports:/storage/imports:rw
+    depends_on:
+      - mariadb
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DOMAIN
+      - _APP_DOMAIN_TARGET_CNAME
+      - _APP_DOMAIN_TARGET_AAAA
+      - _APP_DOMAIN_TARGET_A
+      - _APP_DOMAIN_TARGET_CAA
+      - _APP_DNS
+      - _APP_EMAIL_SECURITY
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_LOGGING_CONFIG
+      - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
+      - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
+
+  appwrite-task-maintenance:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: maintenance
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_DOMAIN
+      - _APP_DOMAIN_TARGET_CNAME
+      - _APP_DOMAIN_TARGET_AAAA
+      - _APP_DOMAIN_TARGET_A
+      - _APP_DOMAIN_TARGET_CAA
+      - _APP_DNS
+      - _APP_DOMAIN_FUNCTIONS
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_MAINTENANCE_INTERVAL
+      - _APP_MAINTENANCE_RETENTION_EXECUTION
+      - _APP_MAINTENANCE_RETENTION_CACHE
+      - _APP_MAINTENANCE_RETENTION_ABUSE
+      - _APP_MAINTENANCE_RETENTION_AUDIT
+      - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
+      - _APP_MAINTENANCE_RETENTION_USAGE_HOURLY
+      - _APP_MAINTENANCE_RETENTION_SCHEDULES
+
+  appwrite-task-stats-resources:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: stats-resources
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_USAGE_STATS
+      - _APP_LOGGING_CONFIG
+      - _APP_DATABASE_SHARED_TABLES
+      - _APP_STATS_RESOURCES_INTERVAL
+
+  appwrite-worker-stats-resources:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-stats-resources
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_USAGE_STATS
+      - _APP_LOGGING_CONFIG
+      - _APP_STATS_RESOURCES_INTERVAL
+
+  appwrite-worker-stats-usage:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: worker-stats-usage
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_USAGE_STATS
+      - _APP_LOGGING_CONFIG
+      - _APP_USAGE_AGGREGATION_INTERVAL
+
+  appwrite-task-scheduler-functions:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: schedule-functions
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+
+  appwrite-task-scheduler-executions:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: schedule-executions
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+
+  appwrite-task-scheduler-messages:
+    image: appwrite/appwrite:1.8.0
+    entrypoint: schedule-messages
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+
+  appwrite-assistant:
+    image: appwrite/assistant:0.8.3
+    <<: *x-logging
+    restart: unless-stopped
+    environment:
+      - _APP_ASSISTANT_OPENAI_API_KEY
+
+  appwrite-browser:
+    image: appwrite/browser:0.2.4
+    <<: *x-logging
+    restart: unless-stopped
+
+  openruntimes-executor:
+    hostname: exc1
+    <<: *x-logging
+    restart: unless-stopped
+    stop_signal: SIGINT
+    image: openruntimes/executor:0.7.22
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - appwrite-builds:/storage/builds:rw
+      - appwrite-functions:/storage/functions:rw
+      - appwrite-sites:/storage/sites:rw
+      # Host mount necessary to share files between executor and runtimes.
+      # It's not possible to share mount file between 2 containers without host mount (copying is too slow)
+      - /tmp:/tmp:rw
+    environment:
+      - OPR_EXECUTOR_INACTIVE_TRESHOLD=$_APP_COMPUTE_INACTIVE_THRESHOLD
+      - OPR_EXECUTOR_MAINTENANCE_INTERVAL=$_APP_COMPUTE_MAINTENANCE_INTERVAL
+      - OPR_EXECUTOR_NETWORK=$_APP_COMPUTE_RUNTIMES_NETWORK
+      - OPR_EXECUTOR_DOCKER_HUB_USERNAME=$_APP_DOCKER_HUB_USERNAME
+      - OPR_EXECUTOR_DOCKER_HUB_PASSWORD=$_APP_DOCKER_HUB_PASSWORD
+      - OPR_EXECUTOR_ENV=$_APP_ENV
+      - OPR_EXECUTOR_RUNTIMES=$_APP_FUNCTIONS_RUNTIMES,$_APP_SITES_RUNTIMES
+      - OPR_EXECUTOR_SECRET=$_APP_EXECUTOR_SECRET
+      - OPR_EXECUTOR_RUNTIME_VERSIONS=v5
+      - OPR_EXECUTOR_LOGGING_CONFIG=$_APP_LOGGING_CONFIG
+      - OPR_EXECUTOR_STORAGE_DEVICE=$_APP_STORAGE_DEVICE
+      - OPR_EXECUTOR_STORAGE_S3_ACCESS_KEY=$_APP_STORAGE_S3_ACCESS_KEY
+      - OPR_EXECUTOR_STORAGE_S3_SECRET=$_APP_STORAGE_S3_SECRET
+      - OPR_EXECUTOR_STORAGE_S3_REGION=$_APP_STORAGE_S3_REGION
+      - OPR_EXECUTOR_STORAGE_S3_BUCKET=$_APP_STORAGE_S3_BUCKET
+      - OPR_EXECUTOR_STORAGE_S3_ENDPOINT=$_APP_STORAGE_S3_ENDPOINT
+      - OPR_EXECUTOR_STORAGE_DO_SPACES_ACCESS_KEY=$_APP_STORAGE_DO_SPACES_ACCESS_KEY
+      - OPR_EXECUTOR_STORAGE_DO_SPACES_SECRET=$_APP_STORAGE_DO_SPACES_SECRET
+      - OPR_EXECUTOR_STORAGE_DO_SPACES_REGION=$_APP_STORAGE_DO_SPACES_REGION
+      - OPR_EXECUTOR_STORAGE_DO_SPACES_BUCKET=$_APP_STORAGE_DO_SPACES_BUCKET
+      - OPR_EXECUTOR_STORAGE_BACKBLAZE_ACCESS_KEY=$_APP_STORAGE_BACKBLAZE_ACCESS_KEY
+      - OPR_EXECUTOR_STORAGE_BACKBLAZE_SECRET=$_APP_STORAGE_BACKBLAZE_SECRET
+      - OPR_EXECUTOR_STORAGE_BACKBLAZE_REGION=$_APP_STORAGE_BACKBLAZE_REGION
+      - OPR_EXECUTOR_STORAGE_BACKBLAZE_BUCKET=$_APP_STORAGE_BACKBLAZE_BUCKET
+      - OPR_EXECUTOR_STORAGE_LINODE_ACCESS_KEY=$_APP_STORAGE_LINODE_ACCESS_KEY
+      - OPR_EXECUTOR_STORAGE_LINODE_SECRET=$_APP_STORAGE_LINODE_SECRET
+      - OPR_EXECUTOR_STORAGE_LINODE_REGION=$_APP_STORAGE_LINODE_REGION
+      - OPR_EXECUTOR_STORAGE_LINODE_BUCKET=$_APP_STORAGE_LINODE_BUCKET
+      - OPR_EXECUTOR_STORAGE_WASABI_ACCESS_KEY=$_APP_STORAGE_WASABI_ACCESS_KEY
+      - OPR_EXECUTOR_STORAGE_WASABI_SECRET=$_APP_STORAGE_WASABI_SECRET
+      - OPR_EXECUTOR_STORAGE_WASABI_REGION=$_APP_STORAGE_WASABI_REGION
+      - OPR_EXECUTOR_STORAGE_WASABI_BUCKET=$_APP_STORAGE_WASABI_BUCKET
+
+  mariadb:
+    image: mariadb:10.11 # fix issues when upgrading using: mysql_upgrade -u root -p
+    <<: *x-logging
+    restart: unless-stopped
+    volumes:
+      - appwrite-mariadb:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=${_APP_DB_ROOT_PASS}
+      - MYSQL_DATABASE=${_APP_DB_SCHEMA}
+      - MYSQL_USER=${_APP_DB_USER}
+      - MYSQL_PASSWORD=${_APP_DB_PASS}
+      - MARIADB_AUTO_UPGRADE=1
+    command: "mysqld --innodb-flush-method=fsync"
+
+  redis:
+    image: redis:7.2.4-alpine
+    <<: *x-logging
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory            512mb
+      --maxmemory-policy     allkeys-lru
+      --maxmemory-samples    5
+    volumes:
+      - appwrite-redis:/data:rw
+
+  # clamav:
+  #   image: appwrite/clamav:1.2.0
+  #   restart: unless-stopped
+  #   volumes:
+  #     - appwrite-uploads:/storage/uploads
+
+volumes:
+  appwrite-mariadb:
+  appwrite-redis:
+  appwrite-cache:
+  appwrite-uploads:
+  appwrite-imports:
+  appwrite-certificates:
+  appwrite-functions:
+  appwrite-sites:
+  appwrite-builds:
+  appwrite-config:
+```
+
+## Veja também
+
+- [Templates de um clique](/guias/templates/)
+- [Stacks Docker Compose](/guias/compose/)
+- [Diagnosticar um 502](/guias/diagnosticar-502/)

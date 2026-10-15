@@ -1,0 +1,189 @@
+---
+title: Hospedar Documenso com Rustploy
+description: "Plataforma para assinaturas digitais de documentos (Alternativa ao DocuSign). Crie Documenso em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+sidebar:
+  hidden: true
+---
+
+**Documenso**: Plataforma para assinaturas digitais de documentos (Alternativa ao DocuSign). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+
+## Resumo
+
+| | |
+|---|---|
+| **Identificador** | `documenso` |
+| **Containers** | 2 (`postgres`, `documenso`) |
+| **Imagens** | `postgres:16`, `documenso/documenso:v1.12.10` |
+| **Porta da interface** | 3000, no serviço `documenso` |
+| **Tipo no Rustploy** | Stack Compose |
+
+## Como criar
+
+1. No projeto, clique em **+ Novo serviço → Template**.
+2. Busque por **Documenso** e selecione.
+3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
+4. Crie e faça o **Deploy**.
+5. Aponte o seu domínio em **Domains**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).
+
+## Variáveis de ambiente
+
+**Variáveis do template** (valores calculados na criação):
+
+| Variável | Valor |
+|---|---|
+| `main_domain` | *domínio (gerado; troque pelo seu)* |
+| `nextauth_secret` | *chave base64 aleatória (32 bytes)* |
+| `encryption_key` | *senha aleatória de 32 caracteres* |
+| `secondary_encryption_key` | *senha aleatória de 64 caracteres* |
+
+**Entregues ao container:**
+
+| Variável | Valor |
+|---|---|
+| `DOCUMENSO_HOST` | ${main_domain} |
+| `DOCUMENSO_PORT` | 3000 |
+| `NEXTAUTH_SECRET` | ${nextauth_secret} |
+| `NEXT_PRIVATE_ENCRYPTION_KEY` | ${encryption_key} |
+| `NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY` | ${secondary_encryption_key} |
+
+## Domínios
+
+| Serviço | Porta | Host |
+|---|---|---|
+| `documenso` | 3000 | ${main_domain} |
+
+## docker-compose.yml do template
+
+```yaml
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16
+
+    volumes:
+      - documenso-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=documenso
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=documenso
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U documenso"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  documenso:
+    image: documenso/documenso:v1.12.10
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - PORT=${DOCUMENSO_PORT}
+      - NEXTAUTH_URL=http://${DOCUMENSO_HOST}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXT_PRIVATE_ENCRYPTION_KEY=${NEXT_PRIVATE_ENCRYPTION_KEY}
+      - NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY=${NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY}
+      - NEXT_PUBLIC_WEBAPP_URL=http://${DOCUMENSO_HOST}
+      - NEXT_PRIVATE_DATABASE_URL=postgres://documenso:password@postgres:5432/documenso
+      - NEXT_PRIVATE_DIRECT_DATABASE_URL=postgres://documenso:password@postgres:5432/documenso
+      - NEXT_PUBLIC_UPLOAD_TRANSPORT=database
+      - NEXT_PRIVATE_SMTP_TRANSPORT=smtp-auth
+      - NEXT_PRIVATE_SIGNING_TRANSPORT=local
+      - NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH=/app/certs/cert.p12
+      - NEXT_PRIVATE_SIGNING_LOCAL_FILE_PASSPHRASE=${NEXT_PRIVATE_SIGNING_LOCAL_FILE_PASSPHRASE}
+      - CERT_VALID_DAYS=${CERT_VALID_DAYS:-365}
+      - CERT_INFO_COUNTRY_NAME=${CERT_INFO_COUNTRY_NAME:-US}
+      - CERT_INFO_STATE_OR_PROVIDENCE=${CERT_INFO_STATE_OR_PROVIDENCE:-State}
+      - CERT_INFO_LOCALITY_NAME=${CERT_INFO_LOCALITY_NAME:-City}
+      - CERT_INFO_ORGANIZATION_NAME=${CERT_INFO_ORGANIZATION_NAME:-Organization}
+      - CERT_INFO_ORGANIZATIONAL_UNIT=${CERT_INFO_ORGANIZATIONAL_UNIT:-IT Department}
+      - CERT_INFO_EMAIL=${CERT_INFO_EMAIL:-admin@example.com}
+      - DOCUMENSO_HOST=${DOCUMENSO_HOST}
+    ports:
+      - ${DOCUMENSO_PORT}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        CERT_PASSPHRASE="$${NEXT_PRIVATE_SIGNING_LOCAL_FILE_PASSPHRASE}"
+        
+        # Save original working directory
+        ORIGINAL_DIR="$$(pwd)"
+        
+        # Find openssl binary (should be available in v1.12.10+)
+        OPENSSL_CMD="$$(which openssl 2>/dev/null || command -v openssl 2>/dev/null || echo '/usr/bin/openssl')"
+        
+        # Verify openssl is available
+        if ! $$OPENSSL_CMD version >/dev/null 2>&1; then
+          echo "Error: OpenSSL not found. Please use Documenso image v1.12.10 or later."
+          exit 1
+        fi
+        
+        # Create certificate directory - use /app/certs (writable by user 1001)
+        CERT_DIR="/app/certs"
+        mkdir -p "$$CERT_DIR" || {
+          # Fallback to tmp if app directory not writable
+          CERT_DIR="/tmp/certs"
+          mkdir -p "$$CERT_DIR"
+          echo "Warning: Using fallback directory: $$CERT_DIR"
+        }
+        
+        touch /tmp/cert_info_path
+        cat <<EOF > /tmp/cert_info_path
+        [ req ]
+        distinguished_name = req_distinguished_name
+        prompt = no
+        [ req_distinguished_name ]
+        C            = $${CERT_INFO_COUNTRY_NAME}
+        ST           = $${CERT_INFO_STATE_OR_PROVIDENCE}
+        L            = $${CERT_INFO_LOCALITY_NAME}
+        O            = $${CERT_INFO_ORGANIZATION_NAME}
+        OU           = $${CERT_INFO_ORGANIZATIONAL_UNIT}
+        CN           = $${DOCUMENSO_HOST}
+        emailAddress = $${CERT_INFO_EMAIL}
+        EOF
+
+        cd "$$CERT_DIR"
+        
+        $$OPENSSL_CMD genrsa -out private.key 2048
+        
+        $$OPENSSL_CMD req \
+          -new \
+          -x509 \
+          -key private.key \
+          -out certificate.crt \
+          -days $${CERT_VALID_DAYS} \
+          -config /tmp/cert_info_path
+        
+        $$OPENSSL_CMD pkcs12 \
+          -export \
+          -out cert.p12 \
+          -inkey private.key \
+          -in certificate.crt \
+          -legacy \
+          -passout pass:"$$CERT_PASSPHRASE"
+        
+        # Set permissions (may fail if not root, but will work in Coolify)
+        chown 1001:1001 cert.p12 private.key certificate.crt 2>/dev/null || true
+        chmod 400 cert.p12 private.key certificate.crt
+        
+        # Update environment variable if directory changed
+        if [ "$$CERT_DIR" != "/app/certs" ]; then
+          export NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH="$$CERT_DIR/cert.p12"
+        fi
+        
+        # Return to original directory before starting application
+        cd "$$ORIGINAL_DIR"
+        
+        ./start.sh
+
+volumes:
+  documenso-data:
+```
+
+## Veja também
+
+- [Templates de um clique](/guias/templates/)
+- [Stacks Docker Compose](/guias/compose/)
+- [Diagnosticar um 502](/guias/diagnosticar-502/)
