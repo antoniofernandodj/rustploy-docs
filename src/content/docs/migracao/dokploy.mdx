@@ -1,0 +1,141 @@
+---
+title: Migrar do Dokploy para o Rustploy
+description: Como usar o importer do Rustploy para copiar projetos, aplicações Git, stacks Compose, variáveis e domínios do Dokploy - o que é convertido, o que não é, os riscos de sobrescrita e a checklist de conferência depois da migração.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+O **importer** (`rustploy-import`) lê o banco PostgreSQL do Dokploy e cria os
+projetos e serviços equivalentes no Rustploy. Ele copia a **configuração**: não
+move dados, volumes nem containers, e não faz deploy.
+
+<Aside type="danger" title="Leia 'Riscos' antes de rodar de verdade">
+  A importação real grava direto no banco do Rustploy e pode **apagar serviços e
+  variáveis que já existem** lá. Use `--dry-run` primeiro e faça backup.
+</Aside>
+
+## O que ele converte
+
+| No Dokploy | No Rustploy |
+|---|---|
+| Projeto | Projeto (novo id) |
+| Aplicação de **Git**, **GitHub** ou **Gitea** | Serviço de fonte **Git** (URL, branch, Dockerfile, contexto) |
+| **Docker Compose** | Serviço **Compose** (YAML inteiro) |
+| Variáveis de ambiente da aplicação ou do compose | Variáveis **comuns** do serviço |
+| Domínio, porta e HTTPS | Domínio, porta e TLS do serviço |
+
+Todos os serviços chegam **parados**. Nada é implantado.
+
+## O que **não** vem
+
+| Item | Situação |
+|---|---|
+| **Aplicações de imagem Docker** | **não convertidas**: viram um serviço Git **vazio** (sem URL). Recrie à mão |
+| **Bancos de dados** do Dokploy (Postgres, MySQL, Redis…) | não lidos. Recrie com o [assistente](/guias/bancos-e-brokers/) e restaure os dados |
+| **Secrets** | variáveis viram comuns; recrie os [secrets](/guias/variaveis-e-secrets/) |
+| **Credenciais Git** de repositório privado | não vêm. Configure em **Settings → Git** |
+| **Volumes** | não mapeados |
+| **Mais de um domínio** por serviço | só o **primeiro** domínio é levado |
+| **Variáveis compartilhadas do projeto** | não há equivalente lido |
+| Histórico de deploys, builds não Dockerfile (Nixpacks, buildpacks) | não. Tipos de build que não sejam Dockerfile geram aviso e são tratados como Dockerfile |
+| Backups, agendamentos, notificações do Dokploy | não |
+
+Os **dados** dos seus bancos e volumes ficam onde estão: migre-os por
+`pg_dump`/`restore` e cópia de arquivos.
+
+<Aside type="note">
+  O importer lê o esquema atual do Dokploy, em que aplicações e composes pertencem a
+  um **environment** dentro do projeto. Versões antigas do Dokploy, sem essa tabela,
+  falham na leitura.
+</Aside>
+
+## Antes de começar
+
+1. O `rustploy-import` **não vem no pacote `.deb` nem no tarball**. Compile-o:
+
+   ```bash
+   cd rustploy-daemon
+   cargo build --release -p rustploy-import
+   # binário: target/release/rustploy-import
+   ```
+
+2. O **Postgres do Dokploy** precisa estar acessível a partir de onde você roda o importer. Por padrão ele não expõe porta no host: publique a porta ou rode o importer dentro da mesma rede Docker.
+3. O Rustploy deve estar instalado e ter **iniciado ao menos uma vez**, para existir o banco `/var/lib/rustploy/db/rustploy.db`.
+4. Faça **backup** de `/var/lib/rustploy/db`.
+
+## Passo a passo
+
+<Steps>
+1. **Simule.** Não grava nada:
+
+   ```bash
+   rustploy-import dokploy \
+     --pg-url "postgresql://usuario:senha@HOST:5432/dokploy" \
+     --dry-run
+   ```
+
+   Ele imprime quantos projetos, aplicações e composes achou e a lista de
+   **avisos** (bloqueantes, avisos e informações).
+
+2. **Leia os avisos.** Um aviso **bloqueante** (por exemplo, uma aplicação que
+   aponta para um projeto inexistente) **interrompe** a migração.
+
+3. **Revise o SQL, se quiser.** Em vez de gravar, gere um arquivo:
+
+   ```bash
+   rustploy-import dokploy --pg-url "…" --output-sql migracao.sql --yes
+   ```
+
+4. **Importe de verdade**, com o usuário que tem acesso ao banco do Rustploy:
+
+   ```bash
+   sudo -u rustploy rustploy-import dokploy --pg-url "…" --yes
+   ```
+
+   Sem `--yes` ele só avisa e **não faz nada**.
+
+5. **Reinicie o daemon** para ele reconhecer os serviços novos:
+
+   ```bash
+   sudo systemctl restart rustployd
+   ```
+</Steps>
+
+### Opções
+
+| Opção | Efeito |
+|---|---|
+| `--pg-url` | URL do Postgres do Dokploy (padrão `postgresql://dokploy:dokploy@localhost:5432/dokploy`) |
+| `--dry-run` | só simula |
+| `--yes` | confirma a gravação |
+| `--output-sql ARQUIVO` | grava um arquivo SQL em vez de escrever no banco |
+| `--gitea-url URL` | base de URL para aplicações do tipo **Gitea** (sem ela usa `https://gitea.example.com`) |
+
+A opção `--auto-detect-docker` existe, mas **ainda não faz nada**.
+
+## Riscos
+
+<Aside type="danger">
+  A gravação direta tem comportamento destrutivo, por desenho:
+
+  - **Projeto com o mesmo nome:** é **atualizado**, e as **variáveis do projeto são substituídas por uma lista vazia**.
+  - **Serviço com o mesmo nome:** o importer faz `DELETE FROM service WHERE name = …` **sem filtrar por projeto**. Isso apaga **qualquer serviço de mesmo nome em qualquer projeto** do Rustploy, e depois cria o novo.
+
+  Se o servidor de destino **já tem serviços**, confira os nomes antes. Prefira
+  importar para um Rustploy **novo e vazio**, ou use `--output-sql` e aplique só o
+  que você revisou.
+</Aside>
+
+## Depois de importar: checklist
+
+1. **Secrets:** recrie os que existiam e troque as variáveis correspondentes por `secret:NOME`.
+2. **Imagens Docker:** recrie as aplicações de imagem que viraram serviços Git vazios.
+3. **Bancos:** crie e restaure os dados.
+4. **Repositórios privados:** conecte a conta em **Settings → Git** e escolha-a em cada serviço.
+5. **Compose:** o importer troca `dokploy-network` por `rp_net` no YAML. **Revise as redes**: o Rustploy já liga a stack à rede do projeto sozinho, então referências a redes externas do Dokploy podem ser removidas.
+6. **Domínios:** adicione os extras e confira porta e TLS na aba **Domains**. Aponte o DNS para o novo servidor.
+7. **Healthcheck:** os serviços chegam com healthcheck **None**. [Configure](/guias/healthcheck/).
+8. **Volumes:** declare-os nos serviços.
+9. **Deploy:** faça o deploy de um serviço por vez e confira.
+
+Mantenha o Dokploy no ar até validar tudo. A troca do DNS é o ponto de corte.

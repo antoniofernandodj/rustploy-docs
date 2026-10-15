@@ -1,144 +1,188 @@
 ---
 title: O arquivo config.toml
-description: Referência do config.toml do rustployd - onde fica, a ordem de busca, cada seção (daemon, api, ingress, acme, docker, deploy, metrics, secrets, external_ports, registry) e os padrões.
+description: Referência do config.toml do rustployd, conferida contra o código - onde fica, quais seções são obrigatórias, o que acontece quando o arquivo tem erro, cada chave com o padrão, e as variáveis de ambiente RUSTPLOY_* que a sobrescrevem.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-O `rustployd` lê a configuração de um arquivo TOML. Sem arquivo, valem os padrões.
+O `rustployd` lê a configuração de um arquivo TOML. No pacote `.deb` ele fica em
+`/etc/rustploy/config.toml`, já completo.
 
 ## Onde ele é procurado
 
-Na ordem, o primeiro que existir:
+Na ordem, o **primeiro arquivo que existir e for válido**:
 
 1. o caminho em `$RUSTPLOY_CONFIG`;
 2. `/etc/rustploy/config.toml`;
 3. `~/.config/rustploy/config.toml`.
 
-<Aside type="danger" title="O parse é tudo ou nada">
-  Se você usa um arquivo próprio em `RUSTPLOY_CONFIG`, ele só é aceito se
-  contiver **todas** as seções. Não há mistura com os padrões. Um arquivo
-  parcial é rejeitado por inteiro. O arquivo de `/etc/rustploy/config.toml`
-  instalado pelo pacote já vem completo; edite-o em vez de recriá-lo.
+Se nenhum servir, valem os padrões embutidos (veja a coluna *sem arquivo* abaixo).
+
+<Aside type="danger" title="Um erro no arquivo não aparece em lugar nenhum">
+  Se o arquivo não for um TOML válido, **ou** faltar uma seção obrigatória, **ou** um
+  valor tiver o tipo errado (por exemplo `port = "9797"` com aspas), o daemon
+  **ignora o arquivo inteiro em silêncio**, sem aviso no log, e segue para o próximo
+  caminho ou para os padrões. Um erro de digitação pode, na prática, subir o daemon
+  **sem o seu token e sem o seu domínio**. Depois de editar, confira que o daemon
+  leu o que você escreveu (veja [Conferir](#conferir-o-que-o-daemon-leu)).
 </Aside>
 
-## Variáveis de ambiente que sobrescrevem o arquivo
+### Seções obrigatórias e opcionais
 
-| Variável | Efeito |
+| Seção | Obrigatória? |
 |---|---|
-| `RUSTPLOY_CONFIG` | caminho do arquivo de configuração |
-| `RUSTPLOY_DB_PATH` | diretório do banco (sob systemd o unit já a define) |
-| `RUSTPLOY_LOG_LEVEL` ou `RUST_LOG` | nível de log (o log é JSON estruturado) |
-| `RUSTPLOY_API_TOKEN` | token da API |
+| `[daemon]`, `[ingress]` com `[ingress.acme]`, `[docker]`, `[deploy]`, `[metrics]`, `[secrets]` | **sim**, e todas as chaves delas (exceto `acme.email`) |
+| `[api]`, `[env_backup]`, `[external_ports]`, `[registry]` | não: ausentes, usam o padrão. Dentro delas, **cada chave** é opcional |
 
-## Seções
+Por isso `[registry]` com só `enabled = true` basta. Mas dentro de `[ingress]`,
+omitir `https_port` invalida o arquivo todo.
+
+## Padrões
+
+Há **dois** conjuntos de padrões. O do **pacote** é o que você vê no
+`/etc/rustploy/config.toml` recém-instalado. O **sem arquivo** é o do código,
+quando nenhum arquivo é lido:
+
+| Chave | Pacote `.deb` | Sem arquivo |
+|---|---|---|
+| `ingress.http_port` | **80** | **8080** |
+| `ingress.https_port` | 443 | 443 |
+| `ingress.acme.enabled` | **false** | **true** |
+| `ingress.acme.email` | vazio | ausente |
+
+Ou seja: sem arquivo, o ACME fica **ligado** (e sem e-mail), e o HTTP escuta em 8080.
+
+## Chave por chave
 
 ### `[daemon]`
 
-```toml
-[daemon]
-db_path   = "/var/lib/rustploy/db"
-log_level = "info"
-```
+| Chave | Padrão | |
+|---|---|---|
+| `db_path` | `/var/lib/rustploy/db` | diretório do banco SQLite e dos dados (builds, certificados, registry) |
+| `log_level` | `info` | o log é JSON estruturado |
 
-Sob systemd, o `db_path` é fixado pela variável `RUSTPLOY_DB_PATH` do unit, que
-tem prioridade. Editar o campo no arquivo não tem efeito nesse caso.
+Sob systemd, o unit define `RUSTPLOY_DB_PATH`, que **tem prioridade** sobre o
+arquivo. Editar `db_path` no arquivo não muda nada nesse caso.
 
-### `[api]`
+### `[api]` (opcional)
 
-```toml
-[api]
-bind_address = "0.0.0.0"
-port         = 9797
-token        = "<token forte>"
-domain       = "rustploy.meusite.com"   # opcional: TLS automático na própria porta
-```
-
-Padrão: `127.0.0.1:9797`, sem token. Essa porta serve também a web UI, os
-webhooks de deploy e o MCP.
+| Chave | Padrão | |
+|---|---|---|
+| `enabled` | `true` | desligar também desliga webhooks, web UI e MCP |
+| `bind_address` | `127.0.0.1` | |
+| `port` | `9797` | |
+| `token` | nenhum | o token da API |
+| `domain` | nenhum | com domínio, a API termina TLS **na própria porta** (ACME) |
+| `max_connections` | `32` | |
 
 <Aside type="caution">
   **Guarda de segurança:** o daemon se recusa a subir com `bind_address` que não
   seja loopback e sem `token`.
 </Aside>
 
-Com `domain` definido, a porta da API termina TLS com certificado ACME.
+No `.deb`, o bloco `[api]` vem **comentado**: para usá-lo, descomente e preencha.
 
 ### `[ingress]` e `[ingress.acme]`
 
-```toml
-[ingress]
-http_port    = 80
-https_port   = 443
-bind_address = "0.0.0.0"
+| Chave | | |
+|---|---|---|
+| `http_port` | obrigatória | porta do proxy HTTP (também recebe o desafio do Let's Encrypt) |
+| `https_port` | obrigatória | |
+| `bind_address` | obrigatória | |
+| `acme.enabled` | obrigatória | ligar a emissão automática de certificados |
+| `acme.email` | opcional | e-mail do Let's Encrypt |
+| `acme.directory` | obrigatória | URL da CA (padrão `https://acme-v02.api.letsencrypt.org/directory`) |
 
-[ingress.acme]
-enabled   = false
-email     = ""
-directory = "https://acme-v02.api.letsencrypt.org/directory"
-```
-
-Para ter HTTPS automático, ligue `enabled` e informe um `email` válido.
+O e-mail do ACME também se define em **Settings → Web Server**. O valor dessa tela
+**tem precedência** sobre o arquivo e exige reiniciar o daemon.
 
 ### `[docker]`
 
-```toml
-[docker]
-socket_path = "/var/run/docker.sock"
-```
+| Chave | Padrão |
+|---|---|
+| `socket_path` | `/var/run/docker.sock` |
 
 ### `[deploy]`
 
-```toml
-[deploy]
-drain_secs  = 10
-image_cache = 2
-```
-
-`drain_secs` é a espera após a troca de rota antes de remover o container
-antigo.
+| Chave | Padrão | |
+|---|---|---|
+| `drain_secs` | `10` | espera, depois da troca de rota, antes de remover o container antigo |
+| `image_cache` | `2` | |
 
 ### `[metrics]`
 
-```toml
-[metrics]
-interval_secs  = 2
-history_points = 60
-```
+| Chave | Padrão |
+|---|---|
+| `interval_secs` | `2` |
+| `history_points` | `60` |
 
 ### `[secrets]`
 
-```toml
-[secrets]
-master_key_path = "/etc/rustploy/master.key"
+| Chave | Padrão | |
+|---|---|---|
+| `master_key_path` | `/etc/rustploy/master.key` | a chave que cifra os secrets. **Faça backup.** |
+
+### `[external_ports]` (opcional)
+
+| Chave | Padrão | |
+|---|---|---|
+| `range_start` | `20000` | |
+| `range_end` | `20999` | |
+
+A faixa que o Rustploy usa para expor bancos e brokers. É também a **única** faixa
+que o `rustployd-fw` aceita abrir no `ufw`.
+
+### `[registry]` (opcional)
+
+| Chave | Padrão | |
+|---|---|---|
+| `enabled` | `false` | |
+| `port` | `5100` | o listener escuta **só em loopback** |
+| `domain` | nenhum | expõe o registry publicamente (rota no ingress + certificado) |
+| `storage_dir` | `<db_path>/registry/` | |
+
+O domínio definido em **Settings → Web Server** tem precedência sobre o do arquivo.
+
+### `[env_backup]` (opcional)
+
+| Chave | Padrão | |
+|---|---|---|
+| `dir` | `<db_path>/env_backups/` | |
+| `interval_secs` | `60` | |
+
+## Variáveis de ambiente
+
+Elas **sobrescrevem** o arquivo (e os padrões):
+
+| Variável | Sobrescreve |
+|---|---|
+| `RUSTPLOY_CONFIG` | o caminho do arquivo |
+| `RUSTPLOY_DB_PATH` | `daemon.db_path` |
+| `RUSTPLOY_LOG_LEVEL` | `daemon.log_level` (o `RUST_LOG` também é lido) |
+| `RUSTPLOY_HTTP_PORT` | `ingress.http_port` |
+| `RUSTPLOY_API_ENABLED` | `api.enabled` (`1`, `true`, `yes` ou `on` ligam; qualquer outro valor desliga) |
+| `RUSTPLOY_API_BIND` | `api.bind_address` |
+| `RUSTPLOY_API_PORT` | `api.port` |
+| `RUSTPLOY_API_TOKEN` | `api.token` (vazio = sem token) |
+| `RUSTPLOY_API_DOMAIN` | `api.domain` |
+| `RUSTPLOY_REGISTRY_ENABLED` | `registry.enabled` |
+| `RUSTPLOY_REGISTRY_PORT` | `registry.port` |
+| `RUSTPLOY_REGISTRY_DOMAIN` | `registry.domain` |
+| `RUSTPLOY_REGISTRY_STORAGE_DIR` | `registry.storage_dir` |
+
+Com o `.deb`, o unit systemd lê também `/etc/rustploy/environment` (opcional).
+É o lugar certo para variáveis como `RUSTPLOY_API_TOKEN` quando você não quer o
+token no `config.toml`. Nesse caso o daemon **não grava** o `connection_token` no
+arquivo: use `rustployd access-key`.
+
+## Conferir o que o daemon leu
+
+```bash
+sudo systemctl restart rustployd
+sudo rustployd access-key        # imprime o token de conexão
+journalctl -u rustployd -n 30    # confira porta e domínio
 ```
 
-A chave mestra que cifra os secrets. **Faça backup dela**: sem a chave, os
-secrets gravados não podem ser decifrados.
-
-### `[external_ports]`
-
-```toml
-[external_ports]
-range_start = 20000
-range_end   = 20999
-```
-
-A faixa de portas do host que o Rustploy aloca para expor bancos e brokers.
-É também a única faixa que o helper de firewall aceita abrir.
-
-### `[registry]`
-
-```toml
-[registry]
-enabled = false
-port    = 5100
-# storage_dir = "/var/lib/rustploy/db/registry"
-```
-
-O registry Docker embutido, desligado por padrão.
-
-### `[env_backup]`
-
-Snapshots periódicos das variáveis de ambiente. Opcional; por padrão a cada 60 s
-em `<db_path>/env_backups/`.
+Se o `access-key` responder "sem `[api].token` configurado" depois de você ter
+definido um, o arquivo **não foi lido**: procure o erro de digitação, aspas
+faltando ou uma seção obrigatória ausente.

@@ -93,6 +93,12 @@ testar na própria VPS, mas ainda não deixa nenhum cliente remoto entrar.
 </Steps>
 
 <Aside type="caution">
+  Se o `config.toml` tiver um erro, o daemon o **ignora em silêncio** e sobe com os
+  padrões. Se o passo 4 disser que não há token, o arquivo não foi lido. Veja
+  [O arquivo config.toml](/instalacao/config-toml/#conferir-o-que-o-daemon-leu).
+</Aside>
+
+<Aside type="caution">
   Sem `[api].domain`, a porta 9797 fala **HTTP puro** e o token trafega sem
   cifra. Para uso real, configure um domínio (veja abaixo) ou feche a porta
   para a internet e acesse por VPN ou túnel SSH.

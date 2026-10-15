@@ -71,6 +71,9 @@ export default defineConfig({
           { slug: 'guias/limpeza-docker' },
           { slug: 'guias/backup' },
         ]},
+        { label: 'Migração', items: [
+          { slug: 'migracao/dokploy' },
+        ]},
         { label: 'Referência', items: [
           { slug: 'referencia/comandos' },
           { slug: 'referencia/respostas' },
