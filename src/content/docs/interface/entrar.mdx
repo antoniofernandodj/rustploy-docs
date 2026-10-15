@@ -1,0 +1,53 @@
+---
+title: Entrar no servidor
+description: Como fazer login no app desktop do Rustploy com o token de conexão, usar a lista de servidores salvos, esquecer um servidor e o que significam os estados de conexão.
+---
+
+import Shot from '../../../components/Shot.astro';
+import login from '../../../assets/ui/login.png';
+
+<Shot
+  src={login}
+  alt="Tela de login do Rustploy com a lista de servidores salvos, o campo do token de conexão e o botão Connect."
+  caption="Tela de login."
+/>
+
+A tela de login tem **um campo só**: o **token de conexão**. Ele já carrega o
+endereço do servidor e o token da API, então você não digita host nem porta. Para
+saber onde pegá-lo, veja [Primeiro acesso](/instalacao/primeiro-acesso/).
+
+## Entrar
+
+1. Cole o token no campo *"cole o token de conexão"*.
+2. Clique em **Connect**.
+
+O app não sabe se o servidor fala **HTTPS** ou **HTTP**: ele tenta o seguro primeiro
+e, se a conexão falhar, o outro. Se o servidor não tem domínio configurado, o
+login vai por HTTP. Veja o aviso em [Segurança do servidor](/operacao/seguranca-do-servidor/).
+
+O texto no rodapé do cartão (`desconectado`) mostra o estado da conexão e as
+mensagens de erro, como token inválido ou servidor inalcançável.
+
+## Servidores salvos
+
+Depois do primeiro login bem-sucedido, o app **lembra o servidor**. Da próxima vez,
+escolha-o na lista **servidores salvos** (ela mostra `host:porta`) e clique em
+**Connect**: não precisa colar o token de novo.
+
+Para trabalhar com **vários servidores**, entre em cada um uma vez. Eles aparecem
+todos na lista, e a [barra superior](/interface/visao-geral/#a-barra-superior) mostra
+em qual você está.
+
+**Esquecer este servidor** remove da lista o servidor cujo token está no campo e
+limpa o campo.
+
+## Se o login falhar
+
+| Mensagem ou sintoma | O que fazer |
+|---|---|
+| token com formato errado | o token é o texto em base64 completo, sem espaços nem aspas. Cole de novo |
+| token de outra instalação | o token foi trocado no servidor. Pegue o novo em `rustployd access-key` |
+| nada responde | a porta `9797` está fechada no firewall, ou o endereço está errado |
+
+Mais causas em [Conectar o Claude Code](/agentes/conectar-claude-code/#problemas-comuns):
+são as mesmas, porque o token e a porta são os mesmos.

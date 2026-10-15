@@ -1,0 +1,82 @@
+---
+title: Docker e Registry no app desktop
+description: A tela Docker do app desktop do Rustploy - containers, imagens, volumes, redes do servidor - e a sub-aba Registry para repositórios do registry embutido, tokens de acesso, docker login e garbage collector.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import registry from '../../../assets/ui/docker-registry.png';
+import novoToken from '../../../assets/ui/novo-token-registry.png';
+import tokenCriado from '../../../assets/ui/token-registry-criado.png';
+
+A tela **Docker** (menu lateral) mostra o Docker do **servidor inteiro**, não só o
+que é do Rustploy. No topo, quatro contadores: **CONTAINERS**, **IMAGENS**,
+**VOLUMES** e **NETWORKS**. Abaixo, uma sub-aba para cada um, mais o **Registry**.
+
+| Sub-aba | Mostra |
+|---|---|
+| **Containers** | todos, rodando e parados |
+| **Images** | as imagens e se estão em uso |
+| **Volumes** | os volumes do Docker (o Rustploy só usa *bind mounts*, então são de fora dele) |
+| **Networks** | as redes, com as dos projetos identificadas |
+| **Registry** | o registry Docker embutido |
+
+Cada lista tem a ação de remover. O Docker **recusa** remover o que está em uso. Para
+limpar de uma vez, veja [Limpeza do Docker](/guias/limpeza-docker/).
+
+## Registry
+
+<Shot
+  src={registry}
+  alt="Sub-aba Registry mostrando o status do registry, a tabela de repositórios vazia, os tokens de acesso e o botão Novo token."
+  caption="Sub-aba Registry, sem repositórios nem tokens."
+/>
+
+O topo informa o estado: *"Registry ativo em 127.0.0.1:5100 · 0 repositório(s)"*. Se o
+registry estiver desligado, a tela avisa; ligue-o em `[registry]` no
+[`config.toml`](/instalacao/config-toml/#registry-opcional).
+
+| Elemento | O que faz |
+|---|---|
+| Tabela **REPOSITÓRIO / TAGS / TAMANHO / CRIADO / AÇÃO** | os repositórios publicados e suas tags. Vazia, mostra *"Faça `docker push` para o registry embutido."* |
+| **Executar GC** | o *garbage collector*: remove manifests sem tag e blobs que ninguém usa |
+| **TOKENS DE ACESSO (N)** | as credenciais de `docker login` |
+| **+ Novo token** | cria um token |
+
+Criar conteúdo só acontece por `docker push`: a tela não envia imagens.
+
+### Criar um token
+
+Sem token nenhum, **nenhum push ou pull é autenticado**: crie um antes de usar o
+registry. Clique em **+ Novo token**.
+
+<Shot
+  src={novoToken}
+  alt="Janela Novo token com o campo Nome e a escolha de escopo entre somente leitura (pull) e leitura e escrita (push)."
+  caption="Janela Novo token."
+/>
+
+| Campo | |
+|---|---|
+| **NOME** | por exemplo `ci-deploy` |
+| **ESCOPO** | **Somente leitura (pull)** ou **Leitura e escrita (push)** |
+
+Clique em **Criar token**.
+
+<Shot
+  src={tokenCriado}
+  alt="Janela Token criado com o aviso de que o segredo não pode ser recuperado e o comando docker login com o segredo borrado."
+  caption="O comando docker login, mostrado uma única vez. (O segredo foi borrado nesta imagem.)"
+/>
+
+<Aside type="danger" title="O segredo aparece uma vez">
+  A janela mostra o **comando `docker login`** completo, com o segredo, e avisa:
+  *"O segredo não pode ser recuperado depois de fechar esta janela."* Clique em
+  **Copiar** antes de **Fechar**. Se perder, apague o token e crie outro.
+</Aside>
+
+O token aparece na tabela **TOKENS DE ACESSO** com **NOME**, **ESCOPO**, **CRIADO** e
+**ÚLTIMO USO** (`nunca` até a primeira vez). O **×** vermelho o revoga na hora.
+
+Use um token **push** no CI e **pull** onde só se baixa. O fluxo completo, com
+domínio e HTTPS, está em [Registry embutido](/guias/registry/).

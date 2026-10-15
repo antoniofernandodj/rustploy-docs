@@ -1,0 +1,116 @@
+---
+title: Criar um serviço (assistente Novo serviço)
+description: Passo a passo do assistente Novo serviço do app desktop do Rustploy - Application, Database, Broker, Compose, Template e Importar - com o formulário de banco de dados (Postgres) e a busca de templates.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import tipos from '../../../assets/ui/novo-servico-tipos.png';
+import banco from '../../../assets/ui/novo-servico-banco.png';
+import postgres from '../../../assets/ui/novo-servico-postgres.png';
+import template from '../../../assets/ui/novo-servico-template.png';
+
+No projeto aberto, clique em **+ Novo serviço**. O assistente abre numa janela
+própria, **Novo serviço — nome do projeto**, com **‹ Voltar** e **Cancelar** no topo.
+Criar um serviço **não faz deploy**: depois de criado, abra o serviço e clique em
+**Deploy**.
+
+## Escolha o tipo
+
+<Shot
+  src={tipos}
+  alt="Janela Novo serviço com os seis tipos: Application, Database, Broker, Compose, Template e Importar."
+  caption="Primeiro passo: o tipo de serviço."
+/>
+
+| Tipo | Descrição na tela | Quando usar |
+|---|---|---|
+| **Application** | Web app via Git ou imagem | seu código ou uma imagem pronta. Veja [Git](/guias/git/) e [zip](/guias/zip/) |
+| **Database** | Banco de dados gerenciado | Postgres, MySQL, MariaDB, MongoDB ou Redis |
+| **Broker** | Mensageria: Kafka, RabbitMQ, NATS | filas e eventos |
+| **Compose** | Stack Docker Compose | vários containers juntos. Veja [Compose](/guias/compose/) |
+| **Template** | A partir de um preset | aplicações prontas do [catálogo](/templates/) |
+| **Importar** | Recriar um serviço exportado de outro servidor | levar um serviço de um Rustploy para outro |
+
+Clique em **Selecionar ›** na linha do tipo.
+
+## Database
+
+<Shot
+  src={banco}
+  alt="Lista de bancos de dados: MongoDB, PostgreSQL, MariaDB, MySQL e Redis, cada um com a imagem padrão."
+  caption="Escolha do banco, com a imagem padrão de cada um."
+/>
+
+| Banco | Imagem padrão |
+|---|---|
+| MongoDB | `mongo:8` |
+| PostgreSQL | `postgres:18` |
+| MariaDB | `mariadb:11` |
+| MySQL | `mysql:8` |
+| Redis | `redis:7` |
+
+<Aside type="caution" title="mongo:8 em kernels novos">
+  A imagem `mongo:8` não inicia em kernels Linux 6.19 ou mais novos. Nesses
+  servidores, troque a imagem para `mongo:7` no formulário.
+</Aside>
+
+### O formulário
+
+<Shot
+  src={postgres}
+  alt="Formulário Nova PostgreSQL com os campos Nome, Database name, User, Password gerada, a opção de URL externa e a imagem Docker."
+  caption="Formulário do PostgreSQL."
+/>
+
+| Campo | O que é |
+|---|---|
+| **NOME** | o nome do **serviço** no Rustploy (ex.: `meu-banco`) |
+| **DATABASE NAME** | o database criado dentro do servidor (padrão `app`) |
+| **USER** | o usuário (padrão `postgres`) |
+| **PASSWORD** | **gerada** para você, e você pode trocar |
+| **Gerar URL de conexão externa** | marque para acessar o banco de **fora do servidor** (veja abaixo) |
+| **DOCKER IMAGE** | a imagem, ex. `postgres:18` |
+
+Clique em **Criar PostgreSQL**. Os campos mudam conforme o banco: MySQL e MariaDB
+pedem também a senha do root, e o MongoDB tem **Use Replica Sets**.
+
+<Aside type="caution" title="Anote a senha">
+  A senha mostrada é a que vai valer. Copie-a antes de criar, ou consulte depois na
+  aba **Environment** do serviço.
+</Aside>
+
+#### URL de conexão externa
+
+Marcando **"Gerar URL de conexão externa (porta e firewall automáticos)"**, o
+Rustploy aloca uma porta livre da faixa `[external_ports]` (padrão 20000–20999),
+libera essa porta no `ufw` e mostra a **External URL** na aba **Connection** do
+serviço. Isso deixa o banco acessível pela **internet**, protegido só pela senha.
+Use uma senha forte. Sem marcar, o banco só é alcançável de dentro do projeto.
+Detalhes em [Bancos e brokers](/guias/bancos-e-brokers/).
+
+## Template
+
+<Shot
+  src={template}
+  alt="Lista de templates com logo, nome e botão Escolher, e um campo de busca no topo."
+  caption="Catálogo de templates, com busca."
+/>
+
+Use o campo **BUSCAR** (*"buscar templates…"*) para filtrar o catálogo pelo nome ou pela
+descrição. Cada linha tem o logo, o nome e **Escolher ›**. Depois você dá um nome ao
+serviço e revisa as variáveis (as senhas já vêm geradas). São mais de 380
+aplicações: veja o [catálogo](/templates/).
+
+## Application, Broker, Compose e Importar
+
+- **Application**: o assistente pede só o **NOME** (e, opcionalmente, o **APP NAME**, usado no lugar do nome) e cria o serviço **vazio**. A origem (**Git**, imagem ou zip), a porta e o domínio se configuram depois, na aba **General** do serviço. Veja [Git](/guias/git/).
+- **Broker**: Kafka, RabbitMQ ou NATS, com usuário e senha gerados. Veja [Bancos e brokers](/guias/bancos-e-brokers/).
+- **Compose**: nome, porta, domínio e o YAML da stack.
+- **Importar**: escolha o arquivo exportado de outro servidor. O serviço é criado **sem deploy** e nada é sobrescrito.
+
+## Depois de criar
+
+1. Abra o serviço (**Abrir ›** no cartão).
+2. Configure o [healthcheck](/guias/healthcheck/), o [domínio](/guias/dominios-e-tls/) e as variáveis.
+3. Clique em **Deploy**.

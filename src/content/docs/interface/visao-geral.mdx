@@ -1,0 +1,84 @@
+---
+title: Visão geral da interface desktop
+description: Como é a janela do app desktop do Rustploy - barra superior, menu lateral, o botão Stop All, a busca, os indicadores de status e uptime e como navegar entre as telas.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import deployments from '../../../assets/ui/deployments.png';
+
+O app desktop do Rustploy (Linux e Windows) mostra o **mesmo servidor** que a
+[web UI](/instalacao/instalar-clientes/#web-ui-zero-instalação), e as duas falam
+com a mesma API. Esta seção percorre as telas do app, uma a uma.
+
+<Shot
+  src={deployments}
+  alt="Tela Deployments do app desktop, com o menu lateral à esquerda, a barra superior e a tabela de deployments vazia."
+  caption="Tela inicial depois de entrar: Deployments."
+/>
+
+## A janela
+
+| Área | O que tem |
+|---|---|
+| **Barra superior** | botão ☰ (mostra ou esconde o menu), campo de busca, o servidor conectado com a versão do daemon, **Stop All** e **Disconnect** |
+| **Menu lateral** | as telas do app, em dois grupos, mais **Settings** e **Support** |
+| **Área central** | o conteúdo da tela escolhida |
+
+Algumas ações abrem **janelas separadas**, com a própria barra de título, e não
+um painel dentro da principal: **Novo projeto**, **Novo serviço**, **Novo token** do
+registry, **Novo job** e a janela de **logs**. Você pode movê-las e redimensioná-las.
+O app lembra o tamanho da janela da última vez.
+
+## O menu lateral
+
+| Grupo | Tela | Para quê |
+|---|---|---|
+| **DEPLOYMENT OPS** | **Deployments** | os deploys recentes de todos os projetos |
+| | **Deploy Engine** | a [fila de deploys](/guias/fila-de-deploys/) |
+| | **Monitoring** | CPU e memória do servidor e dos containers ([detalhes](/operacao/monitoramento-e-saude/)) |
+| | **Schedules** | os [jobs agendados](/guias/jobs/) |
+| | **Ingress** | as rotas ativas do proxy |
+| | **Docker** | containers, imagens, volumes, redes e o [registry](/interface/docker-e-registry/) |
+| **MANAGEMENT** | **Projects** | os [projetos](/interface/projetos/) e seus serviços (o número é a contagem) |
+| (rodapé) | **Settings** | [configurações](/interface/configuracoes/) |
+| | **Support** | endereço do repositório do projeto |
+
+## A barra superior
+
+- **☰** esconde ou mostra o menu lateral, para ganhar espaço.
+- **Busca** (`Search deployments, nodes…`): filtra as listas da tela enquanto você digita.
+- **O servidor conectado** aparece com o endereço, a porta e a versão do daemon (`daemon v0.1.1`). Com vários servidores salvos, é por aqui que você confere onde está.
+- **Disconnect** encerra a sessão e volta para o [login](/interface/entrar/).
+
+### Stop All
+
+<Aside type="danger" title="Para tudo">
+  **Stop All** para **todos os serviços** do Rustploy, de todos os projetos. O app
+  pede confirmação (*"Parar todos os serviços?"*). Eles só voltam com um novo
+  **Deploy**. Use em manutenção, não no dia a dia.
+</Aside>
+
+## A tela Deployments
+
+É a tela inicial. Em cima, dois indicadores:
+
+| Indicador | Significa |
+|---|---|
+| **STATUS** `0/7` | serviços **rodando** sobre o **total** de serviços |
+| **UPTIME** `18h 53m` | há quanto tempo o **daemon** está no ar |
+
+A tabela lista os deploys com **SERVIÇO**, **PROJETO**, **ESTADO**, **DURAÇÃO** e
+**INÍCIO**. Vazia, mostra *"Nenhum deployment ainda."*
+
+### Limpar parados/falhos
+
+O botão vermelho **Limpar parados/falhos** apaga do histórico todo deploy em estado
+**Stopped** ou **Failed**, **com os logs de build**. Deploys em andamento não são
+afetados. A ação é **irreversível** e pede confirmação.
+
+## Notificações
+
+O app avisa quando um deploy termina, inclusive com a janela fechada: fechar a
+última janela **recolhe o app para a bandeja do sistema** em vez de encerrá-lo, e a
+conexão com o servidor continua viva. Para abrir de novo, use o ícone da bandeja.

@@ -1,0 +1,146 @@
+---
+title: Configurações (Settings) no app desktop
+description: As quatro abas de Settings do app desktop do Rustploy - Web Server (URL da API, token de conexão e comando do agente de IA), Git (contas GitHub e Gitea), Infra as Code (exportar e importar zip) e Manutenção (limpeza automática do Docker).
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import web from '../../../assets/ui/settings-web-server.png';
+import git from '../../../assets/ui/settings-git.png';
+import gitOauth from '../../../assets/ui/settings-git-oauth.png';
+import iac from '../../../assets/ui/settings-iac.png';
+import manutencao from '../../../assets/ui/settings-manutencao.png';
+import manutencaoFim from '../../../assets/ui/settings-manutencao-fim.png';
+
+**Settings** (no rodapé do menu lateral) tem quatro abas: **Web Server**, **Git**,
+**Infra as Code** e **Manutenção**.
+
+## Web Server
+
+<Shot
+  src={web}
+  alt="Aba Web Server com a URL pública da API, o token de conexão e o comando para conectar um agente do Claude Code. Os endereços e o token foram borrados."
+  caption="Aba Web Server. Os valores foram borrados nesta imagem."
+/>
+
+Três blocos, cada um com **Copiar**:
+
+| Bloco | O que é |
+|---|---|
+| **URL PÚBLICA DA API** | a base dos **webhooks** dos serviços e do callback do OAuth. Vem de `[api].domain` e da porta. Para mudá-la, configure `api.domain` e reinicie o daemon |
+| **TOKEN DE CONEXÃO** | o texto em base64 de `host:porta::token`, o que se cola no [login](/interface/entrar/) e que um agente de IA usa. Também fica em `[api].connection_token` no `config.toml` |
+| **CONECTAR UM AGENTE (CLAUDE CODE)** | copia o comando `claude mcp add …/mcp` já com o token. Cole no terminal. Veja [Conectar o Claude Code](/agentes/conectar-claude-code/) |
+
+<Aside type="danger">
+  O token de conexão **vale tanto quanto o token de administrador**. Não o compartilhe,
+  e não publique prints desta tela sem borrar.
+</Aside>
+
+Mais abaixo, role a tela, ficam o **E-MAIL LET'S ENCRYPT (HTTPS AUTOMÁTICO)** e o
+**DOMÍNIO DO REGISTRY (EXPOSIÇÃO PÚBLICA)**. Os dois exigem reiniciar o daemon.
+
+## Git
+
+<Shot
+  src={git}
+  alt="Aba Git sem contas conectadas, com a escolha entre Gitea e GitHub, os campos Nome e Base URL, o método OAuth2 ou token e os campos Client ID e Client Secret."
+  caption="Aba Git: conectar uma conta."
+/>
+
+Aqui você conecta contas **GitHub** ou **Gitea** uma vez e as usa em todos os
+serviços e jobs. **CONTAS CONECTADAS (N)** lista as existentes.
+
+Para **conectar**:
+
+1. Escolha **Gitea** ou **GitHub**.
+2. Informe um **NOME** (só um rótulo) e, para Gitea ou GitHub Enterprise, a **BASE URL**. No GitHub.com deixe em branco.
+3. Escolha o **MÉTODO**: **OAuth2** ou **Token (PAT)**.
+4. Com **OAuth2**, informe o **CLIENT ID** e o **CLIENT SECRET** de um aplicativo OAuth criado no provedor.
+5. Clique em **Conectar conta**.
+
+<Shot
+  src={gitOauth}
+  alt="Parte de baixo da aba Git mostrando a Redirect URI com botão Copiar, a instrução para o Gitea e os botões Conectar conta e Atualizar lista. A URI foi borrada."
+  caption="O final do formulário: a Redirect URI. (Borrada nesta imagem.)"
+/>
+
+No OAuth, a tela mostra a **REDIRECT URI**: copie-a com **Copiar** e cole no
+aplicativo OAuth do provedor (no Gitea: *Settings → Applications*; no GitHub:
+*Settings → Developer settings → OAuth Apps*, campo *Authorization callback URL*).
+Ao clicar em **Conectar conta**, o navegador abre para você autorizar.
+
+Com **Token (PAT)**, cole um *Personal Access Token* com permissão de leitura dos
+repositórios (escopo `repo`). **Atualizar lista** recarrega as contas.
+
+Detalhes e o uso nos serviços: [Fazer deploy a partir de Git](/guias/git/).
+
+## Infra as Code
+
+<Shot
+  src={iac}
+  alt="Aba Infra as Code com os blocos Exportar e Importar, as opções prune e disparar deploy e os botões para exportar e importar um arquivo zip."
+  caption="Aba Infra as Code."
+/>
+
+| Bloco | O que faz |
+|---|---|
+| **Exportar para um .zip…** | gera um `.zip` com `rustploy.yml` e `rustploy.vars.toml` no lugar que você escolher. Os valores das variáveis ficam só no TOML; **secrets nunca saem do daemon** |
+| **Importar de um .zip…** | lê um `.zip` do mesmo formato, com **exatamente um** `.yml` e um `.toml` na raiz |
+
+Opções da importação:
+
+| Opção | Efeito |
+|---|---|
+| **Remover serviços ausentes do manifesto (prune)** | apaga os serviços que não estão no manifesto |
+| **Disparar deploy dos serviços criados/alterados** | faz o deploy depois de sincronizar |
+
+Se faltar o valor de alguma variável usada no YAML, a importação é **cancelada antes
+de aplicar qualquer coisa**, e a mensagem diz qual variável falta, rotulada com o
+escopo (por exemplo `Chiquitos/api: APP_PORT`). Detalhes em
+[Infra as Code](/guias/infra-as-code/).
+
+## Manutenção
+
+<Shot
+  src={manutencao}
+  alt="Aba Manutenção com a limpeza automática ativada, frequência diária às 03:00, e as opções de containers parados e imagens sem uso marcadas."
+  caption="Aba Manutenção, início do formulário."
+/>
+
+Aqui fica a **limpeza automática do Docker**. Ela vem **desligada** e **não remove
+nada** até você marcar pelo menos um recurso e ativar.
+
+1. Ligue **Ativar limpeza automática**.
+2. Em **FREQUÊNCIA**, escolha **A cada N horas**, **Todo dia** ou **Toda semana** e o **HORÁRIO**.
+3. Em **O QUE LIMPAR**, marque os tipos.
+4. Clique em **Salvar**. **Executar agora** roda na hora.
+
+<Aside type="caution" title="O horário que você digita é UTC">
+  O campo **HORÁRIO** é em **UTC**. A linha **Próxima execução agendada** mostra o
+  horário no **seu fuso**: na imagem acima, `03:00` aparece como `15/10 00:00`
+  (UTC−3). Use essa linha para conferir.
+</Aside>
+
+<Shot
+  src={manutencaoFim}
+  alt="Final da aba Manutenção com redes sem uso e cache de build marcados, o aviso de volumes em vermelho, os botões Salvar e Executar agora e a última execução."
+  caption="Aba Manutenção, final: volumes, botões e última execução."
+/>
+
+| Opção | Efeito |
+|---|---|
+| **Containers parados** | remove os containers parados |
+| **Imagens sem uso** | por padrão só as *dangling*. **incluir todas as não usadas** inclui também as com tag |
+| **SÓ IMAGENS CRIADAS HÁ MAIS DE (HORAS)** | padrão **168**. `0` não filtra. O Docker olha a data de criação, não a do último uso |
+| **Redes sem uso** | remove redes sem containers |
+| **Cache de build** | remove o cache sem uso |
+| **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | padrão **168**. `0` apaga todo o cache sem uso |
+| **Volumes sem uso** | **cuidado** |
+
+<Aside type="danger" title="Volumes">
+  *"Volumes sem uso criados por fora do rustploy podem conter dado que ninguém
+  recriaria sozinho."* Deixe desmarcado a menos que tenha certeza.
+</Aside>
+
+No final, **ÚLTIMA EXECUÇÃO** mostra quando rodou e o que liberou (containers, imagens,
+redes, cache de build). Mais em [Limpeza do Docker](/guias/limpeza-docker/).

@@ -22,12 +22,14 @@ O YAML pode ir para o Git sem medo; o TOML tem valores, **trate-o como segredo**
 
 ## Exportar
 
-**Settings → Infra as Code → Exportar tudo.** Copie os dois textos (ou baixe o zip,
-na GUI).
+**Settings → Infra as Code.**
+
+- **Web UI:** **Exportar tudo** mostra os dois textos para copiar.
+- **App desktop:** **Exportar para um .zip…** grava um `.zip` com `rustploy.yml` e `rustploy.vars.toml` (é o mesmo TOML de variáveis, com outro nome).
 
 ## Importar
 
-**Settings → Infra as Code → Importar.** Cole o `rustploy.yml` e o `variáveis.toml`.
+**Settings → Infra as Code → Importar.** Na web UI, cole o `rustploy.yml` e o `variáveis.toml`. No app desktop, **Importar de um .zip…** lê um zip com **exatamente um** `.yml` e um `.toml` na raiz.
 Duas opções:
 
 | Opção | Efeito |

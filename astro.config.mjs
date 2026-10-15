@@ -85,6 +85,14 @@ export default defineConfig({
           { slug: 'referencia/paridade' },
           { slug: 'templates' },
         ]},
+        { label: 'Interface desktop', items: [
+          { slug: 'interface/visao-geral' },
+          { slug: 'interface/entrar' },
+          { slug: 'interface/projetos' },
+          { slug: 'interface/novo-servico' },
+          { slug: 'interface/docker-e-registry' },
+          { slug: 'interface/configuracoes' },
+        ]},
         { label: 'Conceitos', items: [
           { slug: 'conceitos/projeto' },
           { slug: 'conceitos/servico-e-fontes' },

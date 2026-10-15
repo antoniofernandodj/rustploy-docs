@@ -1,0 +1,114 @@
+---
+title: Projetos no app desktop
+description: Como listar, criar, abrir e editar projetos no app desktop do Rustploy, e usar as abas Serviços, Variáveis, Secrets e Jobs de um projeto.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import projects from '../../../assets/ui/projects.png';
+import novoProjeto from '../../../assets/ui/novo-projeto.png';
+import variaveis from '../../../assets/ui/variaveis.png';
+import variaveisEditando from '../../../assets/ui/variaveis-editando.png';
+
+Um [projeto](/conceitos/projeto/) agrupa serviços numa rede própria. A tela
+**Projects** (menu lateral, grupo **MANAGEMENT**) lista todos.
+
+<Shot
+  src={projects}
+  alt="Tela Projects com um cartão de projeto mostrando a contagem de serviços e o botão Abrir."
+  caption="Tela Projects: um cartão por projeto."
+/>
+
+## A lista
+
+No topo, dois indicadores: **SERVICES** (o total de serviços de todos os
+projetos) e **PROJECTS**. Cada cartão mostra:
+
+- o **nome** do projeto;
+- a contagem, como `7 serviço(s) · 0 rodando`;
+- **Abrir ›** para entrar no projeto;
+- quando o projeto **tem serviços**, o aviso *"Não removível: tem serviços"*. Para excluir um projeto, remova antes todos os serviços dele.
+
+## Criar um projeto
+
+Clique em **+ Novo projeto**. Abre uma janela separada:
+
+<Shot
+  src={novoProjeto}
+  alt="Janela Novo projeto com os campos Nome e Descrição e os botões Cancelar e Criar projeto."
+  caption="Janela Novo projeto."
+/>
+
+| Campo | |
+|---|---|
+| **NOME** | obrigatório |
+| **DESCRIÇÃO (OPCIONAL)** | texto livre |
+
+Confirme em **Criar projeto**. O Rustploy cria a rede Docker do projeto na primeira
+vez que ela é necessária.
+
+## Dentro de um projeto
+
+**Abrir ›** leva à tela do projeto. No topo, **‹ Projetos** volta à lista, e à direita
+ficam **+ Novo serviço** (abre o [assistente](/interface/novo-servico/)) e **Editar
+projeto** (nome e descrição).
+
+Quatro abas:
+
+| Aba | O que tem |
+|---|---|
+| **Serviços** | um cartão por serviço, com o nome, a porta, o status, CPU e memória, e botões para parar, remover e exportar |
+| **Variáveis (N)** | as variáveis de ambiente do projeto |
+| **Secrets (N)** | os valores cifrados do projeto |
+| **Jobs (N)** | os [jobs](/guias/jobs/) do projeto |
+
+O número entre parênteses é a contagem de itens de cada aba.
+
+### O cartão de serviço
+
+**Abrir ›** abre a tela do serviço, onde ficam o deploy, o domínio, o healthcheck e os
+logs. Os botões do cartão:
+
+| Botão | Efeito |
+|---|---|
+| **■** | **para** o serviço (pede confirmação; o tráfego é interrompido até um novo deploy) |
+| **×** (vermelho) | remove o serviço |
+| **⇪** | exporta o serviço para recriá-lo em outro servidor ([copiar serviço](/guias/infra-as-code/)) |
+
+## Variáveis do projeto
+
+<Shot
+  src={variaveis}
+  alt="Aba Variáveis de um projeto com uma variável listada e os campos KEY e value para adicionar outra."
+  caption="Aba Variáveis, com uma variável já cadastrada."
+/>
+
+O texto no topo lembra a regra: *"Herdadas por todos os serviços deste projeto no
+deploy — as do serviço têm precedência."* Veja os detalhes em
+[Como as variáveis são resolvidas](/conceitos/variaveis-de-ambiente/).
+
+Para **adicionar**:
+
+1. Digite o nome em **KEY** e o valor em **value**.
+2. Clique em **Adicionar**.
+
+<Shot
+  src={variaveisEditando}
+  alt="Aba Variáveis com o nome env_var e o valor valueOfVar digitados nos campos, antes de clicar em Adicionar."
+  caption="Preenchendo uma variável antes de adicionar."
+/>
+
+| Controle | O que faz |
+|---|---|
+| **usar secret** | em vez de digitar o valor, aponta a variável para um **secret** do projeto |
+| **×** vermelho na linha | remove a variável |
+| **.env** | abre o editor em texto, no formato `.env` (uma `CHAVE=valor` por linha, com comentários) |
+| **Exportar** | abre o mesmo editor já preenchido com as variáveis atuais, para copiar |
+
+<Aside type="note">
+  Variáveis e secrets só chegam ao container **no próximo deploy**. Depois de mudar
+  algo, faça **Deploy** nos serviços afetados. O **Reload** não aplica.
+</Aside>
+
+Os **Secrets** têm a própria aba: informe o nome e o valor; o valor é cifrado e
+**não volta a ser exibido**. Veja [Variáveis de ambiente e secrets](/guias/variaveis-e-secrets/).

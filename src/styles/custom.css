@@ -11,7 +11,7 @@
   --sl-text-code: 0.8125rem;
   --sl-text-code-sm: 0.75rem;
   --sl-line-height: 1.7;
-  --sl-content-width: 46rem;
+  --sl-content-width: 50rem;
   --sl-sidebar-width: 17rem;
 }
 
@@ -55,3 +55,6 @@
 .sl-markdown-content p,
 .sl-markdown-content li { max-width: 68ch; }
 .sl-markdown-content :not(pre) > code { font-size: 0.85em; }
+
+/* Telas do app: a coluna é estreita, então a figura (Shot.astro) abre em tamanho cheio ao clicar. */
+.sl-markdown-content .shot img { margin: 0; }
