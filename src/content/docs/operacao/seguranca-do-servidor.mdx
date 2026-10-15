@@ -1,0 +1,103 @@
+---
+title: Segurança do servidor
+description: Modelo de segurança do Rustploy - o token único da API e o que ele permite, isolamento de redes por projeto, secrets cifrados, o helper de firewall, o grupo docker do usuário rustploy, TLS, webhooks e uma lista de endurecimento recomendada.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Esta página descreve o que o Rustploy protege, o que **não** protege e o que você
+deve fazer no servidor.
+
+## O token da API é tudo
+
+A API usa **um único token Bearer, sem escopo**. Quem o tem faz **qualquer coisa**:
+cria projetos, lê variáveis e secrets **decifrados**, sobe e derruba containers,
+apaga serviços e bancos. Não existe somente leitura, nem por usuário, nem
+confirmação em comandos destrutivos.
+
+O mesmo vale para o **token de conexão**, que carrega o token da API, e para o
+acesso do [agente de IA](/agentes/seguranca/).
+
+**Trate o token como a senha de root do servidor**: ele leva a execução de
+containers com o que você montar neles.
+
+- Use um valor longo e aleatório (`openssl rand -hex 32`).
+- Troque-o se vazar: altere `[api].token`, reinicie o daemon, e entre de novo nos clientes.
+- Não o coloque no Git. Guarde-o no `config.toml` (modo `640`, dono `rustploy`) ou em `/etc/rustploy/environment`.
+
+### A guarda de bind
+
+O daemon **não inicia a API** se `bind_address` não for loopback e não houver
+`token`. Ele registra um erro no log e **segue rodando sem API**: o painel e os
+agentes ficam fora do ar. Procure a mensagem `listener NÃO iniciado` no
+`journalctl`.
+
+## Exposição da API
+
+Por padrão a API escuta em `127.0.0.1`. Ao abri-la na internet:
+
+- **Use HTTPS.** Defina `[api].domain` para o próprio daemon terminar TLS na porta da API (Let's Encrypt). Sem isso, o token trafega em **texto puro**.
+- **Reduza a superfície.** Se só você administra, deixe a porta fechada ao mundo e acesse por **VPN** ou **túnel SSH** (`ssh -L 9797:127.0.0.1:9797 servidor`).
+- Os webhooks precisam de acesso público à mesma porta; o caminho `/webhook/…` é separado e **não** libera a API.
+
+## O que o Rustploy isola
+
+- **Redes por projeto.** Cada projeto tem a sua rede Docker; containers de projetos diferentes **não se enxergam**. O proxy é o único ponto de entrada.
+- **Sem privilégios extras.** Os containers dos serviços não usam `--privileged` nem capabilities adicionais.
+- **Banco compartilhado** é a exceção controlada: o Rustploy conecta o servidor de banco às redes dos projetos que **você autoriza**, com um apelido próprio, e cada projeto tem usuário e database separados. Veja [Banco compartilhado](/guias/banco-compartilhado/).
+
+Isso **não** protege contra o que está dentro do container: uma aplicação
+vulnerável continua vulnerável. E um serviço Compose ou um job é um YAML seu: ele
+pode montar `/var/run/docker.sock` ou usar `privileged: true`, e o Rustploy não
+impede.
+
+## Secrets
+
+- São cifrados com `age` antes de ir para o banco; listar devolve só os nomes.
+- A **chave mestra** fica em `/etc/rustploy/master.key`. O arquivo é criado com as permissões padrão do processo; quem o protege é o diretório `/etc/rustploy`, com modo `750` e dono `rustploy`. Mantenha assim, e guarde uma cópia **fora do servidor**.
+- Em stacks Compose e jobs, os valores decifrados passam por um `.env` temporário em disco. Veja [Como as variáveis são resolvidas](/conceitos/variaveis-de-ambiente/#compose-via-arquivo-env).
+- As senhas geradas por **templates** ficam como variáveis comuns, não como secrets.
+
+## O usuário do daemon e o grupo `docker`
+
+O `rustployd` roda como o usuário de sistema **`rustploy`**, sem shell e sem
+diretório pessoal, no grupo **`docker`**. Ser do grupo `docker` equivale a ter
+**root no servidor**: quem controla o daemon controla o Docker. O unit systemd
+reduz o que dá: `NoNewPrivileges`, `PrivateTmp` e só a capacidade
+`CAP_NET_BIND_SERVICE` (para ouvir nas portas 80 e 443).
+
+## O helper de firewall
+
+Abrir uma porta no `ufw` exige root, então isso fica num processo separado, o
+**`rustployd-fw`**:
+
+- roda como root, mas só é **ativado por um socket** (`/run/rustploy/fw.sock`), acessível ao root e ao grupo `rustploy` (modo `0660`);
+- aceita só dois pedidos, *allow* e *deny* de **porta TCP**;
+- **recusa qualquer porta fora da faixa** `[external_ports]` (padrão 20000–20999) e só fala com o `ufw`;
+- roda com sistema de arquivos somente leitura, exceto onde o `ufw` escreve.
+
+Expor um banco **abre a porta na internet**, protegida só pela senha dele. Restrinja
+por IP no próprio `ufw` quando puder.
+
+## Registry embutido
+
+Toda rota exige autenticação, mesmo em loopback. Use tokens **pull** onde só se baixa
+e **push** só no CI. O segredo aparece uma única vez. Veja [Registry](/guias/registry/).
+
+## Webhooks
+
+O token tem 48 caracteres hexadecimais, é único por serviço e é comparado em tempo
+constante. A URL funciona como senha: guarde-a como secret do seu CI e use
+**Regenerar** se vazar.
+
+## Checklist de endurecimento
+
+1. Token da API **forte**, só no `config.toml` (`640`) ou em `/etc/rustploy/environment`.
+2. `[api].domain` com HTTPS, **ou** API só em loopback com VPN ou túnel SSH.
+3. Firewall do servidor (ufw ou do provedor): libere só 22, 80, 443 e, se preciso, a 9797.
+4. SSH por **chave**, sem senha, e sem login de root.
+5. [Backup](/guias/backup/) da `master.key` e de `/var/lib/rustploy`, **fora** do servidor.
+6. Atualizações do sistema e do Docker em dia.
+7. Imagens de fontes confiáveis; não monte o `docker.sock` em containers.
+8. Senhas fortes em bancos expostos externamente, ou não os exponha.
+9. Dê a agentes de IA só o que você aceitaria dar a um administrador.

@@ -71,6 +71,10 @@ export default defineConfig({
           { slug: 'guias/limpeza-docker' },
           { slug: 'guias/backup' },
         ]},
+        { label: 'Operação', items: [
+          { slug: 'operacao/monitoramento-e-saude' },
+          { slug: 'operacao/seguranca-do-servidor' },
+        ]},
         { label: 'Migração', items: [
           { slug: 'migracao/dokploy' },
         ]},

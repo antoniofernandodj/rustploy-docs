@@ -1,0 +1,93 @@
+---
+title: Monitoramento, saúde dos serviços e reinício automático
+description: O que a tela Monitoring do Rustploy mostra (CPU, memória, disco, carga e rede por container), como o watchdog vigia os serviços, restarta containers que caem e marca Degraded ou Error, e o que acontece depois de reiniciar o servidor.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## A tela Monitoring
+
+**Monitoring** (menu lateral) mostra o uso **agora**, atualizado a cada 2 segundos:
+
+| Bloco | O que mede |
+|---|---|
+| **CPU** | uso total de CPU do servidor |
+| **MEMORY** | memória em uso |
+| **DISK** | disco do **maior ponto de montagem** (normalmente `/`) |
+| **LOAD** | carga média do sistema (1, 5 e 15 minutos) |
+
+Abaixo, uma linha por **container** de serviço no ar: **CPU**, **memória** e tráfego
+de rede recebido e enviado. A CPU do container é relativa à capacidade total das
+CPUs (um container usando 2 núcleos de 4 mostra 200% na escala de um núcleo).
+
+<Aside type="note" title="Só o presente, sem histórico">
+  As métricas não são gravadas. A tela mostra o valor atual e **não há gráfico nem
+  histórico**: ao recarregar, os números por container reaparecem a cada novo
+  ciclo de coleta. A chave `[metrics].history_points` do `config.toml` existe, mas
+  hoje **não tem efeito**. Para histórico e alertas, use uma ferramenta externa
+  (por exemplo Beszel ou Uptime Kuma, ambos no [catálogo de templates](/templates/)).
+</Aside>
+
+O intervalo de coleta é `[metrics].interval_secs` (padrão 2 s).
+
+## O watchdog: quem vigia os serviços
+
+Um laço dentro do daemon verifica, a cada **5 segundos**, todos os serviços com
+status **Running** ou **Degraded**. Para cada um, no ritmo do **INTERVAL** do
+healthcheck do serviço:
+
+1. **O container está rodando?** Se não, o watchdog tenta **iniciá-lo de novo** (até **3 tentativas**, esperando 3 s entre elas) e marca o serviço **Degraded**. Se o container foi **removido**, ou as 3 tentativas falham, dispara um **redeploy**.
+2. **O healthcheck passa?** Usa o mesmo tipo configurado na aba **Healthcheck** (Http, Tcp, Docker).
+
+A progressão de status quando o healthcheck **falha**:
+
+| Falhas seguidas | Status do serviço |
+|---|---|
+| 1 | **Degraded** |
+| até `RETRIES` − 1 | continua Degraded, só registra no log do daemon |
+| `RETRIES` (padrão 10) | **Error** (`healthcheck falhou Nx`) e o serviço **sai da vigilância** |
+
+Se o healthcheck volta a passar antes de chegar a `RETRIES`, o serviço volta a
+**Running**. Um serviço em **Error** não é mais vigiado: você precisa agir (corrigir
+e fazer **Deploy**).
+
+Com o healthcheck **None**, o watchdog só confere se o container está de pé.
+
+### Por que o Rustploy restarta em vez do Docker
+
+Os containers são criados com a política de reinício do Docker em **`no`**: quem
+decide religá-los é o watchdog, não o `dockerd`. Isso permite contar tentativas,
+mudar o status e cair num redeploy em vez de ficar num laço de reinício.
+
+## Depois de reiniciar o servidor
+
+<Aside type="caution" title="Os serviços não voltam sozinhos">
+  Pelo código, ao iniciar, o daemon **reconcilia** o status de cada serviço com o
+  Docker e marca como **Stopped** os que não têm container rodando. Como os
+  containers têm política de reinício `no`, depois de **reiniciar a máquina** os
+  serviços ficam **parados** até você fazer **Deploy** (ou restart) de cada um. O
+  plano de "iniciar tudo no boot" (`plano-dependencias-e-autostart`) ainda **não
+  foi implementado**. Confira no seu servidor antes de depender disso em produção.
+</Aside>
+
+O que o daemon **faz** ao subir:
+
+- recoloca na fila os deploys que estavam esperando e retoma os que estavam no meio da troca de rota;
+- reconstrói a **tabela de rotas** do proxy a partir dos containers que existem no Docker;
+- reabre as portas externas e reconecta servidores de banco compartilhados às redes autorizadas;
+- repete essa reconciliação a **cada 30 segundos**.
+
+Para reiniciar tudo de uma vez depois de um reboot, use um agente de IA com a
+ferramenta `deploy` ou chame `DeployStart` para cada serviço pela API.
+
+## Logs do próprio daemon
+
+O `rustployd` registra em JSON no **journal** do systemd:
+
+```bash
+journalctl -u rustployd -f
+journalctl -u rustployd --since "1 hour ago" | grep -i watchdog
+```
+
+O nível vem de `[daemon].log_level` ou de `RUST_LOG` (veja
+[`config.toml`](/instalacao/config-toml/)).
