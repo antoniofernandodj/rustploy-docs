@@ -28,6 +28,19 @@ serviço systemd e sobe o daemon.
 O pacote depende de `docker.io` ou `docker-ce`. O serviço roda como o usuário
 de sistema `rustploy`, que entra no grupo `docker`.
 
+## Pelo crates.io
+
+Se preferir compilar na própria máquina, o crate do daemon se chama
+`rustploy` (o binário instalado é `rustployd`):
+
+```bash
+cargo install rustploy
+```
+
+Isso instala só os binários em `~/.cargo/bin`. Não cria o usuário, o serviço
+systemd nem o `config.toml`: para um servidor de produção, prefira o `.deb`
+abaixo.
+
 ## Gerar o pacote
 
 Numa máquina com a toolchain Rust e o `cargo-deb`:
