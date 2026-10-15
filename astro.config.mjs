@@ -17,10 +17,13 @@ export default defineConfig({
         root: { label: 'Português', lang: 'pt-BR' },
         en: { label: 'English', lang: 'en' },
       },
+      logo: { src: './src/assets/logo.svg', alt: 'Rustploy' },
       customCss: ['./src/styles/custom.css'],
       editLink: { baseUrl: 'https://github.com/antoniofernandodj/rustploy/edit/main/rustploy-docs/' },
       lastUpdated: true,
       head: [
+        { tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32.png' } },
+        { tag: 'link', attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' } },
         {
           tag: 'script',
           attrs: { type: 'application/ld+json' },

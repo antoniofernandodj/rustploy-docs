@@ -58,3 +58,15 @@
 
 /* Telas do app: a coluna é estreita, então a figura (Shot.astro) abre em tamanho cheio ao clicar. */
 .sl-markdown-content .shot img { margin: 0; }
+
+/* A palavra Rustploy usa a fonte da tela de login do app (JetBrains Mono Bold), na cor do título dela. */
+.site-title,
+.site-title span {
+  font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
+  font-weight: 700;
+  color: #2563c9;
+}
+:root[data-theme='dark'] .site-title,
+:root[data-theme='dark'] .site-title span {
+  color: #a9c7ff;
+}
