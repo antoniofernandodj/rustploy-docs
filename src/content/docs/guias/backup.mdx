@@ -1,0 +1,52 @@
+---
+title: Backup e restauração
+description: O que fazer backup num servidor Rustploy - banco SQLite do daemon, chave mestra dos secrets, config.toml, certificados, dados dos bancos de dados dos serviços - e como automatizar com jobs.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Dois conjuntos de dados precisam de backup: o **estado do próprio Rustploy** e os
+**dados das suas aplicações**.
+
+## 1. O estado do Rustploy
+
+| O quê | Onde | Por quê |
+|---|---|---|
+| Banco do daemon (projetos, serviços, deploys, jobs) | `/var/lib/rustploy/db` | é o estado inteiro da plataforma |
+| **Chave mestra** | `/etc/rustploy/master.key` | sem ela, os secrets gravados **não podem ser decifrados** |
+| Configuração | `/etc/rustploy/config.toml` | token da API, domínios, ACME |
+| Certificados TLS | `<db_path>/certs/` | evita reemitir (o Let's Encrypt limita) |
+| Registry embutido | `<db_path>/registry/` | só se você o usa |
+
+<Aside type="danger" title="A chave mestra é insubstituível">
+  Guarde `master.key` **fora do servidor**, num cofre. Um backup do banco sem a
+  chave deixa todos os secrets ilegíveis.
+</Aside>
+
+Faça a cópia com o daemon parado, ou use uma cópia consistente do SQLite.
+
+### Um atalho mais barato: o manifesto
+
+O [manifesto de Infra as Code](/guias/infra-as-code/) recria projetos e serviços
+em outro servidor. Ele **não** leva secrets nem dados. Complementa o backup do
+banco, não o substitui.
+
+### Backup de variáveis
+
+O daemon já grava, a cada 60 s, snapshots das variáveis em
+`<db_path>/env_backups/`. Protege contra edição errada, não contra a perda do
+servidor: copie essa pasta junto.
+
+## 2. Os dados das suas aplicações
+
+O Rustploy **não faz backup dos dados dos bancos nem dos volumes**. Isso é com
+você.
+
+- **Bancos:** use um [job](/guias/jobs/) agendado que roda `pg_dump`, `mysqldump` ou `mongodump` e grava num caminho do host (bind mount), e então copie esse caminho para fora do servidor. O exemplo do guia de jobs é um backup de Postgres.
+- **Volumes (bind mounts):** são pastas do host. Inclua-as no seu backup do servidor.
+- **Snapshots do provedor** da VPS são uma camada extra útil.
+
+## Testar a restauração
+
+Um backup que nunca foi restaurado é uma hipótese. Restaure num servidor de teste
+de vez em quando.

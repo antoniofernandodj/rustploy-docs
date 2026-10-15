@@ -1,0 +1,113 @@
+---
+title: Infra as Code (manifesto YAML)
+description: Como exportar e importar todos os projetos e serviços do Rustploy como um manifesto YAML versionável, com um arquivo TOML de variáveis, para recriar um servidor, clonar ambientes e fazer GitOps.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+O Rustploy descreve projetos e serviços num **manifesto YAML**: dá para exportar o
+estado atual, guardar no Git e importar em outro servidor.
+
+## O par de arquivos
+
+A exportação gera **dois** arquivos:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `rustploy.yml` | projetos e serviços. Valores de variável **nunca** aparecem: no lugar vai `${NOME}` |
+| `variáveis.toml` | os valores reais das variáveis comuns, organizados por projeto e serviço, mais os dados não secretos das contas Git |
+
+Os **secrets não saem do daemon**: no YAML ficam como `secret:NOME`, sem valor.
+O YAML pode ir para o Git sem medo; o TOML tem valores, **trate-o como segredo**.
+
+## Exportar
+
+**Settings → Infra as Code → Exportar tudo.** Copie os dois textos (ou baixe o zip,
+na GUI).
+
+## Importar
+
+**Settings → Infra as Code → Importar.** Cole o `rustploy.yml` e o `variáveis.toml`.
+Duas opções:
+
+| Opção | Efeito |
+|---|---|
+| **Remover serviços ausentes do manifesto (prune)** | apaga os serviços do projeto que não estão no manifesto |
+| **Disparar deploy dos serviços criados/alterados** | faz o rollout depois de sincronizar |
+
+Por padrão a importação é **aditiva e idempotente**: casa projetos e serviços **por
+nome**, cria os que faltam, atualiza os alterados e **não apaga nada**. Rodar duas
+vezes dá o mesmo resultado. O painel **RESULTADO** lista o que foi criado,
+atualizado ou deixado igual.
+
+<Aside type="caution" title="O casamento é por nome">
+  Se você renomeou um projeto ou serviço, um manifesto antigo cria um **novo** em
+  vez de atualizar o existente.
+</Aside>
+
+Variáveis `${NOME}` sem valor no TOML abortam a importação, listando o que falta.
+Nada é aplicado pela metade.
+
+## Formato
+
+```yaml
+apiVersion: rustploy/v1
+projects:
+  - project:
+      name: minha-app
+      description: API e front
+      env:
+        LOG_LEVEL: info
+        DB_PASS: ${DB_PASS}
+    services:
+      - name: web
+        source:
+          git:
+            url: https://github.com/acme/web.git
+            branch: main
+            dockerfile: Dockerfile
+        port: 3000
+        domains:
+          - { domain: app.exemplo.com, port: 3000, tls: true }
+        env:
+          API_KEY: secret:API_KEY
+        healthcheck: { type: http, path: /health, status: 200 }
+        replicas: 2
+      - name: cache
+        source:
+          registry: redis:7
+        port: 6379
+```
+
+### Campos do serviço
+
+| Campo | Observação |
+|---|---|
+| `source` | **exatamente uma** de `registry: <imagem>`, `git: {…}` ou `compose: <yaml>` |
+| `source.compose_ingress` | serviço do compose que recebe o domínio |
+| `port`, `host_port` | porta do container; porta externa (TCP) |
+| `domains` | lista de `{domain, port, tls}` |
+| `env` | mapa; valor `secret:NOME` referencia um secret |
+| `volumes` | lista `host:container[:ro]` |
+| `healthcheck` | `type: none \| tcp \| http \| docker`, `path`, `status`, `interval`, `timeout`, `retries`, `start_period` |
+| `replicas`, `resources` | `resources: { cpu_shares, mem: 256m }` |
+| `command`, `args` | sobrescreve o comando da imagem |
+| `db`, `shared` | tipo de banco e marca de servidor compartilhado |
+
+`source.git` aceita `url`, `branch`, `dockerfile`, `context`, `username`,
+`credentials` e `provider` (o **nome** da conta Git conectada).
+
+Um manifesto pode também referenciar arquivos: `- include: ./web/rustploy.yml`.
+
+## Limites
+
+- Um serviço de fonte **zip** (Archive) **não cabe** no manifesto.
+- Contas Git: o TOML leva só os dados não secretos. Depois de importar, **complete a autenticação** (OAuth ou token) em **Settings → Git**.
+- Não há linha de comando: o CLI `rustploy apply` foi removido junto com a TUI. A importação e a exportação passam pela tela ou pela API (`ManifestImport`, `ManifestExportAll`).
+
+## Pela API
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" https://SERVIDOR:9797/api/rpc \
+  -d '"ManifestExportAll"'
+```

@@ -1,0 +1,78 @@
+---
+title: Registry Docker embutido
+description: Como ligar o registry Docker (OCI) embutido no daemon do Rustploy, expô-lo num domínio com HTTPS, criar tokens de push e pull, fazer docker login e push, usar a imagem num serviço e limpar com o garbage collector.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+O `rustployd` traz um **registry Docker** (OCI Distribution API v2). Seu CI faz
+`docker push` direto para o seu servidor, e um serviço usa a imagem: sem Docker
+Hub, sem registry separado.
+
+## Ligar
+
+No `config.toml`:
+
+```toml
+[registry]
+enabled = true
+port    = 5100
+```
+
+Reinicie o daemon. Por padrão o registry escuta só em **loopback**
+(`127.0.0.1:5100`).
+
+## Expor num domínio com HTTPS
+
+Para fazer push de outra máquina, dê um domínio ao registry:
+
+1. Aponte um registro DNS para o servidor.
+2. Em **Settings → Web Server**, preencha **DOMÍNIO DO REGISTRY (EXPOSIÇÃO PÚBLICA)**, por exemplo `registry.meusite.com`, e salve. Reinicie o daemon. (O ACME precisa estar [ligado](/guias/dominios-e-tls/).)
+
+O daemon registra a rota no ingress e emite o certificado, então o `docker` de
+qualquer máquina fala com ele sem configurar `insecure-registries`.
+
+## Tokens
+
+Toda rota do registry exige autenticação (Basic), inclusive em loopback. Crie
+tokens em **Docker → Registry**:
+
+<Steps>
+1. Clique em **+ Novo token**.
+2. Dê um nome e escolha o escopo: **pull** (só baixar) ou **push** (publicar, e também baixar).
+3. Confirme. A tela mostra o **comando `docker login`** com o segredo.
+</Steps>
+
+<Aside type="danger">
+  O segredo aparece **uma única vez**. Copie o comando antes de concluir. Se
+  perder, revogue o token e crie outro.
+</Aside>
+
+Use um token **push** no CI e **pull** onde só se baixa.
+
+## Publicar uma imagem
+
+```bash
+docker login registry.meusite.com -u <nome-do-token> -p <segredo>
+docker build -t registry.meusite.com/app:v1 .
+docker push registry.meusite.com/app:v1
+```
+
+## Usar a imagem num serviço
+
+Crie um serviço de fonte **Registry** com a imagem `registry.meusite.com/app:v1`.
+O Rustploy puxa a imagem do próprio registry com credencial interna, sem você
+configurar nada.
+
+## Ver e limpar
+
+A sub-aba **Docker → Registry** lista **repositórios e tags** (digest, tamanho,
+data) e deixa remover tags e repositórios.
+
+Remover uma tag não libera disco por si só. O **garbage collector** (botão
+**Executar GC**) apaga manifests sem tag, e os blobs que ninguém mais usa. Se outra tag
+aponta para o mesmo digest, ela continua valendo.
+
+<Aside type="note">
+  Criar conteúdo só acontece por `docker push`: a tela não envia imagens.
+</Aside>

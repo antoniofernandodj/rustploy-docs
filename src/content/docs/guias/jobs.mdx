@@ -1,0 +1,104 @@
+---
+title: Jobs e tarefas agendadas (Schedules)
+description: Como criar jobs no Rustploy - tarefas de execução única em Docker Compose, manuais ou agendadas (intervalo, diário, semanal), com variáveis, fonte Git, logs, cancelamento e aquecimento de cache.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Um **job** é uma tarefa que roda até terminar e some: backup, migração, relatório,
+limpeza. Não é um serviço que fica no ar. Cada execução sobe uma stack Docker
+Compose própria, na **rede do projeto**, e a remove ao final.
+
+Jobs aparecem na tela **Schedules** (todos os projetos) e na aba **Jobs** de cada
+projeto.
+
+## Criar um job
+
+<Steps>
+1. Em **Schedules** (ou na aba **Jobs** do projeto), clique em **+ Novo job**.
+2. Escolha o **projeto**.
+3. Escolha o **serviço gatilho**, ou **Nenhum (autônomo)**. O gatilho só empresta as variáveis de ambiente dele ao job; o job **não roda dentro** do container dele.
+4. Preencha o formulário e confirme.
+</Steps>
+
+### O formulário
+
+| Campo | O que é |
+|---|---|
+| **NOME** | por exemplo `backup-diario` |
+| **FONTE DO COMPOSE** | **Compose** (você cola o YAML) ou **Git** (o job clona um repositório e roda o `docker-compose.yml` dele a cada execução) |
+| **MAIN SERVICE** | o serviço do compose cujo **código de saída** decide se o job deu certo (`docker compose up --exit-code-from`) |
+| **VARIÁVEIS DE AMBIENTE** | próprias do job, no formato `.env`. Têm a **maior precedência**, acima das do projeto e do serviço gatilho |
+| **Quando** | **Manual**, **Intervalo**, **Diário** ou **Semanal** |
+
+Com a fonte **Git**, escolha a conta (conectada em **Settings → Git**), o
+repositório, a branch e o **caminho do compose** dentro dele.
+
+### Exemplo
+
+```yaml
+services:
+  job:
+    image: postgres:16
+    command: pg_dump -h rp_banco -U app -f /backup/dump.sql app
+    volumes:
+      - /var/backups:/backup
+```
+
+Com `MAIN SERVICE` = `job`. Se o `pg_dump` sair com código diferente de 0, a
+execução conta como falha.
+
+## Agendamento
+
+| Tipo | Campos |
+|---|---|
+| **Manual** | sem agendamento: só dispara quando você pede |
+| **Intervalo** | **A CADA (HORAS)** |
+| **Diário** | **HORÁRIO** |
+| **Semanal** | **DIA DA SEMANA** e **HORÁRIO** |
+
+<Aside type="caution" title="O horário é em UTC">
+  O daemon interpreta o **HORÁRIO** em **UTC**, sem conversão para o seu fuso, e
+  a tela não avisa. No Brasil (UTC−3), "03:00" dispara às 00:00 locais. Some o
+  seu deslocamento ao escolher.
+</Aside>
+
+## Ações de um job
+
+O botão **⋯** da linha abre o painel de ações:
+
+| Ação | Efeito |
+|---|---|
+| **▶ Rodar agora** | executa já, fora do agendamento |
+| **■ Cancelar execução** | interrompe a execução em andamento |
+| **◐ Aquecer** | prepara o job sem executá-lo (veja abaixo) |
+| **≡ Ver logs** | saída (stdout e stderr) das execuções |
+| **✎ Editar** | altera o job |
+| **✕ Remover** | apaga o job |
+
+Jobs e deploys compartilham a **mesma fila**: um por vez no servidor. Um job
+manual pode esperar a vez atrás de um deploy.
+
+## Aquecer um job
+
+A primeira execução de um job baixa imagens e constrói tudo do zero. Isso pode
+acontecer no pior momento (no meio de um deploy que espera um *migrator*, ou de
+madrugada). **Aquecer** baixa as imagens e monta o cache de build **sem rodar** a
+tarefa.
+
+O job aparece como **quente**, **frio** ou **aquecendo…**. Ele está **frio** quando:
+
+- nunca foi aquecido;
+- a definição mudou (compose, repositório, branch ou caminho);
+- uma imagem sumiu do host;
+- o cache de build foi apagado por uma limpeza do Docker.
+
+## Se o daemon reiniciar
+
+Execuções em andamento (ou esperando na fila) viram **interrompidas**: ficam com
+falha, código `-1` e uma linha no log explicando. O agendador as dispara de novo
+no próximo horário.
+
+## Usar um job como verificação antes do deploy
+
+Veja [Pré-deploy](/guias/pre-deploy/).

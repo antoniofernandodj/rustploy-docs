@@ -1,0 +1,57 @@
+---
+title: Migrar um banco para o servidor compartilhado
+description: Como mover os dados de um banco antigo (serviço Compose do projeto) para um database de um servidor compartilhado no Rustploy, com parada controlada, troca da variável de ambiente, rollback e descarte do banco antigo.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+O assistente de migração move os dados de um banco **dentro de um projeto** para um
+database de um [servidor compartilhado](/guias/banco-compartilhado/), troca a
+variável de ambiente e permite **voltar atrás**.
+
+<Aside type="caution" title="A migração é com parada">
+  Os serviços que usam o banco antigo ficam **parados** durante a cópia, e voltam
+  no fim. Planeje uma janela de manutenção.
+</Aside>
+
+## Antes
+
+- Existe um servidor compartilhado do **mesmo motor**, e você já criou nele o database de destino **para o mesmo projeto**, marcando **"Não mexer em env var (vou migrar os dados antes)"**.
+- Tenha um backup (veja [Backup](/guias/backup/)).
+
+## Migrar
+
+<Steps>
+1. Abra o serviço de banco **antigo** e vá na aba **Migrar**.
+2. Em **DATABASE DE ORIGEM**, informe o nome do database dentro desse banco.
+3. Escolha o **DESTINO** (o database criado no servidor compartilhado).
+4. Em **ENV VAR A TROCAR**, informe a variável (padrão `DATABASE_URL` ou `MONGODB_URI`).
+5. Clique em **Migrar**.
+</Steps>
+
+O painel **ANDAMENTO** mostra cada passo. O processo roda em segundo plano, então
+você pode sair da tela e voltar com **Atualizar**.
+
+### O que ele faz
+
+O Rustploy confere o destino (**precisa estar vazio**), para os serviços
+consumidores, copia os dados com dump e restore (usando a imagem do servidor de
+destino, em pipe), troca a variável **em todo lugar onde ela existe** (projeto e
+serviços), religa os consumidores e **para** o banco antigo, sem apagá-lo.
+
+## Voltar atrás
+
+Com a migração concluída e o banco antigo ainda guardado, **Reverter** devolve a
+variável, religa o banco antigo e os consumidores.
+
+## Descartar
+
+Depois de um período de observação, **Descartar banco antigo** remove o serviço e
+os containers dele, **com os dados**. Os volumes Docker dele podem sobrar: a
+[limpeza do Docker](/guias/limpeza-docker/) os recolhe.
+
+## Limites
+
+- O espaço em disco do destino **não** é verificado antes.
+- Extensões do Postgres que exigem superusuário fazem o restore falhar; a migração aborta e desfaz, mas o destino pode ficar com sobras. Apague o database e tente de novo.
+- "Subir os serviços" apenas enfileira o redeploy; confira o healthcheck de cada um.

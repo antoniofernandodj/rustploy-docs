@@ -1,0 +1,71 @@
+---
+title: Bancos de dados e brokers de mensagens
+description: Como criar Postgres, MySQL, MariaDB, MongoDB, Redis, Kafka, RabbitMQ e NATS no Rustploy com o assistente - credenciais geradas, URL de conexão interna, URL externa com porta e firewall automáticos e backup.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+O assistente **Novo serviço** cria bancos e brokers prontos, já com credenciais
+geradas e uma URL de conexão. Eles são stacks Docker Compose por baixo.
+
+## O que existe
+
+| Tipo | Opções | Imagem padrão | Porta |
+|---|---|---|---|
+| **Database** | PostgreSQL | `postgres:18` | 5432 |
+| | MySQL | `mysql:8` | 3306 |
+| | MariaDB | `mariadb:11` | 3306 |
+| | MongoDB | `mongo:8` | 27017 |
+| | Redis | `redis:7` | 6379 |
+| **Broker** | Kafka | `apache/kafka:3.9.0` | 9092 |
+| | RabbitMQ | `rabbitmq:4-management` | 5672 |
+| | NATS | `nats:2` | 4222 |
+
+<Aside type="caution" title="MongoDB 8 e kernels novos">
+  A imagem `mongo:8` não inicia em kernels Linux 6.19 ou mais novos (um problema
+  conhecido do próprio MongoDB). Nesses servidores, troque a imagem para
+  `mongo:7` no formulário.
+</Aside>
+
+## Criar
+
+<Steps>
+1. No projeto, **+ Novo serviço**, e escolha **Database** (ou **Broker**).
+2. Escolha o motor.
+3. Preencha o formulário. O nome do serviço é o único campo obrigatório; usuário e senha são **gerados** se você deixar em branco. Dependendo do motor aparecem também **nome do banco**, **usuário**, **senha**, **senha do root**, a **imagem** e, no MongoDB, **Use Replica Sets**.
+4. Crie e faça o **Deploy**.
+</Steps>
+
+## Como a aplicação se conecta
+
+Abra a aba **Connection** do serviço: ela mostra o **host** e a **URL de conexão
+internos**, prontos para copiar. Use a URL interna nas variáveis de ambiente das
+aplicações do **mesmo projeto**.
+
+Para ligar a aplicação, coloque a URL numa variável (por exemplo `DATABASE_URL`) e
+faça um novo deploy dela. Prefira guardar a senha como [secret](/guias/variaveis-e-secrets/).
+
+Se vários projetos precisam do mesmo banco, veja o
+[banco compartilhado](/guias/banco-compartilhado/).
+
+## Acesso de fora do servidor
+
+Por padrão o banco **só é alcançável de dentro** do projeto. Na **GUI desktop**, o
+formulário tem a opção **"Gerar URL de conexão externa (porta e firewall
+automáticos)"**. Ao marcá-la, o Rustploy:
+
+1. aloca uma porta livre da faixa `[external_ports]` (padrão 20000–20999);
+2. a libera no `ufw`, pelo helper `rustployd-fw`;
+3. mostra a **External URL** na aba **Connection**.
+
+<Aside type="caution">
+  Isso deixa o banco acessível pela **internet**, protegido só pela senha. Use
+  uma senha forte, e considere restringir por IP no firewall. A web UI ainda não
+  oferece essa opção no assistente.
+</Aside>
+
+A tela **Ingress** lista as portas TCP externas em uso.
+
+## Backup
+
+O Rustploy **não faz backup dos dados** dos bancos. Veja [Backup](/guias/backup/).

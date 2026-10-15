@@ -1,0 +1,62 @@
+---
+title: Limpeza do Docker
+description: Como liberar espaço em disco no servidor do Rustploy - inventário do Docker, remoção manual de containers, imagens, volumes e redes sem uso, e a limpeza automática agendada com prazos de retenção.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Com o tempo o Docker acumula imagens antigas, containers parados e cache de
+build. Numa VPS pequena isso enche o disco. O Rustploy ajuda de duas formas.
+
+## Ver o que existe
+
+A tela **Docker** lista o **host inteiro**, não só o que é do Rustploy:
+**Containers**, **Images**, **Volumes** e **Networks**, com a indicação de uso. A
+ligação com projeto e serviço é a melhor possível: imagens pela tag, redes pelo
+nome gravado; volumes não têm ligação.
+
+Cada linha tem a ação de remover. O Docker **recusa** remover o que está em uso, e
+o erro aparece na tela.
+
+## Limpar à mão
+
+Os botões de limpeza removem tudo o que não está em uso, por tipo: containers
+parados, imagens, volumes, redes e cache de build.
+
+## Limpeza automática
+
+Em **Settings → Manutenção**, **LIMPEZA AUTOMÁTICA**:
+
+<Steps>
+1. Marque **Ativar limpeza automática**.
+2. Escolha a **FREQUÊNCIA**: **A cada N horas**, **Todo dia** ou **Toda semana** (com **HORÁRIO**).
+3. Em **O QUE LIMPAR**, marque os tipos.
+4. Clique em **Salvar**. **Executar agora** roda na hora.
+</Steps>
+
+<Aside type="caution" title="O horário é em UTC">
+  Como nos jobs, o **HORÁRIO** é em UTC. O padrão é 03:00 UTC.
+</Aside>
+
+| Opção | Efeito |
+|---|---|
+| **Containers parados** | remove os parados |
+| **Imagens sem uso** | por padrão só as *dangling* (sem tag). **incluir todas as não usadas** remove também as com tag |
+| **SÓ IMAGENS CRIADAS HÁ MAIS DE (HORAS)** | padrão **168 h** (7 dias). `0` não filtra. O Docker olha a data de **criação**, não a do último uso |
+| **Redes sem uso** | remove as redes sem containers |
+| **Cache de build** | remove o cache sem uso |
+| **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | padrão **168 h**. `0` apaga todo o cache sem uso. Com um prazo, o cache de um deploy ou job recente sobrevive e o próximo build não recomeça do zero |
+| **Volumes sem uso** | **cuidado**: veja abaixo |
+
+<Aside type="danger" title="Volumes podem conter dados">
+  O Rustploy só usa *bind mounts*, então um volume nomeado do Docker não é
+  dele: pode ser de um banco que você mesmo subiu. Remover apaga os dados.
+  Deixe **Volumes** desmarcado a menos que tenha certeza.
+</Aside>
+
+A limpeza automática vem **desligada** e sem nenhum tipo marcado.
+
+## Relação com os jobs
+
+A limpeza de cache de build pode deixar um [job](/guias/jobs/#aquecer-um-job)
+**frio**. O prazo de retenção do cache existe para evitar isso.

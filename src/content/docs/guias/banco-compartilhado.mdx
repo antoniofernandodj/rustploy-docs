@@ -1,0 +1,62 @@
+---
+title: Banco de dados compartilhado entre projetos
+description: Como usar um único servidor de banco (Postgres, MySQL, MariaDB ou MongoDB) para vários projetos no Rustploy, com database e usuário próprios por projeto, isolamento por permissão e connection string entregue numa variável de ambiente.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Cada projeto com o seu próprio banco custa memória, backups e upgrades
+duplicados. O **servidor compartilhado** é **um** banco (por motor) usado por
+vários projetos, cada um com o seu **database** e o seu **usuário**. O isolamento
+passa a ser por permissões do banco, como num RDS ou Atlas.
+
+Normalmente os projetos não se enxergam na rede. O Rustploy abre uma exceção
+controlada: ele conecta o servidor de banco à rede de cada projeto autorizado,
+com um nome (alias) que não colide com os de dentro do projeto.
+
+## Como funciona
+
+1. Você marca um **banco criado pelo assistente** como **compartilhado**.
+2. Na aba **Databases** desse servidor, você cria um database para um projeto.
+3. O Rustploy cria o database e o usuário, **autoriza** o projeto, conecta as redes e grava a **connection string** numa variável de ambiente do projeto (por padrão `DATABASE_URL` ou `MONGODB_URI`).
+
+## Passo a passo
+
+<Steps>
+1. Crie um serviço **Database** (Postgres, MySQL, MariaDB ou MongoDB), de preferência num projeto próprio para infraestrutura (por exemplo `infra`). Faça o deploy.
+2. Abra o serviço e clique em **Compartilhar**. A aba **Databases** aparece.
+3. Em **NOVO DATABASE**, informe:
+   - **nome** do database (e do usuário): `a-z`, `0-9` e `_`, até 32 caracteres;
+   - **env var** que receberá a URL (opcional: usa `DATABASE_URL` ou `MONGODB_URI`);
+   - **limite de conexões** (opcional; não vale no MongoDB);
+   - **timeout de query**, em ms (opcional; só Postgres);
+   - o **projeto consumidor**, num seletor.
+4. Clique em **Criar database**.
+5. No projeto consumidor, **faça um novo deploy** para a aplicação ler a variável.
+</Steps>
+
+A lista mostra, por database, o projeto, a variável e a **URL** com botão **Copiar**.
+
+## Isolamento
+
+Cada database tem um usuário **sem acesso aos demais**. O usuário de um é
+recusado no outro. Os projetos consumidores recebem só a própria connection string.
+
+## Conflito de variável
+
+Se o projeto já tem a variável (por exemplo um `DATABASE_URL` apontando para o
+banco antigo), a criação é **recusada**, a menos que você autorize sobrescrever.
+Marque **"Não mexer em env var (vou migrar os dados antes)"** quando quiser criar o database sem tocar na
+aplicação: é o primeiro passo de uma [migração](/guias/migrar-banco/).
+
+## Remover um database
+
+Remover **apaga o database e o usuário, com os dados**. Não há como recuperar.
+
+## Limites
+
+<Aside type="caution">
+  - O timeout de query só existe no Postgres; o limite de conexões não existe no MongoDB.
+  - `mongo:8` não inicia em kernels Linux 6.19 ou mais novos (um problema do próprio MongoDB). Use `mongo:7` nesses servidores.
+  - O Rustploy **não faz backup dos dados** do banco. Faça os seus (veja [Backup](/guias/backup/)).
+</Aside>

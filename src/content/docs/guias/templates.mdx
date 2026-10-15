@@ -1,0 +1,41 @@
+---
+title: Templates de aplicações de um clique
+description: Como criar no Rustploy aplicações prontas (n8n, Plausible, Uptime Kuma e centenas de outras) a partir do catálogo de templates, com variáveis geradas e domínio configurado no assistente.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+O catálogo de **templates** traz mais de 380 aplicações open source já
+configuradas (formato de blueprints do Dokploy): analytics, automação, wikis,
+bancos, ferramentas de monitoramento, e assim por diante.
+
+## Usar um template
+
+<Steps>
+1. No projeto, **+ Novo serviço → Template**.
+2. Use a **busca** para achar a aplicação pelo nome ou pela descrição.
+3. Selecione o template.
+4. Dê um **nome** ao serviço e revise as **variáveis**: o assistente já preenche senhas e segredos gerados, e você pode editar o resto.
+5. Crie e faça o **Deploy**.
+</Steps>
+
+## O que um template define
+
+- o **compose** com os containers necessários (aplicação, banco, cache…);
+- as **variáveis de ambiente**, com geradores de senha e de chave;
+- o **domínio** e a **porta** do container que serve a interface;
+- os **volumes** (bind mounts).
+
+O resultado é um serviço **Compose** comum: você o edita, reconfigura o domínio e
+redeploya como qualquer outro. Veja [Stacks Docker Compose](/guias/compose/).
+
+## Depois de criar
+
+1. Aponte um domínio na aba **Domains**, com [DNS e TLS](/guias/dominios-e-tls/).
+2. Anote as credenciais geradas na aba **Environment**.
+3. Faça [backup](/guias/backup/) dos volumes, se a aplicação guarda dados.
+
+## Se o domínio responde 502
+
+Numa stack com vários containers o domínio vai para um só. Se for o errado, defina o
+alvo de ingress. Veja [Diagnosticar um 502](/guias/diagnosticar-502/).

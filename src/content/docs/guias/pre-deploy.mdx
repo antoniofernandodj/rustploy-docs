@@ -1,0 +1,33 @@
+---
+title: Verificação antes do deploy (pré-deploy)
+description: Como rodar jobs em ordem antes de cada deploy no Rustploy - migrações, testes, análise estática - e só continuar se todos saírem com código 0.
+---
+
+O **pré-deploy** executa uma fila de [jobs](/guias/jobs/) antes de o deploy
+subir o container novo. Se todos terminarem com **código 0**, o deploy segue. Se
+algum falhar, o deploy **para** e termina em **Failed**; o container que estava
+no ar não é tocado.
+
+O caso clássico é a **migração de banco**: rode-a como job antes de trocar a
+versão da aplicação.
+
+## Configurar
+
+1. Crie os jobs (por exemplo `migrar-banco`, `testes`) no mesmo projeto.
+2. No serviço, abra a aba **Advanced**.
+3. Em **FILA DE PRÉ-DEPLOY**, use **ADICIONAR À FILA** para escolher os jobs.
+4. Ordene com **↑** e **↓**. Remova com **✕**.
+
+## Como funciona
+
+- Os jobs rodam **na ordem** da fila.
+- A **primeira falha interrompe tudo**: os seguintes não rodam.
+- Fila vazia: o deploy passa direto.
+- A saída dos jobs aparece no **log do deploy**, junto do restante do build.
+- O estado do deploy é **PreDeployCheck**. Veja [o ciclo de vida](/conceitos/ciclo-de-vida/).
+
+## Cuidados
+
+- Um job que **nunca termina** trava o deploy. Dê um fim a ele.
+- O job de pré-deploy é o mesmo objeto de **Schedules**: dá para também agendá-lo ou rodá-lo à mão.
+- [Aqueça](/guias/jobs/#aquecer-um-job) o job para que o primeiro deploy não espere o build dele.
