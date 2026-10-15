@@ -1,0 +1,71 @@
+---
+title: Janelas de logs (runtime e build)
+description: A janela de logs do app desktop do Rustploy - logs de runtime ao vivo de um serviço e build logs de um deploy, com copiar tudo, ir ao topo e ao fim, e os limites do que fica guardado.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import runtime from '../../../assets/ui/logs-runtime.png';
+import build from '../../../assets/ui/logs-build.png';
+
+Os logs abrem em uma **janela própria**, isolada do restante do app: assim um serviço que
+escreve muito não trava a interface. A janela é a mesma para os dois tipos de log.
+
+## Logs de runtime
+
+<Shot
+  src={runtime}
+  alt="Janela Logs do serviço backend com as linhas de log ao vivo do container. Os identificadores de usuário e tenant foram borrados."
+  caption="Janela de logs de runtime. Os identificadores foram borrados nesta imagem."
+/>
+
+É a saída (stdout e stderr) do **container em execução**. Para abrir:
+
+- na tela do serviço, aba **Logs → Abrir logs em janela**; ou
+- o botão **Logs de runtime** do painel lateral.
+
+O título é `Logs · nome-do-serviço`. Em cima, o contador (*"15 linhas · ao vivo"*) e três botões:
+
+| Botão | Efeito |
+|---|---|
+| **↑** | vai ao **topo** |
+| **↓** | vai ao **fim** |
+| **Copiar tudo** | copia todo o conteúdo |
+
+Ao abrir, a janela mostra as últimas linhas já emitidas (o *tail*) e **continua
+acrescentando** as novas em tempo real. O texto é **selecionável**, então dá para copiar um
+trecho com o mouse. Cada linha começa com uma hora (`HH:MM:SS`) que o Rustploy acrescenta, seguida da linha
+como o container a emitiu (aqui, já com o timestamp do próprio app).
+
+Sem saída, a janela diz *"(sem logs ainda — aguardando o serviço emitir saída)"*.
+
+## Build logs
+
+<Shot
+  src={build}
+  alt="Janela Build logs de um deploy mostrando os passos do docker build, de Step 1 a Step 7, com a indicação de uso de cache."
+  caption="Janela de build log de um deploy."
+/>
+
+É a saída do **build** de um deploy (as etapas do `docker build`, o clone, o pull). Para abrir, vá
+em **Deployments** na tela do serviço e clique em **≡** na linha do deploy. O título é
+`Build logs · dep_…`, com o id do deploy.
+
+Um deploy ainda em andamento mostra o build **ao vivo**. Um que falhou traz, no fim, a
+linha `==> Erro em [Estado]: …` com a **causa**. Veja
+[Onde está a causa de uma falha](/conceitos/ciclo-de-vida/#onde-está-a-causa).
+
+## O que fica guardado
+
+<Aside type="caution" title="Runtime não é guardado; build é">
+  O **build log fica guardado** no banco e pode ser aberto depois. O **log de runtime não**:
+  ele é lido do Docker ao vivo. Quando um deploy troca o container, o log do antigo some. Se
+  você precisa de histórico de logs da aplicação, envie-os para fora do servidor (por exemplo
+  com um template como Loki ou Grafana do [catálogo](/templates/)).
+</Aside>
+
+A janela guarda no máximo **6 000 linhas** na tela: ao passar disso, descarta as mais antigas
+e mantém as 4 000 mais recentes.
+
+Os logs de uma execução de [job](/interface/schedules/) abrem na mesma janela, pela ação
+**Ver logs** do job.

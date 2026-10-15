@@ -1,0 +1,130 @@
+---
+title: Deploy Engine no app desktop
+description: A tela Deploy Engine do app desktop do Rustploy - indicadores das últimas 24 horas, o deploy em execução com as etapas e o botão de abortar, a fila com pausar, promover e reordenar, e o histórico de 24 horas.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import executando from '../../../assets/ui/deploy-engine-executando.png';
+import fila from '../../../assets/ui/deploy-engine-fila.png';
+import historico from '../../../assets/ui/deploy-engine-historico.png';
+
+**Deploy Engine** (menu lateral) é o painel de controle dos deploys do servidor: o que está
+rodando, o que espera e o que aconteceu nas últimas 24 horas. Lembre que o Rustploy executa
+**um deploy por vez**; os demais esperam na fila. O funcionamento está em
+[A fila de deploys](/guias/fila-de-deploys/).
+
+## Os indicadores
+
+No topo, cinco cartões:
+
+| Cartão | Mostra |
+|---|---|
+| **ATIVOS** | deploys em execução agora |
+| **SUCESSO 24H** | deploys que chegaram a `Live` nas últimas 24 horas |
+| **FALHAS 24H** | deploys que falharam nas últimas 24 horas |
+| **TOTAL 24H** | todos os deploys das últimas 24 horas |
+| **UPTIME** | há quanto tempo o daemon está no ar |
+
+Abaixo, três abas, cada uma com a contagem entre parênteses: **Fila**, **Executando** e
+**Histórico 24h**.
+
+## Executando
+
+<Shot
+  src={executando}
+  alt="Aba Executando mostrando um deploy em andamento com serviço, projeto, estado, tempos, os botões Detalhes e abortar, e a linha de etapas do pipeline."
+  caption="Aba Executando, com um deploy em andamento."
+/>
+
+**EXECUTANDO AGORA (N)** lista o deploy ativo. As colunas:
+
+| Coluna | Significa |
+|---|---|
+| **SERVIÇO** | o serviço (clique para abri-lo) |
+| **PROJETO** | o projeto dele |
+| **ESTADO** | o estado atual da [máquina de estados](/conceitos/ciclo-de-vida/), como `BUILDING` |
+| **TOTAL** | quanto tempo o deploy já levou |
+| **FASE** | quanto tempo ele está na etapa atual |
+
+À direita da linha:
+
+| Botão | Efeito |
+|---|---|
+| **Detalhes** | abre o painel do deploy: as etapas e o histórico de transições, com a duração e a mensagem de cada uma |
+| **■** (vermelho) | **aborta** o deploy em execução |
+
+Sob a linha, a **faixa de etapas** mostra o caminho do deploy:
+
+```text
+Fila · Checks · Deps · Obter · Staging · Health · Swap · Live
+```
+
+| Etapa | Estados que ela reúne |
+|---|---|
+| **Fila** | `Pending` |
+| **Checks** | `PreDeployCheck` ([verificação antes do deploy](/guias/pre-deploy/)) |
+| **Deps** | `ResolvingDeps` |
+| **Obter** | `PullingImage`, `CloningRepo`, `BuildingImage`, `ComposingUp` |
+| **Staging** | `Staging` |
+| **Health** | `HealthcheckPolling` |
+| **Swap** | `SwappingIn`, `Draining`, `Promoting` |
+| **Live** | `Live` |
+
+Cada etapa aparece como concluída (**✓**), atual (**●**), pendente (**○**) ou com falha (**✕**).
+Sem nada rodando, a aba diz *"Nenhum deploy em andamento."*
+
+<Aside type="caution" title="Abortar não desfaz nada">
+  **■** interrompe a tarefa do deploy **na hora**, sem rodar o rollback. O deploy termina
+  como **Failed** (*"aborted by user"*) e o **serviço fica com o status `Error`**
+  (*"deploy aborted by user"*) até você fazer um novo **Deploy**. Se o deploy já tinha criado
+  um container de *staging*, ele pode sobrar no Docker: confira na tela
+  [Docker](/interface/docker-e-registry/).
+</Aside>
+
+## Fila
+
+<Shot
+  src={fila}
+  alt="Aba Fila com dois deploys esperando, numerados, cada um com os botões de subir ao topo e de cancelar, e o botão Pausar fila."
+  caption="Aba Fila, com dois deploys esperando."
+/>
+
+**NA FILA (N)** lista os deploys na ordem em que vão rodar, como `1. app` e `2. frontend-dev`,
+com o projeto de cada um. Sem nada: *"Nenhum deploy na fila."*
+
+| Controle | Efeito |
+|---|---|
+| **⋮** (alça à esquerda) | **arraste** para reordenar a fila |
+| **↑ topo** | move o deploy para o **início** da fila ("furar fila") |
+| **✕** (vermelho) | **cancela** o deploy enfileirado. O serviço volta ao status `Stopped`; se o container antigo ainda estiver rodando, o daemon corrige o status em até 30 s |
+| **Pausar fila** | a fila para de iniciar novos deploys. O que já está rodando termina |
+| **Retomar fila** | aparece no lugar de *Pausar* quando a fila está pausada |
+
+Com a fila pausada, a aba mostra *"Fila pausada — deploys esperam até você retomar."* Os
+[jobs](/interface/schedules/) entram na mesma fila.
+
+## Histórico 24h
+
+<Shot
+  src={historico}
+  alt="Aba Histórico 24h com a tabela de deploys concluídos, mostrando serviço, projeto, estado LIVE ou FAILED, duração e hora de início."
+  caption="Aba Histórico 24h."
+/>
+
+**HISTÓRICO 24H (N)** lista os deploys concluídos recentemente:
+
+| Coluna | Significa |
+|---|---|
+| (ícone) | **✓** deu certo, **×** falhou |
+| **SERVIÇO** | o serviço. Clique para abri-lo |
+| **PROJETO** | o projeto dele |
+| **ESTADO** | `LIVE` (verde) ou `FAILED` (vermelho) |
+| **DURAÇÃO** | quanto o deploy levou |
+| **INÍCIO** | a hora em que começou |
+
+Quando o serviço de um deploy **já foi removido**, a linha mostra o **id do serviço**
+(`svc_…`) e fica sem projeto. Sem deploys: *"Nenhum deploy concluído nas últimas 24h."*
+
+Para descobrir **por que um deploy falhou**, abra o serviço e use **≡** na aba **Deployments**
+para ver o [build log](/interface/logs/#build-logs).

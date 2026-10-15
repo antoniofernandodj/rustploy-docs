@@ -1,0 +1,67 @@
+---
+title: Ingress no app desktop
+description: A tela Ingress do app desktop do Rustploy - as rotas ativas do proxy reverso (domínio, serviço, porta de destino, TLS) e as portas TCP do host, e como usá-la para diagnosticar um 502.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import ingress from '../../../assets/ui/ingress.png';
+
+<Shot
+  src={ingress}
+  alt="Tela Ingress com a tabela de rotas de domínio, com os domínios borrados, e a tabela de portas TCP de host."
+  caption="Tela Ingress. Os domínios foram borrados nesta imagem."
+/>
+
+**Ingress** (menu lateral) mostra o que o proxy reverso do Rustploy está servindo **agora**.
+Containers não publicam porta: quem recebe o tráfego das portas 80 e 443 é o proxy, e ele
+encaminha pelo nome do domínio. Veja [Como o ingress funciona](/conceitos/rede-e-nomes/#nenhum-container-publica-porta).
+
+Dois indicadores no topo: **ROUTES** (rotas de domínio) e **PORTAS DE HOST** (portas TCP abertas).
+
+## Rotas de domínio
+
+| Coluna | Significa |
+|---|---|
+| **DOMÍNIO** | o nome que o proxy atende |
+| **SERVIÇO** | o serviço de destino |
+| **UPSTREAM** | a **porta do container** para onde o tráfego vai (`:3000`) |
+| **TLS** | indica se a rota usa HTTPS |
+
+A tabela rola quando há muitas rotas. Cada linha é uma rota de um serviço: um serviço com
+vários domínios aparece em várias linhas. As rotas **só existem para serviços no ar**:
+um serviço parado, ou cujo deploy falhou antes de promover, não tem linha.
+
+## Portas TCP de host
+
+**PORTAS TCP DE HOST (N)** lista os serviços que têm uma porta aberta no servidor, como
+bancos e brokers:
+
+| Coluna | Significa |
+|---|---|
+| **SERVIÇO** | o serviço |
+| **PROJETO** | o projeto dele |
+| **PORTA HOST** | a porta no servidor (na faixa `[external_ports]`, padrão 20000–20999) |
+| **PORTA CONTAINER** | a porta de destino dentro do container |
+
+Sem nenhuma, a tela diz *"Nenhum serviço com porta de host configurada."* Para abrir uma porta,
+use a [aba Domains do serviço](/interface/servico-configuracao/#porta-tcp-do-host).
+
+<Aside type="caution">
+  Cada porta nesta lista está **acessível pela internet** (liberada no firewall),
+  protegida só pela senha do serviço. Confira se todas deveriam estar abertas.
+</Aside>
+
+## Usando para diagnosticar um 502
+
+Um domínio que responde **502** tem rota no proxy, mas o container não respondeu. Esta tela
+ajuda a separar os casos:
+
+| O que você vê | O que significa |
+|---|---|
+| o domínio **não está** na lista | nenhum deploy registrou a rota. Veja o status do serviço e o último deploy |
+| o domínio está, com a **UPSTREAM** errada | a porta do domínio não é a porta em que o app escuta. Corrija na aba **Domains** |
+| o domínio está e a porta está certa | o container não está respondendo. Veja o [log de runtime](/interface/logs/) e o healthcheck |
+
+O passo a passo completo, com as ferramentas do agente de IA, está em
+[Diagnosticar um erro 502](/guias/diagnosticar-502/).

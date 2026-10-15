@@ -24,7 +24,7 @@ No menu lateral, **Deploy Engine**, com três abas:
 | **Reordenar** | define a ordem exata da fila |
 | **Pausar / retomar** | a fila para de iniciar novos deploys (o em execução termina) |
 | **Cancelar** um enfileirado | remove da fila |
-| **Abortar** o em execução | interrompe o deploy |
+| **Abortar** o em execução | interrompe a tarefa na hora, **sem rollback**: o deploy fica `Failed` e o serviço fica `Error` até um novo Deploy |
 
 Jobs e deploys compartilham a mesma fila.
 
