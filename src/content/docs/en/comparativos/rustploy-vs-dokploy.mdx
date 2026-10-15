@@ -1,0 +1,66 @@
+---
+title: Rustploy vs Dokploy
+description: A direct comparison of Rustploy and Dokploy - multi-server and Docker Swarm versus one node and a built-in proxy, Traefik, shared templates, backups, notifications, license, and how to migrate from Dokploy to Rustploy.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Dokploy is the closest reference to Rustploy: both are self-hosted alternatives to Heroku, Vercel and
+Netlify on top of Docker, and **Rustploy's template catalog uses Dokploy's format**. The difference is
+scope: Dokploy covers several servers; Rustploy chooses to do one machine well.
+
+<Aside type="note">
+  Dokploy data checked against its official documentation and repository on 2026-10-15. "Not stated"
+  means the pages consulted do not say. See also the [overview](/en/comparativos/visao-geral/).
+</Aside>
+
+## Differences that matter
+
+| | Rustploy | Dokploy |
+|---|---|---|
+| **Servers** | **one**, its own | several: *"Multi Server"* (remote servers) and *"Multi Node"* (cluster with Docker Swarm) |
+| **Proxy** | built into the daemon (hyper) with ACME | Traefik |
+| **Orchestration** | Docker Engine directly, no Swarm | Docker Swarm for multi-node |
+| **Data backups** | **none** | automatic database backups to external storage |
+| **Monitoring** | current values; no history | CPU, memory, disk and network per resource; ships logs and metrics to Grafana, Datadog and Splunk |
+| **Notifications** | operating system, in the desktop app | Slack, Discord, Telegram, email and others |
+| **Build** | Dockerfile only | Node.js, PHP, Python, Go, Ruby and other apps |
+| **CLI and API** | HTTP API and MCP, **no CLI** | CLI and API |
+| **MCP for AI** | **yes, native** | not stated |
+| **Interface** | desktop app (Linux, Windows) and web UI | web |
+| **License** | MIT | `LICENSE.MD` and `LICENSE_PROPRIETARY.md` in the repository, and an Enterprise section in the docs (see the files for the terms) |
+| **Hosted version** | no | Cloud |
+
+## What both have
+
+- **Docker Compose** as a service source.
+- One-click **templates**. Rustploy's 386 templates come from Dokploy's blueprints: see the [catalog](/en/templates/).
+- **Managed databases** for MySQL, PostgreSQL, MongoDB, MariaDB and Redis. Dokploy also lists libsql. Rustploy adds brokers (Kafka, RabbitMQ and NATS).
+- **Auto deploy** by webhook.
+
+## What Rustploy has that is not stated in the sources consulted
+
+- A **native MCP server**, to operate everything through an AI agent.
+- A **shared database with assisted migration** across projects.
+- A **pre-deploy queue**: jobs that block the deploy if they fail.
+- An **OCI registry built into the daemon**, with no extra container.
+
+## Where Dokploy has the edge (per the sources consulted)
+
+- **More than one server**, and clustering.
+- **Automatic backups** of databases and volumes.
+- **Notifications** on several channels and metrics shipping to external tools.
+- Greater **maturity and community**.
+
+## Migrate from Dokploy
+
+Rustploy ships an **importer** that reads Dokploy's PostgreSQL and creates the projects, Git applications,
+Compose stacks, variables and each service's first domain. It does **not** convert Docker image applications, databases,
+secrets or volumes, and the direct write can delete services with the same name. Read
+[Migrate from Dokploy](/en/migracao/dokploy/) before running it.
+
+## Summary
+
+Pick **Rustploy** if you have one machine, want the fewest moving parts and value operating through an
+AI agent. Pick **Dokploy** if you need more than one server, automatic backups or notifications. You can
+start on Rustploy and move later: the templates and the service format are similar.

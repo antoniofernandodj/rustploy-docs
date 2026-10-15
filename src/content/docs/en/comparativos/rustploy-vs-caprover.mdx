@@ -1,0 +1,60 @@
+---
+title: Rustploy vs CapRover
+description: A direct comparison of Rustploy and CapRover - Docker Swarm and nginx versus a built-in proxy, CLI and captain-definition, wildcard DNS, Docker and memory requirements, and when to pick each.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+CapRover is one of the older self-hosted PaaS projects. It runs as a Docker container and, according to its own
+repository, uses **Docker Swarm** for containerization and clustering, **nginx** for load balancing and
+**Let's Encrypt** for HTTPS. One thing people like: *"no lock-in: remove CapRover and your apps keep
+working"*.
+
+<Aside type="note">
+  CapRover data checked against its official documentation and repository on 2026-10-15. "Not stated"
+  means the pages consulted do not say. See also the [overview](/en/comparativos/visao-geral/).
+</Aside>
+
+## Differences that matter
+
+| | Rustploy | CapRover |
+|---|---|---|
+| **Installation** | the daemon's `.deb` package (systemd) | a container that mounts the Docker socket and the `/captain` volume |
+| **Orchestration** | Docker Engine directly | Docker Swarm |
+| **Proxy** | built into the daemon | nginx (customizable template) |
+| **HTTPS** | built-in ACME | Let's Encrypt |
+| **DNS** | one `A` record per domain | a **wildcard** `A` record pointing at the server |
+| **How to deploy** | the UI, a webhook or the API | the CLI (`caprover deploy`), which sends the current git commit |
+| **Build** | Dockerfile | controlled by the `captain-definition` file |
+| **CLI** | **no** | yes, plus a web UI |
+| **Docker Compose** | yes | not stated |
+| **One-click apps** | 386 templates | databases from a menu; general catalog not stated |
+| **Monitoring** | current values | NetData |
+| **MCP for AI** | **yes, native** | not stated |
+| **Requirements** | Linux, systemd and Docker | Docker 25 or newer, tested on Ubuntu 24.04, **1 GB of RAM recommended** |
+| **License** | MIT | see the repository's license file |
+
+## What changes in practice
+
+- **Deploy flow.** In CapRover the usual path is the command line: `caprover deploy` in the project folder. Rustploy has no CLI: you trigger a deploy from the UI, from a webhook (for example in GitHub Actions) or from an AI agent.
+- **DNS.** CapRover asks for a wildcard `A` record (`*.apps.example.com`). In Rustploy you point each domain individually, which also suits domains that do not share a suffix.
+- **Swarm.** CapRover brings the Swarm model, which makes growing to more nodes easier. Rustploy does not use Swarm: it is one machine.
+- **No lock-in.** Rustploy does not trap you either: the containers are plain Docker containers and the Infrastructure as Code manifest exports the configuration.
+
+## What Rustploy has that is not stated in the sources consulted
+
+- A **native MCP server** for AI agents.
+- **Docker Compose stacks** and Dokploy-format templates.
+- **Shared database**, pre-deploy and an **embedded registry**.
+- A **desktop app** with deploy notifications.
+
+## Where CapRover has the edge (per the sources consulted)
+
+- A **CLI** for deployment and automation.
+- **Clustering** through Docker Swarm.
+- **Years of track record** and a large community.
+
+## Summary
+
+Pick **CapRover** if you like a CLI and a customizable nginx, and may grow into a Swarm cluster. Pick
+**Rustploy** if you prefer one machine, no Swarm, with Compose, templates and operation through an AI agent.

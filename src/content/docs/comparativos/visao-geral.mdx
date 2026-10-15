@@ -1,0 +1,85 @@
+---
+title: Rustploy vs Dokploy, Coolify e CapRover
+description: Comparativo honesto do Rustploy com Dokploy, Coolify e CapRover - arquitetura, multi-servidor, proxy, templates, backups, licença e MCP - com fontes oficiais e a data da consulta, e quando escolher cada um.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+O Rustploy compete com plataformas de deploy self-hosted maiores e mais antigas. Esta página
+compara os quatro com fatos que dá para conferir e diz **quando cada um é a melhor escolha**,
+inclusive quando não é o Rustploy.
+
+<Aside type="note" title="Como ler esta comparação">
+  Os dados do Dokploy, do Coolify e do CapRover vêm das documentações e dos repositórios oficiais,
+  **consultados em 15/10/2026** (links no fim). Esses projetos mudam rápido: confira a fonte antes de
+  decidir. **"Não consta"** significa que as páginas consultadas não dizem, e não que o recurso não existe.
+</Aside>
+
+## Em uma frase
+
+| | |
+|---|---|
+| **Rustploy** | uma máquina, um binário, proxy e HTTPS embutidos, sem Swarm nem Traefik, com servidor MCP nativo |
+| **Dokploy** | alternativa open source ao Heroku, Vercel e Netlify, com multi-servidor e cluster por Docker Swarm |
+| **Coolify** | painel que controla um ou mais servidores por SSH, com mais de 280 serviços de um clique |
+| **CapRover** | PaaS sobre Docker Swarm e nginx, com CLI e interface web, que não prende você: remover o CapRover deixa os apps rodando |
+
+## Tabela comparativa
+
+| | Rustploy | Dokploy | Coolify | CapRover |
+|---|---|---|---|---|
+| **Servidores** | **um só** | vários (servidores remotos; cluster com Docker Swarm) | um ou mais, por SSH | Docker Swarm (clustering mencionado; detalhes não constam) |
+| **Onde roda o painel** | no próprio servidor | na VPS | controla os servidores por SSH | container no servidor |
+| **Proxy e HTTPS** | proxy embutido + ACME | Traefik | proxy por servidor, com HTTPS automático | nginx + Let's Encrypt |
+| **Build** | só **Dockerfile** | aplicações Node.js, PHP, Python, Go, Ruby e outras | Git, Dockerfile, Compose ou imagem | `captain-definition` |
+| **Docker Compose** | sim | sim | sim | não consta |
+| **Templates de um clique** | 386 (formato Dokploy) | sim (ex.: Plausible, Pocketbase, Cal.com) | 280+ a 300+ serviços | bancos por menu; catálogo geral não consta |
+| **Bancos gerenciados** | Postgres, MySQL, MariaDB, MongoDB, Redis, mais brokers Kafka, RabbitMQ e NATS | MySQL, PostgreSQL, MongoDB, MariaDB, libsql, Redis | sim, com armazenamento persistente | MariaDB, MySQL, MongoDB e outros por menu |
+| **Backup dos dados** | **não** | sim: backups automáticos de bancos para storage externo | sim: backup de bancos configurável | não consta |
+| **Monitoramento** | valor atual, **sem histórico** | CPU, memória, disco e rede; envio de métricas e logs a Grafana, Datadog, Splunk | logs e health checks | NetData |
+| **Notificações** | notificação do SO no app desktop | Slack, Discord, Telegram, e-mail e outros | consta na navegação | não consta |
+| **CLI** | **não** | CLI e API | dashboard e API | CLI e interface web |
+| **MCP para agentes de IA** | **sim, nativo** (9 ferramentas) | não consta | não consta | não consta |
+| **Interface** | app desktop (Linux, Windows) e web UI | web | web | web |
+| **Opção hospedada** | não | Cloud | Coolify Cloud | não consta |
+| **Licença** | MIT | `LICENSE.MD` e `LICENSE_PROPRIETARY.md` no repositório; seção Enterprise na documentação | Apache-2.0 | ver o arquivo de licença do repositório |
+
+## Onde o Rustploy é melhor (nas fontes consultadas)
+
+- **Simplicidade de operação em uma máquina.** Sem Swarm, sem Traefik, sem painel separado: o daemon, o proxy, o banco (SQLite) e o registry são um processo só.
+- **MCP nativo.** O daemon serve um servidor MCP: um agente como o Claude Code faz deploy e espera o resultado, lê build logs e diagnostica um 502. Veja [Operar com agentes de IA](/agentes/visao-geral/).
+- **Banco compartilhado com migração.** Um servidor de Postgres, MySQL, MariaDB ou MongoDB para vários projetos, com database e usuário por projeto, e um assistente de migração com reversão.
+- **Pré-deploy.** Jobs que rodam antes do deploy e o impedem se falharem (migrações, testes).
+- **Registry OCI embutido.**
+
+## Onde o Rustploy é pior
+
+- **Um servidor só.** Sem cluster nem multi-servidor. Se você precisa de mais de uma máquina, escolha outro.
+- **Sem backups de dados**, sem notificações em Slack, Discord ou e-mail, sem histórico de métricas e sem CLI.
+- **Só Dockerfile.** Sem buildpacks.
+- **Sem controle de acesso.** Um único token de administrador, sem usuários nem escopos.
+- **Projeto novo e pequeno.** Comunidade, documentação de terceiros e histórico de uso em produção são bem menores. Alguns recursos têm lacunas conhecidas, listadas na documentação.
+
+## Quando escolher cada um
+
+| Se você... | Escolha |
+|---|---|
+| tem **uma VPS**, usa Docker e quer o mínimo de peças, e quer operar por agente de IA | **Rustploy** |
+| precisa de **vários servidores**, backups de banco automáticos e notificações | **Dokploy** ou **Coolify** |
+| quer o **maior catálogo** de serviços de um clique e previews de pull request | **Coolify** |
+| já usa **Docker Swarm** e prefere CLI e nginx | **CapRover** |
+| quer uma **opção hospedada** ao lado da self-hosted | **Dokploy Cloud** ou **Coolify Cloud** |
+
+## Comparações detalhadas
+
+- [Rustploy vs Dokploy](/comparativos/rustploy-vs-dokploy/): inclui o [importer](/migracao/dokploy/) e os templates em comum.
+- [Rustploy vs Coolify](/comparativos/rustploy-vs-coolify/)
+- [Rustploy vs CapRover](/comparativos/rustploy-vs-caprover/)
+
+## Fontes
+
+Consultadas em 15/10/2026:
+
+- Dokploy: [documentação](https://docs.dokploy.com/docs/core) e [repositório](https://github.com/Dokploy/dokploy)
+- Coolify: [documentação](https://coolify.io/docs/get-started/introduction) e [repositório](https://github.com/coollabsio/coolify)
+- CapRover: [documentação](https://caprover.com/docs/get-started.html) e [repositório](https://github.com/caprover/caprover)

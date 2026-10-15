@@ -7,9 +7,9 @@
     "dev": "astro dev",
     "build": "npm run gen && astro build",
     "preview": "astro preview",
-    "check": "astro check",
+    "check": "node scripts/check-links.mjs",
     "sync-manual": "node scripts/sync-manual.mjs",
-    "gen": "node scripts/sync-manual.mjs && node scripts/gen-templates.mjs && node scripts/gen-protocol.mjs && node scripts/gen-manifest.mjs"
+    "gen": "node scripts/sync-manual.mjs && node scripts/gen-templates.mjs && node scripts/gen-protocol.mjs && node scripts/gen-manifest.mjs && node scripts/gen-faq.mjs"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.6",

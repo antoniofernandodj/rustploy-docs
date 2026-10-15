@@ -13,7 +13,10 @@ export default defineConfig({
       description:
         'Documentação do Rustploy: PaaS self-hosted em Rust, um binário só, sobre Docker. Instalação, deploy, domínios, TLS, jobs, registry e MCP para agentes de IA.',
       defaultLocale: 'root',
-      locales: { root: { label: 'Português', lang: 'pt-BR' } },
+      locales: {
+        root: { label: 'Português', lang: 'pt-BR' },
+        en: { label: 'English', lang: 'en' },
+      },
       customCss: ['./src/styles/custom.css'],
       editLink: { baseUrl: 'https://github.com/antoniofernandodj/rustploy/edit/main/rustploy-docs/' },
       lastUpdated: true,
@@ -34,12 +37,12 @@ export default defineConfig({
         },
       ],
       sidebar: [
-        { label: 'Comece aqui', items: [
+        { label: 'Comece aqui', translations: { en: 'Start here' }, items: [
           { slug: 'comece/o-que-e' },
           { slug: 'comece/docker-para-rustploy' },
           { slug: 'comece/glossario' },
         ]},
-        { label: 'Instalação', items: [
+        { label: 'Instalação', translations: { en: 'Installation' }, items: [
           { slug: 'instalacao/requisitos' },
           { slug: 'instalacao/instalar-daemon' },
           { slug: 'instalacao/instalar-clientes' },
@@ -47,10 +50,32 @@ export default defineConfig({
           { slug: 'instalacao/config-toml' },
           { slug: 'instalacao/atualizar' },
         ]},
-        { label: 'Tutorial', items: [
+        { label: 'Tutorial', translations: { en: 'Tutorial' }, items: [
           { slug: 'tutorial/primeiro-deploy' },
         ]},
-        { label: 'Guias', items: [
+        { label: 'Conceitos', translations: { en: 'Concepts' }, items: [
+          { slug: 'conceitos/projeto' },
+          { slug: 'conceitos/servico-e-fontes' },
+          { slug: 'conceitos/rede-e-nomes' },
+          { slug: 'conceitos/variaveis-de-ambiente' },
+          { slug: 'conceitos/ciclo-de-vida' },
+        ]},
+        { label: 'Interface desktop', translations: { en: 'Desktop app' }, items: [
+          { slug: 'interface/visao-geral' },
+          { slug: 'interface/entrar' },
+          { slug: 'interface/projetos' },
+          { slug: 'interface/novo-servico' },
+          { slug: 'interface/servico' },
+          { slug: 'interface/servico-configuracao' },
+          { slug: 'interface/deploy-engine' },
+          { slug: 'interface/ingress' },
+          { slug: 'interface/schedules' },
+          { slug: 'interface/monitoring' },
+          { slug: 'interface/logs' },
+          { slug: 'interface/docker-e-registry' },
+          { slug: 'interface/configuracoes' },
+        ]},
+        { label: 'Guias', translations: { en: 'Guides' }, items: [
           { slug: 'guias/git' },
           { slug: 'guias/zip' },
           { slug: 'guias/compose' },
@@ -71,44 +96,7 @@ export default defineConfig({
           { slug: 'guias/limpeza-docker' },
           { slug: 'guias/backup' },
         ]},
-        { label: 'Operação', items: [
-          { slug: 'operacao/monitoramento-e-saude' },
-          { slug: 'operacao/seguranca-do-servidor' },
-        ]},
-        { label: 'Migração', items: [
-          { slug: 'migracao/dokploy' },
-        ]},
-        { label: 'Referência', items: [
-          { slug: 'referencia/manifesto' },
-          { slug: 'referencia/comandos' },
-          { slug: 'referencia/respostas' },
-          { slug: 'referencia/eventos' },
-          { slug: 'referencia/paridade' },
-          { slug: 'templates' },
-        ]},
-        { label: 'Interface desktop', items: [
-          { slug: 'interface/visao-geral' },
-          { slug: 'interface/entrar' },
-          { slug: 'interface/projetos' },
-          { slug: 'interface/novo-servico' },
-          { slug: 'interface/servico' },
-          { slug: 'interface/servico-configuracao' },
-          { slug: 'interface/deploy-engine' },
-          { slug: 'interface/ingress' },
-          { slug: 'interface/schedules' },
-          { slug: 'interface/monitoring' },
-          { slug: 'interface/logs' },
-          { slug: 'interface/docker-e-registry' },
-          { slug: 'interface/configuracoes' },
-        ]},
-        { label: 'Conceitos', items: [
-          { slug: 'conceitos/projeto' },
-          { slug: 'conceitos/servico-e-fontes' },
-          { slug: 'conceitos/rede-e-nomes' },
-          { slug: 'conceitos/variaveis-de-ambiente' },
-          { slug: 'conceitos/ciclo-de-vida' },
-        ]},
-        { label: 'Agentes de IA (MCP)', items: [
+        { label: 'Agentes de IA (MCP)', translations: { en: 'AI agents (MCP)' }, items: [
           { slug: 'agentes/visao-geral' },
           { slug: 'agentes/conectar-claude-code' },
           { slug: 'agentes/ferramentas' },
@@ -116,6 +104,28 @@ export default defineConfig({
           { slug: 'agentes/seguranca' },
           { slug: 'agentes/manual' },
         ]},
+        { label: 'Operação', translations: { en: 'Operations' }, items: [
+          { slug: 'operacao/monitoramento-e-saude' },
+          { slug: 'operacao/seguranca-do-servidor' },
+        ]},
+        { label: 'Migração', translations: { en: 'Migration' }, items: [
+          { slug: 'migracao/dokploy' },
+        ]},
+        { label: 'Comparativos', translations: { en: 'Comparisons' }, items: [
+          { slug: 'comparativos/visao-geral' },
+          { slug: 'comparativos/rustploy-vs-dokploy' },
+          { slug: 'comparativos/rustploy-vs-coolify' },
+          { slug: 'comparativos/rustploy-vs-caprover' },
+        ]},
+        { label: 'Referência', translations: { en: 'Reference' }, items: [
+          { slug: 'referencia/manifesto' },
+          { slug: 'referencia/comandos' },
+          { slug: 'referencia/respostas' },
+          { slug: 'referencia/eventos' },
+          { slug: 'referencia/paridade' },
+          { slug: 'templates' },
+        ]},
+        { slug: 'faq' },
       ],
       plugins: [
         starlightLlmsTxt({

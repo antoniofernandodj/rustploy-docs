@@ -1,0 +1,59 @@
+---
+title: Rustploy vs Coolify
+description: A direct comparison of Rustploy and Coolify - a dashboard that controls servers over SSH versus a daemon on the server itself, a catalog of 280+ services, pull request previews, Apache-2.0 and MIT licenses, and when to pick each.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Coolify is a **self-hosted, open source** (Apache-2.0) deployment platform that acts as *"the control
+plane for your infrastructure"*. The core difference: Coolify is a dashboard that connects over **SSH** to
+one or more servers, while Rustploy is a **daemon that runs on the very server** it manages.
+
+<Aside type="note">
+  Coolify data checked against its official documentation and repository on 2026-10-15. "Not stated"
+  means the pages consulted do not say. See also the [overview](/en/comparativos/visao-geral/).
+</Aside>
+
+## Differences that matter
+
+| | Rustploy | Coolify |
+|---|---|---|
+| **Model** | a daemon on the server itself, one binary | an instance that controls servers over **SSH** (a VPS, bare metal, a Raspberry Pi or any server that accepts SSH) |
+| **Servers** | **one** | one or more |
+| **Proxy** | built into the daemon, with ACME | a proxy on each server, with automatic HTTPS |
+| **Application sources** | Dockerfile (via Git or zip), image, Compose, template | Git repository, Dockerfile, Docker Compose or prebuilt image |
+| **One-click services** | 386 templates | more than 280 (the repository says 280+ in one place and 300+ in another) |
+| **Pull request previews** | **no** | yes |
+| **Deploy on every push** | yes, by webhook | yes |
+| **Database backups** | **none** | database backup configuration |
+| **MCP for AI** | **yes, native** | not stated |
+| **Interface** | desktop app and web UI | web (and API) |
+| **License** | MIT | Apache-2.0 |
+| **Hosted version** | no | Coolify Cloud |
+
+## What changes in practice
+
+- **Where the panel lives.** With Coolify you have one central instance that administers remote servers over SSH. With Rustploy you install the daemon **on each server**, and the desktop app or web UI connects to it (the app remembers several servers).
+- **Scale.** If you want one panel for a fleet of machines, Coolify fits; Rustploy was designed for one.
+- **Weight.** Rustploy is a Rust binary with an embedded SQLite database. Coolify, going by its GitHub topics, is a PHP and Laravel application with a JavaScript frontend. The documentation consulted gives no resource-usage numbers for either, and this comparison does not invent them.
+
+## What Rustploy has that is not stated in the sources consulted
+
+- A **native MCP server** (9 tools) to operate through an AI agent.
+- A **shared database with assisted migration** across projects.
+- A **pre-deploy queue**: jobs that block the deploy if they fail.
+- An **embedded OCI registry.**
+- A **desktop app** with a system tray.
+
+## Where Coolify has the edge (per the sources consulted)
+
+- **More than one server** in a single instance.
+- **Pull request previews.**
+- A **larger service catalog.**
+- **Database backups** and a **hosted option**.
+- A much larger **community** and track record.
+
+## Summary
+
+Pick **Rustploy** for one VPS, with the fewest moving parts and operation through an AI agent. Pick
+**Coolify** to manage several servers from one central panel, with PR previews and a broad service catalog.

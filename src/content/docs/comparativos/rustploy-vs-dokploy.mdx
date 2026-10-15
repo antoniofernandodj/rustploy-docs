@@ -1,0 +1,66 @@
+---
+title: Rustploy vs Dokploy
+description: Comparação direta entre Rustploy e Dokploy - multi-servidor e Docker Swarm contra um nó e proxy embutido, Traefik, templates em comum, backups, notificações, licença e como migrar do Dokploy para o Rustploy.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+O Dokploy é a referência mais próxima do Rustploy: os dois são alternativas self-hosted a Heroku,
+Vercel e Netlify sobre Docker, e **o catálogo de templates do Rustploy usa o formato do Dokploy**.
+A diferença é de escopo: o Dokploy cobre vários servidores; o Rustploy escolhe fazer bem uma máquina só.
+
+<Aside type="note">
+  Dados do Dokploy conferidos na documentação e no repositório oficiais em 15/10/2026. "Não consta"
+  quer dizer que as páginas consultadas não dizem. Veja também a [visão geral](/comparativos/visao-geral/).
+</Aside>
+
+## Diferenças que importam
+
+| | Rustploy | Dokploy |
+|---|---|---|
+| **Servidores** | **um só**, o próprio | vários: *"Multi Server"* (servidores remotos) e *"Multi Node"* (cluster com Docker Swarm) |
+| **Proxy** | proxy embutido no daemon (hyper) com ACME | Traefik |
+| **Orquestração** | Docker Engine direto, sem Swarm | Docker Swarm para multi-nó |
+| **Backups de dados** | **não faz** | backups automáticos de bancos para storage externo |
+| **Monitoramento** | valor atual; sem histórico | CPU, memória, disco e rede por recurso; envia logs e métricas a Grafana, Datadog e Splunk |
+| **Notificações** | do sistema operacional, no app desktop | Slack, Discord, Telegram, e-mail e outros |
+| **Build** | só Dockerfile | aplicações Node.js, PHP, Python, Go, Ruby e outras |
+| **CLI e API** | API HTTP e MCP, **sem CLI** | CLI e API |
+| **MCP para IA** | **sim, nativo** | não consta |
+| **Interface** | app desktop (Linux, Windows) e web UI | web |
+| **Licença** | MIT | `LICENSE.MD` e `LICENSE_PROPRIETARY.md` no repositório, e uma seção Enterprise na documentação (veja os arquivos para os termos) |
+| **Versão hospedada** | não | Cloud |
+
+## O que os dois têm
+
+- **Docker Compose** como fonte de serviço.
+- **Templates** de um clique. Os 386 templates do Rustploy vêm dos blueprints do Dokploy: veja o [catálogo](/templates/).
+- **Bancos gerenciados** de MySQL, PostgreSQL, MongoDB, MariaDB e Redis. O Dokploy lista também libsql. O Rustploy acrescenta brokers (Kafka, RabbitMQ e NATS).
+- **Auto deploy** por webhook.
+
+## O que o Rustploy tem e não consta nas fontes consultadas
+
+- **Servidor MCP nativo**, para operar tudo por um agente de IA.
+- **Banco compartilhado com migração assistida** entre projetos.
+- **Fila de pré-deploy**: jobs que bloqueiam o deploy se falharem.
+- **Registry OCI embutido no daemon**, sem container extra.
+
+## Onde o Dokploy leva vantagem (nas fontes consultadas)
+
+- **Mais de um servidor**, e cluster.
+- **Backups automáticos** de bancos e volumes.
+- **Notificações** em vários canais e envio de métricas para ferramentas externas.
+- **Maturidade e comunidade** maiores.
+
+## Migrar do Dokploy
+
+O Rustploy traz um **importer** que lê o PostgreSQL do Dokploy e cria os projetos, as aplicações Git, as
+stacks Compose, as variáveis e o primeiro domínio de cada serviço. Ele **não** converte aplicações de imagem Docker, bancos,
+secrets nem volumes, e a gravação direta pode apagar serviços de mesmo nome. Leia
+[Migrar do Dokploy](/migracao/dokploy/) antes de rodar.
+
+## Resumo
+
+Escolha o **Rustploy** se você tem uma máquina, quer o mínimo de peças e valoriza operar por
+agente de IA. Escolha o **Dokploy** se precisa de mais de um servidor, de backups automáticos
+ou de notificações. Dá para começar no Rustploy e mudar: os templates e o formato dos serviços são parecidos.
