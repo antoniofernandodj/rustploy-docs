@@ -4,6 +4,8 @@ description: Como exportar um serviço do Rustploy para um arquivo YAML e import
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import janelaExportar from '../../../assets/ui/servico-exportar-janela.png';
 
 Para copiar **um serviço** de um servidor Rustploy para outro, você o **exporta** num arquivo YAML
 (o *pacote de serviço*) e o **importa** no projeto de destino. Só a **configuração** viaja: os
@@ -50,6 +52,12 @@ está nele. O import de serviço só **acrescenta** um serviço ao projeto que v
 No **servidor de origem**, abra o serviço e clique em **Exportar serviço**. O botão também
 existe (**⇪**) no cartão do serviço, dentro do projeto. Abre a janela **Exportar serviço**, a
 mesma no [app desktop](/interface/servico/) e na [web UI](/interface/web-ui/).
+
+<Shot
+  src={janelaExportar}
+  alt="Janela Exportar serviço do app desktop, com as variáveis do serviço, as variáveis do projeto, a caixa Incluir os valores das variáveis, o aviso de segredos e os botões Salvar arquivo e Mostrar como texto."
+  caption="A janela Exportar serviço no app desktop (nomes de projeto e variáveis borrados)."
+/>
 
 <Steps>
 
@@ -124,9 +132,8 @@ clique em **+ Novo serviço** e escolha **Importar**.
 
 <Steps>
 
-1. **Escolha o pacote.** Na web UI, escolha o arquivo `.yml` **ou cole o texto**. No app desktop,
-   **Escolher arquivo…**. Clique em **Analisar** (web UI). O daemon faz uma **pré-visualização** e
-   não cria nada ainda.
+1. **Escolha o pacote.** Escolha o arquivo `.yml` (**Escolher arquivo…**) **ou cole o texto**, nas duas
+   interfaces, e clique em **Analisar**. O daemon faz uma **pré-visualização** e não cria nada ainda.
 
 2. **Nome do serviço novo.** Vem preenchido com o nome do pacote. Se já existe um serviço com esse
    nome no projeto, a tela avisa (*"Já existe um serviço com esse nome neste projeto — escolha

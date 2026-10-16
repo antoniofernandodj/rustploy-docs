@@ -5,6 +5,13 @@ description: Passo a passo do assistente Novo serviço do app desktop do Rustplo
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
+import wizApp from '../../../assets/ui/novo-servico-application.png';
+import wizBroker from '../../../assets/ui/novo-servico-broker.png';
+import wizRabbit from '../../../assets/ui/novo-servico-rabbitmq.png';
+import wizKafka from '../../../assets/ui/novo-servico-kafka.png';
+import wizNats from '../../../assets/ui/novo-servico-nats.png';
+import wizCompose from '../../../assets/ui/novo-servico-compose.png';
+import wizImport from '../../../assets/ui/novo-servico-importar.png';
 import tipos from '../../../assets/ui/novo-servico-tipos.png';
 import banco from '../../../assets/ui/novo-servico-banco.png';
 import postgres from '../../../assets/ui/novo-servico-postgres.png';
@@ -102,12 +109,82 @@ descrição. Cada linha tem o logo, o nome e **Escolher ›**. Depois você dá 
 serviço e revisa as variáveis (as senhas já vêm geradas). São mais de 380
 aplicações: veja o [catálogo](/templates/).
 
-## Application, Broker, Compose e Importar
+## Application
 
-- **Application**: o assistente pede só o **NOME** (e, opcionalmente, o **APP NAME**, usado no lugar do nome) e cria o serviço **vazio**. A origem (**Git**, imagem ou zip), a porta e o domínio se configuram depois, na aba **General** do serviço. Veja [Git](/guias/git/).
-- **Broker**: Kafka, RabbitMQ ou NATS, com usuário e senha gerados. Veja [Bancos e brokers](/guias/bancos-e-brokers/).
-- **Compose**: nome, porta, domínio e o YAML da stack.
-- **Importar**: escolha o arquivo exportado de outro servidor. O serviço é criado **sem deploy** e nada é sobrescrito.
+<Shot
+  src={wizApp}
+  alt="Formulário Nova Application com os campos Nome e App name opcional, o aviso para configurar a origem na aba General e o botão Criar Application."
+  caption="Nova Application: só o nome."
+/>
+
+O assistente pede só o **NOME** (e, opcionalmente, o **APP NAME**, usado no lugar do nome) e cria o
+serviço **vazio**. A origem (**Git**, imagem ou zip), a porta e o domínio se configuram depois, na aba
+**General** do serviço. Veja [Git](/guias/git/).
+
+## Broker
+
+<Shot
+  src={wizBroker}
+  alt="Lista de brokers com Apache Kafka, RabbitMQ e NATS, cada um com a imagem Docker e o botão Selecionar."
+  caption="Escolha do broker."
+/>
+
+Três opções, cada uma com a imagem que vai rodar: **Apache Kafka** (`apache/kafka:3.9.0`), **RabbitMQ**
+(`rabbitmq:4-management`) e **NATS** (`nats:2`). Depois de **Selecionar ›**, o formulário muda um pouco:
+
+<Shot
+  src={wizRabbit}
+  alt="Formulário Nova RabbitMQ com nome, user, password gerada, a opção de gerar URL de conexão externa, a imagem Docker e o botão Criar RabbitMQ."
+  caption="RabbitMQ pede **USER** e **PASSWORD** (a senha vem gerada; os valores estão borrados)."
+/>
+
+<Shot
+  src={wizKafka}
+  alt="Formulário Nova Apache Kafka com nome, password gerada, a opção de gerar URL de conexão externa, a imagem Docker e o botão Criar Apache Kafka."
+  caption="Kafka: só **NOME** e **PASSWORD**."
+/>
+
+<Shot
+  src={wizNats}
+  alt="Formulário Nova NATS com nome, password gerada, a opção de gerar URL de conexão externa, a imagem Docker e o botão Criar NATS."
+  caption="NATS: também só **NOME** e **PASSWORD**."
+/>
+
+| Campo | O que é |
+|---|---|
+| **NOME** | o nome do serviço |
+| **USER** | só no RabbitMQ (padrão `rabbit`) |
+| **PASSWORD (gerada, pode trocar)** | a senha. Já vem preenchida: troque se quiser |
+| **Gerar URL de conexão externa** | abre uma porta TCP no servidor e no firewall, e mostra a URL de fora. Desligado, o broker só é alcançável pela rede do projeto |
+| **DOCKER IMAGE** | a imagem, só para conferir |
+
+Veja [Bancos e brokers](/guias/bancos-e-brokers/).
+
+## Compose
+
+<Shot
+  src={wizCompose}
+  alt="Formulário Nova Compose Stack com os campos Nome e App name opcional, o aviso para configurar o compose file dentro do serviço e o botão Criar Compose Stack."
+  caption="Nova Compose Stack: só o nome."
+/>
+
+Como na Application, o app desktop pede só o **NOME** (e o **APP NAME** opcional) e cria a stack
+**vazia**: *"Configure o compose file dentro do serviço antes de fazer deploy."* O YAML se edita na aba
+**General** do serviço. Veja [Stacks Docker Compose](/guias/compose/).
+
+## Importar
+
+<Shot
+  src={wizImport}
+  alt="Passo Importar serviço exportado, com o botão Escolher arquivo, a caixa para colar o texto do pacote e o botão Analisar."
+  caption="Importar um serviço exportado (o nome do projeto, no texto, está borrado)."
+/>
+
+Escolha o arquivo exportado de outro servidor (**Escolher arquivo…**) **ou cole o texto** do pacote, e clique
+em **Analisar**. O serviço é criado **no projeto aberto**, **sem deploy** (*"revise e clique em Deploy
+depois"*), e nada é sobrescrito. Só a configuração vem no arquivo: os **dados** (volumes, bancos) não. O passo
+a passo, os avisos e as escolhas sobre variáveis estão em
+[Copiar um serviço para outro servidor](/guias/copiar-servico/#importar).
 
 ## Depois de criar
 

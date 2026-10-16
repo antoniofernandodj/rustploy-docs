@@ -8,14 +8,14 @@ and templates, and it fits any set of containers that go together.
 
 ## Create
 
-**+ Novo serviço → Compose** (New service → Compose). Fill in:
+**+ Novo serviço → Compose** (New service → Compose). What the wizard asks depends on the client:
 
-- the stack's **Nome** (Name);
-- the **Porta** (Port) of the container that serves the domain (in stacks with several containers, the port of the one that serves HTTP);
-- the **Domínio** (Domain), optional;
-- **Docker Compose (YAML)** with your file.
+- **Desktop app:** only the stack's **Nome** (Name) and the optional **APP NAME**. It starts **empty**: write the YAML in the
+  service's **General** tab (**Salvar compose**, Save compose), set the port and the domain, and run **Deploy**.
+- **Web UI:** the **Nome**, the **Porta** (Port) of the container that serves the domain (in stacks with several containers, the
+  port of the one that serves HTTP), the **Domínio** (Domain), optional, and the **Docker Compose (YAML)** with your file.
 
-Then edit the YAML on the service's **General** tab (**Salvar compose**, Save compose) and run **Deploy**.
+In either one, edit the YAML afterwards on the service's **General** tab and run **Deploy**.
 
 ## What Rustploy does with your YAML
 

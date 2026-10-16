@@ -9,15 +9,14 @@ containers que andam juntos.
 
 ## Criar
 
-**+ Novo serviço → Compose**. Preencha:
+**+ Novo serviço → Compose**. O que o assistente pede depende do cliente:
 
-- **Nome** da stack;
-- **Porta** do container que atende o domínio (em stacks com vários containers, a porta de quem serve HTTP);
-- **Domínio** (opcional);
-- **Docker Compose (YAML)** com o seu arquivo.
+- **App desktop:** só o **Nome** da stack (e o **APP NAME**, opcional). Ela nasce **vazia**: escreva o YAML na
+  aba **General** do serviço (**Salvar compose**), configure a porta e o domínio, e faça **Deploy**.
+- **Web UI:** o **Nome**, a **Porta** do container que atende o domínio (em stacks com vários containers, a
+  porta de quem serve HTTP), o **Domínio** (opcional) e o **Docker Compose (YAML)** com o seu arquivo.
 
-Depois edite o YAML na aba **General** do serviço (**Salvar compose**) e faça
-**Deploy**.
+Em qualquer dos dois, edite o YAML depois na aba **General** do serviço e faça **Deploy**.
 
 ## O que o Rustploy faz com o seu YAML
 

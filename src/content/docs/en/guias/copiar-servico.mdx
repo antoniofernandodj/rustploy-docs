@@ -4,6 +4,8 @@ description: How to export a Rustploy service to a YAML file and import it on an
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import janelaExportar from '../../../../assets/ui/servico-exportar-janela.png';
 
 To copy **one service** from one Rustploy server to another, you **export** it to a YAML file (the
 *service bundle*) and **import** it into the target project. Only the **configuration** travels:
@@ -49,6 +51,12 @@ is not in it. The service import only **adds** a service to the project you choo
 On the **source server**, open the service and click **Export service**. The button also exists
 (**⇪**) on the service card inside the project. It opens the **Export service** window, the same in
 the [desktop app](/en/interface/servico/) and the [web UI](/en/interface/web-ui/).
+
+<Shot
+  src={janelaExportar}
+  alt="The Export service window of the desktop app, with the service variables, the project variables, the Include variable values checkbox, the secrets warning and the Salvar arquivo and Mostrar como texto buttons."
+  caption="The Export service window in the desktop app (project and variable names blurred)."
+/>
 
 <Steps>
 
@@ -125,9 +133,8 @@ On the **target server**, open the **project** where you want the service (it mu
 
 <Steps>
 
-1. **Choose the bundle.** In the web UI, pick the `.yml` file **or paste the text**. In the desktop
-   app, **Escolher arquivo…** (choose file). Click **Analisar** (Analyze) in the web UI. The daemon
-   produces a **preview** and creates nothing yet.
+1. **Choose the bundle.** Pick the `.yml` file (**Escolher arquivo…**, choose file) **or paste the text**, in both
+   interfaces, and click **Analisar** (Analyze). The daemon produces a **preview** and creates nothing yet.
 
 2. **New service name.** It is pre-filled with the bundle's name. If a service with that name
    already exists in the project, the screen warns you and **blocks** creation until you change it.

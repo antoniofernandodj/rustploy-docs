@@ -5,6 +5,13 @@ description: A step-by-step guide to the desktop app's New service wizard in Rus
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
+import wizApp from '../../../../assets/ui/novo-servico-application.png';
+import wizBroker from '../../../../assets/ui/novo-servico-broker.png';
+import wizRabbit from '../../../../assets/ui/novo-servico-rabbitmq.png';
+import wizKafka from '../../../../assets/ui/novo-servico-kafka.png';
+import wizNats from '../../../../assets/ui/novo-servico-nats.png';
+import wizCompose from '../../../../assets/ui/novo-servico-compose.png';
+import wizImport from '../../../../assets/ui/novo-servico-importar.png';
 import tipos from '../../../../assets/ui/novo-servico-tipos.png';
 import banco from '../../../../assets/ui/novo-servico-banco.png';
 import postgres from '../../../../assets/ui/novo-servico-postgres.png';
@@ -97,12 +104,83 @@ Use the **BUSCAR** (Search) field (*"buscar templates…"*) to filter the catalo
 and **Escolher ›** (Choose). Then you name the service and review the variables (passwords already come generated). There are more than
 380 applications: see the [catalog](/en/templates/).
 
-## Application, Broker, Compose and Import
+## Application
 
-- **Application**: the wizard asks only for the **NOME** (and, optionally, the **APP NAME**, used in place of the name) and creates the service **empty**. The source (**Git**, image or zip), the port and the domain are configured afterwards, on the service's **General** tab. See [Git](/en/guias/git/).
-- **Broker**: Kafka, RabbitMQ or NATS, with generated user and password. See [Databases and brokers](/en/guias/bancos-e-brokers/).
-- **Compose**: name, port, domain and the stack's YAML.
-- **Importar** (Import): pick the file exported from another server. The service is created **without a deploy** and nothing is overwritten.
+<Shot
+  src={wizApp}
+  alt="The New Application form with the Name and optional App name fields, the notice to set the source in the General tab and the Criar Application button."
+  caption="New Application: just the name."
+/>
+
+The wizard only asks for the **NOME** (name) and, optionally, the **APP NAME**, used in place of the name, and
+creates the service **empty**. The source (**Git**, image or zip), the port and the domain are set later, in the
+service's **General** tab. See [Git](/en/guias/git/).
+
+## Broker
+
+<Shot
+  src={wizBroker}
+  alt="The broker list with Apache Kafka, RabbitMQ and NATS, each with its Docker image and the Selecionar button."
+  caption="Choosing the broker."
+/>
+
+Three options, each with the image that will run: **Apache Kafka** (`apache/kafka:3.9.0`), **RabbitMQ**
+(`rabbitmq:4-management`) and **NATS** (`nats:2`). After **Selecionar ›** (Select), the form changes slightly:
+
+<Shot
+  src={wizRabbit}
+  alt="The New RabbitMQ form with name, user, generated password, the external connection URL option, the Docker image and the Criar RabbitMQ button."
+  caption="RabbitMQ asks for **USER** and **PASSWORD** (the password comes generated; the values are blurred)."
+/>
+
+<Shot
+  src={wizKafka}
+  alt="The New Apache Kafka form with name, generated password, the external connection URL option, the Docker image and the Criar Apache Kafka button."
+  caption="Kafka: just **NOME** and **PASSWORD**."
+/>
+
+<Shot
+  src={wizNats}
+  alt="The New NATS form with name, generated password, the external connection URL option, the Docker image and the Criar NATS button."
+  caption="NATS: also just **NOME** and **PASSWORD**."
+/>
+
+| Field | What it is |
+|---|---|
+| **NOME** (name) | the service name |
+| **USER** | RabbitMQ only (default `rabbit`) |
+| **PASSWORD (gerada, pode trocar)** (generated, you can change it) | the password. It comes filled in: change it if you want |
+| **Gerar URL de conexão externa** (generate an external connection URL) | opens a TCP port on the server and in the firewall, and shows the outside URL. Off, the broker is only reachable on the project network |
+| **DOCKER IMAGE** | the image, just to check |
+
+See [Databases and brokers](/en/guias/bancos-e-brokers/).
+
+## Compose
+
+<Shot
+  src={wizCompose}
+  alt="The New Compose Stack form with the Name and optional App name fields, the notice to set the compose file inside the service and the Criar Compose Stack button."
+  caption="New Compose Stack: just the name."
+/>
+
+Like Application, the desktop app only asks for the **NOME** (and the optional **APP NAME**) and creates the stack
+**empty**: *"Configure o compose file dentro do serviço antes de fazer deploy."* (set the compose file inside the
+service before deploying). You edit the YAML in the service's **General** tab. See
+[Docker Compose stacks](/en/guias/compose/).
+
+## Importar (Import)
+
+<Shot
+  src={wizImport}
+  alt="The Import exported service step, with the Escolher arquivo button, the box to paste the bundle text and the Analisar button."
+  caption="Importing an exported service (the project name in the text is blurred)."
+/>
+
+Pick the file exported from another server (**Escolher arquivo…**) **or paste the bundle text**, and click
+**Analisar** (Analyze). The service is created **in the open project**, **without a deploy** (*"revise e clique
+em Deploy depois"*, review and click Deploy afterwards), and nothing is overwritten. Only the configuration comes in
+the file: the **data** (volumes, databases) does not. The step by step, the warnings and the choices about
+variables are in [Copy a service to another server](/en/guias/copiar-servico/#import).
 
 ## After creating
 
