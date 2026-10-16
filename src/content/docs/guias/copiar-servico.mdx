@@ -1,0 +1,236 @@
+---
+title: Copiar um serviço para outro servidor
+description: Como exportar um serviço do Rustploy para um arquivo YAML e importá-lo em outro servidor - quais variáveis levar, o que não atravessa (dados, secrets, porta externa), como o import resolve conflitos e como fazer o mesmo pela API.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Para copiar **um serviço** de um servidor Rustploy para outro, você o **exporta** num arquivo YAML
+(o *pacote de serviço*) e o **importa** no projeto de destino. Só a **configuração** viaja: os
+**dados** (volumes, conteúdo de bancos) não. O import **cria** um serviço novo, **não faz deploy**
+sozinho e **nunca apaga nem sobrescreve** nada sem você escolher.
+
+Os dois servidores são daemons independentes e não se enxergam: o arquivo é a única coisa que
+atravessa, e quem o carrega é você.
+
+## Qual ferramenta usar
+
+| Você quer | Use |
+|---|---|
+| copiar **um** serviço para um projeto de outro servidor | **Exportar serviço** e **Importar** (esta página) |
+| descrever **todo** o servidor num arquivo e reconciliar (criar, atualizar, apagar) | [Infra as Code](/guias/infra-as-code/) |
+
+O pacote é **aditivo**: o IaC reconcilia o servidor com o arquivo e, com `prune`, apaga o que não
+está nele. O import de serviço só **acrescenta** um serviço ao projeto que você escolheu.
+
+## O que viaja e o que não viaja
+
+| Item | O que acontece |
+|---|---|
+| Origem (imagem, Git, Compose), porta, healthcheck, réplicas, limites, comando e argumentos | **vão** no pacote |
+| Variáveis **do serviço** | **vão**, todas |
+| Variáveis **do projeto** | só as que você **marcar** (veja abaixo) |
+| Domínios e TLS | **vão**. O DNS precisa apontar para o servidor de destino. Dá para **não trazer** |
+| Porta externa (`host_port`) | **não vai**: o destino aloca uma nova da faixa dele |
+| **Dados** (volumes, conteúdo do banco) | **não vão**. O volume nasce vazio |
+| Secrets (`secret:NOME`) | só a **referência** vai, nunca o valor |
+| Git provider (conta OAuth ou PAT) | referenciado **pelo nome**; se o destino não tem, você escolhe outro ou segue sem |
+| Fila de pré-deploy, jobs e webhooks | **não vão**. O destino cria o próprio token de webhook no primeiro deploy |
+| Servidor de banco compartilhado e databases gerenciados | **não vão**: o serviço vira um serviço comum |
+| Origem por **zip** | **não exporta**: o zip mora no servidor de origem. Reenvie o zip no destino |
+
+<Aside type="caution" title="Dados não são copiados">
+  Copiar um banco de dados copia a **definição** dele (imagem, variáveis, volume), não as
+  linhas. Para levar os dados, faça um dump e uma restauração à parte (veja o
+  [guia de backup](/guias/backup/)).
+</Aside>
+
+## Exportar
+
+No **servidor de origem**, abra o serviço e clique em **Exportar serviço**. O botão também
+existe (**⇪**) no cartão do serviço, dentro do projeto. Abre a janela **Exportar serviço**, a
+mesma no [app desktop](/interface/servico/) e na [web UI](/interface/web-ui/).
+
+<Steps>
+
+1. **Variáveis do serviço.** A janela lista todas, e **todas vão**. As que são `secret:NOME`
+   aparecem com 🔒.
+
+2. **Variáveis do projeto.** Marque as que o app precisa. O container recebe **todas** as
+   variáveis do projeto, e o Rustploy **não sabe** quais o seu código lê, por isso a escolha é
+   sua. Vêm **pré-marcadas** as que o serviço cita como `${VAR}` ou `$VAR` (rótulo *citada pelo
+   serviço*). Use **Sugeridas**, **Todas** e **Nenhuma**, e o filtro. O que você não marca
+   **não entra** no arquivo.
+
+3. **Incluir os valores das variáveis.** Ligada (padrão), o arquivo leva os valores, em texto, e
+   **vira um segredo**: guarde como uma senha. Desligada, cada valor vira `${NOME}` e quem importar
+   preenche os valores. Em qualquer caso, `secret:NOME` **nunca** é decifrado: só a referência vai.
+
+4. **Salvar.** Na web UI, **Baixar .yml** ou **Copiar texto**. No app desktop, **Salvar arquivo…**,
+   **Mostrar como texto** ou **Copiar texto**.
+
+</Steps>
+
+Se o serviço for de origem **zip**, a janela mostra o motivo no lugar dos botões: não há o que
+exportar.
+
+## O arquivo
+
+É um YAML por serviço. O corpo de `service` é o mesmo formato do
+[manifesto](/referencia/manifesto/#item-de-services); o resto é do pacote:
+
+```yaml
+apiVersion: rustploy/v1
+kind: Service
+origin:
+  server: https://rustploy.origem.exemplo.com:9797
+  project: loja
+  exported_at: 2026-10-16T13:40:00Z
+  daemon: 0.1.1
+service:
+  name: api
+  source:
+    registry: ghcr.io/acme/loja-api:1.4.0
+  port: 8080
+  domains:
+    - { domain: api.exemplo.com, port: 8080, tls: true }
+  env:
+    DATABASE_URL: ${DATABASE_URL}
+    API_KEY: secret:API_KEY
+  healthcheck:
+    type: http
+    path: /health
+    status: 200
+project_env:
+  LOG_LEVEL: info
+  SENTRY_DSN: secret:SENTRY_DSN
+```
+
+| Campo | O que é |
+|---|---|
+| `apiVersion` | `rustploy/v1`. Outra versão é recusada |
+| `kind` | tem que ser `Service`. Um YAML do IaC (sem `kind`) **não** é aceito aqui |
+| `origin` | informativo: de onde saiu. O import não depende dele |
+| `service` | o serviço (veja o manifesto) |
+| `project_env` | só as variáveis do projeto que você marcou |
+
+O arquivo é **estrito**: um campo que o daemon não conhece é **erro**, não é ignorado. Você pode
+abrir e editar o YAML (trocar domínio, imagem, porta) antes de importar.
+
+## Importar
+
+No **servidor de destino**, abra o **projeto** onde quer o serviço (ele precisa existir),
+clique em **+ Novo serviço** e escolha **Importar**.
+
+<Steps>
+
+1. **Escolha o pacote.** Na web UI, escolha o arquivo `.yml` **ou cole o texto**. No app desktop,
+   **Escolher arquivo…**. Clique em **Analisar** (web UI). O daemon faz uma **pré-visualização** e
+   não cria nada ainda.
+
+2. **Nome do serviço novo.** Vem preenchido com o nome do pacote. Se já existe um serviço com esse
+   nome no projeto, a tela avisa (*"Já existe um serviço com esse nome neste projeto — escolha
+   outro."*) e **bloqueia** a criação até você trocar.
+
+3. **Leia os avisos** (*ATENÇÃO*). Cada coisa que não pôde ser trazida ou exige ação aparece aqui
+   (tabela abaixo).
+
+4. **Preencha o que falta.** Se o pacote foi exportado **sem valores**, a tela pede o valor de
+   cada variável do serviço e do projeto (*sem valor, obrigatório*). Se o pacote referencia
+   `secret:NOME` que o projeto não tem, você informa o valor para **criar** o secret, ou deixa
+   vazio (o serviço fica com a referência quebrada até você criar o secret). Se o pacote usa um
+   **Git provider** que o servidor não tem, escolha outro da lista ou **seguir sem provider**.
+
+5. **Variáveis do projeto trazidas.** Cada uma aparece como **nova**, **igual** (já existe com o
+   mesmo valor: nada a fazer) ou **em conflito** (já existe com outro valor). Para cada uma,
+   escolha o que fazer:
+
+   | Escolha | Efeito |
+   |---|---|
+   | **criar no projeto** (se é nova) / **manter a do projeto** (se existe) | o padrão |
+   | **sobrescrever a do projeto** | troca o valor no projeto de destino (só em conflito). **Mexe em quem já roda lá** |
+   | **só neste serviço** | grava no ambiente do serviço novo, que vence o do projeto, sem tocar no projeto |
+   | **não trazer** | ignora a variável |
+
+6. **Opções.** **Não trazer os domínios** e **Fazer deploy logo depois de criar** (desligada por
+   padrão).
+
+7. Clique em **Criar serviço**. Ele é **criado e não é deployado**, a menos que você tenha marcado
+   a opção. Revise e clique em **Deploy**.
+
+</Steps>
+
+### Avisos do import
+
+Cada aviso tem um código estável, útil para quem automatiza.
+
+| Código | Quando aparece |
+|---|---|
+| `data_not_copied` | o serviço tem volumes ou é um banco: só a configuração foi copiada |
+| `host_port_new` | havia porta externa: o destino aloca uma nova |
+| `domains_dns` | domínios trazidos: o DNS precisa apontar para **este** servidor |
+| `domains_dropped` | você escolheu não trazer os domínios |
+| `domain_in_use` | outro serviço **deste** servidor já usa um dos domínios: eles disputariam a rota |
+| `git_provider_missing` | o Git provider do pacote não existe aqui |
+| `shared_dropped` | era um servidor de banco compartilhado e virou um serviço comum |
+| `compose_alias_renamed` | o nome interno de um banco/broker Compose mudou (`rp_<nome>`), porque você deu outro nome ao serviço |
+| `deploy_not_started` | o serviço foi criado, mas o deploy pedido não iniciou. O motivo vem na mensagem |
+
+<Aside type="caution" title="Renomear um banco ou broker Compose">
+  O nome interno de um serviço Compose é `rp_<nome>`. Se você dá outro nome ao serviço, o
+  import renomeia o nome interno dentro do compose (`compose_alias_renamed`), mas **não** altera
+  variáveis de **outros** serviços que apontam para o nome antigo. Corrija essas variáveis à mão.
+  Veja [Rede e nomes](/conceitos/rede-e-nomes/).
+</Aside>
+
+## Pela API
+
+Os mesmos três comandos em [`POST /api/rpc`](/referencia/api-http/#post-apirpc) servem a GUI, a
+web UI e o MCP:
+
+| Comando | Para quê |
+|---|---|
+| [`ServiceExportPlan`](/referencia/comandos/#serviceexportplan) | lista as variáveis do serviço e do projeto, com `suggested`, e `blocked` se não dá para exportar |
+| [`ServiceExport`](/referencia/comandos/#serviceexport) | devolve o YAML do pacote |
+| [`ServiceImport`](/referencia/comandos/#serviceimport) | cria o serviço a partir do YAML. Com `dry_run: true`, só devolve o relatório |
+
+```bash
+# 1. exportar no servidor de origem (só nomes de variáveis, sem valores)
+curl -s -H "Authorization: Bearer $TOKEN_A" $A/api/rpc \
+  -d '{"ServiceExport":{"service_id":"svc_…","include_values":false,"project_env_keys":[]}}'
+
+# 2. analisar no servidor de destino, sem criar nada
+curl -s -H "Authorization: Bearer $TOKEN_B" $B/api/rpc \
+  -d '{"ServiceImport":{"yaml":"…","project_id":"prj_…","dry_run":true}}'
+```
+
+O relatório (`ServiceImportReport`) traz `warnings`, `name_conflict`, `missing_service_vars`,
+`missing_project_vars`, `missing_secrets`, `missing_git_provider` e `project_env` (o estado de cada
+variável do projeto). Para criar de verdade, repita o pedido **sem** `dry_run`, com os valores que
+faltavam em `vars`, `project_vars` e `secrets`.
+
+## Limitações
+
+- **Só configuração.** Dados de volumes e bancos não são copiados.
+- **Zip não exporta.** Serviço de origem zip precisa ter o zip reenviado no destino.
+- **Só cria.** Não há "atualizar um serviço existente" por pacote; para isso, use o
+  [IaC](/guias/infra-as-code/).
+- **Sem fila de pré-deploy, jobs nem webhook.** Recrie no destino.
+- **Segredo em texto.** Um pacote exportado com valores guarda as variáveis em texto puro.
+
+## Se deu errado
+
+- **Erro de `kind` ou de campo desconhecido:** o arquivo não é um pacote de serviço. Um
+  manifesto do [IaC](/guias/infra-as-code/) (o do servidor inteiro) tem outro formato e **não** é
+  aceito aqui. Exporte o pacote com **Exportar serviço**.
+- **`apiVersion '…' não suportada`:** o pacote é de uma versão do formato que este daemon não lê.
+  Atualize o daemon de destino.
+- **O serviço novo sobe e dá 502 ou não conecta no banco:** confira as variáveis (`${NOME}` sem
+  valor, `secret:` sem o secret criado) e se os domínios já apontam para o novo servidor.
+- **Criou, mas nada rodou:** é o esperado. O import não faz deploy: clique em **Deploy**.
+
+## Próximos passos
+
+- [Variáveis de ambiente e secrets](/guias/variaveis-e-secrets/).
+- [Infra as Code](/guias/infra-as-code/): descrever e reconciliar o servidor inteiro.
+- [Referência do manifesto](/referencia/manifesto/): os campos de `service`.

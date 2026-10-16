@@ -15,7 +15,7 @@ A exportação gera **dois** arquivos:
 | Arquivo | Conteúdo |
 |---|---|
 | `rustploy.yml` | projetos e serviços. Valores de variável **nunca** aparecem: no lugar vai `${NOME}` |
-| `variáveis.toml` | os valores reais das variáveis comuns, organizados por projeto e serviço, mais os dados não secretos das contas Git |
+| `rustploy.vars.toml` | os valores reais das variáveis comuns, organizados por projeto e serviço, mais os dados não secretos das contas Git |
 
 Os **secrets não saem do daemon**: no YAML ficam como `secret:NOME`, sem valor.
 O YAML pode ir para o Git sem medo; o TOML tem valores, **trate-o como segredo**.
@@ -24,12 +24,14 @@ O YAML pode ir para o Git sem medo; o TOML tem valores, **trate-o como segredo**
 
 **Settings → Infra as Code.**
 
-- **Web UI:** **Exportar tudo** mostra os dois textos para copiar.
-- **App desktop:** **Exportar para um .zip…** grava um `.zip` com `rustploy.yml` e `rustploy.vars.toml` (é o mesmo TOML de variáveis, com outro nome).
+Nas duas interfaces, **Exportar para um .zip…** gera um `.zip` com `rustploy.yml` e
+`rustploy.vars.toml`. O app desktop pergunta onde salvar; a web UI baixa o arquivo
+(`rustploy-infra.zip`) pelo navegador e mostra os dois textos logo abaixo, para conferir ou copiar.
 
 ## Importar
 
-**Settings → Infra as Code → Importar.** Na web UI, cole o `rustploy.yml` e o `variáveis.toml`. No app desktop, **Importar de um .zip…** lê um zip com **exatamente um** `.yml` e um `.toml` na raiz.
+**Settings → Infra as Code → Importar.** Escolha o `.zip` (**Importar de um .zip…** no app desktop; o seletor de arquivo na web UI). Ele precisa ter **exatamente um** `.yml` e um `.toml` na raiz e nada mais, senão a importação é recusada. Na web UI também dá para **colar** o `rustploy.yml` e o `rustploy.vars.toml`.
+Antes de aplicar, as duas interfaces **pedem confirmação** e mostram o que você marcou (com o prune em destaque).
 Duas opções:
 
 | Opção | Efeito |

@@ -1,0 +1,151 @@
+---
+title: Web UI tour
+description: How to use the Rustploy web UI in the browser - sign in, side menu, floating windows, installing it as a PWA, how it differs from the desktop app and what it does not do.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro';
+import login from '../../../../assets/ui/webui-login.png';
+import deployments from '../../../../assets/ui/webui-deployments.png';
+import janelas from '../../../../assets/ui/webui-janelas.png';
+
+The **web UI** is Rustploy's interface in the browser. There is nothing to install: the
+daemon itself serves it on the API port, and it shows **the same server** and the same
+screens as the [desktop app](/en/interface/visao-geral/), because both talk to the same API.
+Almost everything in the [Desktop app](/en/interface/visao-geral/) section applies here;
+this page covers what is **different**.
+
+## Open it and sign in
+
+<Shot
+  src={login}
+  alt="Web UI sign-in screen in the browser, with the connection token field, the Remember access key checkbox and the Connect button."
+  caption="Web UI sign-in. A remembered token is shown masked."
+/>
+
+Open the daemon's address in the browser:
+
+```text
+http://YOUR_SERVER:9797
+```
+
+(or `https://`, if you set `[api].domain`). The login screen has **a single field**,
+**CONNECTION TOKEN**. Paste the [connection token](/en/instalacao/primeiro-acesso/) and click
+**Connect**.
+
+| Difference from the desktop app | In the web UI |
+|---|---|
+| **Server** | always the address of the page. No saved-servers list and no host field |
+| **Token from another server** | if the token points to another address, the screen only **warns** (`this token is for … — you are on …`) and lets you try, because behind a proxy the address the browser sees may differ |
+| **Remember access key** | when checked, the token is stored **in the browser** (`localStorage`, key `rustploy.prefs`), in plain text |
+
+<Aside type="caution" title="Only remember the token on your own machine">
+  The token works as the server administrator. Check **Remember access key** only in a browser
+  that is yours and not shared. On someone else's machine, leave it unchecked and use
+  **Disconnect** when you leave.
+</Aside>
+
+If what you paste is not a connection token (for example, only the API token), the screen says
+so and asks for the whole token, the base64 of `host:port::token`.
+
+## The window
+
+<Shot
+  src={deployments}
+  alt="Web UI Deployments screen with the side menu, the top bar and the deployments table."
+  caption="The web UI on the Deployments screen (project and service names blurred)."
+/>
+
+The layout is the desktop app's: **side menu** on the left, **top bar** above and the
+**central area** with the chosen screen.
+
+- The menu has the same items: **Deployments**, **Deploy Engine**, **Monitoring**,
+  **Schedules**, **Ingress**, **Docker**, **Projects**, **Settings** and **Support**.
+- The top bar has **☰** (hides the menu), the search, the connected server with the daemon
+  version (`● host · daemon vX.Y.Z`), **Stop All** and **Disconnect**.
+- The **Deployments** screen, the **STATUS**/**UPTIME** indicators and the clear-finished
+  button work as described in the [overview](/en/interface/visao-geral/).
+
+The interface follows the browser window size: below **900 px** the menu shrinks to icons only,
+and the indicators at the top of the screens disappear at smaller widths.
+
+## Floating windows
+
+<Shot
+  src={janelas}
+  alt="Web UI with two floating windows open at once: New project and New job."
+  caption="Two floating windows open at once: New project and New job."
+/>
+
+In the desktop app, actions such as **New project** or **New service** open operating-system
+windows. In the browser they become **floating windows** inside the page:
+
+| Gesture | Effect |
+|---|---|
+| **Drag** the title bar | moves the window |
+| **Drag the corner** | resizes |
+| **Click** the window | brings it to the front |
+| **Double-click** the title bar, or the green dot | maximizes and restores |
+| **Esc**, or the red dot | closes the frontmost window |
+
+Several windows can stay open at once, and the page underneath remains usable (you can, for
+example, leave a service's log open and keep navigating). The browser **remembers the size and
+position** of each window type.
+
+The floating windows are: deploy detail, build log, live service logs, **New service**,
+**New/Edit project**, **Export service**, registry **New token**, **New job**, a job's actions
+and a job's logs.
+
+<Aside type="note" title="On a small screen">
+  Below **700 px** wide (phone), every window opens **full screen**, with no dragging or
+  resizing. You can operate the server from a phone, but the comfortable way is a large screen.
+</Aside>
+
+## Install it as an app (PWA)
+
+The web UI is a **PWA**. In Chrome or Edge, use the install icon in the address bar (or
+**Install Rustploy** in the browser menu). It then opens in its own window, without the browser
+bar, with the Rustploy icon.
+
+- The interface files (HTML, CSS and JavaScript) are kept in the browser **cache**, so the
+  screen opens fast. The cache renews itself when the daemon is updated.
+- **Data** never goes to the cache: everything from `/api/*` is fetched from the server every
+  time. Without a connection to the daemon, there is nothing to show.
+- The interface library (Alpine.js) is loaded from a CDN (`cdn.jsdelivr.net`) and is not in the
+  PWA cache. So the **browser** must be able to reach that CDN, even if the server is on a closed
+  network.
+
+## Notifications
+
+The web UI **does not use system notifications**. When a deploy **you started** finishes, it
+shows a *toast* in the corner of the screen, even if you have left the service screen. If the
+tab is closed, there is no notice. To be notified with the window closed, use the
+[desktop app](/en/interface/visao-geral/), which collapses to the system tray.
+
+## Web UI or desktop app?
+
+| | Web UI | Desktop app |
+|---|---|---|
+| Installation | none | `.deb` (Linux) or `.zip` (Windows) |
+| Several saved servers | no (one per address) | yes |
+| Notification with the window closed | no | yes (system tray) |
+| Works on a phone | yes | no |
+| Windows | floating, inside the page | operating-system windows |
+| Screens and features | the same | the same |
+
+Two commands are used only by the web UI (`ServiceCreate` and `DeployRollback`) and one only by
+the desktop app (`JobList`). See [parity between the interfaces](/en/referencia/paridade/).
+
+## Limitations
+
+- The web UI is served by the daemon itself. If the daemon goes down, so does the web UI.
+- Over `http://` the token travels **unencrypted**. Set `[api].domain` to get HTTPS: see
+  [Server security](/en/operacao/seguranca-do-servidor/).
+- The browser caches the JavaScript for a long time. After updating the daemon, if the screen
+  looks old, reload ignoring the cache (**Ctrl+Shift+R**).
+
+## Next steps
+
+- [Interface overview](/en/interface/visao-geral/): the screens, one by one.
+- [First access and the connection token](/en/instalacao/primeiro-acesso/).
+- [Install the clients](/en/instalacao/instalar-clientes/).

@@ -65,6 +65,7 @@ export default defineConfig({
         ]},
         { label: 'Interface desktop', translations: { en: 'Desktop app' }, items: [
           { slug: 'interface/visao-geral' },
+          { slug: 'interface/web-ui' },
           { slug: 'interface/entrar' },
           { slug: 'interface/projetos' },
           { slug: 'interface/novo-servico' },
@@ -95,6 +96,7 @@ export default defineConfig({
           { slug: 'guias/banco-compartilhado' },
           { slug: 'guias/migrar-banco' },
           { slug: 'guias/infra-as-code' },
+          { slug: 'guias/copiar-servico' },
           { slug: 'guias/registry' },
           { slug: 'guias/limpeza-docker' },
           { slug: 'guias/backup' },
@@ -122,6 +124,7 @@ export default defineConfig({
         ]},
         { label: 'Referência', translations: { en: 'Reference' }, items: [
           { slug: 'referencia/manifesto' },
+          { slug: 'referencia/api-http' },
           { slug: 'referencia/comandos' },
           { slug: 'referencia/respostas' },
           { slug: 'referencia/eventos' },

@@ -1,0 +1,239 @@
+---
+title: Copy a service to another server
+description: How to export a Rustploy service to a YAML file and import it on another server - which variables to bring, what does not cross over (data, secrets, external port), how the import resolves conflicts and how to do the same through the API.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+To copy **one service** from one Rustploy server to another, you **export** it to a YAML file (the
+*service bundle*) and **import** it into the target project. Only the **configuration** travels:
+the **data** (volumes, database contents) does not. The import **creates** a new service, **does
+not deploy** by itself and **never deletes or overwrites** anything without you choosing.
+
+The two servers are independent daemons and cannot see each other: the file is the only thing that
+crosses over, and you carry it.
+
+## Which tool to use
+
+| You want | Use |
+|---|---|
+| to copy **one** service into a project on another server | **Export service** and **Import** (this page) |
+| to describe the **whole** server in a file and reconcile it (create, update, delete) | [Infrastructure as Code](/en/guias/infra-as-code/) |
+
+The bundle is **additive**: IaC reconciles the server with the file and, with `prune`, deletes what
+is not in it. The service import only **adds** a service to the project you choose.
+
+## What travels and what does not
+
+| Item | What happens |
+|---|---|
+| Source (image, Git, Compose), port, healthcheck, replicas, limits, command and arguments | **go** in the bundle |
+| **Service** variables | **go**, all of them |
+| **Project** variables | only the ones you **tick** (see below) |
+| Domains and TLS | **go**. DNS must point to the target server. You can **leave them out** |
+| External port (`host_port`) | **does not go**: the target allocates a new one from its own range |
+| **Data** (volumes, database contents) | **do not go**. The volume starts empty |
+| Secrets (`secret:NAME`) | only the **reference** goes, never the value |
+| Git provider (OAuth or PAT account) | referenced **by name**; if the target has none, you pick another or go without |
+| Pre-deploy queue, jobs and webhooks | **do not go**. The target creates its own webhook token on the first deploy |
+| Shared database server and managed databases | **do not go**: the service becomes a plain service |
+| **Zip** source | **cannot be exported**: the zip lives on the source server. Re-upload the zip on the target |
+
+<Aside type="caution" title="Data is not copied">
+  Copying a database copies its **definition** (image, variables, volume), not its rows. To bring
+  the data, take a dump and restore it separately (see the [backup guide](/en/guias/backup/)).
+</Aside>
+
+## Export
+
+On the **source server**, open the service and click **Export service**. The button also exists
+(**⇪**) on the service card inside the project. It opens the **Export service** window, the same in
+the [desktop app](/en/interface/servico/) and the [web UI](/en/interface/web-ui/).
+
+<Steps>
+
+1. **Service variables.** The window lists all of them, and **all go**. Those that are
+   `secret:NAME` show a 🔒.
+
+2. **Project variables.** Tick the ones the app needs. The container receives **all** of the
+   project's variables, and Rustploy **does not know** which ones your code reads, so the choice is
+   yours. The ones the service cites as `${VAR}` or `$VAR` come **pre-ticked** (label *citada pelo
+   serviço*, "cited by the service"). Use **Sugeridas** (suggested), **Todas** (all) and
+   **Nenhuma** (none), and the filter. What you do not tick **does not enter** the file.
+
+3. **Include variable values.** On (default), the file carries the values, in plain text, and
+   **becomes a secret**: keep it like a password. Off, each value becomes `${NAME}` and whoever
+   imports fills in the values. In both cases `secret:NAME` is **never** decrypted: only the
+   reference goes.
+
+4. **Save.** In the web UI, **Baixar .yml** (download) or **Copiar texto** (copy text). In the
+   desktop app, **Salvar arquivo…** (save file), **Mostrar como texto** (show as text) or
+   **Copiar texto**.
+
+</Steps>
+
+If the service has a **zip** source, the window shows the reason in place of the buttons: there is
+nothing to export.
+
+## The file
+
+It is one YAML per service. The body of `service` is the same format as the
+[manifest](/en/referencia/manifesto/#item-of-services); the rest belongs to the bundle:
+
+```yaml
+apiVersion: rustploy/v1
+kind: Service
+origin:
+  server: https://rustploy.origin.example.com:9797
+  project: shop
+  exported_at: 2026-10-16T13:40:00Z
+  daemon: 0.1.1
+service:
+  name: api
+  source:
+    registry: ghcr.io/acme/shop-api:1.4.0
+  port: 8080
+  domains:
+    - { domain: api.example.com, port: 8080, tls: true }
+  env:
+    DATABASE_URL: ${DATABASE_URL}
+    API_KEY: secret:API_KEY
+  healthcheck:
+    type: http
+    path: /health
+    status: 200
+project_env:
+  LOG_LEVEL: info
+  SENTRY_DSN: secret:SENTRY_DSN
+```
+
+| Field | What it is |
+|---|---|
+| `apiVersion` | `rustploy/v1`. Another version is refused |
+| `kind` | must be `Service`. An IaC YAML (no `kind`) is **not** accepted here |
+| `origin` | informational: where it came from. The import does not depend on it |
+| `service` | the service (see the manifest) |
+| `project_env` | only the project variables you ticked |
+
+The file is **strict**: a field the daemon does not know is an **error**, not ignored. You can open
+and edit the YAML (change domain, image, port) before importing.
+
+## Import
+
+On the **target server**, open the **project** where you want the service (it must exist), click
+**+ Novo serviço** (New service) and choose **Importar** (Import).
+
+<Steps>
+
+1. **Choose the bundle.** In the web UI, pick the `.yml` file **or paste the text**. In the desktop
+   app, **Escolher arquivo…** (choose file). Click **Analisar** (Analyze) in the web UI. The daemon
+   produces a **preview** and creates nothing yet.
+
+2. **New service name.** It is pre-filled with the bundle's name. If a service with that name
+   already exists in the project, the screen warns you and **blocks** creation until you change it.
+
+3. **Read the warnings** (*ATENÇÃO*). Everything that could not be brought, or needs action,
+   appears here (table below).
+
+4. **Fill in what is missing.** If the bundle was exported **without values**, the screen asks for
+   the value of each service and project variable (required). If the bundle references a
+   `secret:NAME` the project does not have, you give a value to **create** the secret, or leave it
+   empty (the service keeps a broken reference until you create the secret). If the bundle uses a
+   **Git provider** the server does not have, pick another from the list or **seguir sem provider**
+   (go without a provider).
+
+5. **Project variables brought.** Each one shows as **nova** (new), **igual** (same: already
+   exists with the same value, nothing to do) or **em conflito** (conflict: exists with another
+   value). For each one, choose what to do:
+
+   | Choice | Effect |
+   |---|---|
+   | **criar no projeto** (if new) / **manter a do projeto** (if it exists) | the default |
+   | **sobrescrever a do projeto** | replaces the value in the target project (conflicts only). **Affects whatever already runs there** |
+   | **só neste serviço** | writes it to the new service's environment, which wins over the project's, without touching the project |
+   | **não trazer** | ignores the variable |
+
+6. **Options.** **Não trazer os domínios** (don't bring the domains) and **Fazer deploy logo
+   depois de criar** (deploy right after creating), off by default.
+
+7. Click **Criar serviço** (Create service). It is **created and not deployed**, unless you ticked
+   the option. Review it and click **Deploy**.
+
+</Steps>
+
+### Import warnings
+
+Each warning has a stable code, useful for automation.
+
+| Code | When it appears |
+|---|---|
+| `data_not_copied` | the service has volumes or is a database: only the configuration was copied |
+| `host_port_new` | it had an external port: the target allocates a new one |
+| `domains_dns` | domains brought: DNS must point to **this** server |
+| `domains_dropped` | you chose not to bring the domains |
+| `domain_in_use` | another service on **this** server already uses one of the domains: they would fight over the route |
+| `git_provider_missing` | the bundle's Git provider does not exist here |
+| `shared_dropped` | it was a shared database server and became a plain service |
+| `compose_alias_renamed` | the internal name of a Compose database/broker changed (`rp_<name>`), because you gave the service another name |
+| `deploy_not_started` | the service was created, but the requested deploy did not start. The reason is in the message |
+
+<Aside type="caution" title="Renaming a Compose database or broker">
+  A Compose service's internal name is `rp_<name>`. If you give the service another name, the
+  import renames the internal name inside the compose (`compose_alias_renamed`), but it does **not**
+  change variables in **other** services that point to the old name. Fix those by hand. See
+  [Network and names](/en/conceitos/rede-e-nomes/).
+</Aside>
+
+## Through the API
+
+The same three commands on [`POST /api/rpc`](/en/referencia/api-http/#post-apirpc) serve the
+desktop app, the web UI and MCP:
+
+| Command | What for |
+|---|---|
+| [`ServiceExportPlan`](/en/referencia/comandos/#serviceexportplan) | lists the service and project variables, with `suggested`, and `blocked` if it cannot be exported |
+| [`ServiceExport`](/en/referencia/comandos/#serviceexport) | returns the bundle YAML |
+| [`ServiceImport`](/en/referencia/comandos/#serviceimport) | creates the service from the YAML. With `dry_run: true`, it only returns the report |
+
+```bash
+# 1. export on the source server (variable names only, no values)
+curl -s -H "Authorization: Bearer $TOKEN_A" $A/api/rpc \
+  -d '{"ServiceExport":{"service_id":"svc_…","include_values":false,"project_env_keys":[]}}'
+
+# 2. analyze on the target server, creating nothing
+curl -s -H "Authorization: Bearer $TOKEN_B" $B/api/rpc \
+  -d '{"ServiceImport":{"yaml":"…","project_id":"prj_…","dry_run":true}}'
+```
+
+The report (`ServiceImportReport`) carries `warnings`, `name_conflict`, `missing_service_vars`,
+`missing_project_vars`, `missing_secrets`, `missing_git_provider` and `project_env` (the state of
+each project variable). To really create it, repeat the request **without** `dry_run`, with the
+missing values in `vars`, `project_vars` and `secrets`.
+
+## Limitations
+
+- **Configuration only.** Volume and database data are not copied.
+- **Zip cannot be exported.** A zip-source service needs the zip re-uploaded on the target.
+- **Create only.** There is no "update an existing service" by bundle; for that, use
+  [IaC](/en/guias/infra-as-code/).
+- **No pre-deploy queue, jobs or webhook.** Recreate them on the target.
+- **Secret in plain text.** A bundle exported with values holds the variables in plain text.
+
+## If it went wrong
+
+- **A `kind` error or an unknown field:** the file is not a service bundle. An
+  [IaC](/en/guias/infra-as-code/) manifest (the whole-server one) has another format and is **not**
+  accepted here. Export a bundle with **Export service**.
+- **`apiVersion '…' não suportada`:** the bundle is from a format version this daemon cannot read.
+  Update the target daemon.
+- **The new service starts and returns 502 or cannot reach the database:** check the variables
+  (`${NAME}` with no value, `secret:` without the secret created) and whether the domains already
+  point to the new server.
+- **It was created, but nothing ran:** that is expected. The import does not deploy: click
+  **Deploy**.
+
+## Next steps
+
+- [Environment variables and secrets](/en/guias/variaveis-e-secrets/).
+- [Infrastructure as Code](/en/guias/infra-as-code/): describe and reconcile the whole server.
+- [Manifest reference](/en/referencia/manifesto/): the fields of `service`.

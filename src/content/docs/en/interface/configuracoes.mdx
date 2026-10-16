@@ -85,6 +85,8 @@ Details and the use in services: [Deploy from a Git repository](/en/guias/git/).
 | **Exportar para um .zip…** (Export to a .zip) | writes a `.zip` with `rustploy.yml` and `rustploy.vars.toml` wherever you choose. Variable values live only in the TOML; **secrets never leave the daemon** |
 | **Importar de um .zip…** (Import from a .zip) | reads a `.zip` of the same format, with **exactly one** `.yml` and one `.toml` at the root |
 
+In the [web UI](/en/interface/web-ui/) the tab is the same: **Exportar para um .zip…** downloads the file through the browser (`rustploy-infra.zip`) and shows the two texts to check or copy, and the import accepts the `.zip` through the file picker **or** pasted text. In both interfaces the app **asks for confirmation** before applying.
+
 Import options:
 
 | Option | Effect |

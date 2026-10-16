@@ -363,7 +363,7 @@ projects:
         shared: true
 \`\`\`
 
-E o arquivo de variáveis que o acompanha (\`variáveis.toml\`, ou \`rustploy.vars.toml\` no zip do app):
+E o arquivo de variáveis que o acompanha (\`rustploy.vars.toml\`, dentro do zip da exportação):
 
 \`\`\`toml
 [project."loja".service."web".env]
@@ -566,7 +566,7 @@ projects:
         shared: true
 \`\`\`
 
-And the variables file that goes with it (\`variáveis.toml\`, or \`rustploy.vars.toml\` in the desktop app zip):
+And the variables file that goes with it (\`rustploy.vars.toml\`, inside the export zip):
 
 \`\`\`toml
 [project."loja".service."web".env]

@@ -1,0 +1,155 @@
+---
+title: Tour da web UI
+description: Como usar a web UI do Rustploy no navegador - login, menu lateral, janelas flutuantes, instalação como PWA, o que ela tem de diferente do app desktop e o que não faz.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
+import login from '../../../assets/ui/webui-login.png';
+import deployments from '../../../assets/ui/webui-deployments.png';
+import janelas from '../../../assets/ui/webui-janelas.png';
+
+A **web UI** é a interface do Rustploy no navegador. Não há nada para instalar:
+o próprio daemon a serve na porta da API, e ela mostra **o mesmo servidor** e as mesmas
+telas do [app desktop](/interface/visao-geral/), porque as duas falam com a mesma API.
+Quase tudo que está na seção [Interface desktop](/interface/visao-geral/) vale aqui; esta
+página cobre o que é **diferente**.
+
+## Abrir e entrar
+
+<Shot
+  src={login}
+  alt="Tela de login da web UI no navegador, com o campo do token de conexão, a caixa Remember access key e o botão Connect."
+  caption="Login da web UI. O token lembrado aparece mascarado."
+/>
+
+Abra no navegador o endereço do daemon:
+
+```text
+http://SEU_SERVIDOR:9797
+```
+
+(ou `https://`, se você configurou `[api].domain`). A tela de login tem **um campo só**,
+**CONNECTION TOKEN**. Cole o [token de conexão](/instalacao/primeiro-acesso/) e clique em
+**Connect**.
+
+| Diferença para o app desktop | Como é na web UI |
+|---|---|
+| **Servidor** | é sempre o endereço da página. Não há lista de servidores salvos nem campo de host |
+| **Token de outro servidor** | se o token aponta para outro endereço, a tela só **avisa** (`este token é de … — você está em …`) e deixa tentar, porque atrás de um proxy o endereço visto pelo navegador pode ser outro |
+| **Remember access key** | marcado, o token fica guardado **no navegador** (`localStorage`, chave `rustploy.prefs`), em texto puro |
+
+<Aside type="caution" title="Lembrar o token só em máquina sua">
+  O token vale como administrador do servidor. Marque **Remember access key** apenas em um
+  navegador que é seu e não é compartilhado. Em máquina de terceiros, deixe desmarcado e use
+  **Disconnect** ao sair.
+</Aside>
+
+Se o token não for um token de conexão (por exemplo, só o token da API), a tela diz isso e
+pede o token inteiro, o base64 de `host:porta::token`.
+
+## A janela
+
+<Shot
+  src={deployments}
+  alt="Tela Deployments da web UI com o menu lateral, a barra superior e a tabela de deploys."
+  caption="A web UI na tela Deployments (nomes de projetos e serviços borrados)."
+/>
+
+O layout é o do app desktop: **menu lateral** à esquerda, **barra superior** em cima e a
+**área central** com a tela escolhida.
+
+- O menu tem os mesmos itens: **Deployments**, **Deploy Engine**, **Monitoring**,
+  **Schedules**, **Ingress**, **Docker**, **Projects**, **Settings** e **Support**.
+- A barra superior tem **☰** (esconde o menu), a busca, o servidor conectado com a versão
+  do daemon (`● host · daemon vX.Y.Z`), **Stop All** e **Disconnect**.
+- A tela de **Deployments**, os indicadores **STATUS**/**UPTIME** e o botão **Limpar
+  parados/falhos** funcionam como descrito na
+  [visão geral](/interface/visao-geral/#a-tela-deployments).
+
+A interface acompanha o tamanho da janela do navegador: abaixo de **900 px** o menu
+encolhe e mostra só os ícones, e os indicadores do topo das telas somem em larguras
+menores.
+
+## Janelas flutuantes
+
+<Shot
+  src={janelas}
+  alt="Web UI com duas janelas flutuantes abertas ao mesmo tempo: Novo projeto e Novo job."
+  caption="Duas janelas flutuantes abertas ao mesmo tempo: Novo projeto e Novo job."
+/>
+
+No app desktop, ações como **Novo projeto** ou **Novo serviço** abrem janelas do sistema. No
+navegador elas viram **janelas flutuantes** dentro da página:
+
+| Gesto | Efeito |
+|---|---|
+| **Arrastar** a barra de título | move a janela |
+| **Arrastar o canto** | redimensiona |
+| **Clicar** na janela | traz para a frente |
+| **Duplo clique** na barra de título, ou o ponto verde | maximiza e restaura |
+| **Esc**, ou o ponto vermelho | fecha a janela que está mais à frente |
+
+Várias janelas podem ficar abertas ao mesmo tempo, e a página por baixo continua
+utilizável (você pode, por exemplo, deixar o log de um serviço aberto e navegar). O
+navegador **lembra o tamanho e a posição** de cada tipo de janela.
+
+As janelas flutuantes são: detalhe do deploy, log de build, logs ao vivo do serviço, **Novo
+serviço**, **Novo/Editar projeto**, **Exportar serviço**, **Novo token** do registry, **Novo
+job**, as ações de um job e os logs de um job.
+
+<Aside type="note" title="Em tela pequena">
+  Abaixo de **700 px** de largura (celular), toda janela abre **em tela cheia**, sem arrastar nem
+  redimensionar. Dá para operar o servidor pelo telefone, mas o uso mais confortável é em tela
+  grande.
+</Aside>
+
+## Instalar como aplicativo (PWA)
+
+A web UI é um **PWA**. No Chrome ou no Edge, use o ícone de instalar na barra de endereço
+(ou **Instalar Rustploy** no menu do navegador). Ela passa a abrir em janela própria, sem a
+barra do navegador, com o ícone do Rustploy.
+
+- Os arquivos da interface (HTML, CSS e JavaScript) ficam em **cache** no navegador, então a
+  tela abre rápido. O cache é renovado sozinho quando o daemon é atualizado.
+- Os **dados** nunca vão para o cache: tudo que vem de `/api/*` é buscado do servidor a cada
+  vez. Sem conexão com o daemon, não há o que mostrar.
+- A biblioteca da interface (Alpine.js) é carregada de um CDN (`cdn.jsdelivr.net`) e não
+  entra no cache do PWA. Por isso o **navegador** precisa alcançar esse CDN, mesmo que o
+  servidor esteja numa rede fechada.
+
+## Notificações
+
+A web UI **não usa notificações do sistema**. Quando um deploy que **você disparou**
+termina, ela mostra um aviso (*toast*) no canto da tela, mesmo que você já tenha saído da
+tela do serviço. Se a aba estiver fechada, não há aviso. Para ser avisado com a janela
+fechada, use o [app desktop](/interface/visao-geral/#notificações), que recolhe para a
+bandeja.
+
+## Web UI ou app desktop?
+
+| | Web UI | App desktop |
+|---|---|---|
+| Instalação | nenhuma | `.deb` (Linux) ou `.zip` (Windows) |
+| Vários servidores salvos | não (um por endereço) | sim |
+| Notificação com a janela fechada | não | sim (bandeja do sistema) |
+| Funciona no celular | sim | não |
+| Janelas | flutuantes, dentro da página | janelas do sistema |
+| Telas e funções | as mesmas | as mesmas |
+
+Há dois comandos que só a web UI usa (`ServiceCreate` e `DeployRollback`) e um que só o app
+desktop usa (`JobList`). Veja a [paridade entre as interfaces](/referencia/paridade/).
+
+## Limitações
+
+- A web UI é servida pelo próprio daemon. Se o daemon cair, ela também fica fora do ar.
+- Pelo endereço `http://` o token trafega **sem criptografia**. Configure `[api].domain`
+  para ter HTTPS: veja [Segurança do servidor](/operacao/seguranca-do-servidor/).
+- O navegador guarda o JavaScript em cache por muito tempo. Depois de atualizar o daemon, se
+  a tela parecer antiga, recarregue ignorando o cache (**Ctrl+Shift+R**).
+
+## Próximos passos
+
+- [Visão geral da interface](/interface/visao-geral/): as telas, uma a uma.
+- [Primeiro acesso e token de conexão](/instalacao/primeiro-acesso/).
+- [Instalar os clientes](/instalacao/instalar-clientes/).

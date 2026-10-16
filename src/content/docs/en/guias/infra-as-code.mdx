@@ -15,7 +15,7 @@ The export produces **two** files:
 | File | Contents |
 |---|---|
 | `rustploy.yml` | projects and services. Variable values **never** appear: `${NAME}` goes in their place |
-| `variáveis.toml` (the variables file) | the real values of plain variables, organized by project and service, plus the non-secret data of Git accounts |
+| `rustploy.vars.toml` (the variables file) | the real values of plain variables, organized by project and service, plus the non-secret data of Git accounts |
 
 **Secrets never leave the daemon**: in the YAML they stay as `secret:NAME`, with no value. The YAML can go into
 Git without worry; the TOML has values, so **treat it as a secret**.
@@ -24,12 +24,14 @@ Git without worry; the TOML has values, so **treat it as a secret**.
 
 **Settings → Infra as Code.**
 
-- **Web UI:** **Exportar tudo** (Export all) shows the two texts to copy.
-- **Desktop app:** **Exportar para um .zip…** (Export to a .zip) writes a `.zip` with `rustploy.yml` and `rustploy.vars.toml` (the same variables TOML, under another name).
+In both interfaces, **Exportar para um .zip…** (Export to a .zip) produces a `.zip` with
+`rustploy.yml` and `rustploy.vars.toml`. The desktop app asks where to save; the web UI downloads the
+file (`rustploy-infra.zip`) through the browser and shows the two texts right below, to check or copy.
 
 ## Import
 
-**Settings → Infra as Code → Importar** (Import). In the web UI, paste the `rustploy.yml` and the `variáveis.toml`. In the desktop app, **Importar de um .zip…** reads a zip with **exactly one** `.yml` and one `.toml` at the root.
+**Settings → Infra as Code → Importar** (Import). Choose the `.zip` (**Importar de um .zip…** in the desktop app; the file picker in the web UI). It must have **exactly one** `.yml` and one `.toml` at the root and nothing else, otherwise the import is refused. In the web UI you can also **paste** the `rustploy.yml` and the `rustploy.vars.toml`.
+Before applying, both interfaces **ask for confirmation** and show what you ticked (with prune highlighted).
 Two options:
 
 | Option | Effect |

@@ -114,5 +114,5 @@ mesmo.
 ## O que **não** passa por esta resolução
 
 - O **token de clone** do Git (campo *Credentials*) é lido do secret só na hora do clone e **não** entra no ambiente do container.
-- O `${VAR}` do **manifesto de Infra as Code** é resolvido na importação, pelo arquivo `variáveis.toml`, e não por esta lista. Veja [Infra as Code](/guias/infra-as-code/).
-- Variáveis geradas por **templates** (senhas, chaves) são calculadas na criação do serviço e gravadas como variáveis **comuns**, não como secrets: ficam em texto no banco e vão no `variáveis.toml` de uma exportação. Se quiser cifrá-las, crie um secret com o valor e troque a variável por `secret:NOME`.
+- O `${VAR}` do **manifesto de Infra as Code** é resolvido na importação, pelo arquivo `rustploy.vars.toml`, e não por esta lista. Veja [Infra as Code](/guias/infra-as-code/).
+- Variáveis geradas por **templates** (senhas, chaves) são calculadas na criação do serviço e gravadas como variáveis **comuns**, não como secrets: ficam em texto no banco e vão no `rustploy.vars.toml` de uma exportação. Se quiser cifrá-las, crie um secret com o valor e troque a variável por `secret:NOME`.

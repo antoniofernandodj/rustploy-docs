@@ -1,0 +1,284 @@
+---
+title: API HTTP
+description: Referência das rotas HTTP do daemon do Rustploy - login, POST /api/rpc, eventos e logs por SSE, upload de zip, webhook de deploy, callback OAuth, MCP e rotas públicas - com autenticação, códigos de status e exemplos com curl.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+O daemon do Rustploy fala **HTTP/1.1 com JSON** na porta da API (padrão `9797`). Uma rota,
+`POST /api/rpc`, executa **qualquer** [comando](/referencia/comandos/); as demais cuidam do
+login, dos streams ao vivo (SSE), do upload de zip e das chamadas de terceiros. A GUI, a web UI
+e o [MCP](/agentes/visao-geral/) usam estas mesmas rotas.
+
+Nos exemplos, `$RP` é o endereço do servidor (`https://SERVIDOR:9797`) e `$TOKEN` é o token da
+API (o que o [login](#post-apilogin) devolve em `access_token`).
+
+## Autenticação
+
+| Rota | Autenticação |
+|---|---|
+| `GET /api/version`, `POST /api/login`, arquivos da web UI | **nenhuma** |
+| `POST /webhook/<id>/<token>`, `GET /oauth/<provedor>/callback` | **própria** (token na URL, `state` do OAuth) |
+| todas as outras (`/api/*`, `/mcp`) | `Authorization: Bearer <token>` |
+
+O token é o `[api].token` do `config.toml`. A comparação é em tempo constante. O prefixo
+`Bearer ` é opcional, mas outro esquema (`Basic`…) é recusado. Sem o header, ou com token errado,
+a resposta é **`401 unauthorized`** em texto puro, e o daemon registra o motivo no log.
+
+<Aside type="caution" title="O token vale como administrador">
+  Não há escopo nem modo somente leitura: quem tem o token executa **qualquer** comando,
+  inclusive os destrutivos. Veja [Segurança do servidor](/operacao/seguranca-do-servidor/).
+</Aside>
+
+Se o daemon sobe **sem** `[api].token`, ele só aceita bind em loopback e **não pede**
+autenticação. Com bind público e sem token, o listener **não inicia**.
+
+## Convenções
+
+- **Corpo e resposta** são JSON (`UTF-8`), exceto onde dito.
+- **Erros de transporte** (corpo ilegível, comando inválido, rota inexistente) voltam como texto
+  puro com o status HTTP. **Erros de comando** voltam como `200` com a variante `Err` da resposta:
+  veja [`/api/rpc`](#post-apirpc).
+- **gzip:** com `Accept-Encoding: gzip`, respostas JSON acima de um piso de tamanho vêm
+  comprimidas.
+- **TLS:** com `[api].domain` o próprio listener termina HTTPS na mesma porta, com certificado
+  ACME. Sem domínio é HTTP puro, e o token trafega sem criptografia.
+- **CORS:** a API não envia cabeçalhos CORS. Use-a de servidores e scripts, ou da própria web UI.
+
+## Tabela das rotas
+
+| Método e rota | Auth | Para quê |
+|---|---|---|
+| `GET /api/version` | não | versão e commit do binário, em texto puro |
+| `POST /api/login` | não | troca o token de conexão pelo token da API |
+| `POST /api/rpc` | Bearer | executa um `Command` |
+| `GET /api/events` | Bearer | SSE: snapshot do painel e eventos |
+| `GET /api/services/<id>/logs` | Bearer | SSE: log de runtime de um serviço |
+| `GET /api/deployments/<id>/build-logs` | Bearer | SSE: build ao vivo de um deploy |
+| `GET /api/jobs/runs/<id>/logs` | Bearer | SSE: saída de uma execução de job |
+| `POST /api/services/<id>/archive` | Bearer | envia o `.zip` de um serviço de origem Archive |
+| `GET /api/health` | Bearer | sonda de vida (`ok`) |
+| `GET /api/access-key` | Bearer | o token de conexão deste servidor |
+| `GET /api/agent/manual` | Bearer | o manual do agente, em Markdown |
+| `POST /mcp` | Bearer | servidor MCP (Streamable HTTP) |
+| `POST /webhook/<id>/<token>` | token na URL | dispara um deploy |
+| `GET /oauth/gitea/callback`, `GET /oauth/github/callback` | `state` | fim do fluxo OAuth |
+| `GET /` e arquivos da web UI | não | a [web UI](/interface/web-ui/) |
+
+<Aside type="note" title="`/api/health` pede token">
+  A sonda de vida passa pela mesma checagem das outras rotas. Para um monitor externo que não
+  deve ter o token, use `GET /api/version`, que é pública.
+</Aside>
+
+## `GET /api/version`
+
+Sem autenticação. Serve para um `curl` descobrir qual binário está no ar.
+
+```bash
+curl -s $RP/api/version
+```
+
+```text
+rustployd 0.1.1 (7934ee8)
+```
+
+A resposta é `rustployd <versão> (<commit>)`, em texto puro.
+
+## `POST /api/login`
+
+Troca o [token de conexão](/instalacao/primeiro-acesso/) (o base64 de `host:porta::token`) pelo
+token da API. Os clientes de IA usam esta rota. Quem já tem o token da API não precisa dela.
+
+```bash
+curl -s $RP/api/login -d '{"key":"<token de conexão>"}'
+```
+
+O corpo é `{"key": "..."}`; o token de conexão cru, sem JSON, também é aceito.
+
+```json
+{
+  "access_token": "…",
+  "token_type": "Bearer",
+  "server": "https://SERVIDOR:9797",
+  "ai_agent": { "mcp": "https://SERVIDOR:9797/mcp", "manual": "https://SERVIDOR:9797/api/agent/manual" }
+}
+```
+
+| Status | Quando |
+|---|---|
+| `200` | o token de conexão confere. `server` leva `https` se `[api].domain` está definido, senão `http` |
+| `400` | o token está malformado. O corpo diz qual parte falhou (`not_base64`, e outros códigos) e traz o formato esperado |
+| `401` | o token está bem formado, mas é de **outra instalação** (`invalid_key`) |
+
+## `POST /api/rpc`
+
+É a rota principal. O corpo é **um comando** em JSON, e a resposta é **a resposta do comando**
+em JSON. Os dois usam o formato *externally tagged* do Serde: o nome da variante é a chave do
+objeto. Comandos sem campos são só uma string.
+
+```bash
+# comando sem campos
+curl -s -H "Authorization: Bearer $TOKEN" $RP/api/rpc -d '"Ping"'
+
+# comando com campos
+curl -s -H "Authorization: Bearer $TOKEN" $RP/api/rpc \
+  -d '{"ServiceList":{"project_id":"prj_…"}}'
+```
+
+A lista completa de comandos, com o JSON de cada um, está em
+[Comandos](/referencia/comandos/); as respostas, em [Respostas](/referencia/respostas/).
+
+| Status | Quando |
+|---|---|
+| `200` | o comando **rodou**. O resultado está no corpo, inclusive quando é um erro de negócio (`Err`) |
+| `400` | o corpo não é um comando válido (`comando inválido: …` e o motivo do Serde) |
+| `401` | token ausente ou errado |
+
+<Aside type="caution" title="Um comando que falha também volta com 200">
+  Erro de negócio (serviço inexistente, nome repetido, Docker indisponível) vem como
+  `{"Err":{"code":"…","message":"…"}}`, **não** como status HTTP de erro. Quem automatiza precisa
+  olhar o corpo, não só o status.
+</Aside>
+
+## `GET /api/events`
+
+Stream **SSE** do painel inteiro. Ao conectar, o daemon manda um **snapshot** na hora, depois
+outro **a cada 2 segundos**, e cada **evento** assim que acontece.
+
+```bash
+curl -N -H "Authorization: Bearer $TOKEN" $RP/api/events
+```
+
+Cada registro é um bloco `event: …` e `data: …` separados por uma linha em branco. O `data` é
+JSON e traz um campo **`kind`**, porque alguns clientes só enxergam o `data`:
+
+| `kind` | O que é |
+|---|---|
+| `snapshot` | o estado completo do painel (abaixo) |
+| `bus` | um evento: `{"kind":"bus","event":{…}}`. Os eventos estão em [Eventos](/referencia/eventos/) |
+
+O **snapshot** traz estas chaves: `status` (o `DaemonStatus`), `deployments` (os 40 mais
+recentes), `projects` (cada um com a lista dos nomes de `secrets`, nunca os valores),
+`services` (cada um com os `containers` em execução), `docker_images`, `docker_volumes`,
+`docker_networks`, `docker_containers`, `jobs`, `engine` (a fila de deploys), `registry_status` e
+`registry_repos`.
+
+<Aside type="note">
+  Os **logs** (de container, de build e de job) **não** passam por `/api/events`: um serviço que
+  loga muito sufocaria o painel. Eles têm rotas próprias, abaixo.
+</Aside>
+
+O navegador não consegue usar o `EventSource` nativo aqui, porque ele não envia o header
+`Authorization`: leia o stream com `fetch` e `ReadableStream`.
+
+## Logs por SSE
+
+Três rotas, mesma ideia: um stream só dos logs de **um** objeto, consumido pelas janelas de log.
+
+| Rota | O que entrega |
+|---|---|
+| `GET /api/services/<id>/logs` | linhas de log do container do serviço |
+| `GET /api/deployments/<id>/build-logs` | a saída do `docker build` de um deploy |
+| `GET /api/jobs/runs/<id>/logs` | a saída de uma execução de job |
+
+```bash
+curl -N -H "Authorization: Bearer $TOKEN" $RP/api/services/svc_…/logs
+```
+
+As linhas chegam em **lotes** (`{"kind":"bus_batch","events":[…]}`), agrupadas a cada ~80 ms,
+com até 400 por lote. Cada evento é um `LogLine`, `BuildLog` ou `JobLogLine`: veja
+[Eventos](/referencia/eventos/).
+
+<Aside type="caution" title="O stream só entrega o que chega depois de conectar">
+  Estas rotas não repetem o histórico. O log de runtime é lido do Docker ao vivo e **não é
+  guardado**. Para ler um build log que já terminou, use o comando `GetBuildLogs` em
+  `/api/rpc`, ou a ferramenta `build_logs` do MCP, que pagina por cursor.
+</Aside>
+
+## `POST /api/services/<id>/archive`
+
+Envia o `.zip` de um serviço cuja origem é **Archive**. O corpo é **binário** (o zip), sem JSON.
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" \
+  -H "x-rustploy-filename: app.zip" \
+  --data-binary @app.zip $RP/api/services/svc_…/archive
+```
+
+| Detalhe | Valor |
+|---|---|
+| Header opcional | `x-rustploy-filename`: o nome original do arquivo, guardado na origem do serviço |
+| Conteúdo do zip | precisa ter um `Dockerfile` na raiz (senão, `Err` com `MissingDockerfile`) |
+| Tamanho máximo | **100 MiB** (acima disso, `413` com `zip excede 100 MiB`) |
+| Resposta | JSON como em `/api/rpc`: o serviço atualizado, ou um `Err` (`NotFound`, `MissingDockerfile`) |
+
+Depois do upload, dispare um deploy. Veja [Deploy a partir de zip](/guias/zip/).
+
+## `GET /api/access-key`
+
+Devolve o token de conexão deste servidor, para repassar o acesso:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" $RP/api/access-key
+```
+
+```json
+{ "key": "<token de conexão em base64>" }
+```
+
+## `GET /api/agent/manual`
+
+O manual do agente, em Markdown (`text/markdown`). É o mesmo texto das `instructions` do MCP e
+da página [Manual do agente](/agentes/manual/).
+
+## `POST /mcp`
+
+O servidor MCP, no transporte *Streamable HTTP*, sempre respondendo `application/json`. Só aceita
+`POST`: `GET` e `DELETE` devolvem `405 use POST /mcp`. Veja [Ferramentas do MCP](/agentes/ferramentas/)
+e [Conectar o Claude Code](/agentes/conectar-claude-code/).
+
+## `POST /webhook/<id>/<token>`
+
+Dispara um deploy do serviço `<id>`. **Não usa Bearer**: o segredo é o `<token>` da URL, gerado por
+serviço. Está feito para ser chamado por GitHub, GitLab, Gitea, Docker Hub e CI.
+
+```bash
+curl -s -X POST $RP/webhook/svc_…/<token>
+```
+
+| Status | Corpo | Quando |
+|---|---|---|
+| `200` | `deploy triggered` | o deploy foi enfileirado |
+| `200` | `skipped: branch mismatch` | o payload é de um push em outra branch que a configurada no serviço |
+| `401` | `invalid token` | token errado, ou o serviço não tem webhook |
+| `404` | `not found` | a URL não tem o formato `/webhook/<id>/<token>` |
+| `405` | `method not allowed` | o método não é `POST` |
+
+O corpo da requisição é **ignorado**, exceto para o filtro de branch: num payload de push com
+`"ref": "refs/heads/<branch>"`, um serviço Git com branch configurada só faz deploy se a branch
+conferir. Qualquer outro corpo (Docker Hub, `curl` sem corpo) dispara o deploy. Receitas por
+provedor, em [Webhooks de deploy](/guias/webhooks/).
+
+## `GET /oauth/gitea/callback` e `GET /oauth/github/callback`
+
+O endereço para onde o provedor devolve o navegador no fim do fluxo OAuth2 de
+**Settings → Git**. Você não chama estas rotas à mão: cadastre
+`https://SERVIDOR:9797/oauth/<provedor>/callback` como *redirect URI* no aplicativo OAuth do
+provedor. A rota valida o `state` (proteção CSRF) e conclui a conexão. Veja
+[Settings → Git](/interface/configuracoes/#git).
+
+## Limitações
+
+- **Sem versão na URL.** A API não tem `/v1`. O formato dos comandos acompanha a versão do
+  daemon: confira `GET /api/version` e a [referência de comandos](/referencia/comandos/) da
+  versão que você usa.
+- **Sem esquema formal.** Não há OpenAPI nem JSON Schema do protocolo. A referência de comandos
+  é gerada do código.
+- **Sem escopo de token.** Um único token de administrador.
+- **Sem limite de taxa.** Proteja a porta com firewall ou VPN.
+
+## Próximos passos
+
+- [Comandos](/referencia/comandos/), [Respostas](/referencia/respostas/) e [Eventos](/referencia/eventos/).
+- [Ferramentas do MCP](/agentes/ferramentas/): os mesmos recursos, já resolvidos para um agente.
+- [Segurança do servidor](/operacao/seguranca-do-servidor/).
