@@ -62,11 +62,13 @@ Cada parte do Rustploy se instala com **um comando**. Escolha o que você quer i
   </TabItem>
 </Tabs>
 
-<Aside type="caution" title="Enquanto não houver uma release publicada">
-  Os comandos acima baixam os pacotes da **última release** do repositório no GitHub. Se ainda não existir
-  nenhuma, o instalador **avisa e não instala nada**, e indica o `cargo install` como alternativa. Veja
-  [Instalar o daemon na VPS](/instalacao/instalar-daemon/) e
-  [Instalar os clientes](/instalacao/instalar-clientes/).
+<Aside type="note" title="De onde vêm os pacotes">
+  Os comandos baixam os pacotes da **última release** em
+  [github.com/antoniofernandodj/rustploy/releases](https://github.com/antoniofernandodj/rustploy/releases): o `.deb` do
+  daemon (amd64 e arm64), o `.deb` do app (amd64), o zip do Windows e o `checksums.sha256`. A primeira release é a
+  `v0.1.1`. Se o GitHub estiver inacessível para a sua máquina, veja
+  [Instalar o daemon na VPS](/instalacao/instalar-daemon/) e [Instalar os clientes](/instalacao/instalar-clientes/)
+  para os caminhos alternativos (`cargo install` e compilar o pacote).
 </Aside>
 
 ## O que cada comando faz

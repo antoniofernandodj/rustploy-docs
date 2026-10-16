@@ -62,11 +62,13 @@ Each part of Rustploy installs with **one command**. Pick what you want to insta
   </TabItem>
 </Tabs>
 
-<Aside type="caution" title="Until a release is published">
-  The commands above download the packages from the repository's **latest release** on GitHub. If there is none
-  yet, the installer **warns and installs nothing**, and points to `cargo install` as an alternative. See
-  [Install the daemon on the VPS](/en/instalacao/instalar-daemon/) and
-  [Install the clients](/en/instalacao/instalar-clientes/).
+<Aside type="note" title="Where the packages come from">
+  The commands download the packages from the **latest release** at
+  [github.com/antoniofernandodj/rustploy/releases](https://github.com/antoniofernandodj/rustploy/releases): the daemon
+  `.deb` (amd64 and arm64), the app `.deb` (amd64), the Windows zip and `checksums.sha256`. The first release is
+  `v0.1.1`. If GitHub is not reachable from your machine, see
+  [Install the daemon on the VPS](/en/instalacao/instalar-daemon/) and [Install the clients](/en/instalacao/instalar-clientes/)
+  for the alternative paths (`cargo install` and building the package).
 </Aside>
 
 ## What each command does
