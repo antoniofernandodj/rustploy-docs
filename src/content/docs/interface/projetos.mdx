@@ -9,6 +9,7 @@ import projects from '../../../assets/ui/projects.png';
 import novoProjeto from '../../../assets/ui/novo-projeto.png';
 import variaveis from '../../../assets/ui/variaveis.png';
 import variaveisEditando from '../../../assets/ui/variaveis-editando.png';
+import confirmarRemover from '../../../assets/ui/confirmar-remover-servico.png';
 
 Um [projeto](/conceitos/projeto/) agrupa serviços numa rede própria. A tela
 **Projects** (menu lateral, grupo **MANAGEMENT**) lista todos.
@@ -72,8 +73,16 @@ healthcheck e os logs. Os botões do cartão:
 | Botão | Efeito |
 |---|---|
 | **■** | **para** o serviço (pede confirmação; o tráfego é interrompido até um novo deploy) |
-| **×** (vermelho) | remove o serviço |
-| **⇪** | exporta o serviço para recriá-lo em outro servidor ([copiar serviço](/guias/infra-as-code/)) |
+| **×** (vermelho) | **para e remove** o serviço, depois de pedir confirmação (veja abaixo) |
+| **⇪** | exporta o serviço para recriá-lo em outro servidor ([copiar serviço](/guias/copiar-servico/)) |
+
+<Shot
+  src={confirmarRemover}
+  alt="Diálogo Parar e remover serviço, com o texto O serviço será parado e removido, essa ação não pode ser desfeita, e os botões Cancelar e Remover."
+  caption="A confirmação do botão ×. Remover não tem volta."
+/>
+
+O diálogo diz *"O serviço será parado e removido. Essa ação não pode ser desfeita."* **Cancelar** não faz nada; **Remover** para o container e apaga o serviço e o histórico dele.
 
 ## Variáveis do projeto
 

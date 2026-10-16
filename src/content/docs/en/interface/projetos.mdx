@@ -9,6 +9,7 @@ import projects from '../../../../assets/ui/projects.png';
 import novoProjeto from '../../../../assets/ui/novo-projeto.png';
 import variaveis from '../../../../assets/ui/variaveis.png';
 import variaveisEditando from '../../../../assets/ui/variaveis-editando.png';
+import confirmarRemover from '../../../../assets/ui/confirmar-remover-servico.png';
 
 A [project](/en/conceitos/projeto/) groups services on a network of their own. The **Projects** screen (side menu, **MANAGEMENT**
 group) lists them all.
@@ -68,8 +69,16 @@ The number in parentheses is each tab's item count.
 | Button | Effect |
 |---|---|
 | **■** | **stops** the service (asks for confirmation; traffic is interrupted until a new deploy) |
-| **×** (red) | removes the service |
-| **⇪** | exports the service to recreate it on another server ([copy a service](/en/guias/infra-as-code/)) |
+| **×** (red) | **stops and removes** the service, after asking for confirmation (see below) |
+| **⇪** | exports the service to recreate it on another server ([copy a service](/en/guias/copiar-servico/)) |
+
+<Shot
+  src={confirmarRemover}
+  alt="The Stop and remove service dialog, with the text The service will be stopped and removed, this action cannot be undone, and the Cancelar and Remover buttons."
+  caption="The confirmation of the × button. Removing cannot be undone."
+/>
+
+The dialog says *"O serviço será parado e removido. Essa ação não pode ser desfeita."* (the service will be stopped and removed; this action cannot be undone). **Cancelar** (Cancel) does nothing; **Remover** (Remove) stops the container and deletes the service and its history.
 
 ## Project variables
 
