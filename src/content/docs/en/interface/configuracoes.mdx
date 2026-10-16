@@ -5,6 +5,10 @@ description: The four Settings tabs of the Rustploy desktop app - Web Server (AP
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
+import iacWebInicial from '../../../../assets/ui/webui-iac-inicial.png';
+import iacWebExportar from '../../../../assets/ui/webui-iac-exportar.png';
+import iacWebImportar from '../../../../assets/ui/webui-iac-importar.png';
+import iacWebResultado from '../../../../assets/ui/webui-iac-resultado.png';
 import web from '../../../../assets/ui/settings-web-server.png';
 import git from '../../../../assets/ui/settings-git.png';
 import gitOauth from '../../../../assets/ui/settings-git-oauth.png';
@@ -86,6 +90,30 @@ Details and the use in services: [Deploy from a Git repository](/en/guias/git/).
 | **Importar de um .zip…** (Import from a .zip) | reads a `.zip` of the same format, with **exactly one** `.yml` and one `.toml` at the root |
 
 In the [web UI](/en/interface/web-ui/) the tab is the same: **Exportar para um .zip…** downloads the file through the browser (`rustploy-infra.zip`) and shows the two texts to check or copy, and the import accepts the `.zip` through the file picker **or** pasted text. In both interfaces the app **asks for confirmation** before applying.
+
+<Shot
+  src={iacWebInicial}
+  alt="The Infrastructure as Code tab of the web UI, with the Export and Import blocks, the prune and trigger-deploy options and the .zip file picker."
+  caption="The Infrastructure as Code tab in the web UI."
+/>
+
+<Shot
+  src={iacWebExportar}
+  alt="The web UI Infrastructure as Code tab after exporting, with the downloaded-file notice and the rustploy.yml and rustploy.vars.toml texts to copy."
+  caption="After exporting: the zip is downloaded and the two texts are shown (sample data)."
+/>
+
+<Shot
+  src={iacWebImportar}
+  alt="The web UI import block with prune ticked, the loaded zip name and the text fields with the YAML and the TOML."
+  caption="Import: the chosen zip fills the text fields (sample data)."
+/>
+
+<Shot
+  src={iacWebResultado}
+  alt="Result of an import in the web UI, with the Updated, Unchanged and Deleted actions and the line for services removed by prune."
+  caption="The result lists each action and the services removed by prune (sample data)."
+/>
 
 Import options:
 

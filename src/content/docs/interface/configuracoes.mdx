@@ -5,6 +5,10 @@ description: As quatro abas de Settings do app desktop do Rustploy - Web Server 
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
+import iacWebInicial from '../../../assets/ui/webui-iac-inicial.png';
+import iacWebExportar from '../../../assets/ui/webui-iac-exportar.png';
+import iacWebImportar from '../../../assets/ui/webui-iac-importar.png';
+import iacWebResultado from '../../../assets/ui/webui-iac-resultado.png';
 import web from '../../../assets/ui/settings-web-server.png';
 import git from '../../../assets/ui/settings-git.png';
 import gitOauth from '../../../assets/ui/settings-git-oauth.png';
@@ -90,6 +94,30 @@ Detalhes e o uso nos serviços: [Fazer deploy a partir de Git](/guias/git/).
 Na [web UI](/interface/web-ui/) a aba é a mesma: **Exportar para um .zip…** baixa o arquivo pelo
 navegador (`rustploy-infra.zip`) e mostra os dois textos para conferir ou copiar, e a importação aceita o `.zip` pelo
 seletor de arquivo **ou** o texto colado. Nas duas interfaces o app **pede confirmação** antes de aplicar.
+
+<Shot
+  src={iacWebInicial}
+  alt="Aba Infra as Code da web UI, com os blocos Exportar e Importar, as opções prune e disparar deploy e o seletor de arquivo .zip."
+  caption="A aba Infra as Code na web UI."
+/>
+
+<Shot
+  src={iacWebExportar}
+  alt="Aba Infra as Code da web UI depois de exportar, com o aviso de arquivo baixado e os textos de rustploy.yml e rustploy.vars.toml para copiar."
+  caption="Depois de exportar: o zip é baixado e os dois textos ficam à mostra (dados de exemplo)."
+/>
+
+<Shot
+  src={iacWebImportar}
+  alt="Bloco de importação da web UI com a opção prune marcada, o nome do zip carregado e os campos de texto com o YAML e o TOML."
+  caption="Importar: o zip escolhido preenche os campos de texto (dados de exemplo)."
+/>
+
+<Shot
+  src={iacWebResultado}
+  alt="Resultado de uma importação na web UI, com as ações Updated, Unchanged e Deleted e a linha dos serviços removidos pelo prune."
+  caption="O resultado lista cada ação e os serviços removidos pelo prune (dados de exemplo)."
+/>
 
 Opções da importação:
 
