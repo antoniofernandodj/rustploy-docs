@@ -14,13 +14,14 @@ description: What the VPS needs to run Rustploy - Linux with systemd, Docker Eng
 
 ## Compatible systems (glibc)
 
-The daemon and desktop app `.deb` packages require **glibc 2.34 or newer** (`libc6 (>= 2.34)`). glibc already ships with
-every Debian and Ubuntu, so you install nothing: the system's version just has to be equal or higher. If it is not,
+The daemon `.deb` requires **glibc 2.34 or newer** (`libc6 (>= 2.34)`) and the desktop app's, **2.35** (`libc6 (>= 2.35)`).
+glibc already ships with every Debian and Ubuntu, so you install nothing: the system's version just has to be equal or
+higher. If it is not,
 the installer refuses **before downloading**, and `apt` would refuse the installation too.
 
 | System | glibc | Supported |
 |---|---|---|
-| Debian 11 (bullseye) | 2.31 | **no** |
+| Debian 11 (bullseye) | 2.31 | **no** (neither) |
 | Debian 12 (bookworm), current Raspberry Pi OS | 2.36 | yes |
 | Debian 13 (trixie) | 2.41 | yes |
 | Ubuntu 20.04 | 2.31 | **no** |
