@@ -5,6 +5,9 @@ description: A tour of a service's screen in the Rustploy desktop app - the Depl
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
+import envAba from '../../../../assets/ui/servico-environment.png';
+import logsAba from '../../../../assets/ui/servico-logs.png';
+import buildAba from '../../../../assets/ui/servico-deployments-build.png';
 import dbLista from '../../../../assets/ui/servico-databases-lista.png';
 import dbNovo from '../../../../assets/ui/servico-databases-novo.png';
 import migrar from '../../../../assets/ui/servico-migrar.png';
@@ -128,6 +131,12 @@ string you put in `DATABASE_URL`.
 
 ### Environment
 
+<Shot
+  src={envAba}
+  alt="A service's Environment tab with the variable counter, the Exportar and .env buttons, the KEY and value fields, the Adicionar button and the variable list with the values blurred."
+  caption="The Environment tab (the variable values are blurred)."
+/>
+
 The **service's** variables, in the same format as the [project variables](/en/interface/projetos/#project-variables): **KEY** and
 **value**, **Adicionar** (Add), **✕** to remove, the **.env** button to edit as text and **Exportar**. The count appears as *"N
 variável(eis)"* (N variable(s)). The service's own **take precedence** over the project's. Full rules in
@@ -159,6 +168,12 @@ here, with **Copiar** and **Regenerar**. See [Deploy webhooks](/en/guias/webhook
 Empty, it shows *"Nenhum deploy ainda."* (No deploys yet.) The cause of a failed deploy is in the build log: see
 [The lifecycle of a deploy](/en/conceitos/ciclo-de-vida/#where-the-cause-is).
 
+<Shot
+  src={buildAba}
+  alt="The Deployments tab with the list of deploys and, over it, the Build logs window of a deploy, with the docker compose up lines."
+  caption="A deploy's ≡ button opens the build log in a window (identifiers blurred)."
+/>
+
 ### Logs
 
 The **Abrir logs em janela** (Open logs in a window) button opens the container's **runtime logs** in a window of their own, isolated
@@ -166,6 +181,12 @@ from the rest of the app, so the interface does not freeze under heavy volume. T
 (**Logs de runtime**). The build log opens from the **Deployments** tab. Both windows are in [Log windows](/en/interface/logs/).
 
 The runtime log is read from Docker **live** and **is not stored**: when a deploy swaps the container, the old log goes with it.
+
+<Shot
+  src={logsAba}
+  alt="The service's Logs tab with the Abrir logs em janela button and, over it, the service Logs window with the live log lines."
+  caption="The Logs tab: the button opens the runtime logs in a window of their own."
+/>
 
 ### Migrar (Migrate)
 

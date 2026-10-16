@@ -5,6 +5,9 @@ description: Tour da tela de um serviço no app desktop do Rustploy - botões De
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
+import envAba from '../../../assets/ui/servico-environment.png';
+import logsAba from '../../../assets/ui/servico-logs.png';
+import buildAba from '../../../assets/ui/servico-deployments-build.png';
 import dbLista from '../../../assets/ui/servico-databases-lista.png';
 import dbNovo from '../../../assets/ui/servico-databases-novo.png';
 import migrar from '../../../assets/ui/servico-migrar.png';
@@ -134,6 +137,12 @@ Abaixo, **CONTAINERS (N)** lista os containers em execução do serviço. Para b
 
 ### Environment
 
+<Shot
+  src={envAba}
+  alt="Aba Environment de um serviço com o contador de variáveis, os botões Exportar e .env, os campos KEY e value, o botão Adicionar e a lista de variáveis com os valores borrados."
+  caption="Aba Environment (os valores das variáveis estão borrados)."
+/>
+
 As variáveis **do serviço**, no mesmo formato das [variáveis do projeto](/interface/projetos/#variáveis-do-projeto):
 **KEY** e **value**, **Adicionar**, **✕** para remover, o botão **.env** para editar em
 texto e **Exportar**. A contagem aparece como *"N variável(eis)"*. As do serviço
@@ -167,6 +176,12 @@ Em cada linha:
 Vazia, mostra *"Nenhum deploy ainda."* A causa de um deploy que falhou está no build log:
 veja [O ciclo de vida de um deploy](/conceitos/ciclo-de-vida/#onde-está-a-causa).
 
+<Shot
+  src={buildAba}
+  alt="Aba Deployments com a lista de deploys e, sobre ela, a janela Build logs de um deploy, com as linhas do docker compose up."
+  caption="O botão ≡ de um deploy abre o build log numa janela (identificadores borrados)."
+/>
+
 ### Logs
 
 O botão **Abrir logs em janela** abre os **logs de runtime** do container numa janela
@@ -176,6 +191,12 @@ aba **Deployments**. As duas janelas estão em [Janelas de logs](/interface/logs
 
 O log de runtime é lido do Docker **ao vivo** e **não é guardado**: quando o container é
 trocado por um deploy, o log antigo vai junto.
+
+<Shot
+  src={logsAba}
+  alt="Aba Logs do serviço com o botão Abrir logs em janela e, sobre ela, a janela Logs do serviço com as linhas de log ao vivo."
+  caption="Aba Logs: o botão abre os logs de runtime numa janela própria."
+/>
 
 ### Migrar
 

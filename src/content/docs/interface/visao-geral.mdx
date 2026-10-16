@@ -5,6 +5,7 @@ description: Como é a janela do app desktop do Rustploy - barra superior, menu 
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
+import bandeja from '../../../assets/ui/bandeja-menu.png';
 import deployments from '../../../assets/ui/deployments.png';
 
 O app desktop do Rustploy (Linux e Windows) mostra o **mesmo servidor** que a
@@ -82,3 +83,15 @@ afetados. A ação é **irreversível** e pede confirmação.
 O app avisa quando um deploy termina, inclusive com a janela fechada: fechar a
 última janela **recolhe o app para a bandeja do sistema** em vez de encerrá-lo, e a
 conexão com o servidor continua viva. Para abrir de novo, use o ícone da bandeja.
+
+<Shot
+  src={bandeja}
+  alt="Menu do ícone do Rustploy na bandeja do sistema, com as opções Open Rustploy, Notifications marcada e Quit Rustploy."
+  caption="O menu do ícone da bandeja (aqui no KDE; o visual muda com o ambiente)."
+/>
+
+| Item do menu | Efeito |
+|---|---|
+| **Open Rustploy** | abre a janela principal de novo |
+| **Notifications** | liga ou desliga os avisos de fim de deploy. Marcado, o app avisa |
+| **Quit Rustploy** | **encerra** o app e a conexão com o servidor. Fechar a janela só recolhe para a bandeja |

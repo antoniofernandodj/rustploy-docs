@@ -5,6 +5,7 @@ description: What the Rustploy desktop app window looks like - top bar, side men
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
+import bandeja from '../../../../assets/ui/bandeja-menu.png';
 import deployments from '../../../../assets/ui/deployments.png';
 
 The Rustploy desktop app (Linux and Windows) shows the **same server** as the
@@ -84,3 +85,15 @@ asks for confirmation.
 
 The app tells you when a deploy finishes, even with the window closed: closing the last window **minimizes the app to the
 system tray** instead of quitting, and the connection to the server stays alive. To open it again, use the tray icon.
+
+<Shot
+  src={bandeja}
+  alt="The Rustploy tray icon menu with the Open Rustploy, Notifications (ticked) and Quit Rustploy options."
+  caption="The tray icon menu (here on KDE; the look changes with the desktop environment)."
+/>
+
+| Menu item | Effect |
+|---|---|
+| **Open Rustploy** | opens the main window again |
+| **Notifications** | turns the deploy-finished notices on or off. Ticked, the app notifies |
+| **Quit Rustploy** | **quits** the app and the connection to the server. Closing the window only collapses it to the tray |
