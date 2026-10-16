@@ -5,6 +5,7 @@ description: The desktop app's Schedules screen in Rustploy and the New job wind
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
+import jobsMenu from '../../../../assets/ui/jobs-menu-acoes.png';
 import schedules from '../../../../assets/ui/schedules-novo-job.png';
 import compose from '../../../../assets/ui/novo-job-compose.png';
 import git from '../../../../assets/ui/novo-job-git.png';
@@ -94,9 +95,28 @@ every run**.
 
 Click **Criar job** (Create job). **‹ Voltar** goes back to the previous step.
 
+## A job's ⋯ menu
+
+<Shot
+  src={jobsMenu}
+  alt="A job's actions panel open over a project's job list, with the job name, the warm state and the Rodar agora, Aquecer, Ver logs, Pausar, Editar and Remover actions."
+  caption="The panel from the ⋯ button (the job and project names are blurred)."
+/>
+
+The **⋯** button at the end of the row opens a panel with the job name, the warm-up state (*quente*,
+"warm", and *aquecido em*, "warmed at", with date and time) and the actions:
+
+| Action | Effect |
+|---|---|
+| **▶ Rodar agora** (Run now) | runs right away, outside the schedule. With a run in progress, it becomes **■ Cancelar execução** (Cancel run) |
+| **◐ Aquecer** (Warm up) | pulls the images and builds the build cache **without running** the job |
+| **≡ Ver logs** (View logs) | the output (stdout and stderr) of the runs |
+| **‖ Pausar** (Pause) | suspends the schedule. With the job paused, the button becomes **Ativar** (Enable) |
+| **✎ Editar** (Edit) | opens the job to change it |
+| **✕ Remover** (Remove) | deletes the job **right away, without asking for confirmation** |
+
 ## After creating
 
-- **Rodar agora** runs it immediately; **Ver logs** shows the output; **Cancelar execução** interrupts.
 - If the job uses large images or a build, use **Aquecer** before the first run.
 - To run the job **before every deploy**, add it to the service's pre-deploy queue: see
   [Domains, healthcheck and advanced options](/en/interface/servico-configuracao/#the-pre-deploy-queue).

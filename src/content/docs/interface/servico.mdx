@@ -5,6 +5,9 @@ description: Tour da tela de um serviço no app desktop do Rustploy - botões De
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
+import dbLista from '../../../assets/ui/servico-databases-lista.png';
+import dbNovo from '../../../assets/ui/servico-databases-novo.png';
+import migrar from '../../../assets/ui/servico-migrar.png';
 import db from '../../../assets/ui/servico-db-geral.png';
 import git from '../../../assets/ui/servico-geral-git.png';
 import connection from '../../../assets/ui/servico-connection.png';
@@ -58,7 +61,7 @@ As abas dependem do tipo de serviço. Um serviço **Application** tem **General*
 um [servidor compartilhado](/guias/migrar-banco/)). Um servidor de banco compartilhado tem a aba
 **Databases**.
 
-Esta página cobre as cinco primeiras. **Domains**, **Healthcheck** e **Advanced** estão em
+Esta página cobre **General**, **Connection**, **Environment**, **Deployments**, **Logs**, **Migrar** e **Databases**. **Domains**, **Healthcheck** e **Advanced** estão em
 [Configurar domínios, healthcheck e opções avançadas](/interface/servico-configuracao/).
 
 ### General
@@ -173,3 +176,62 @@ aba **Deployments**. As duas janelas estão em [Janelas de logs](/interface/logs
 
 O log de runtime é lido do Docker **ao vivo** e **não é guardado**: quando o container é
 trocado por um deploy, o log antigo vai junto.
+
+### Migrar
+
+<Shot
+  src={migrar}
+  alt="Aba Migrar de um serviço de banco, com os campos database de origem, destino, env var a trocar e os botões Migrar e Atualizar."
+  caption="Aba Migrar de um banco que roda dentro de um projeto."
+/>
+
+A aba existe em **bancos e stacks Compose**. Ela leva os dados de um database que vive **dentro deste
+banco** para um database de um [servidor compartilhado](/guias/banco-compartilhado/).
+
+<Aside type="caution" title="A migração é com parada">
+  Os serviços que usam este banco ficam **fora do ar** durante a cópia. Crie antes o database de
+  destino no servidor compartilhado (na aba **Databases** de lá), marcando **"Não mexer em env var"**.
+  O destino precisa ser do **mesmo motor** e do **mesmo projeto**.
+</Aside>
+
+| Campo | O que é |
+|---|---|
+| **DATABASE DE ORIGEM** | o nome do database **dentro deste banco** (por exemplo, o nome do projeto) |
+| **DESTINO** | o database criado no servidor compartilhado, escolhido numa lista |
+| **ENV VAR A TROCAR** | a variável com a connection string. Em branco, vale `DATABASE_URL` ou `MONGODB_URI` |
+
+**Migrar** inicia o processo, que roda em segundo plano e mostra o andamento. **Atualizar** relê o
+estado, e é como você volta a acompanhar depois de sair da tela. Passo a passo, o que a migração faz,
+como voltar atrás e como descartar o banco antigo: veja [Migrar um banco](/guias/migrar-banco/).
+
+### Databases
+
+<Shot
+  src={dbLista}
+  alt="Aba Databases de um servidor de banco compartilhado, com a lista de databases, cada um apontando para o projeto consumidor e a variável de ambiente, e o início do formulário Novo database."
+  caption="Aba Databases de um servidor compartilhado: a lista (nomes borrados) e o formulário Novo database."
+/>
+
+A aba aparece em um **servidor de banco compartilhado**. Em **DATABASES (N)**, cada linha é um database com
+usuário próprio, **sem acesso aos demais**. Ela mostra o database, o projeto que o consome e a variável que
+recebe a connection string. O **×** vermelho **apaga o database e o usuário, com os dados**: não há como
+recuperar.
+
+<Shot
+  src={dbNovo}
+  alt="Formulário Novo database com os campos nome, projeto consumidor, env var, limite de conexões e timeout de query, as duas opções de env var e o botão Criar database."
+  caption="Formulário Novo database."
+/>
+
+| Campo | O que faz |
+|---|---|
+| **nome** | nome do database e do usuário: `a-z`, `0-9` e `_` |
+| **projeto consumidor** | o projeto que vai usar o database. Recebe a connection string numa variável |
+| **env var** | a variável que recebe a URL. Padrão: `DATABASE_URL` ou `MONGODB_URI` |
+| **limite de conexões** | opcional. Não vale no MongoDB |
+| **timeout de query** | opcional, em ms. Só no Postgres |
+| **Sobrescrever a env var se o projeto já a tiver** | sem isso, a criação é **recusada** se a variável já existir |
+| **Não mexer em env var (vou migrar os dados antes)** | cria o database sem tocar na aplicação: o primeiro passo de uma [migração](/guias/migrar-banco/) |
+
+Depois de **Criar database**, faça um novo deploy no projeto consumidor para a aplicação ler a variável.
+Tudo sobre isolamento, limites e conflitos está em [Banco compartilhado](/guias/banco-compartilhado/).

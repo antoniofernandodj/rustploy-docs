@@ -5,6 +5,9 @@ description: A tour of a service's screen in the Rustploy desktop app - the Depl
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
+import dbLista from '../../../../assets/ui/servico-databases-lista.png';
+import dbNovo from '../../../../assets/ui/servico-databases-novo.png';
+import migrar from '../../../../assets/ui/servico-migrar.png';
 import db from '../../../../assets/ui/servico-db-geral.png';
 import git from '../../../../assets/ui/servico-geral-git.png';
 import connection from '../../../../assets/ui/servico-connection.png';
@@ -54,7 +57,7 @@ The tabs depend on the service type. An **Application** service has **General**,
 **Deployments**, **Healthcheck**, **Logs** and **Advanced**. A database or **Compose** stack also gets **Migrar** (Migrate: move the
 data to a [shared server](/en/guias/migrar-banco/)). A shared database server has the **Databases** tab.
 
-This page covers the first five. **Domains**, **Healthcheck** and **Advanced** are in
+This page covers **General**, **Connection**, **Environment**, **Deployments**, **Logs**, **Migrar** and **Databases**. **Domains**, **Healthcheck** and **Advanced** are in
 [Domains, healthcheck and advanced options](/en/interface/servico-configuracao/).
 
 ### General
@@ -163,3 +166,62 @@ from the rest of the app, so the interface does not freeze under heavy volume. T
 (**Logs de runtime**). The build log opens from the **Deployments** tab. Both windows are in [Log windows](/en/interface/logs/).
 
 The runtime log is read from Docker **live** and **is not stored**: when a deploy swaps the container, the old log goes with it.
+
+### Migrar (Migrate)
+
+<Shot
+  src={migrar}
+  alt="The Migrar tab of a database service, with the source database, destination, env var to swap fields and the Migrar and Atualizar buttons."
+  caption="The Migrar tab of a database running inside a project."
+/>
+
+The tab exists on **databases and Compose stacks**. It moves the data of a database that lives **inside this
+database** to a database on a [shared server](/en/guias/banco-compartilhado/).
+
+<Aside type="caution" title="The migration stops the services">
+  The services that use this database are **down** during the copy. First create the destination
+  database on the shared server (in its **Databases** tab), ticking **"Não mexer em env var"** (leave
+  the env var alone). The destination must have the **same engine** and belong to the **same project**.
+</Aside>
+
+| Field | What it is |
+|---|---|
+| **DATABASE DE ORIGEM** (source database) | the name of the database **inside this database server** (for example, the project name) |
+| **DESTINO** (destination) | the database created on the shared server, chosen from a list |
+| **ENV VAR A TROCAR** (env var to swap) | the variable with the connection string. Blank means `DATABASE_URL` or `MONGODB_URI` |
+
+**Migrar** starts the process, which runs in the background and shows progress. **Atualizar** (Refresh) re-reads the
+state, and is how you pick it up again after leaving the screen. For the step by step, what the migration does,
+how to roll back and how to discard the old database, see [Migrate a database](/en/guias/migrar-banco/).
+
+### Databases
+
+<Shot
+  src={dbLista}
+  alt="The Databases tab of a shared database server, with the list of databases, each pointing to its consumer project and environment variable, and the start of the New database form."
+  caption="The Databases tab of a shared server: the list (names blurred) and the New database form."
+/>
+
+The tab appears on a **shared database server**. In **DATABASES (N)**, each row is a database with its own
+user, with **no access to the others**. It shows the database, the project that consumes it and the variable that
+receives the connection string. The red **×** **deletes the database and the user, with the data**: there is no way
+to recover it.
+
+<Shot
+  src={dbNovo}
+  alt="The New database form with the name, consumer project, env var, connection limit and query timeout fields, the two env var options and the Criar database button."
+  caption="The New database form."
+/>
+
+| Field | What it does |
+|---|---|
+| **nome** (name) | name of the database and the user: `a-z`, `0-9` and `_` |
+| **projeto consumidor** (consumer project) | the project that will use the database. It receives the connection string in a variable |
+| **env var** | the variable that receives the URL. Default: `DATABASE_URL` or `MONGODB_URI` |
+| **limite de conexões** (connection limit) | optional. Not valid on MongoDB |
+| **timeout de query** | optional, in ms. Postgres only |
+| **Sobrescrever a env var se o projeto já a tiver** (overwrite the env var if the project already has it) | without it, creation is **refused** if the variable already exists |
+| **Não mexer em env var (vou migrar os dados antes)** (leave the env var alone, I will migrate the data first) | creates the database without touching the application: the first step of a [migration](/en/guias/migrar-banco/) |
+
+After **Criar database** (Create database), redeploy the consumer project so the application reads the variable.
+Everything about isolation, limits and conflicts is in [Shared database](/en/guias/banco-compartilhado/).

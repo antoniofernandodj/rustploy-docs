@@ -5,6 +5,7 @@ description: A tela Schedules do app desktop do Rustploy e a janela Novo job - e
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
+import jobsMenu from '../../../assets/ui/jobs-menu-acoes.png';
 import schedules from '../../../assets/ui/schedules-novo-job.png';
 import compose from '../../../assets/ui/novo-job-compose.png';
 import git from '../../../assets/ui/novo-job-git.png';
@@ -95,9 +96,28 @@ execução**.
 
 Clique em **Criar job**. **‹ Voltar** retorna à etapa anterior.
 
+## O menu ⋯ de um job
+
+<Shot
+  src={jobsMenu}
+  alt="Painel de ações de um job aberto sobre a lista de jobs de um projeto, com o nome do job, o estado quente e as ações Rodar agora, Aquecer, Ver logs, Pausar, Editar e Remover."
+  caption="O painel do botão ⋯ (o nome do job e o do projeto estão borrados)."
+/>
+
+O botão **⋯** no fim da linha abre um painel com o nome do job, o estado de aquecimento (*quente*, e
+*aquecido em* data e hora) e as ações:
+
+| Ação | Efeito |
+|---|---|
+| **▶ Rodar agora** | executa já, fora do agendamento. Com uma execução em andamento, vira **■ Cancelar execução** |
+| **◐ Aquecer** | baixa as imagens e monta o cache de build **sem executar** o job |
+| **≡ Ver logs** | a saída (stdout e stderr) das execuções |
+| **‖ Pausar** | suspende o agendamento. Com o job pausado, o botão vira **Ativar** |
+| **✎ Editar** | abre o job para alterar |
+| **✕ Remover** | apaga o job **na hora, sem pedir confirmação** |
+
 ## Depois de criar
 
-- **Rodar agora** executa na hora; **Ver logs** mostra a saída; **Cancelar execução** interrompe.
 - Se o job usa imagens grandes ou um build, use **Aquecer** antes da primeira execução.
 - Para rodar o job **antes de cada deploy**, adicione-o à fila de pré-deploy do serviço: veja
   [Domínios, healthcheck e opções avançadas](/interface/servico-configuracao/#fila-de-pré-deploy).
