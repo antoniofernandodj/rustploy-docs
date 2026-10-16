@@ -6,11 +6,30 @@ description: What the VPS needs to run Rustploy - Linux with systemd, Docker Eng
 ## On the server
 
 - **Linux** with **systemd**. The daemon runs as a service.
-- **Docker Engine** reachable at `/var/run/docker.sock`. Rustploy does not install Docker.
+- **Docker Engine** reachable at `/var/run/docker.sock`. Rustploy does not install Docker (the `.deb` package pulls it in as a dependency, `docker.io` or `docker-ce`, if it is missing).
 - **x86_64** or **aarch64** architecture.
 - **1 vCPU and 1 GB of RAM** are enough for Rustploy itself; the rest is for your applications.
 - **git**, if any service uses the Git source (cloning uses the server's `git`).
 - (Optional) **ufw**, if you want Rustploy to open database and broker ports by itself.
+
+## Compatible systems (glibc)
+
+The daemon and desktop app `.deb` packages require **glibc 2.34 or newer** (`libc6 (>= 2.34)`). glibc already ships with
+every Debian and Ubuntu, so you install nothing: the system's version just has to be equal or higher. If it is not,
+the installer refuses **before downloading**, and `apt` would refuse the installation too.
+
+| System | glibc | Supported |
+|---|---|---|
+| Debian 11 (bullseye) | 2.31 | **no** |
+| Debian 12 (bookworm), current Raspberry Pi OS | 2.36 | yes |
+| Debian 13 (trixie) | 2.41 | yes |
+| Ubuntu 20.04 | 2.31 | **no** |
+| Ubuntu 22.04 and Linux Mint 21 | 2.35 | yes |
+| Ubuntu 24.04 | 2.39 | yes |
+| Alpine and other musl distributions | do not use glibc | **no** |
+
+To check yours: `getconf GNU_LIBC_VERSION`. The minimum version comes from where the binary is built (an Ubuntu 22.04):
+built against a newer glibc, it would only run on systems equal or newer.
 
 ## Network
 

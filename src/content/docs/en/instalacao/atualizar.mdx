@@ -5,7 +5,15 @@ description: How to update the Rustploy daemon and clients without losing data -
 
 ## Update the daemon
 
-Install the new `.deb` over the old one:
+The shortest way is to run the [install command](/en/instalacao/instalacao-rapida/) again, which downloads the latest
+release and installs it over the old one. It **keeps** `config.toml` (and the token) and changes nothing you already
+configured:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
+```
+
+Or, by hand, install the new `.deb` over the old one:
 
 ```bash
 sudo dpkg -i rustployd_<new-version>_*.deb
@@ -29,7 +37,7 @@ inspected in Docker; `Promoting` is completed. The proxy's route table is rebuil
 ## Update the clients
 
 - **Web UI**: it ships with the daemon. If the browser shows the old version, force a reload (`Ctrl+Shift+R`), because the files are served with a long cache.
-- **Desktop app**: install the new `.deb` or replace the portable zip's folder.
+- **Desktop app**: run the install command again (Linux: `… | sudo sh -s -- gui`; Windows: `irm … | iex`), install the new `.deb` or replace the portable zip's folder.
 
 :::tip
 Back up `/etc/rustploy/master.key` and `/var/lib/rustploy` before big updates. Without the master key,

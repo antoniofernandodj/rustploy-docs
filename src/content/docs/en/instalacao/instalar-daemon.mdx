@@ -5,12 +5,25 @@ description: How to install rustployd on a Debian or Ubuntu server from the .deb
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-The supported installation path today is the `rustployd` **`.deb`** package, for Debian, Ubuntu and
+The supported installation path is the `rustployd` **`.deb`** package, for Debian, Ubuntu and
 derivatives. It creates the `rustploy` user, installs the systemd service and starts the daemon.
 
-<Aside type="note" title="Releases and the install script">
-  The repository publishes binaries to *GitHub Releases* when a `v*` tag is created, and `install.sh`
-  downloads from there. Until a release is published, use the `.deb` below.
+## In one command
+
+On the VPS, as root:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
+```
+
+The installer downloads the `.deb` from the **latest GitHub release**, checks the SHA-256, installs it, generates a
+token, starts the service and prints the **connection token**. To allow access from outside the VPS, add `--remote`
+after `sh -s --`. All the details, the options and how to read the script before running it are in
+[Quick install](/en/instalacao/instalacao-rapida/).
+
+<Aside type="note" title="No release yet?">
+  If no release has been published, the installer warns and **installs nothing**. Use one of the paths below
+  (`cargo install` or the `.deb` built from the repository).
 </Aside>
 
 ## What the package installs
@@ -68,6 +81,12 @@ By default the API listens on `127.0.0.1:9797`, **with no token**. That is fine 
 itself, but it does not yet let any remote client in.
 
 ## Enable remote access
+
+<Aside type="tip" title="Already ran the one-line command?">
+  The installer already generated the token and wrote `[api]` to `config.toml`. With `--remote`, the API already
+  listens on `0.0.0.0:9797`: skip to step 4 (get the token) and 5 (firewall). Without `--remote`, run the command
+  again with the option.
+</Aside>
 
 <Steps>
 1. Generate a strong token:

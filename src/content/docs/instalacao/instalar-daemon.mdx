@@ -5,14 +5,26 @@ description: Como instalar o rustployd num servidor Debian ou Ubuntu a partir do
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-O caminho de instalação suportado hoje é o pacote **`.deb`** do `rustployd`,
+O caminho de instalação suportado é o pacote **`.deb`** do `rustployd`,
 para Debian, Ubuntu e derivados. Ele cria o usuário `rustploy`, instala o
 serviço systemd e sobe o daemon.
 
-<Aside type="note" title="Releases e script de instalação">
-  O repositório publica binários em *GitHub Releases* quando uma tag `v*` é
-  criada, e o `install.sh` baixa deles. Enquanto não houver uma release
-  publicada, use o `.deb` abaixo.
+## Em um comando
+
+Na VPS, como root:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
+```
+
+O instalador baixa o `.deb` da **última release do GitHub**, confere o SHA-256, instala, gera um token, sobe o
+serviço e mostra o **token de conexão**. Para liberar o acesso de fora da VPS, acrescente `--remote` depois de
+`sh -s --`. Todos os detalhes, as opções e como ler o script antes de rodar estão em
+[Instalação rápida](/instalacao/instalacao-rapida/).
+
+<Aside type="note" title="Ainda não há release?">
+  Se nenhuma release tiver sido publicada, o instalador avisa e **não instala nada**. Use um dos caminhos abaixo
+  (`cargo install` ou o `.deb` gerado a partir do repositório).
 </Aside>
 
 ## O que o pacote instala
@@ -71,6 +83,12 @@ Por padrão a API escuta em `127.0.0.1:9797`, **sem token**. Isso serve para
 testar na própria VPS, mas ainda não deixa nenhum cliente remoto entrar.
 
 ## Liberar o acesso remoto
+
+<Aside type="tip" title="Já fez o comando de uma linha?">
+  O instalador já gerou o token e gravou o `[api]` no `config.toml`. Com `--remote`, a API já escuta em
+  `0.0.0.0:9797`: pule para o passo 4 (pegar o token) e o 5 (firewall). Sem `--remote`, rode o comando de novo
+  com a opção.
+</Aside>
 
 <Steps>
 1. Gere um token forte:

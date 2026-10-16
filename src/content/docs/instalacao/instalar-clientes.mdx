@@ -24,6 +24,29 @@ web UI é um PWA: o navegador oferece instalá-la como aplicativo.
 Um aplicativo nativo, leve, com bandeja do sistema e notificação quando um
 deploy termina. Ele **não precisa estar na mesma máquina do daemon**.
 
+### Linux (um comando)
+
+Em Debian, Ubuntu ou derivados (amd64):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh -s -- gui
+```
+
+Baixa o `.deb` da última release, confere o SHA-256 e instala com `apt`. Depois abra **Rustploy** no menu de
+aplicativos ou rode `rustploy-gui`.
+
+### Windows (um comando)
+
+No PowerShell, sem administrador:
+
+```powershell
+irm https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.ps1 | iex
+```
+
+Baixa o zip portátil da última release, confere o SHA-256, instala em `%LOCALAPPDATA%\Rustploy` e cria o atalho no
+Menu Iniciar. As opções e o que fazer se ainda não houver release estão em
+[Instalação rápida](/instalacao/instalacao-rapida/).
+
 ### Pelo crates.io (Linux, Windows, macOS)
 
 Com a toolchain Rust instalada, o jeito mais curto:
@@ -33,7 +56,7 @@ cargo install rustploy-gui
 rustploy-gui
 ```
 
-### Linux (.deb)
+### Linux (.deb, gerando o pacote)
 
 Gere o pacote a partir do repositório e instale:
 
@@ -44,7 +67,7 @@ sudo dpkg -i dist/rustploy-gui_*.deb
 
 Depois abra **Rustploy** no menu de aplicativos ou rode `rustploy-gui`.
 
-### Windows (zip portátil)
+### Windows (zip portátil, gerando o pacote)
 
 O repositório gera um `.zip` portátil com `make rustploy-gui-windows-dist`
 (resultado em `dist/rustploy-gui-windows.zip`). Descompacte e execute o

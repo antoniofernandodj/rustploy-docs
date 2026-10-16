@@ -55,8 +55,8 @@ export const sections = [
       {
         q: { pt: 'Como instalo o Rustploy?', en: 'How do I install Rustploy?' },
         a: {
-          pt: 'O caminho suportado hoje é o pacote `.deb` do `rustployd`, para Debian, Ubuntu e derivados, gerado com `make deb-rustploy`. Ele cria o usuário `rustploy`, o serviço systemd e o helper de firewall. Veja [Instalar o daemon na VPS](/instalacao/instalar-daemon/). Não há GitHub Release publicada, então o `install.sh` ainda não funciona.',
-          en: 'The supported path today is the `rustployd` `.deb` package for Debian, Ubuntu and derivatives, built with `make deb-rustploy`. It creates the `rustploy` user, the systemd service and the firewall helper. See [Install the daemon on the VPS](/instalacao/instalar-daemon/). No GitHub Release has been published yet, so `install.sh` does not work.',
+          pt: 'Com um comando, na VPS Debian ou Ubuntu: `curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh`. Ele baixa o `.deb` do `rustployd` da última release do GitHub, confere o SHA-256, instala, gera um token e mostra o token de conexão. O pacote cria o usuário `rustploy`, o serviço systemd e o helper de firewall. Veja [Instalação rápida](/instalacao/instalacao-rapida/). Enquanto não houver release publicada, o instalador avisa e não instala nada: use o `.deb` gerado com `make deb-rustploy` ([Instalar o daemon na VPS](/instalacao/instalar-daemon/)).',
+          en: 'With one command, on a Debian or Ubuntu VPS: `curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh`. It downloads the `rustployd` `.deb` from the latest GitHub release, checks the SHA-256, installs it, generates a token and prints the connection token. The package creates the `rustploy` user, the systemd service and the firewall helper. See [Quick install](/en/instalacao/instalacao-rapida/). Until a release is published, the installer warns and installs nothing: use the `.deb` built with `make deb-rustploy` ([Install the daemon on the VPS](/en/instalacao/instalar-daemon/)).',
         },
       },
       {

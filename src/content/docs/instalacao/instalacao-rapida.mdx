@@ -1,0 +1,123 @@
+---
+title: Instalação rápida
+description: Um comando para instalar o daemon do Rustploy numa VPS Debian ou Ubuntu, o app desktop no Linux ou no Windows, e conectar um agente de IA. O instalador baixa a última release do GitHub e confere o SHA-256.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Cada parte do Rustploy se instala com **um comando**. Escolha o que você quer instalar:
+
+<Tabs>
+  <TabItem label="Servidor (VPS)">
+    Na VPS (Debian ou Ubuntu, amd64 ou arm64), como root:
+
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
+    ```
+
+    Para liberar o acesso de **fora da VPS** (GUI desktop, web UI e agentes), acrescente `--remote`:
+
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh -s -- --remote
+    ```
+
+    No fim, o instalador mostra o **token de conexão**. É ele que você cola nos clientes.
+  </TabItem>
+  <TabItem label="Desktop (Linux)">
+    Em Debian, Ubuntu ou derivados (amd64):
+
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh -s -- gui
+    ```
+
+    Depois abra **Rustploy** no menu de aplicativos, ou rode `rustploy-gui`.
+  </TabItem>
+  <TabItem label="Desktop (Windows)">
+    No PowerShell, **sem** administrador:
+
+    ```powershell
+    irm https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.ps1 | iex
+    ```
+
+    Depois abra **Rustploy** no Menu Iniciar.
+  </TabItem>
+  <TabItem label="Web UI">
+    Não há nada para instalar: o daemon já serve a interface. Abra no navegador:
+
+    ```text
+    http://IP_DA_VPS:9797
+    ```
+
+    e cole o token de conexão. Funciona depois de instalar o servidor com `--remote`.
+  </TabItem>
+  <TabItem label="Agente de IA (MCP)">
+    Com o Claude Code, registre o servidor (use o token da API, não o de conexão):
+
+    ```bash
+    claude mcp add --transport http --scope user rustploy https://IP_DA_VPS:9797/mcp \
+      --header "Authorization: Bearer <token da API>"
+    ```
+
+    Veja o [passo a passo](/agentes/conectar-claude-code/).
+  </TabItem>
+</Tabs>
+
+<Aside type="caution" title="Enquanto não houver uma release publicada">
+  Os comandos acima baixam os pacotes da **última release** do repositório no GitHub. Se ainda não existir
+  nenhuma, o instalador **avisa e não instala nada**, e indica o `cargo install` como alternativa. Veja
+  [Instalar o daemon na VPS](/instalacao/instalar-daemon/) e
+  [Instalar os clientes](/instalacao/instalar-clientes/).
+</Aside>
+
+## O que cada comando faz
+
+| Comando | O que faz |
+|---|---|
+| **Servidor** | baixa o `.deb` do `rustployd` da última release, **confere o SHA-256**, instala com `apt` (que traz o Docker, se faltar), instala o `git` se faltar, **gera um token forte**, grava o `[api]` no `config.toml`, sobe o serviço e **mostra o token de conexão** |
+| **Servidor com `--remote`** | o mesmo, mas a API escuta em `0.0.0.0:9797` (sem a opção, escuta só em `127.0.0.1`, e nada fica exposto à internet) |
+| **Desktop (Linux)** | baixa o `.deb` do app, confere o SHA-256 e instala com `apt` |
+| **Desktop (Windows)** | baixa o zip portátil, confere o SHA-256, instala em `%LOCALAPPDATA%\Rustploy` e cria o atalho no Menu Iniciar |
+
+## Antes de rodar um `curl | sh`
+
+Rodar um script direto da internet como root exige confiança. Se preferir, **baixe, leia e só então rode**:
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh
+less install.sh
+sudo sh install.sh
+```
+
+Para ver o que ele faria **sem instalar nada**, use `--dry-run`:
+
+```bash
+sh install.sh --dry-run
+```
+
+## Variantes
+
+| Quero | Faça |
+|---|---|
+| uma versão específica | `sudo sh install.sh --version v0.1.1` (ou `RUSTPLOY_VERSION=v0.1.1`) |
+| só conferir o que seria instalado | `sh install.sh --dry-run` |
+| atualizar | rode o mesmo comando de novo. O `config.toml` e os dados são mantidos |
+| instalar o desktop no Windows numa versão específica | `$env:RUSTPLOY_VERSION = 'v0.1.1'` antes do `irm … \| iex` |
+
+<Aside type="note" title="O que o instalador não faz">
+  Não abre portas no firewall nem configura HTTPS. Com `--remote`, o token trafega **sem cifra** até você
+  configurar um domínio: veja [Ligar o HTTPS](/instalacao/instalar-daemon/#ligar-o-https). Também não instala o
+  app no macOS: use `cargo install rustploy-gui`.
+</Aside>
+
+## Requisitos
+
+| Componente | Precisa de |
+|---|---|
+| Servidor | Debian 12+, Ubuntu 22.04+ ou derivado (**glibc 2.34 ou mais nova**, veja a [tabela](/instalacao/requisitos/#sistemas-compatíveis-glibc)), **amd64 ou arm64**, systemd, acesso root e `curl` |
+| Desktop (Linux) | Debian 12+, Ubuntu 22.04+ ou derivado (glibc 2.34+), **amd64** |
+| Desktop (Windows) | Windows 10 ou 11, 64 bits, PowerShell 5 ou mais novo |
+
+## Próximos passos
+
+1. [Primeiro acesso e token de conexão](/instalacao/primeiro-acesso/).
+2. [Seu primeiro deploy](/tutorial/primeiro-deploy/).

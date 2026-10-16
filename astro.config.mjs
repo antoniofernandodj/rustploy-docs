@@ -47,6 +47,7 @@ export default defineConfig({
         ]},
         { label: 'Instalação', translations: { en: 'Installation' }, items: [
           { slug: 'instalacao/requisitos' },
+          { slug: 'instalacao/instalacao-rapida' },
           { slug: 'instalacao/instalar-daemon' },
           { slug: 'instalacao/instalar-clientes' },
           { slug: 'instalacao/primeiro-acesso' },

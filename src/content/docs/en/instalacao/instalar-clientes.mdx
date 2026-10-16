@@ -24,6 +24,29 @@ browser offers to install it as an app.
 A native, light application, with a system tray icon and a notification when a deploy finishes. It
 **does not need to be on the same machine as the daemon**.
 
+### Linux (one command)
+
+On Debian, Ubuntu or derivatives (amd64):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh -s -- gui
+```
+
+Downloads the `.deb` from the latest release, checks the SHA-256 and installs it with `apt`. Then open
+**Rustploy** in the application menu or run `rustploy-gui`.
+
+### Windows (one command)
+
+In PowerShell, without administrator rights:
+
+```powershell
+irm https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.ps1 | iex
+```
+
+Downloads the portable zip from the latest release, checks the SHA-256, installs it in
+`%LOCALAPPDATA%\Rustploy` and creates the Start menu shortcut. The options and what to do if there is no release
+yet are in [Quick install](/en/instalacao/instalacao-rapida/).
+
 ### From crates.io (Linux, Windows, macOS)
 
 With the Rust toolchain installed, the shortest way:
@@ -33,7 +56,7 @@ cargo install rustploy-gui
 rustploy-gui
 ```
 
-### Linux (.deb)
+### Linux (.deb, building the package)
 
 Build the package from the repository and install it:
 
@@ -44,7 +67,7 @@ sudo dpkg -i dist/rustploy-gui_*.deb
 
 Then open **Rustploy** in the application menu or run `rustploy-gui`.
 
-### Windows (portable zip)
+### Windows (portable zip, building the package)
 
 The repository builds a portable `.zip` with `make rustploy-gui-windows-dist` (the result is
 `dist/rustploy-gui-windows.zip`). Unzip it and run `rustploy-gui.exe`.
