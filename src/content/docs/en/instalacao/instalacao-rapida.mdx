@@ -75,7 +75,7 @@ Each part of Rustploy installs with **one command**. Pick what you want to insta
 
 | Command | What it does |
 |---|---|
-| **Server** | downloads the `rustployd` `.deb` from the latest release, **checks the SHA-256**, installs it with `apt` (which brings Docker, if missing), installs `git` if missing, **generates a strong token**, writes `[api]` to `config.toml`, starts the service and **prints the connection token** |
+| **Server** | downloads the `rustployd` `.deb` from the latest release, **checks the SHA-256**, **installs the container engine if missing** (Docker Engine from Docker's official repository, or Podman with `--engine podman`), installs it with `apt`, installs `git` if missing, **generates a strong token**, writes `[api]` to `config.toml`, starts the service and **prints the connection token** |
 | **Server with `--remote`** | the same, but the API listens on `0.0.0.0:9797` (without the option it listens only on `127.0.0.1`, and nothing is exposed to the internet) |
 | **Desktop (Linux)** | downloads the app's `.deb`, checks the SHA-256 and installs it with `apt` |
 | **Desktop (Windows)** | downloads the portable zip, checks the SHA-256, installs it in `%LOCALAPPDATA%\Rustploy` and creates the Start menu shortcut |
@@ -103,6 +103,7 @@ sh install.sh --dry-run
 |---|---|
 | a specific version | `sudo sh install.sh --version v0.1.1` (or `RUSTPLOY_VERSION=v0.1.1`) |
 | just check what would be installed | `sh install.sh --dry-run` |
+| to use Podman instead of Docker | `sudo sh install.sh --engine podman` (or `RUSTPLOY_ENGINE=podman`). See [Docker or Podman](/instalacao/instalar-daemon/#choosing-the-container-engine-docker-or-podman) |
 | to update | run the same command again. `config.toml` and the data are kept |
 | the Windows desktop at a specific version | `$env:RUSTPLOY_VERSION = 'v0.1.1'` before the `irm … \| iex` |
 

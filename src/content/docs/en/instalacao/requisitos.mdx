@@ -1,12 +1,12 @@
 ---
 title: Requirements
-description: What the VPS needs to run Rustploy - Linux with systemd, Docker Engine, ports 80, 443 and 9797 open and a domain pointing at the server.
+description: What the VPS needs to run Rustploy - Linux with systemd, Docker Engine or Podman, ports 80, 443 and 9797 open and a domain pointing at the server.
 ---
 
 ## On the server
 
 - **Linux** with **systemd**. The daemon runs as a service.
-- **Docker Engine** reachable at `/var/run/docker.sock`. Rustploy does not install Docker (the `.deb` package pulls it in as a dependency, `docker.io` or `docker-ce`, if it is missing).
+- A **container engine**: **Docker Engine** (default, socket at `/var/run/docker.sock`) or **Podman** 4.7+ (socket at `/run/podman/podman.sock`). The installer (`install.sh`) installs the chosen engine if it is missing (`--engine docker` or `--engine podman`); see [Choosing the container engine](/instalacao/instalar-daemon/#choosing-the-container-engine-docker-or-podman).
 - **x86_64** or **aarch64** architecture.
 - **1 vCPU and 1 GB of RAM** are enough for Rustploy itself; the rest is for your applications.
 - **git**, if any service uses the Git source (cloning uses the server's `git`).

@@ -3,7 +3,7 @@ title: Instalar o daemon na VPS
 description: Como instalar o rustployd num servidor Debian ou Ubuntu a partir do pacote .deb, liberar o acesso remoto com um token e conferir que o serviço subiu.
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+import { Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
 O caminho de instalação suportado é o pacote **`.deb`** do `rustployd`,
 para Debian, Ubuntu e derivados. Ele cria o usuário `rustploy`, instala o
@@ -17,7 +17,8 @@ Na VPS, como root:
 curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
 ```
 
-O instalador baixa o `.deb` da **última release do GitHub**, confere o SHA-256, instala, gera um token, sobe o
+O instalador baixa o `.deb` da **última release do GitHub**, confere o SHA-256, instala o motor de containers
+(Docker, se faltar), instala, gera um token, sobe o
 serviço e mostra o **token de conexão**. Para liberar o acesso de fora da VPS, acrescente `--remote` depois de
 `sh -s --`. Todos os detalhes, as opções e como ler o script antes de rodar estão em
 [Instalação rápida](/instalacao/instalacao-rapida/).
@@ -25,6 +26,107 @@ serviço e mostra o **token de conexão**. Para liberar o acesso de fora da VPS,
 <Aside type="note" title="Prefere compilar, ou sem acesso ao GitHub?">
   Use um dos caminhos abaixo: `cargo install rustploy` (só o binário) ou o `.deb` gerado a partir do repositório
   (que cria o usuário, o serviço e o helper de firewall).
+</Aside>
+
+## Escolher o motor de containers: Docker ou Podman
+
+O rustploy não roda os containers sozinho: ele usa um **motor de containers**, o programa que de fato cria e
+executa cada serviço. Você escolhe com `--engine`, e **em qualquer dos dois o instalador instala o motor se ele
+faltar**:
+
+| | `--engine docker` (padrão) | `--engine podman` |
+|---|---|---|
+| Comando | `… \| sudo sh` | `… \| sudo sh -s -- --engine podman` |
+| O que instala | Docker Engine (`docker-ce`), pelo repositório oficial da Docker | Podman (4.7 ou mais novo) e um provider de `compose` |
+| RAM com a VPS parada | `dockerd` + `containerd` ficam sempre rodando (~100 a 150 MB) | **não há daemon**: o Podman só acorda quando o rustploy o chama |
+| Sistemas | Debian 12+, Ubuntu 22.04+ | Debian 13+, Ubuntu 24.04+ (o `podman compose` só existe a partir da 4.7) |
+
+<Tabs>
+  <TabItem label="Docker (padrão)">
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
+    # igual a: … | sudo sh -s -- --engine docker
+    ```
+
+    Se o `docker` já existe na máquina, o instalador **não mexe nele**. Se não existe, ele segue o
+    [guia oficial da Docker](https://docs.docker.com/engine/install/ubuntu/): remove pacotes que conflitam
+    (só os instalados: `docker.io`, `podman-docker`, `containerd`, `runc`…), adiciona o repositório apt da Docker
+    (chave GPG + `/etc/apt/sources.list.d/docker.sources`), instala
+    `docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin` e liga o serviço `docker`.
+    Em Debian usa o repositório `debian` da Docker; em derivados (Mint etc.) usa o codinome do Ubuntu/Debian base.
+    Numa distribuição que ele não reconhece, cai no `docker.io` da própria distribuição.
+
+    **À mão** (Ubuntu; em Debian troque `ubuntu` por `debian`):
+
+    ```bash
+    # 1. remover o que conflita (pule se nada disso estiver instalado)
+    sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 \
+      docker-doc docker-buildx podman-docker containerd runc | cut -f1)
+
+    # 2. repositório apt da Docker
+    sudo apt update
+    sudo apt install ca-certificates curl
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+    Types: deb
+    URIs: https://download.docker.com/linux/ubuntu
+    Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+    Components: stable
+    Architectures: $(dpkg --print-architecture)
+    Signed-By: /etc/apt/keyrings/docker.asc
+    EOF
+    sudo apt update
+
+    # 3. instalar e conferir
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo systemctl status docker
+    ```
+
+    Depois instale o rustploy normalmente (o `.deb` aceita o `docker-ce` como dependência).
+  </TabItem>
+  <TabItem label="Podman">
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh -s -- --engine podman
+    ```
+
+    O instalador faz quatro coisas, nesta ordem:
+
+    1. **Instala o Podman** e um provider de compose (`docker-compose-v2`, `docker-compose-plugin` ou
+       `docker-compose`, o primeiro que existir). Isso vem *antes* do `.deb` do rustploy para que o `apt` não
+       puxe o Docker junto (o pacote aceita `docker.io`, `docker-ce` **ou** `podman` como dependência).
+    2. **Liga o `podman.socket`**: o systemd fica de guarda em `/run/podman/podman.sock` e acorda o Podman só
+       quando o rustploy bate ali. É daí que vem a economia de RAM.
+    3. **Dá ao usuário `rustploy` acesso a esse socket**, que nasce `root:root`. Um arquivo
+       `/etc/systemd/system/podman.socket.d/rustploy.conf` com `SocketGroup=rustploy` faz isso valer para sempre
+       (um `chgrp` à mão se perde quando o socket é recriado).
+    4. **Aponta o rustploy para o Podman**: um arquivo `/etc/systemd/system/rustployd.service.d/podman.conf`
+       troca a dependência de `docker.service` por `podman.socket`, e o `[docker] socket_path` do `config.toml`
+       passa a ser `/run/podman/podman.sock`. (A seção continua se chamando `[docker]` por compatibilidade.)
+
+    **À mão:**
+
+    ```bash
+    sudo apt install podman docker-compose-v2     # ou docker-compose-plugin / docker-compose
+    sudo mkdir -p /etc/systemd/system/podman.socket.d /etc/systemd/system/rustployd.service.d
+    printf '[Socket]\nSocketGroup=rustploy\nSocketMode=0660\n' | sudo tee /etc/systemd/system/podman.socket.d/rustploy.conf
+    printf '[Unit]\nAfter=\nWants=\nAfter=network.target podman.socket\nWants=podman.socket\n[Service]\nEnvironment=RUSTPLOY_CONTAINER_ENGINE=podman\n' \
+      | sudo tee /etc/systemd/system/rustployd.service.d/podman.conf
+    sudo sed -i 's|^socket_path *=.*|socket_path = "/run/podman/podman.sock"|' /etc/rustploy/config.toml
+    sudo systemctl daemon-reload
+    sudo systemctl enable --now podman.socket
+    sudo systemctl restart podman.socket rustployd
+    ```
+  </TabItem>
+</Tabs>
+
+<Aside type="caution" title="Trocar de motor não move o que já roda">
+  Containers, imagens e volumes do Docker **não** são migrados para o Podman (e vice-versa): o motor novo começa
+  vazio. Depois de trocar, faça o deploy de cada serviço de novo; bancos exigem atenção porque seus dados estão em
+  volumes do motor antigo. Para liberar de fato a RAM do Docker, depois de migrar tudo:
+  `sudo systemctl disable --now docker docker.socket`. O Podman é suportado só em modo **rootful** (a partir do
+  socket em `/run/podman/`).
 </Aside>
 
 ## O que o pacote instala
@@ -37,8 +139,9 @@ serviço e mostra o **token de conexão**. Para liberar o acesso de fora da VPS,
 | Serviços systemd | `rustployd.service`, `rustployd-fw.socket`, `rustployd-fw.service` |
 | Banco e dados | `/var/lib/rustploy` |
 
-O pacote depende de `docker.io` ou `docker-ce`. O serviço roda como o usuário
-de sistema `rustploy`, que entra no grupo `docker`.
+O pacote depende de `docker.io`, `docker-ce` **ou** `podman`. O serviço roda como o usuário
+de sistema `rustploy`, que entra no grupo `docker`. Veja
+[Escolher o motor de containers](#escolher-o-motor-de-containers-docker-ou-podman).
 
 ## Pelo crates.io
 
