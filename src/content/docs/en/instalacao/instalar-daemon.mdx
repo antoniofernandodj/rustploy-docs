@@ -119,12 +119,61 @@ missing**:
   </TabItem>
 </Tabs>
 
-<Aside type="caution" title="Switching engines does not move what is already running">
-  Docker containers, images and volumes are **not** migrated to Podman (or the other way round): the new engine
-  starts empty. After switching, redeploy every service; databases need care because their data lives in volumes
-  of the old engine. To actually free Docker's RAM, once everything is migrated:
-  `sudo systemctl disable --now docker docker.socket`. Podman is supported in **rootful** mode only (via the
-  socket in `/run/podman/`).
+<Aside type="caution" title="Switching engines after installing">
+  Installing from scratch with `--engine podman` has nothing to migrate. On a VPS that **already runs services on
+  Docker**, see [Updating a VPS that runs on Docker](#updating-a-vps-that-runs-on-docker-switching-to-podman):
+  the switch is guided and migrates the volumes. Podman is supported in **rootful** mode only (via the socket in
+  `/run/podman/`).
+</Aside>
+
+### Updating a VPS that runs on Docker: switching to Podman
+
+When you update a rustploy that is already installed, the installer **asks** which engine to use:
+
+```bash
+# with the installer (downloads the release):
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
+# or, from the repository cloned on the VPS:
+make install-rustploy
+```
+
+```text
+This machine's rustploy currently uses: docker
+
+Which container engine?
+  1) Docker  - the default; dockerd + containerd always run (~150 MB of idle RAM)
+  2) Podman  - no resident daemon: saves ~150 MB of idle RAM (needs Debian 13+/Ubuntu 24.04+)
+Choose [1/2] (default 1):
+```
+
+- **Choosing Docker** changes nothing, and the choice is **remembered** in `/etc/rustploy/engine` (delete the file
+  to be asked again).
+- **Without a terminal** (scripts, CI) it does not ask and keeps the current engine. To decide without asking:
+  `--engine podman --yes` on the installer, or `make install-rustploy ENGINE=podman YES=1`.
+- **`--dry-run`** shows what would be done (containers, volumes and sizes) without changing anything.
+
+Choosing **Podman**, the installer shows the plan and asks for confirmation (`y`). Then, in this order:
+
+1. Makes a **backup** of `/etc/rustploy` and the rustploy database to
+   `/var/backups/rustploy-antes-do-podman-<date>.tar.gz` (the embedded registry, which can be large, is left out).
+2. Records **which services were up** (`Running` or `Degraded`) by asking rustploy's own API.
+3. Checks there is **space** to copy the volumes.
+4. **Stops** `rustployd` and the `rp_*` containers on Docker (so the data is consistent) and removes their restart
+   policy, so Docker does not bring them back by itself.
+5. **Copies** each Docker volume to a volume with the same name (and labels) on Podman. It is a copy: the original is
+   left intact, and a volume that already exists on Podman with data is **not overwritten**.
+6. Points rustploy at Podman (the same adjustments as a fresh install) and restarts it.
+7. **Redeploys** the services that were up (images are pulled or built again).
+
+If anything fails **before** the engine is switched (for example, a container cannot be stopped), the installer
+**starts again** what it stopped and leaves rustploy on Docker. Docker is never turned off or removed: once you have
+checked that everything is back, free the RAM with `sudo systemctl disable --now docker docker.socket`.
+
+<Aside type="caution" title="What needs attention">
+  Services are **unavailable** during the copy and the deploy. Redeploying automatically needs `python3` on the VPS
+  (without it the installer warns and you redeploy by hand). Containers that do **not** start with `rp_` (other
+  applications on the same machine) are not touched, and their volumes are not copied. Going from Podman back to
+  Docker is not automatic.
 </Aside>
 
 ## What the package installs

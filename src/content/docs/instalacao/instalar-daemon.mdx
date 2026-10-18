@@ -121,12 +121,60 @@ faltar**:
   </TabItem>
 </Tabs>
 
-<Aside type="caution" title="Trocar de motor não move o que já roda">
-  Containers, imagens e volumes do Docker **não** são migrados para o Podman (e vice-versa): o motor novo começa
-  vazio. Depois de trocar, faça o deploy de cada serviço de novo; bancos exigem atenção porque seus dados estão em
-  volumes do motor antigo. Para liberar de fato a RAM do Docker, depois de migrar tudo:
-  `sudo systemctl disable --now docker docker.socket`. O Podman é suportado só em modo **rootful** (a partir do
-  socket em `/run/podman/`).
+<Aside type="caution" title="Trocar de motor depois de instalado">
+  Instalar do zero com `--engine podman` não tem o que migrar. Numa VPS que **já roda serviços em Docker**, veja
+  [Atualizando uma VPS que roda em Docker](#atualizando-uma-vps-que-roda-em-docker-trocar-para-o-podman):
+  a troca é guiada e migra os volumes. O Podman é suportado só em modo **rootful** (via o socket em `/run/podman/`).
+</Aside>
+
+### Atualizando uma VPS que roda em Docker: trocar para o Podman
+
+Ao atualizar um rustploy que já está instalado, o instalador **pergunta** qual motor usar:
+
+```bash
+# pelo instalador (baixa a release):
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
+# ou, a partir do repositório clonado na VPS:
+make install-rustploy
+```
+
+```text
+O rustploy desta máquina usa hoje: docker
+
+Qual motor de containers usar?
+  1) Docker  - o padrão; dockerd + containerd ficam sempre rodando (~150 MB de RAM parados)
+  2) Podman  - sem daemon residente: economiza ~150 MB de RAM parado (precisa de Debian 13+/Ubuntu 24.04+)
+Escolha [1/2] (padrão 1):
+```
+
+- **Escolher Docker** não muda nada, e a escolha é **lembrada** em `/etc/rustploy/engine` (apague o arquivo para
+  ser perguntado de novo).
+- **Sem terminal** (script, CI) ele não pergunta e mantém o motor atual. Para decidir sem perguntar:
+  `--engine podman --yes` no instalador, ou `make install-rustploy ENGINE=podman YES=1`.
+- **`--dry-run`** mostra o que seria feito (containers, volumes e tamanhos) sem alterar nada.
+
+Escolhendo **Podman**, o instalador mostra o plano e pede confirmação (`s`). Depois, nesta ordem:
+
+1. Faz **backup** de `/etc/rustploy` e do banco do rustploy em `/var/backups/rustploy-antes-do-podman-<data>.tar.gz`
+   (o registry embutido, que pode ser grande, fica de fora).
+2. Anota **quais serviços estavam no ar** (`Running` ou `Degraded`), perguntando à API do próprio rustploy.
+3. Confere que há **espaço** para copiar os volumes.
+4. **Para** o `rustployd` e os containers `rp_*` do Docker (para os dados ficarem consistentes) e tira a política de
+   reinício deles, para o Docker não os religar sozinho.
+5. **Copia** cada volume do Docker para um volume de mesmo nome (e mesmos rótulos) no Podman. É cópia: o original
+   fica intacto, e um volume que já exista no Podman com dados **não é sobrescrito**.
+6. Aponta o rustploy para o Podman (os mesmos ajustes da instalação nova) e o reinicia.
+7. **Refaz o deploy** dos serviços que estavam no ar (as imagens são baixadas ou construídas de novo).
+
+Se algo falhar **antes** de trocar o motor (por exemplo, não conseguir parar um container), o instalador **religa**
+o que parou e deixa o rustploy no Docker. O Docker nunca é desligado nem apagado: depois de conferir que tudo
+voltou, libere a RAM com `sudo systemctl disable --now docker docker.socket`.
+
+<Aside type="caution" title="O que precisa de atenção">
+  Os serviços ficam **indisponíveis** durante a cópia e o deploy. Para refazer o deploy automaticamente é preciso
+  `python3` na VPS (sem ele o instalador avisa e você faz o deploy à mão). Containers que **não** começam com `rp_`
+  (de outras aplicações na mesma máquina) não são tocados, e os volumes deles também não são copiados. Voltar do
+  Podman para o Docker não é automático.
 </Aside>
 
 ## O que o pacote instala

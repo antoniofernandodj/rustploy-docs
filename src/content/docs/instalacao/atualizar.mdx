@@ -12,6 +12,11 @@ release e instala por cima. Ele **mantém** o `config.toml` (e o token) e não t
 curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
 ```
 
+Num terminal, o instalador também **pergunta o motor de containers** (Docker ou Podman) e, se você trocar para o
+Podman, migra os volumes e refaz o deploy: veja
+[Atualizando uma VPS que roda em Docker](/instalacao/instalar-daemon/#atualizando-uma-vps-que-roda-em-docker-trocar-para-o-podman).
+A mesma pergunta aparece no `make install-rustploy`, a partir do repositório clonado na VPS.
+
 Ou, à mão, instale o `.deb` novo por cima do antigo:
 
 ```bash

@@ -13,6 +13,11 @@ configured:
 curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
 ```
 
+In a terminal, the installer also **asks for the container engine** (Docker or Podman) and, if you switch to Podman,
+migrates the volumes and redeploys: see
+[Updating a VPS that runs on Docker](/en/instalacao/instalar-daemon/#updating-a-vps-that-runs-on-docker-switching-to-podman).
+The same question appears in `make install-rustploy`, from the repository cloned on the VPS.
+
 Or, by hand, install the new `.deb` over the old one:
 
 ```bash
