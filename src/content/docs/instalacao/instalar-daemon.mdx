@@ -91,7 +91,7 @@ faltar**:
     curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh -s -- --engine podman
     ```
 
-    O instalador faz quatro coisas, nesta ordem:
+    O instalador faz cinco coisas, nesta ordem:
 
     1. **Instala o Podman** e um provider de compose (`docker-compose-v2`, `docker-compose-plugin` ou
        `docker-compose`, o primeiro que existir). Isso vem *antes* do `.deb` do rustploy para que o `apt` não
@@ -104,6 +104,13 @@ faltar**:
     4. **Aponta o rustploy para o Podman**: um arquivo `/etc/systemd/system/rustployd.service.d/podman.conf`
        acrescenta `podman.socket` às dependências (o unit do pacote só ordena depois do `docker.service`, sem puxá-lo), e o `[docker] socket_path` do `config.toml`
        passa a ser `/run/podman/podman.sock`. (A seção continua se chamando `[docker]` por compatibilidade.)
+    5. **Ajustes para o Podman se comportar como o Docker** (cada um evita uma quebra real):
+       - liga o `podman-restart.service`: é ele que religa no boot os containers com `restart: always` ou
+         `unless-stopped` (no Docker é o `dockerd`). **Sem isso, depois de reiniciar a VPS esses serviços não voltam**;
+       - cria `/etc/containers/registries.conf.d/rustploy.conf` com `unqualified-search-registries = ["docker.io"]`,
+         para que `postgres:17` ou `redis:alpine` (nome curto) funcionem no `pull` pela linha de comando;
+       - cria `/etc/containers/containers.conf.d/rustploy.conf` com `pids_limit = 0`: o Podman limita cada container
+         a 2048 processos e o Docker não limita.
 
     **À mão:**
 
@@ -115,7 +122,10 @@ faltar**:
       | sudo tee /etc/systemd/system/rustployd.service.d/podman.conf
     sudo sed -i 's|^socket_path *=.*|socket_path = "/run/podman/podman.sock"|' /etc/rustploy/config.toml
     sudo systemctl daemon-reload
-    sudo systemctl enable --now podman.socket
+    sudo mkdir -p /etc/containers/registries.conf.d /etc/containers/containers.conf.d
+    printf 'unqualified-search-registries = ["docker.io"]\n' | sudo tee /etc/containers/registries.conf.d/rustploy.conf
+    printf '[containers]\npids_limit = 0\n' | sudo tee /etc/containers/containers.conf.d/rustploy.conf
+    sudo systemctl enable --now podman.socket podman-restart.service
     sudo systemctl restart podman.socket rustployd
     ```
   </TabItem>
@@ -185,7 +195,7 @@ voltou, libere a RAM com `sudo systemctl disable --now docker docker.socket`.
   na mesma máquina) continuam no Docker, intactos; volumes deles são copiados, mas se um container desses ainda
   estiver rodando, a cópia sai "a quente" e o instalador avisa. Os serviços ficam **indisponíveis** durante a cópia
   e o deploy. Refazer o deploy automaticamente exige `python3` na VPS (sem ele o instalador avisa e você faz o deploy
-  à mão). Volumes de um driver que o Podman não tem são avisados e não copiados. Voltar do Podman para o Docker não
+  à mão). Volumes de um driver que o Podman não tem são avisados e não copiados. As opções do `/etc/docker/daemon.json` (rotação de logs, *mirrors*, DNS, faixa de IPs das redes) **não** passam para o Podman: o instalador avisa se o arquivo existir, e você as recria em `/etc/containers/`. Voltar do Podman para o Docker não
   é automático.
 </Aside>
 
