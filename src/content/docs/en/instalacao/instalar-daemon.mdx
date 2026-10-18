@@ -99,8 +99,8 @@ missing**:
     3. **Gives the `rustploy` user access to that socket**, which is born `root:root`. A
        `/etc/systemd/system/podman.socket.d/rustploy.conf` file with `SocketGroup=rustploy` makes that permanent (a
        hand-made `chgrp` is lost when the socket is recreated).
-    4. **Points rustploy at Podman**: a `/etc/systemd/system/rustployd.service.d/podman.conf` file swaps the
-       `docker.service` dependency for `podman.socket`, and `[docker] socket_path` in `config.toml` becomes
+    4. **Points rustploy at Podman**: a `/etc/systemd/system/rustployd.service.d/podman.conf` file adds
+       `podman.socket` to its dependencies (the package unit only orders itself after `docker.service`, without pulling it in), and `[docker] socket_path` in `config.toml` becomes
        `/run/podman/podman.sock`. (The section is still called `[docker]` for compatibility.)
 
     **By hand:**
@@ -109,7 +109,7 @@ missing**:
     sudo apt install podman docker-compose-v2     # or docker-compose-plugin / docker-compose
     sudo mkdir -p /etc/systemd/system/podman.socket.d /etc/systemd/system/rustployd.service.d
     printf '[Socket]\nSocketGroup=rustploy\nSocketMode=0660\n' | sudo tee /etc/systemd/system/podman.socket.d/rustploy.conf
-    printf '[Unit]\nAfter=\nWants=\nAfter=network.target podman.socket\nWants=podman.socket\n[Service]\nEnvironment=RUSTPLOY_CONTAINER_ENGINE=podman\n' \
+    printf '[Unit]\nAfter=podman.socket\nWants=podman.socket\n[Service]\nEnvironment=RUSTPLOY_CONTAINER_ENGINE=podman\n' \
       | sudo tee /etc/systemd/system/rustployd.service.d/podman.conf
     sudo sed -i 's|^socket_path *=.*|socket_path = "/run/podman/podman.sock"|' /etc/rustploy/config.toml
     sudo systemctl daemon-reload

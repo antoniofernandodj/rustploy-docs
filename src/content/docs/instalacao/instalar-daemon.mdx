@@ -102,7 +102,7 @@ faltar**:
        `/etc/systemd/system/podman.socket.d/rustploy.conf` com `SocketGroup=rustploy` faz isso valer para sempre
        (um `chgrp` à mão se perde quando o socket é recriado).
     4. **Aponta o rustploy para o Podman**: um arquivo `/etc/systemd/system/rustployd.service.d/podman.conf`
-       troca a dependência de `docker.service` por `podman.socket`, e o `[docker] socket_path` do `config.toml`
+       acrescenta `podman.socket` às dependências (o unit do pacote só ordena depois do `docker.service`, sem puxá-lo), e o `[docker] socket_path` do `config.toml`
        passa a ser `/run/podman/podman.sock`. (A seção continua se chamando `[docker]` por compatibilidade.)
 
     **À mão:**
@@ -111,7 +111,7 @@ faltar**:
     sudo apt install podman docker-compose-v2     # ou docker-compose-plugin / docker-compose
     sudo mkdir -p /etc/systemd/system/podman.socket.d /etc/systemd/system/rustployd.service.d
     printf '[Socket]\nSocketGroup=rustploy\nSocketMode=0660\n' | sudo tee /etc/systemd/system/podman.socket.d/rustploy.conf
-    printf '[Unit]\nAfter=\nWants=\nAfter=network.target podman.socket\nWants=podman.socket\n[Service]\nEnvironment=RUSTPLOY_CONTAINER_ENGINE=podman\n' \
+    printf '[Unit]\nAfter=podman.socket\nWants=podman.socket\n[Service]\nEnvironment=RUSTPLOY_CONTAINER_ENGINE=podman\n' \
       | sudo tee /etc/systemd/system/rustployd.service.d/podman.conf
     sudo sed -i 's|^socket_path *=.*|socket_path = "/run/podman/podman.sock"|' /etc/rustploy/config.toml
     sudo systemctl daemon-reload
