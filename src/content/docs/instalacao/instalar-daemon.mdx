@@ -153,28 +153,40 @@ Escolha [1/2] (padrão 1):
   `--engine podman --yes` no instalador, ou `make install-rustploy ENGINE=podman YES=1`.
 - **`--dry-run`** mostra o que seria feito (containers, volumes e tamanhos) sem alterar nada.
 
-Escolhendo **Podman**, o instalador mostra o plano e pede confirmação (`s`). Depois, nesta ordem:
+Escolhendo **Podman**, o instalador mostra o plano e pede confirmação (`s`). A ideia é **reaproveitar tudo que
+está no Docker**, sem deixar nada quebrado. Nesta ordem:
 
 1. Faz **backup** de `/etc/rustploy` e do banco do rustploy em `/var/backups/rustploy-antes-do-podman-<data>.tar.gz`
    (o registry embutido, que pode ser grande, fica de fora).
 2. Anota **quais serviços estavam no ar** (`Running` ou `Degraded`), perguntando à API do próprio rustploy.
-3. Confere que há **espaço** para copiar os volumes.
-4. **Para** o `rustployd` e os containers `rp_*` do Docker (para os dados ficarem consistentes) e tira a política de
+3. Confere que há **espaço** para copiar volumes e imagens.
+4. **Transfere as imagens** (`docker save | podman load`) e dá a cada uma também o nome completo
+   (`docker.io/library/...`). Isso vem **antes** de parar qualquer coisa, para encurtar o tempo fora do ar, e mantém
+   os deploys antigos disponíveis para o *rollback*.
+5. **Para** o `rustployd` e os containers `rp_*` do Docker (para os dados ficarem consistentes) e tira a política de
    reinício deles, para o Docker não os religar sozinho.
-5. **Copia** cada volume do Docker para um volume de mesmo nome (e mesmos rótulos) no Podman. É cópia: o original
-   fica intacto, e um volume que já exista no Podman com dados **não é sobrescrito**.
-6. Aponta o rustploy para o Podman (os mesmos ajustes da instalação nova) e o reinicia.
-7. **Refaz o deploy** dos serviços que estavam no ar (as imagens são baixadas ou construídas de novo).
+6. **Volumes**: copia **todos** os volumes do Docker, tenham container ou não, para um volume de mesmo nome e mesmos
+   rótulos no Podman. É cópia: o original fica intacto, e um volume que já exista no Podman com dados **não é
+   sobrescrito**. Volumes com opções (NFS, *bind*...) são **recriados com as mesmas opções**, sem cópia, porque os
+   dados moram fora. Só ficam de fora os volumes anônimos órfãos (sem nenhum container).
+7. **Redes**: recria no Podman as redes que você ou o Compose criaram (mesmo nome e rótulos, sub-rede automática).
+   As redes de projeto do próprio rustploy (`rp_net_*`) o deploy recria sozinho.
+8. Aponta o rustploy para o Podman (os mesmos ajustes da instalação nova) e o reinicia.
+9. **Refaz o deploy** dos serviços que estavam no ar. Os containers são criados de novo no Podman, com as imagens e
+   os volumes que já foram trazidos.
 
 Se algo falhar **antes** de trocar o motor (por exemplo, não conseguir parar um container), o instalador **religa**
 o que parou e deixa o rustploy no Docker. O Docker nunca é desligado nem apagado: depois de conferir que tudo
 voltou, libere a RAM com `sudo systemctl disable --now docker docker.socket`.
 
-<Aside type="caution" title="O que precisa de atenção">
-  Os serviços ficam **indisponíveis** durante a cópia e o deploy. Para refazer o deploy automaticamente é preciso
-  `python3` na VPS (sem ele o instalador avisa e você faz o deploy à mão). Containers que **não** começam com `rp_`
-  (de outras aplicações na mesma máquina) não são tocados, e os volumes deles também não são copiados. Voltar do
-  Podman para o Docker não é automático.
+<Aside type="caution" title="O que NÃO é aproveitado, e o que precisa de atenção">
+  O **cache de build** do Docker não existe no Podman, então o primeiro build de cada serviço é mais lento.
+  **Containers** não são movidos (são recriados pelo deploy), e os que **não** começam com `rp_` (outras aplicações
+  na mesma máquina) continuam no Docker, intactos; volumes deles são copiados, mas se um container desses ainda
+  estiver rodando, a cópia sai "a quente" e o instalador avisa. Os serviços ficam **indisponíveis** durante a cópia
+  e o deploy. Refazer o deploy automaticamente exige `python3` na VPS (sem ele o instalador avisa e você faz o deploy
+  à mão). Volumes de um driver que o Podman não tem são avisados e não copiados. Voltar do Podman para o Docker não
+  é automático.
 </Aside>
 
 ## O que o pacote instala
