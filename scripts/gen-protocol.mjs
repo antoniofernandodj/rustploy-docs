@@ -74,7 +74,9 @@ function parseEnum(name) {
     if ((match = trimmed.match(/^(\w+),$/))) {
       variants.push({ name: match[1], kind: 'unit', fields: [], section, doc });
     } else if ((match = trimmed.match(/^(\w+)\((.+)\),$/))) {
-      variants.push({ name: match[1], kind: 'tuple', type: match[2], fields: [], section, doc });
+      // `Box<T>` é detalhe do Rust (some do JSON): a doc mostra só `T`.
+      const type = match[2].replace(/^Box<(.*)>$/, '$1');
+      variants.push({ name: match[1], kind: 'tuple', type, fields: [], section, doc });
     } else if ((match = trimmed.match(/^(\w+) \{$/))) {
       current = { name: match[1], kind: 'struct', fields: [], section, doc };
       fieldDoc = [];
