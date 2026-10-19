@@ -32,7 +32,7 @@ At the top, the **JOBS** counter and the **+ Novo job** (New job) button. The ta
 | **RECORRÊNCIA** (Recurrence) | the schedule |
 | **PRÓXIMA EXECUÇÃO** (Next run) | the next firing, **in your time zone** |
 | **AQUECIMENTO** (Warming) | `quente` (warm), `frio` (cold) or `aquecendo…` (warming…) (see [Warm a job](/en/guias/jobs/#warm-a-job)) |
-| **AÇÕES** (Actions) | the **⋯** panel with *Rodar agora* (run now), *Cancelar execução*, *Aquecer*, *Ver logs*, *Editar* and *Remover* |
+| **AÇÕES** (Actions) | the **⋯** panel with *Rodar agora* (run now), *Cancelar execução*, *Aquecer*, *Reconstruir (sem cache)*, *Ver logs*, *Editar* and *Remover* |
 
 With no jobs: *"Nenhum job cadastrado ainda."* (No job registered yet.)
 
@@ -110,6 +110,7 @@ The **⋯** button at the end of the row opens a panel with the job name, the wa
 |---|---|
 | **▶ Rodar agora** (Run now) | runs right away, outside the schedule. With a run in progress, it becomes **■ Cancelar execução** (Cancel run) |
 | **◐ Aquecer** (Warm up) | pulls the images and builds the build cache **without running** the job |
+| **↻ Reconstruir (sem cache)** (Rebuild, no cache) | shown with the job **warm**: rebuilds from scratch and pulls the images again. See [Rebuild from scratch](/en/guias/jobs/#rebuild-from-scratch) |
 | **≡ Ver logs** (View logs) | the output (stdout and stderr) of the runs |
 | **‖ Pausar** (Pause) | suspends the schedule. With the job paused, the button becomes **Ativar** (Enable) |
 | **✎ Editar** (Edit) | opens the job to change it |

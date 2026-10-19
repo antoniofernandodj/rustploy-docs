@@ -33,7 +33,7 @@ No topo, o contador **JOBS** e o botão **+ Novo job**. As colunas da tabela:
 | **RECORRÊNCIA** | o agendamento |
 | **PRÓXIMA EXECUÇÃO** | o próximo disparo, **no seu fuso** |
 | **AQUECIMENTO** | `quente`, `frio` ou `aquecendo…` (veja [Aquecer um job](/guias/jobs/#aquecer-um-job)) |
-| **AÇÕES** | o painel **⋯** com *Rodar agora*, *Cancelar execução*, *Aquecer*, *Ver logs*, *Editar* e *Remover* |
+| **AÇÕES** | o painel **⋯** com *Rodar agora*, *Cancelar execução*, *Aquecer*, *Reconstruir (sem cache)*, *Ver logs*, *Editar* e *Remover* |
 
 Sem jobs: *"Nenhum job cadastrado ainda."*
 
@@ -111,6 +111,7 @@ O botão **⋯** no fim da linha abre um painel com o nome do job, o estado de a
 |---|---|
 | **▶ Rodar agora** | executa já, fora do agendamento. Com uma execução em andamento, vira **■ Cancelar execução** |
 | **◐ Aquecer** | baixa as imagens e monta o cache de build **sem executar** o job |
+| **↻ Reconstruir (sem cache)** | aparece com o job **quente**: refaz o build do zero e baixa as imagens de novo. Veja [Reconstruir do zero](/guias/jobs/#reconstruir-do-zero) |
 | **≡ Ver logs** | a saída (stdout e stderr) das execuções |
 | **‖ Pausar** | suspende o agendamento. Com o job pausado, o botão vira **Ativar** |
 | **✎ Editar** | abre o job para alterar |

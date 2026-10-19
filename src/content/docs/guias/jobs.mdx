@@ -73,6 +73,7 @@ O botão **⋯** da linha abre o painel de ações:
 | **▶ Rodar agora** | executa já, fora do agendamento |
 | **■ Cancelar execução** | interrompe a execução em andamento |
 | **◐ Aquecer** | prepara o job sem executá-lo (veja abaixo) |
+| **↻ Reconstruir (sem cache)** | só com o job **quente**: refaz o build do zero (veja abaixo) |
 | **≡ Ver logs** | saída (stdout e stderr) das execuções |
 | **✎ Editar** | altera o job |
 | **✕ Remover** | apaga o job |
@@ -93,6 +94,16 @@ O job aparece como **quente**, **frio** ou **aquecendo…**. Ele está **frio** 
 - a definição mudou (compose, repositório, branch ou caminho);
 - uma imagem sumiu do host;
 - o cache de build foi apagado por uma limpeza do Docker.
+
+### Reconstruir do zero
+
+Com o job **quente**, **Aquecer** não faz nada (ele já está pronto). O cache, porém, pode
+estar velho: uma imagem base que mudou (`FROM x:latest` não é baixada de novo se já existe no
+servidor) ou um passo `RUN` que buscou algo externo e ficou em cache. Para esses casos, o painel
+mostra **↻ Reconstruir (sem cache)** enquanto o job está quente. Ele pede confirmação, **baixa
+de novo as imagens** e refaz o build **sem cache** (`--no-cache --pull`). Leva minutos e ocupa a
+vaga da fila de jobs enquanto roda. Se a reconstrução falhar, o job continua quente com o cache
+anterior.
 
 ## Se o daemon reiniciar
 

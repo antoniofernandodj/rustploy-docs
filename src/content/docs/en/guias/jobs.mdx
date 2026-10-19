@@ -70,6 +70,7 @@ The **⋯** button on the row opens the actions panel:
 | **▶ Rodar agora** (Run now) | runs right away, outside the schedule |
 | **■ Cancelar execução** (Cancel run) | interrupts the run in progress |
 | **◐ Aquecer** (Warm) | prepares the job without running it (see below) |
+| **↻ Reconstruir (sem cache)** (Rebuild, no cache) | only with the job **warm**: rebuilds from scratch (see below) |
 | **≡ Ver logs** (View logs) | output (stdout and stderr) of the runs |
 | **✎ Editar** (Edit) | changes the job |
 | **✕ Remover** (Remove) | deletes the job |
@@ -88,6 +89,15 @@ The job shows as **quente** (warm), **frio** (cold) or **aquecendo…** (warming
 - the definition changed (compose, repository, branch or path);
 - an image disappeared from the host;
 - the build cache was deleted by a Docker cleanup.
+
+### Rebuild from scratch
+
+With the job **warm**, **Aquecer** does nothing (it is already ready). The cache can still be stale: a base
+image that changed (`FROM x:latest` is not pulled again if it already exists on the server) or a `RUN` step that
+fetched something external and stayed cached. For those cases the panel shows **↻ Reconstruir (sem cache)**
+while the job is warm. It asks for confirmation, **pulls the images again** and rebuilds **without cache**
+(`--no-cache --pull`). It takes minutes and holds the job queue slot while it runs. If the rebuild fails, the
+job stays warm with the previous cache.
 
 ## If the daemon restarts
 

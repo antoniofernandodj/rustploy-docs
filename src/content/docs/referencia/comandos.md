@@ -883,15 +883,16 @@ Fonte única da verdade de "este job está quente?": confere se as imagens e o c
 
 ### JobWarm
 
-Aquece o job (baixa as imagens que faltam e popula o cache de build) sem executá-lo. Já quente: não faz nada e avisa. Senão a vaga única da fila é disputada em segundo plano e o fim chega em `Event::JobWarmChanged`. Resposta: `JobWarmRequested`.
+Aquece o job (baixa as imagens que faltam e popula o cache de build) sem executá-lo. Já quente: não faz nada e avisa. Senão a vaga única da fila é disputada em segundo plano e o fim chega em `Event::JobWarmChanged`. `force = true` **reconstrói do zero** mesmo com o job quente: rebaixa as imagens de registry e roda o build sem cache (`--no-cache --pull`), para pegar imagem base nova ou refazer um `RUN` que buscou algo externo. Ausente no JSON (clientes antigos) vale `false`. Resposta: `JobWarmRequested`.
 
 ```json
-{"JobWarm":{"job_id":"…"}}
+{"JobWarm":{"job_id":"…","force":false}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `job_id` | `String` |
+| `force` | `bool` |
 
 **Usado por:** GUI e web UI.
 

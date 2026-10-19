@@ -886,12 +886,13 @@ Single source of truth for "is this job warm?": checks whether its images and bu
 Warms the job (pulls the missing images and fills the build cache) without running it. If already warm: does nothing and says so. Otherwise the single queue slot is contended in the background and the end arrives in `Event::JobWarmChanged`. Response: `JobWarmRequested`.
 
 ```json
-{"JobWarm":{"job_id":"…"}}
+{"JobWarm":{"job_id":"…","force":false}}
 ```
 
 | Field | Type |
 |---|---|
 | `job_id` | `String` |
+| `force` | `bool` |
 
 **Used by:** GUI and web UI.
 
