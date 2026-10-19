@@ -1272,7 +1272,7 @@ Returns the Gitea authorization URL for the client to open in a browser.
 {"WizardCreate":{…}}
 ```
 
-O valor é um `crate::wizard::WizardCreateReq`.
+O valor é um `WizardCreateReq`.
 
 **Usado por:** GUI e web UI.
 

@@ -1,21 +1,23 @@
 // Gera a referência do protocolo (Command, Response, Event) lendo o
-// rustploy-shared/src/protocol.rs e o comandos.md do agregador.
+// rustploy-shared/src/protocol/*.rs e o comandos.md do agregador.
 // Sem o agregador ao lado, mantém as páginas já commitadas.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { DOCS as DOCS_EN, FIELD_DOCS as FIELD_DOCS_EN, GROUPS as GROUPS_EN } from './data/protocol-en.mjs';
 
 const root = new URL('../../', import.meta.url);
-const protocolFile = new URL('rustploy-shared/src/protocol.rs', root);
+const protocolDir = new URL('rustploy-shared/src/protocol/', root);
+const protocolFile = new URL('command.rs', protocolDir);
 const parityFile = new URL('docs/indice/comandos.md', root);
 const outDirs = { pt: new URL('../src/content/docs/referencia/', import.meta.url), en: new URL('../src/content/docs/en/referencia/', import.meta.url) };
 mkdirSync(outDirs.en, { recursive: true });
 
 if (!existsSync(protocolFile)) {
-  console.log('gen-protocol: protocol.rs não encontrado, mantendo as páginas atuais');
+  console.log('gen-protocol: protocol/command.rs não encontrado, mantendo as páginas atuais');
   process.exit(0);
 }
 
-const source = readFileSync(protocolFile, 'utf8').split('\n');
+const source = ['command', 'event', 'logs', 'response']
+  .flatMap((f) => readFileSync(new URL(`${f}.rs`, protocolDir), 'utf8').split('\n'));
 
 /** Lê um `pub enum Nome { … }` e devolve as variantes com seção, doc e campos. */
 function parseEnum(name) {

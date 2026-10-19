@@ -1,4 +1,4 @@
-// Gera uma página por template do catálogo (rustploy-shared/templates/blueprints)
+// Gera uma página por template do catálogo (rustploy-daemon/crates/daemon/templates/blueprints)
 // e a página-índice. As descrições (pt-BR) vêm de docs/services.md do agregador.
 // Sem o agregador ao lado, mantém as páginas já commitadas.
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, rmSync } from 'node:fs';
@@ -6,7 +6,7 @@ import { parse as parseToml } from 'smol-toml';
 import { parse as parseYaml } from 'yaml';
 
 const root = new URL('../../', import.meta.url);
-const blueprints = new URL('rustploy-shared/templates/blueprints/', root);
+const blueprints = new URL('rustploy-daemon/crates/daemon/templates/blueprints/', root);
 const servicesList = new URL('docs/services.md', root);
 const outDir = new URL('../src/content/docs/templates/', import.meta.url);
 

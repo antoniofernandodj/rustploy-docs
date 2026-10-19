@@ -1,22 +1,25 @@
 // Gera referencia/manifesto.md: as tabelas de campos vêm dos structs de
-// rustploy-shared/src/manifest.rs e models.rs (tipo, opcional, padrão, doc);
+// rustploy-daemon/.../features/iac/manifest.rs e rustploy-shared/src/domain/*.rs (tipo, opcional, padrão, doc);
 // o texto de cada campo vem de NOTES abaixo. Sem o agregador ao lado, mantém a
 // página já commitada. Campo novo no código aparece na tabela sem nota; nota de
 // campo que sumiu do código quebra o build (para não envelhecer em silêncio).
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 
 const root = new URL('../../', import.meta.url);
-const manifestFile = new URL('rustploy-shared/src/manifest.rs', root);
-const modelsFile = new URL('rustploy-shared/src/models.rs', root);
+const manifestFile = new URL('rustploy-daemon/crates/daemon/src/features/iac/manifest.rs', root);
+const modelsDir = new URL('rustploy-shared/src/domain/', root);
 const outFile = new URL('../src/content/docs/referencia/manifesto.mdx', import.meta.url);
 
-if (!existsSync(manifestFile) || !existsSync(modelsFile)) {
+if (!existsSync(manifestFile) || !existsSync(modelsDir)) {
   console.log('gen-manifest: fontes não encontradas, mantendo a página atual');
   process.exit(0);
 }
 
 const manifestLines = readFileSync(manifestFile, 'utf8').split('\n');
-const modelsLines = readFileSync(modelsFile, 'utf8').split('\n');
+const modelsLines = readdirSync(modelsDir)
+  .filter((f) => f.endsWith('.rs'))
+  .sort()
+  .flatMap((f) => readFileSync(new URL(f, modelsDir), 'utf8').split('\n'));
 
 /** Lê `pub struct Nome { … }` e devolve os campos com doc e atributos serde. */
 function parseStruct(lines, name) {
@@ -282,7 +285,7 @@ import { Aside } from '@astrojs/starlight/components';
 O **manifesto** descreve projetos e serviços em YAML. O arquivo de **variáveis** (TOML) leva os
 valores das variáveis. Para exportar, importar e as limitações do fluxo, veja
 [Infra as Code](/guias/infra-as-code/). Esta página é a **referência de campos**, gerada do
-código do \`rustploy-shared\`.
+código do daemon e do \`rustploy-shared\`.
 
 ## As duas formas
 
@@ -485,7 +488,7 @@ import { Aside } from '@astrojs/starlight/components';
 The **manifest** describes projects and services in YAML. The **variables** file (TOML) holds
 the variable values. To export, import and for the limits of the flow, see
 [Infra as Code](/en/guias/infra-as-code/). This page is the **field reference**, generated from
-the \`rustploy-shared\` code.
+the daemon and \`rustploy-shared\` code.
 
 ## The two shapes
 
