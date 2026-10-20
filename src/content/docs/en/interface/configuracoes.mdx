@@ -160,6 +160,7 @@ This is where the **automatic Docker cleanup** lives. It comes **off** and **rem
 | **Redes sem uso** (unused networks) | removes networks with no containers |
 | **Cache de build** | removes unused cache |
 | **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | default **168**. `0` deletes all unused cache |
+| **Aquecer os builds depois da limpeza** (warm builds after cleanup) | on by default. After cleaning, rebuilds the image of every service with a Git repository or zip, **one at a time**, in the deploy queue, so the first deploy of the day does not pay for the whole build. Each service shows a **warm / cold** badge |
 | **Volumes sem uso** (unused volumes) | **careful** |
 
 <Aside type="danger" title="Volumes">

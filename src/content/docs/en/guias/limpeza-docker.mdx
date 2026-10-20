@@ -45,6 +45,7 @@ In **Settings → Manutenção** (Maintenance), **LIMPEZA AUTOMÁTICA** (automat
 | **Redes sem uso** (unused networks) | removes networks with no containers |
 | **Cache de build** | removes unused cache |
 | **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** (keep cache used in the last N hours) | default **168 h**. `0` deletes all unused cache. With a period, the cache of a recent deploy or job survives and the next build does not start from scratch |
+| **Aquecer os builds depois da limpeza** (warm builds after cleanup) | on by default. Rebuilds the image of every Git or zip service that became **cold**, one at a time, in the deploy queue |
 | **Volumes sem uso** (unused volumes) | **careful**: see below |
 
 <Aside type="danger" title="Volumes may hold data">
@@ -53,6 +54,15 @@ In **Settings → Manutenção** (Maintenance), **LIMPEZA AUTOMÁTICA** (automat
 </Aside>
 
 Automatic cleanup comes **off** and with no type ticked.
+
+## Why the first deploy of the day was slow
+
+Deleting the build cache makes the next deploy rebuild everything: pull the base image and
+reinstall dependencies. With **Aquecer os builds depois da limpeza** (warm builds after
+cleanup), the daemon redoes that build right after the cleanup, **one service at a time**,
+and each service shows a **warm** or **cold** badge (in the project's service list and in
+the service header). A successful deploy also leaves the service warm. Services using a
+ready-made image or Compose have no build and no badge.
 
 ## Relationship with jobs
 

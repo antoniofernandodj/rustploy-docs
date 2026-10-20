@@ -1,6 +1,6 @@
 ---
 title: Respostas do protocolo
-description: "As 59 variantes de resposta de POST /api/rpc no Rustploy, com o tipo que cada uma carrega, e como reconhecer um erro."
+description: "As 61 variantes de resposta de POST /api/rpc no Rustploy, com o tipo que cada uma carrega, e como reconhecer um erro."
 ---
 
 Cada [comando](/referencia/comandos/) devolve uma destas variantes. Uma resposta **com campos** é um objeto de uma chave; **sem campos**, a string nua (`"Ok"`).
@@ -61,6 +61,8 @@ Um erro vem como `{"Err":{"code":"…","message":"…"}}`.
 | `JobLogs` | `Vec<BuildLogLine>` |
 | `JobWarmStatus` | `JobWarmStatus` |
 | `JobWarmRequested` | `already_warm: bool` |
+| `ServiceWarmStatuses` | `Vec<ServiceWarmStatus>` |
+| `ServiceWarmRequested` | `already_warm: bool` |
 | `RegistryStatus` | `RegistryStatusInfo` |
 | `RegistryRepos` | `Vec<RegistryRepoInfo>` |
 | `RegistryTags` | `Vec<RegistryTagInfo>` |

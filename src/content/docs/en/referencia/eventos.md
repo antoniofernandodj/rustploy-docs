@@ -1,6 +1,6 @@
 ---
 title: Real-time events (SSE)
-description: "The 14 events the Rustploy daemon publishes on GET /api/events (Server-Sent Events): deploy state changes, build logs, metrics and service status."
+description: "The 15 events the Rustploy daemon publishes on GET /api/events (Server-Sent Events): deploy state changes, build logs, metrics and service status."
 ---
 
 `GET /api/events` is an **SSE** stream. It delivers a full dashboard **snapshot** every 2 seconds and the **events** below as soon as they happen. Each record carries a `kind` field in the JSON `data`: `"snapshot"` or `"bus"`.
@@ -129,6 +129,17 @@ A job warm-up started (`warming: true`) or finished (`warming: false`, with `suc
 | Field | Type |
 |---|---|
 | `job_id` | `String` |
+| `warming` | `bool` |
+| `success` | `Option<bool>` |
+| `error` | `Option<String>` |
+
+### ServiceWarmChanged
+
+A service warm-up started (`warming: true`) or finished (`warming: false`, with `success` and, on failure, `error`). Applies to every client (it is not filtered by service): the list screen needs it.
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
 | `warming` | `bool` |
 | `success` | `Option<bool>` |
 | `error` | `Option<String>` |

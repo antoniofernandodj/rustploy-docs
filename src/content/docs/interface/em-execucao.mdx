@@ -1,0 +1,53 @@
+---
+title: Em execução no app desktop e na web UI
+description: A tela Em execução do Rustploy - só os projetos e serviços rodando agora, com branch, pré-deploy checks, webhook mascarado e atalhos de deploy, parar e navegação.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A tela **Em execução** (menu lateral, grupo **DEPLOYMENT OPS**) responde "o que está no ar
+agora?" sem entrar projeto por projeto. Existe **igual no app desktop e na web UI**.
+
+## O que aparece
+
+- Só **projetos que têm pelo menos um serviço rodando**. Projeto vazio ou com tudo parado
+  não aparece.
+- Dentro de cada projeto, só os **serviços rodando** (ou *degradados*). Um serviço parado
+  some, mesmo que o projeto tenha outro no ar.
+- A caixa de busca do topo filtra por nome de projeto ou de serviço.
+
+## O cartão de cada serviço
+
+O cartão muda conforme o **tipo** do serviço:
+
+| Tipo | O que destaca |
+|---|---|
+| **App · Git** | a **branch** implantada e o repositório |
+| **App · zip** | o tipo e os domínios |
+| **App · imagem** | a imagem e a tag |
+| **Banco** | o motor (postgres, mongodb, mariadb, mysql, redis) e a porta |
+| **Broker** | o motor (kafka, rabbitmq, nats) e a porta |
+| **Compose** | o tipo e os domínios |
+
+Em todos aparecem também:
+
+- **Domínios**, **CPU** e **memória**.
+- O selo **quente / frio** quando o serviço tem build (Git ou zip). Veja
+  [Limpeza do Docker](/guias/limpeza-docker/).
+- **PRÉ-DEPLOY CHECKS**: os jobs que rodam antes do deploy, **na ordem**.
+- **WEBHOOK DE DEPLOY**: a URL, com o token **mascarado**.
+
+<Aside type="caution" title="O token do webhook dispara deploy">
+  Quem tiver a URL inteira consegue disparar um deploy. Por isso ela vem mascarada
+  (`…/webhook/<id>/••••••••`). **Mostrar** revela na tela; **Copiar** sempre copia a URL
+  completa. Serviços Compose não têm webhook.
+</Aside>
+
+## Atalhos
+
+| Botão | O que faz |
+|---|---|
+| **▶ Deploy** | dispara o deploy do serviço, sem abrir a tela dele |
+| **■** | para o serviço (pede confirmação) |
+| **Abrir serviço ›** | vai para a [tela do serviço](/interface/servico/) |
+| **Abrir projeto ›** | vai para o [projeto](/interface/projetos/) |

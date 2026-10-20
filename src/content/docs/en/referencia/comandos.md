@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 107 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 109 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **107 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **109 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -36,6 +36,7 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 - [Infra as Code](#infra-as-code)
 - [Copy a service between servers](#copy-a-service-between-servers)
 - [Jobs](#jobs)
+- [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
 - [Docker](#docker)
 - [Ingress](#ingress)
 - [Variables backup](#variables-backup)
@@ -895,6 +896,33 @@ Warms the job (pulls the missing images and fills the build cache) without runni
 | `force` | `bool` |
 
 **Used by:** GUI and web UI.
+
+## Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)
+
+### ServiceWarmStatusList
+
+The warm-up status (`ServiceWarmStatus`) of every service with a Git or zip source. Response: `ServiceWarmStatuses`.
+
+```json
+"ServiceWarmStatusList"
+```
+
+**Used by:** only by the API and the MCP (no screen).
+
+### ServiceWarm
+
+Warms the service: builds its image in the single queue slot so the next deploy finds a warm cache. If already warm: does nothing and says so (unless `force`, which rebuilds without cache). The end arrives in `Event::ServiceWarmChanged`. Response: `ServiceWarmRequested`.
+
+```json
+{"ServiceWarm":{"service_id":"svc_…","force":false}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `force` | `bool` |
+
+**Used by:** only by the API and the MCP (no screen).
 
 ## Docker
 

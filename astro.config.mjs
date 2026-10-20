@@ -72,6 +72,7 @@ export default defineConfig({
           { slug: 'interface/novo-servico' },
           { slug: 'interface/servico' },
           { slug: 'interface/servico-configuracao' },
+          { slug: 'interface/em-execucao' },
           { slug: 'interface/deploy-engine' },
           { slug: 'interface/ingress' },
           { slug: 'interface/schedules' },

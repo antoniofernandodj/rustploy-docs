@@ -46,6 +46,7 @@ Em **Settings → Manutenção**, **LIMPEZA AUTOMÁTICA**:
 | **Redes sem uso** | remove as redes sem containers |
 | **Cache de build** | remove o cache sem uso |
 | **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | padrão **168 h**. `0` apaga todo o cache sem uso. Com um prazo, o cache de um deploy ou job recente sobrevive e o próximo build não recomeça do zero |
+| **Aquecer os builds depois da limpeza** | ligado por padrão. Reconstrói a imagem de cada serviço Git ou zip que ficou **frio**, um de cada vez, na fila de deploy |
 | **Volumes sem uso** | **cuidado**: veja abaixo |
 
 <Aside type="danger" title="Volumes podem conter dados">
@@ -55,6 +56,15 @@ Em **Settings → Manutenção**, **LIMPEZA AUTOMÁTICA**:
 </Aside>
 
 A limpeza automática vem **desligada** e sem nenhum tipo marcado.
+
+## Por que o primeiro deploy do dia demorava
+
+Apagar o cache de build faz o próximo deploy recompilar tudo: baixar a imagem base e
+reinstalar as dependências. Com **Aquecer os builds depois da limpeza**, o daemon refaz
+esse build logo após a limpeza, **um serviço por vez**, e cada serviço mostra o selo
+**quente** ou **frio** (na lista de serviços do projeto e no cabeçalho do serviço). Um
+deploy bem-sucedido também deixa o serviço quente. Serviços de imagem pronta ou Compose
+não têm build e não têm selo.
 
 ## Relação com os jobs
 

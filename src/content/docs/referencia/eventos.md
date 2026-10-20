@@ -1,6 +1,6 @@
 ---
 title: Eventos em tempo real (SSE)
-description: "Os 14 eventos que o daemon do Rustploy publica em GET /api/events (Server-Sent Events): mudança de estado de deploy, logs de build, métricas e status de serviço."
+description: "Os 15 eventos que o daemon do Rustploy publica em GET /api/events (Server-Sent Events): mudança de estado de deploy, logs de build, métricas e status de serviço."
 ---
 
 `GET /api/events` é um stream **SSE**. Ele entrega um **snapshot** completo do painel a cada 2 segundos e os **eventos** abaixo assim que acontecem. Cada registro traz um campo `kind` no `data` JSON: `"snapshot"` ou `"bus"`.
@@ -129,6 +129,17 @@ Um aquecimento de job começou (`warming: true`) ou terminou (`warming: false`, 
 | Campo | Tipo |
 |---|---|
 | `job_id` | `String` |
+| `warming` | `bool` |
+| `success` | `Option<bool>` |
+| `error` | `Option<String>` |
+
+### ServiceWarmChanged
+
+Um aquecimento de serviço começou (`warming: true`) ou terminou (`warming: false`, com `success` e, na falha, `error`). Vale pra todos os clientes (não filtra por serviço): a tela de lista precisa dele.
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
 | `warming` | `bool` |
 | `success` | `Option<bool>` |
 | `error` | `Option<String>` |

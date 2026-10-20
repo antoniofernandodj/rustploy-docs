@@ -24,6 +24,8 @@ export const DOCS = {
   JobRunNow: 'Runs the job immediately, outside its schedule.',
   JobRunCancel: 'Cancels a running `job_run`: really kills the `docker compose up` process (not just the task) — see `AppState::active_jobs`. `NotFound` error if the run is no longer registered as running (it finished, or the id never existed).',
   JobWarmStatus: 'Single source of truth for "is this job warm?": checks whether its images and build cache are still on the host. Response: `JobWarmStatus`.',
+  ServiceWarmStatusList: 'The warm-up status (`ServiceWarmStatus`) of every service with a Git or zip source. Response: `ServiceWarmStatuses`.',
+  ServiceWarm: 'Warms the service: builds its image in the single queue slot so the next deploy finds a warm cache. If already warm: does nothing and says so (unless `force`, which rebuilds without cache). The end arrives in `Event::ServiceWarmChanged`. Response: `ServiceWarmRequested`.',
   JobWarm: 'Warms the job (pulls the missing images and fills the build cache) without running it. If already warm: does nothing and says so. Otherwise the single queue slot is contended in the background and the end arrives in `Event::JobWarmChanged`. Response: `JobWarmRequested`.',
   PruneVolumes: '`all=true` removes volumes even if they are not anonymous (equivalent to `docker volume prune --all`); `false` is the Docker default.',
   PruneImages: '`all=true` removes every unused image, not just dangling/untagged ones (equivalent to `docker image prune -a`); `false` is the Docker default.',
@@ -43,6 +45,7 @@ export const DOCS = {
   JobRunStateChanged: 'Start/end of a job run.',
   DeployQueueChanged: 'The global deploy queue changed (queued, started, finished, reordered, cancelled or paused/resumed). A light signal: the client re-fetches `DeployEngineStatus` when it receives it. Deliberately appended at the end of the enum.',
   DockerCleanupCompleted: 'An automatic cleanup (or "Run now") finished — triggered by `maintenance::scheduler_loop` or by `Command::DockerCleanupRunNow`. It is not per-service, so it falls in the "always true" arm of `matches`.',
+  ServiceWarmChanged: 'A service warm-up started (`warming: true`) or finished (`warming: false`, with `success` and, on failure, `error`). Applies to every client (it is not filtered by service): the list screen needs it.',
   JobWarmChanged: 'A job warm-up started (`warming: true`) or finished (`warming: false`, with `success` and, on failure, `error`).',
 };
 

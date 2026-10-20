@@ -1,0 +1,54 @@
+---
+title: Running (Em execução) in the desktop app and web UI
+description: The Em execução screen of Rustploy - only the projects and services running right now, with branch, pre-deploy checks, masked webhook and shortcuts to deploy, stop and navigate.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The **Em execução** (Running) screen (side menu, **DEPLOYMENT OPS** group) answers "what is
+up right now?" without opening each project. It is the **same in the desktop app and in the
+web UI**.
+
+## What shows up
+
+- Only **projects with at least one running service**. An empty project, or one with
+  everything stopped, does not appear.
+- Inside each project, only the **running** (or *degraded*) **services**. A stopped service
+  disappears, even if the project has another one up.
+- The search box at the top filters by project or service name.
+
+## Each service card
+
+The card changes with the service **type**:
+
+| Type | What it highlights |
+|---|---|
+| **App · Git** | the deployed **branch** and the repository |
+| **App · zip** | the type and the domains |
+| **App · image** | the image and tag |
+| **Database** | the engine (postgres, mongodb, mariadb, mysql, redis) and the port |
+| **Broker** | the engine (kafka, rabbitmq, nats) and the port |
+| **Compose** | the type and the domains |
+
+Every card also shows:
+
+- **Domains**, **CPU** and **memory**.
+- The **warm / cold** badge when the service has a build (Git or zip). See
+  [Docker cleanup](/en/guias/limpeza-docker/).
+- **PRÉ-DEPLOY CHECKS**: the jobs that run before the deploy, **in order**.
+- **WEBHOOK DE DEPLOY**: the URL, with the token **masked**.
+
+<Aside type="caution" title="The webhook token triggers a deploy">
+  Anyone with the full URL can trigger a deploy. That is why it is masked
+  (`…/webhook/<id>/••••••••`). **Mostrar** (Show) reveals it on screen; **Copiar** (Copy)
+  always copies the full URL. Compose services have no webhook.
+</Aside>
+
+## Shortcuts
+
+| Button | What it does |
+|---|---|
+| **▶ Deploy** | triggers the service deploy without opening its screen |
+| **■** | stops the service (asks for confirmation) |
+| **Abrir serviço ›** | goes to the [service screen](/en/interface/servico/) |
+| **Abrir projeto ›** | goes to the [project](/en/interface/projetos/) |
