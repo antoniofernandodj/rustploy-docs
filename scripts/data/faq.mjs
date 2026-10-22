@@ -264,8 +264,8 @@ export const sections = [
       {
         q: { pt: 'Como conecto o Claude Code ao Rustploy?', en: 'How do I connect Claude Code to Rustploy?' },
         a: {
-          pt: 'Em Settings → Web Server, use o botão **Conectar um agente (Claude Code)** para copiar o comando `claude mcp add --transport http rustploy https://HOST:PORTA/mcp --header "Authorization: Bearer <token>"` e rode-o no terminal. Depois abra uma sessão **nova** do Claude Code. Veja [Conectar o Claude Code ao Rustploy](/agentes/conectar-claude-code/).',
-          en: 'In Settings → Web Server, use the **Conectar um agente (Claude Code)** button to copy the command `claude mcp add --transport http rustploy https://HOST:PORT/mcp --header "Authorization: Bearer <token>"` and run it in your terminal. Then open a **new** Claude Code session. See [Connect Claude Code to Rustploy](/agentes/conectar-claude-code/).',
+          pt: 'Em Settings → Web Server, use a seção **Conectar um agente de IA (MCP)** (há um botão Copiar para Claude Code, Codex e Gemini CLI). No Claude Code, copie o comando `claude mcp add --transport http rustploy https://HOST:PORTA/mcp --header "Authorization: Bearer <token>"` e rode-o no terminal. Depois abra uma sessão **nova** do Claude Code. Veja [Conectar o Claude Code ao Rustploy](/agentes/conectar-claude-code/).',
+          en: 'In Settings → Web Server, use the **Conectar um agente de IA (MCP)** section (it has a Copy button for Claude Code, Codex and Gemini CLI). For Claude Code, copy the command `claude mcp add --transport http rustploy https://HOST:PORT/mcp --header "Authorization: Bearer <token>"` and run it in your terminal. Then open a **new** Claude Code session. Codex and Gemini CLI have their own Copy buttons there (a `config.toml` block and a `gemini mcp add` command). See [Connect Claude Code to Rustploy](/agentes/conectar-claude-code/).',
         },
       },
       {

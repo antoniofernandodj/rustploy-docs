@@ -10,7 +10,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 You have an open session in the desktop app or web UI:
 
 <Steps>
-1. Go to **Settings → Web Server → "Conectar um agente (Claude Code)" (Connect an agent) → Copiar (Copy)**. The command already comes with the URL and token filled in.
+1. Go to **Settings → Web Server → "Conectar um agente de IA (MCP)" (Connect an AI agent) → Claude Code → Copiar (Copy)**. The command already comes with the URL and token filled in.
 
 2. Run it in the terminal of the machine where Claude Code is:
 
@@ -27,6 +27,25 @@ You have an open session in the desktop app or web UI:
 
 4. Open a **new session** of Claude Code. The tools do not appear in the session where the command ran. Use `/mcp` to check.
 </Steps>
+
+## Codex and Gemini CLI
+
+The same MCP server works with other agents. In **Settings → Web Server → "Conectar um agente de IA (MCP)"** (Connect an AI agent) there is a **Copiar** (Copy) button for each one: Claude Code, Codex and Gemini CLI. All of them already include the URL and the token.
+
+**Codex.** Append the copied block to `~/.codex/config.toml` and open a new session:
+
+```toml
+[mcp_servers.rustploy]
+url = "https://HOST:PORT/mcp"
+http_headers = { Authorization = "Bearer <API token>" }
+```
+
+**Gemini CLI.** Run the copied command in the terminal and check with `/mcp`:
+
+```bash
+gemini mcp add --transport http --scope user \
+  --header "Authorization: Bearer <API token>" rustploy https://HOST:PORT/mcp
+```
 
 ## The path with validation (only with the connection token)
 

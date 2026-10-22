@@ -33,7 +33,7 @@ Três blocos, cada um com **Copiar**:
 |---|---|
 | **URL PÚBLICA DA API** | a base dos **webhooks** dos serviços e do callback do OAuth. Vem de `[api].domain` e da porta. Para mudá-la, configure `api.domain` e reinicie o daemon |
 | **TOKEN DE CONEXÃO** | o texto em base64 de `host:porta::token`, o que se cola no [login](/interface/entrar/) e que um agente de IA usa. Também fica em `[api].connection_token` no `config.toml` |
-| **CONECTAR UM AGENTE (CLAUDE CODE)** | copia o comando `claude mcp add …/mcp` já com o token. Cole no terminal. Veja [Conectar o Claude Code](/agentes/conectar-claude-code/) |
+| **CONECTAR UM AGENTE DE IA (MCP)** | três botões Copiar, para Claude Code (`claude mcp add …/mcp`), Codex (bloco para o `~/.codex/config.toml`) e Gemini CLI (`gemini mcp add …`), todos já com o token. Veja [Conectar o Claude Code, Codex e Gemini](/agentes/conectar-claude-code/) |
 
 <Aside type="danger">
   O token de conexão **vale tanto quanto o token de administrador**. Não o compartilhe,
