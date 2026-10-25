@@ -922,7 +922,7 @@ Aquece o serviço: constrói a imagem dele na vaga única da fila, para o próxi
 | `service_id` | `String` |
 | `force` | `bool` |
 
-**Usado por:** só pela API e pelo MCP (nenhuma tela).
+**Usado por:** GUI e web UI.
 
 ## Docker
 

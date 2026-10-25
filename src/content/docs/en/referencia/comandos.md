@@ -922,7 +922,7 @@ Warms the service: builds its image in the single queue slot so the next deploy 
 | `service_id` | `String` |
 | `force` | `bool` |
 
-**Used by:** only by the API and the MCP (no screen).
+**Used by:** GUI and web UI.
 
 ## Docker
 

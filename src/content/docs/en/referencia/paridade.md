@@ -5,7 +5,7 @@ description: "Which Rustploy commands exist only through the API and the MCP, wh
 
 The desktop GUI and the web UI talk to the same API, but cover slightly different sets. This list is generated from the code on every release.
 
-## Not called directly by any screen (29)
+## Not called directly by any screen (28)
 
 No screen fires these commands directly. Some data (the Docker lists, the jobs) shows up on the screens anyway, because it arrives in the dashboard *snapshot*. To act on them, use `curl`, the `rpc` tool of the [MCP](/en/agentes/ferramentas/) or an AI agent.
 
@@ -24,7 +24,6 @@ No screen fires these commands directly. Some data (the Docker lists, the jobs) 
 - [`JobRunHistory`](/en/referencia/comandos/#jobrunhistory)
 - [`JobWarmStatus`](/en/referencia/comandos/#jobwarmstatus)
 - [`ServiceWarmStatusList`](/en/referencia/comandos/#servicewarmstatuslist)
-- [`ServiceWarm`](/en/referencia/comandos/#servicewarm)
 - [`PruneBuildCache`](/en/referencia/comandos/#prunebuildcache)
 - [`DockerImages`](/en/referencia/comandos/#dockerimages)
 - [`DockerVolumes`](/en/referencia/comandos/#dockervolumes)
