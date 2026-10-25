@@ -75,9 +75,9 @@ Cada parte do Rustploy se instala com **um comando**. Escolha o que você quer i
 
 | Comando | O que faz |
 |---|---|
-| **Servidor** | baixa o `.deb` do `rustployd` da última release, **confere o SHA-256**, **instala o motor de containers se faltar** (Docker Engine pelo repositório oficial da Docker, ou Podman com `--engine podman`), instala com `apt`, instala o `git` se faltar, **gera um token forte**, grava o `[api]` no `config.toml`, sobe o serviço e **mostra o token de conexão** |
+| **Servidor** | baixa o `.deb` do `rustployd` da última release, **confere o SHA-256 e a assinatura minisign**, **instala o motor de containers se faltar** (Docker Engine pelo repositório oficial da Docker, ou Podman com `--engine podman`), instala com `apt`, instala o `git` se faltar, **gera um token forte**, grava o `[api]` no `config.toml`, sobe o serviço e **mostra o token de conexão** |
 | **Servidor com `--remote`** | o mesmo, mas a API escuta em `0.0.0.0:9797` (sem a opção, escuta só em `127.0.0.1`, e nada fica exposto à internet) |
-| **Desktop (Linux)** | baixa o `.deb` do app, confere o SHA-256 e instala com `apt` |
+| **Desktop (Linux)** | baixa o `.deb` do app, confere o SHA-256 e a assinatura minisign e instala com `apt` |
 | **Desktop (Windows)** | baixa o zip portátil, confere o SHA-256, instala em `%LOCALAPPDATA%\Rustploy` e cria o atalho no Menu Iniciar |
 
 ## Antes de rodar um `curl | sh`

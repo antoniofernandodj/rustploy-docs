@@ -17,7 +17,7 @@ Na VPS, como root:
 curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
 ```
 
-O instalador baixa o `.deb` da **última release do GitHub**, confere o SHA-256, instala o motor de containers
+O instalador baixa o `.deb` da **última release do GitHub**, confere o SHA-256 e a assinatura minisign (recusa o pacote se não bater com a chave do Rustploy; `--no-verify` pula), instala o motor de containers
 (Docker, se faltar), instala, gera um token, sobe o
 serviço e mostra o **token de conexão**. Para liberar o acesso de fora da VPS, acrescente `--remote` depois de
 `sh -s --`. Todos os detalhes, as opções e como ler o script antes de rodar estão em

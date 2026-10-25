@@ -16,7 +16,7 @@ On the VPS, as root:
 curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.sh | sudo sh
 ```
 
-The installer downloads the `.deb` from the **latest GitHub release**, checks the SHA-256, installs it, generates a
+The installer downloads the `.deb` from the **latest GitHub release**, checks the SHA-256 and the minisign signature (refuses the package if it does not match the Rustploy key; `--no-verify` skips), installs it, generates a
 token, starts the service and prints the **connection token**. To allow access from outside the VPS, add `--remote`
 after `sh -s --`. All the details, the options and how to read the script before running it are in
 [Quick install](/en/instalacao/instalacao-rapida/).
