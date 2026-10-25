@@ -9,6 +9,25 @@ In **Settings → Atualizações** (in the app and in the web UI) the daemon ask
 release and compares it with the running version. It is only a check: **nothing is installed**, and the
 update itself follows the steps below. See [Settings](/en/interface/configuracoes/#atualizações-updates).
 
+## Updating from Settings
+
+If the server was installed from the `.deb`, the **Atualizar daemon** (update daemon) button (in **Settings → Atualizações**, in
+the app and in the web UI) does everything: the daemon keeps a database snapshot, downloads the release's package and
+signature, and asks a root helper to install it, which only installs what the project has **signed** (see
+[the update helper](/en/operacao/seguranca-do-servidor/#the-update-helper)). The daemon restarts, but your services'
+containers **keep running**.
+
+- If a **deploy is running or queued**, the daemon refuses and asks whether you want to update anyway.
+- If the service **does not become stable** after the install, the previous binaries come back by themselves.
+- **Reverter para a versão anterior** (roll back) restores the binaries from the last update's backup. The database is **not**
+  rolled back: if the new version migrated the schema, the snapshot kept before sits in `<db_path>/update_snapshots/` (the 3 most recent).
+- In the desktop app the window returns to the login when the daemon restarts; sign in again and the tab shows the result. In
+  the web UI the progress shows live.
+
+The button only appears if the helper exists (a `.deb` install, with systemd). For other installs use the command below. The
+**first** update to a version that has this feature has to be done with the command below, because the previous version
+does not have the helper yet.
+
 ## Update the daemon
 
 The shortest way is to run the [install command](/en/instalacao/instalacao-rapida/) again, which downloads the latest

@@ -148,6 +148,15 @@ The domain set in **Settings → Web Server** takes precedence over the file's.
 | `dir` | `<db_path>/env_backups/` | |
 | `interval_secs` | `60` | |
 
+### `[update]` (optional)
+
+| Key | Default | |
+|---|---|---|
+| `enabled` | `true` | `false`: the daemon does not ask GitHub at all (VPS with no internet access) |
+| `repo` | `antoniofernandodj/rustploy` | `owner/name` of the releases checked. Fixed in the config: the UI does not pick where an update comes from |
+| `cache_hours` | `6` | how long a result is valid (GitHub limits the anonymous API to 60 requests per hour per IP) |
+| `allow_agent_apply` | `false` | `true`: the MCP agent may request `ApplyUpdate` and `UpdateRollback`. See [the update helper](/en/operacao/seguranca-do-servidor/#the-update-helper) |
+
 ## Environment variables
 
 They **override** the file (and the defaults):

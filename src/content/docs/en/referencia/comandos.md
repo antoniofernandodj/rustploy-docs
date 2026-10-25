@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 110 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 113 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **110 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **113 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -1218,6 +1218,34 @@ Pergunta ao GitHub se há release mais nova que o daemon. Só leitura: não inst
 | `force` | `bool` |
 
 **Used by:** GUI and web UI.
+
+### ApplyUpdate
+
+Atualiza o daemon para a última release **estável** (a que o `CheckUpdate` vê): baixa o pacote e a assinatura, tira um snapshot do banco e pede a instalação ao helper root, que só instala o que estiver assinado. O daemon reinicia no meio; acompanhe com `UpdateStatus`. Recusa se há deploy em andamento ou na fila, a menos que `allow_active_deploys`. O agente MCP só pode usar se `[update] allow_agent_apply = true`. Resposta: `Ok`.
+
+```json
+{"ApplyUpdate":{"allow_active_deploys":false}}
+```
+
+| Field | Type |
+|---|---|
+| `allow_active_deploys` | `bool` |
+
+### UpdateStatus
+
+Estado da atualização em curso, ou o resultado da última. Resposta: `UpdateProgress`.
+
+```json
+"UpdateStatus"
+```
+
+### UpdateRollback
+
+Volta os binários para os do backup da última atualização (o único caminho que aceita uma versão menor). Mesma trava do agente MCP que `ApplyUpdate`. Resposta: `Ok`.
+
+```json
+"UpdateRollback"
+```
 
 ## Git providers
 

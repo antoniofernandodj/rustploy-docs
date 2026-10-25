@@ -72,6 +72,27 @@ Opening a port in `ufw` requires root, so that lives in a separate process, **`r
 Exposing a database **opens the port to the internet**, protected only by its password. Restrict by IP in `ufw`
 itself when you can.
 
+## The update helper
+
+Installing a `.deb` needs root, and the daemon does **not** have root. A second process installs it, **`rustployd-update`**,
+under the same rule as the firewall helper: minimal surface.
+
+- it is only **activated by a socket** (`/run/rustploy/update.sock`, group `rustploy`, mode `0660`), serves **one request** and exits;
+- it **opens no network connection**: the daemon downloads the package, and the helper only checks and installs (so it runs without a network);
+- it accepts only two requests, *install* and *rollback*, and **only installs the `rustployd` package**: a signed `.deb` of
+  another product (such as `rustploy-gui`) is refused;
+- it only installs what is **signed** with the project key (minisign/ed25519, embedded in the helper). The release's
+  SHA-256 is not enough, because it comes from the same place as the file: whoever swapped the release would swap both. The
+  signature carries the package name, version and architecture, and the helper checks they match the `.deb`;
+- it **never installs a version that is not newer** than the installed one (an old, legitimate, signed package does not come back);
+- it copies the file to a root-only directory **before** checking, so the daemon cannot swap it after the check;
+- after installing, it waits for the service to stay stable for a few seconds and, if it crash-loops, **restores the
+  previous binaries** by itself.
+
+The API token can use `ApplyUpdate`, but **the MCP agent cannot** request an update unless you turn on `allow_agent_apply`
+in [`[update]`](/en/instalacao/config-toml/#update-optional). If the signing key leaked, whoever held it could publish a
+package every installation would accept as root: that is why it stays only on the owner's machine, with a password, never in CI.
+
 ## Built-in registry
 
 Every route requires authentication, even on loopback. Use **pull** tokens where you only download and **push**

@@ -180,8 +180,8 @@ redes, cache de build). Mais em [Limpeza do Docker](/guias/limpeza-docker/).
 
 ## Atualizações
 
-Mostra se há uma versão mais nova do **daemon** do que a que está rodando no servidor. A consulta é só
-leitura: **não instala nada**.
+Mostra se há uma versão mais nova do **daemon** do que a que está rodando no servidor e, se o servidor foi instalado
+pelo `.deb`, atualiza o daemon com um botão.
 
 | Campo | O que é |
 |---|---|
@@ -194,9 +194,17 @@ em cache por **6 horas** (o GitHub limita a API anônima a 60 consultas por hora
 atualizações** ignora o cache, mas no máximo uma vez por minuto. O app também consulta uma vez ao conectar, para a
 aba já abrir preenchida.
 
-Quando há versão nova, a aba mostra o comando de instalação, com **Copiar**, e o endereço das notas da
-release. Por enquanto a atualização é manual: rode o comando na VPS (veja
-[Atualizar o Rustploy](/instalacao/atualizar/)).
+Quando há versão nova, a aba mostra **Atualizar daemon**. Antes de agir ela pede confirmação (e, se há deploy em
+andamento ou na fila, pergunta de novo). O daemon guarda um snapshot do banco, baixa o pacote e a assinatura e entrega a um
+helper root, que só instala o que estiver **assinado** pelo projeto; depois da instalação o serviço precisa ficar estável,
+ou os binários anteriores voltam sozinhos. **Reverter para a versão anterior** restaura os binários do backup da última
+atualização. Os detalhes estão em [Atualizar o Rustploy](/instalacao/atualizar/#atualizar-pelo-settings) e o modelo de
+segurança em [o helper de atualização](/operacao/seguranca-do-servidor/#o-helper-de-atualização).
+
+O daemon reinicia no meio (os containers dos serviços continuam rodando). No app desktop a janela volta ao login: entre de
+novo e a aba mostra o resultado (por exemplo "Atualizado para 0.1.11" ou a causa de uma falha). Na web UI o progresso aparece
+ao vivo. Sem o helper (instalação sem `.deb` ou sem systemd) a aba mostra, em vez do botão, o comando de instalação com
+**Copiar** e o endereço das notas da release.
 
 Se a VPS não alcança o GitHub, a aba mostra a causa (sem internet, limite de consultas, nenhuma release publicada).
 Para desligar a consulta, ou trocar o repositório, use a seção `[update]` do `config.toml`:
@@ -206,6 +214,7 @@ Para desligar a consulta, ou trocar o repositório, use a seção `[update]` do 
 enabled = true                         # false: o daemon nem consulta o GitHub
 repo = "antoniofernandodj/rustploy"    # dono/nome
 cache_hours = 6
+allow_agent_apply = false              # true: o agente MCP também pode atualizar
 ```
 
 A web UI tem a mesma aba, com os mesmos campos.

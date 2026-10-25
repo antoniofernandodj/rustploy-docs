@@ -150,6 +150,15 @@ O domínio definido em **Settings → Web Server** tem precedência sobre o do a
 | `dir` | `<db_path>/env_backups/` | |
 | `interval_secs` | `60` | |
 
+### `[update]` (opcional)
+
+| Chave | Padrão | |
+|---|---|---|
+| `enabled` | `true` | `false`: o daemon nem consulta o GitHub (VPS sem saída para a internet) |
+| `repo` | `antoniofernandodj/rustploy` | `dono/nome` das releases consultadas. Fixo na config: a UI não escolhe de onde vem uma atualização |
+| `cache_hours` | `6` | por quanto tempo vale o resultado (o GitHub limita a API anônima a 60 consultas por hora por IP) |
+| `allow_agent_apply` | `false` | `true`: o agente MCP pode pedir `ApplyUpdate` e `UpdateRollback`. Veja [o helper de atualização](/operacao/seguranca-do-servidor/#o-helper-de-atualização) |
+
 ## Variáveis de ambiente
 
 Elas **sobrescrevem** o arquivo (e os padrões):

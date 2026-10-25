@@ -173,8 +173,8 @@ At the bottom, **ÚLTIMA EXECUÇÃO** (last run) shows when it ran and what it f
 
 ## Atualizações (Updates)
 
-Shows whether there is a newer **daemon** than the one running on the server. The check is read-only: it
-**installs nothing**.
+Shows whether there is a newer **daemon** than the one running on the server and, if the server was installed from the
+`.deb`, updates the daemon with a button.
 
 | Field | What it is |
 |---|---|
@@ -187,9 +187,17 @@ The **daemon** asks GitHub, not the app: the question is "is the server out of d
 button skips the cache, but at most once a minute. The app also checks once when it connects, so the tab opens
 already filled in.
 
-When there is a newer version, the tab shows the install command, with **Copiar**, and the release notes
-address. For now updating is manual: run the command on the VPS (see
-[Updating Rustploy](/en/instalacao/atualizar/)).
+When there is a newer version, the tab shows **Atualizar daemon**. It asks for confirmation before acting (and, if a deploy
+is running or queued, asks again). The daemon keeps a database snapshot, downloads the package and signature and hands them to
+a root helper, which only installs what the project has **signed**; after the install the service has to become stable, or the
+previous binaries come back by themselves. **Reverter para a versão anterior** (roll back) restores the binaries from the last
+update's backup. The details are in [Updating Rustploy](/en/instalacao/atualizar/#updating-from-settings) and the security model
+in [the update helper](/en/operacao/seguranca-do-servidor/#the-update-helper).
+
+The daemon restarts in the middle (the services' containers keep running). In the desktop app the window returns to the
+login: sign in again and the tab shows the result (for example "Atualizado para 0.1.11" or the cause of a failure). In the web
+UI the progress shows live. Without the helper (a non-`.deb` install, or no systemd) the tab shows, instead of the button, the
+install command with **Copiar** and the release notes address.
 
 If the VPS cannot reach GitHub, the tab shows the cause (no internet, rate limit, no release published). To
 turn the check off, or change the repository, use the `[update]` section of `config.toml`:
@@ -199,6 +207,7 @@ turn the check off, or change the repository, use the `[update]` section of `con
 enabled = true                         # false: the daemon does not ask GitHub at all
 repo = "antoniofernandodj/rustploy"    # owner/name
 cache_hours = 6
+allow_agent_apply = false              # true: the MCP agent may also update
 ```
 
 The web UI has the same tab, with the same fields.
