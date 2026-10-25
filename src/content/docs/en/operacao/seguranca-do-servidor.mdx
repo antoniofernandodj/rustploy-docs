@@ -93,6 +93,25 @@ The API token can use `ApplyUpdate`, but **the MCP agent cannot** request an upd
 in [`[update]`](/en/instalacao/config-toml/#update-optional). If the signing key leaked, whoever held it could publish a
 package every installation would accept as root: that is why it stays only on the owner's machine, with a password, never in CI.
 
+## The desktop app helper
+
+The app runs on **your machine**, not on the server, and its update follows the same idea as the daemon's with one
+difference: there is no resident service. When you click **Atualizar app**, the app downloads the `.deb` and the signature to
+its own cache (`~/.cache/rustploy-gui/updates`) and runs `pkexec /usr/libexec/rustploy-gui-update install …`; the system shows
+the password dialog, the helper installs and **exits**. Nothing runs as root between one update and the next.
+
+The guarantees are the daemon helper's: it opens no network, only installs the `rustploy-gui` package, only if it is
+**signed** with the project key, and never a version that is not newer. Besides that:
+
+- it only reads files **directly from the calling user's cache**. The directory comes from `PKEXEC_UID` resolved in the user
+  table, not from the `HOME` variable, which the user controls; a package in **another** person's cache is refused;
+- it refuses symbolic links and copies the file to a root-only directory before checking the signature;
+- the polkit policy (`br.com.rustploy.gui-update`) authorizes **a single program**, `/usr/libexec/rustploy-gui-update`,
+  asking for the administrator password (`auth_admin_keep`: valid for a few minutes).
+
+Without `pkexec` on the system, or in an app that did not come from the `.deb`, the button does not appear and the tab only
+shows the install command.
+
 ## Built-in registry
 
 Every route requires authentication, even on loopback. Use **pull** tokens where you only download and **push**

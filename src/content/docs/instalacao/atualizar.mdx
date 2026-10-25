@@ -66,7 +66,8 @@ um *rollback* seguro; uma troca em curso é inspecionada no Docker; `Promoting`
 ## Atualizar os clientes
 
 - **Web UI**: já vem no daemon. Se o navegador mostrar a versão antiga, force o recarregamento (`Ctrl+Shift+R`), porque os arquivos são servidos com cache longo.
-- **GUI**: rode de novo o comando de instalação (Linux: `… | sudo sh -s -- gui`; Windows: `irm … | iex`), instale o novo `.deb` ou substitua a pasta do zip portátil.
+- **GUI instalada pelo `.deb` (Linux)**: em **Settings → Atualizações**, a seção **App desktop** mostra a versão instalada e a última; **Atualizar app** baixa o pacote, pede a **senha de administrador** (o diálogo nativo do sistema, via `pkexec`), instala e reabre o app. O programa que ganha root é só o `rustploy-gui-update`, que instala o pacote `rustploy-gui` **assinado** pelo projeto e nunca uma versão que não seja mais nova; ele existe apenas durante a autenticação, e não há processo root residente no seu computador. Veja [o helper do app](/operacao/seguranca-do-servidor/#o-helper-do-app-desktop).
+- **GUI de outro jeito** (Windows, zip portátil, `cargo install`): a aba mostra a versão nova e o comando de instalação. Rode de novo o comando (Linux: `… | sudo sh -s -- gui`; Windows: `irm … | iex`) ou substitua a pasta do zip portátil.
 
 
 :::tip

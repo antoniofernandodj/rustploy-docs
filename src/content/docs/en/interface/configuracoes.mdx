@@ -210,4 +210,13 @@ cache_hours = 6
 allow_agent_apply = false              # true: the MCP agent may also update
 ```
 
-The web UI has the same tab, with the same fields.
+The web UI has the same tab, with the daemon's same fields.
+
+### Desktop app
+
+In the desktop app the tab also has the **App desktop** section, with the installed version and the latest release. Unlike the
+daemon, the GitHub check is made by the app itself (it runs on your machine). If the app was installed from the `.deb` and the
+system has `pkexec`, **Atualizar app** downloads the package, asks for the administrator password and reopens the already
+updated app. Otherwise the tab shows the install command. The security details are in
+[the desktop app helper](/en/operacao/seguranca-do-servidor/#the-desktop-app-helper). The web UI does not have this section: it
+is served by the daemon and there is no app to update.

@@ -217,4 +217,13 @@ cache_hours = 6
 allow_agent_apply = false              # true: o agente MCP também pode atualizar
 ```
 
-A web UI tem a mesma aba, com os mesmos campos.
+A web UI tem a mesma aba, com os mesmos campos do daemon.
+
+### App desktop
+
+No app desktop a aba tem também a seção **App desktop**, com a versão instalada e a última release. Diferente do daemon, a
+consulta ao GitHub é feita pelo próprio app (ele roda na sua máquina). Se o app foi instalado pelo `.deb` e o sistema tem
+`pkexec`, **Atualizar app** baixa o pacote, pede a senha de administrador e reabre o app já atualizado. Caso contrário a
+aba mostra o comando de instalação. Os detalhes de segurança estão em
+[o helper do app desktop](/operacao/seguranca-do-servidor/#o-helper-do-app-desktop). A web UI não tem essa seção: ela é servida
+pelo daemon e não há app para atualizar.

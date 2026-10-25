@@ -1231,6 +1231,8 @@ Atualiza o daemon para a última release **estável** (a que o `CheckUpdate` vê
 |---|---|
 | `allow_active_deploys` | `bool` |
 
+**Used by:** GUI and web UI.
+
 ### UpdateStatus
 
 Estado da atualização em curso, ou o resultado da última. Resposta: `UpdateProgress`.
@@ -1239,6 +1241,8 @@ Estado da atualização em curso, ou o resultado da última. Resposta: `UpdatePr
 "UpdateStatus"
 ```
 
+**Used by:** GUI and web UI.
+
 ### UpdateRollback
 
 Volta os binários para os do backup da última atualização (o único caminho que aceita uma versão menor). Mesma trava do agente MCP que `ApplyUpdate`. Resposta: `Ok`.
@@ -1246,6 +1250,8 @@ Volta os binários para os do backup da última atualização (o único caminho 
 ```json
 "UpdateRollback"
 ```
+
+**Used by:** GUI and web UI.
 
 ## Git providers
 

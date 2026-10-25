@@ -101,6 +101,24 @@ O token de API dá acesso a `ApplyUpdate`, mas **o agente MCP não pode** pedir 
 poderia publicar um pacote que toda instalação aceitaria como root: por isso ela fica só na máquina do dono, com senha, e
 nunca no CI.
 
+## O helper do app desktop
+
+O app roda na **sua máquina**, não no servidor, e a atualização dele segue a mesma ideia do daemon com uma diferença: não
+há serviço residente. Quando você clica em **Atualizar app**, o app baixa o `.deb` e a assinatura para o próprio cache
+(`~/.cache/rustploy-gui/updates`) e roda `pkexec /usr/libexec/rustploy-gui-update install …`; o sistema mostra o diálogo de
+senha, o helper instala e **sai**. Nada fica rodando como root entre uma atualização e outra.
+
+As garantias são as do helper do daemon: não abre rede, só instala o pacote `rustploy-gui`, só se estiver **assinado** com a
+chave do projeto, e nunca uma versão que não seja mais nova. Além disso:
+
+- só lê arquivos **direto do cache do usuário que chamou**. O diretório vem do `PKEXEC_UID` resolvido na tabela de usuários,
+  e não da variável `HOME`, que o usuário controla; um pacote no cache de **outra** pessoa é recusado;
+- recusa links simbólicos e copia o arquivo para um diretório só do root antes de conferir a assinatura;
+- a política do polkit (`br.com.rustploy.gui-update`) autoriza **um único programa**, `/usr/libexec/rustploy-gui-update`,
+  pedindo a senha de administrador (`auth_admin_keep`: vale por alguns minutos).
+
+Sem `pkexec` no sistema, ou num app que não veio do `.deb`, o botão não aparece e a aba mostra só o comando de instalação.
+
 ## Registry embutido
 
 Toda rota exige autenticação, mesmo em loopback. Use tokens **pull** onde só se baixa
