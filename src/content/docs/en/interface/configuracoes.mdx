@@ -1,6 +1,6 @@
 ---
 title: Settings in the desktop app
-description: The four Settings tabs of the Rustploy desktop app - Web Server (API URL, connection token and the AI agent command), Git (GitHub and Gitea accounts), Infrastructure as Code (export and import zip) and Maintenance (automatic Docker cleanup).
+description: The five Settings tabs of the Rustploy desktop app - Web Server (API URL, connection token and the AI agent command), Git (GitHub and Gitea accounts), Infrastructure as Code (export and import zip) and Maintenance (automatic Docker cleanup).
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -16,7 +16,7 @@ import iac from '../../../../assets/ui/settings-iac.png';
 import manutencao from '../../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../../assets/ui/settings-manutencao-fim.png';
 
-**Settings** (at the foot of the side menu) has four tabs: **Web Server**, **Git**, **Infra as Code** and **Manutenção** (Maintenance).
+**Settings** (at the foot of the side menu) has five tabs: **Web Server**, **Git**, **Infra as Code**, **Manutenção** (Maintenance) and **Atualizações** (Updates).
 
 ## Web Server
 
@@ -170,3 +170,35 @@ This is where the **automatic Docker cleanup** lives. It comes **off** and **rem
 
 At the bottom, **ÚLTIMA EXECUÇÃO** (last run) shows when it ran and what it freed (containers, images, networks, build cache). More in
 [Docker cleanup](/en/guias/limpeza-docker/).
+
+## Atualizações (Updates)
+
+Shows whether there is a newer **daemon** than the one running on the server. The check is read-only: it
+**installs nothing**.
+
+| Field | What it is |
+|---|---|
+| **Versão instalada** (installed version) | the `rustployd` version the app is using right now |
+| **Última versão** (latest version) | the latest **stable** release published on GitHub (`antoniofernandodj/rustploy`) |
+| **Verificado em** (checked at) | when the daemon actually asked GitHub (it can be a few hours old) |
+
+The **daemon** asks GitHub, not the app: the question is "is the server out of date?". The result is cached for
+**6 hours** (GitHub limits the anonymous API to 60 requests per hour per IP), and the **Verificar atualizações**
+button skips the cache, but at most once a minute. The app also checks once when it connects, so the tab opens
+already filled in.
+
+When there is a newer version, the tab shows the install command, with **Copiar**, and the release notes
+address. For now updating is manual: run the command on the VPS (see
+[Updating Rustploy](/en/instalacao/atualizar/)).
+
+If the VPS cannot reach GitHub, the tab shows the cause (no internet, rate limit, no release published). To
+turn the check off, or change the repository, use the `[update]` section of `config.toml`:
+
+```toml
+[update]
+enabled = true                         # false: the daemon does not ask GitHub at all
+repo = "antoniofernandodj/rustploy"    # owner/name
+cache_hours = 6
+```
+
+The web UI has the same tab, with the same fields.

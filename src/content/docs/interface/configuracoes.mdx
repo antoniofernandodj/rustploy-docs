@@ -1,6 +1,6 @@
 ---
 title: Configurações (Settings) no app desktop
-description: As quatro abas de Settings do app desktop do Rustploy - Web Server (URL da API, token de conexão e comando do agente de IA), Git (contas GitHub e Gitea), Infra as Code (exportar e importar zip) e Manutenção (limpeza automática do Docker).
+description: As cinco abas de Settings do app desktop do Rustploy - Web Server (URL da API, token de conexão e comando do agente de IA), Git (contas GitHub e Gitea), Infra as Code (exportar e importar zip), Manutenção (limpeza automática do Docker) e Atualizações (versão nova do daemon).
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -16,8 +16,8 @@ import iac from '../../../assets/ui/settings-iac.png';
 import manutencao from '../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../assets/ui/settings-manutencao-fim.png';
 
-**Settings** (no rodapé do menu lateral) tem quatro abas: **Web Server**, **Git**,
-**Infra as Code** e **Manutenção**.
+**Settings** (no rodapé do menu lateral) tem cinco abas: **Web Server**, **Git**,
+**Infra as Code**, **Manutenção** e **Atualizações**.
 
 ## Web Server
 
@@ -177,3 +177,35 @@ nada** até você marcar pelo menos um recurso e ativar.
 
 No final, **ÚLTIMA EXECUÇÃO** mostra quando rodou e o que liberou (containers, imagens,
 redes, cache de build). Mais em [Limpeza do Docker](/guias/limpeza-docker/).
+
+## Atualizações
+
+Mostra se há uma versão mais nova do **daemon** do que a que está rodando no servidor. A consulta é só
+leitura: **não instala nada**.
+
+| Campo | O que é |
+|---|---|
+| **Versão instalada** | a versão do `rustployd` que o app está usando agora |
+| **Última versão** | a última release **estável** publicada no GitHub (`antoniofernandodj/rustploy`) |
+| **Verificado em** | quando o daemon consultou o GitHub de fato (pode ser de algumas horas atrás) |
+
+Quem consulta o GitHub é o **daemon**, não o app: a pergunta é "o servidor está desatualizado?". O resultado fica
+em cache por **6 horas** (o GitHub limita a API anônima a 60 consultas por hora por IP) e o botão **Verificar
+atualizações** ignora o cache, mas no máximo uma vez por minuto. O app também consulta uma vez ao conectar, para a
+aba já abrir preenchida.
+
+Quando há versão nova, a aba mostra o comando de instalação, com **Copiar**, e o endereço das notas da
+release. Por enquanto a atualização é manual: rode o comando na VPS (veja
+[Atualizar o Rustploy](/instalacao/atualizar/)).
+
+Se a VPS não alcança o GitHub, a aba mostra a causa (sem internet, limite de consultas, nenhuma release publicada).
+Para desligar a consulta, ou trocar o repositório, use a seção `[update]` do `config.toml`:
+
+```toml
+[update]
+enabled = true                         # false: o daemon nem consulta o GitHub
+repo = "antoniofernandodj/rustploy"    # dono/nome
+cache_hours = 6
+```
+
+A web UI tem a mesma aba, com os mesmos campos.

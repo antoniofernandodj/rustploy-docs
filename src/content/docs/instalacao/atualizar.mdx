@@ -3,6 +3,12 @@ title: Atualizar o Rustploy
 description: Como atualizar o daemon e os clientes do Rustploy sem perder dados - o que é preservado no upgrade, como reinstalar o pacote e como o daemon retoma deploys interrompidos.
 ---
 
+## Saber se há versão nova
+
+Em **Settings → Atualizações** (no app e na web UI) o daemon consulta a última release estável no GitHub e
+compara com a versão em execução. É só uma consulta: **nada é instalado**, e a atualização em si segue os
+passos abaixo. Veja [Configurações](/interface/configuracoes/#atualizações).
+
 ## Atualizar o daemon
 
 O jeito mais curto é rodar de novo o [comando de instalação](/instalacao/instalacao-rapida/), que baixa a última

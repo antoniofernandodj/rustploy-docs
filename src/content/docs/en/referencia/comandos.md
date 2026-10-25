@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 109 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 110 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **109 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **110 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -41,6 +41,7 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 - [Ingress](#ingress)
 - [Variables backup](#variables-backup)
 - [Deploy queue](#deploy-queue)
+- [Infrastructure](#infrastructure)
 - [Git providers](#git-providers)
 - [Wizard and templates](#wizard-and-templates)
 - [Built-in registry](#built-in-registry)
@@ -1199,6 +1200,22 @@ Pauses (`true`) or resumes (`false`) the global queue. While paused, the worker 
 | Field | Type |
 |---|---|
 | `paused` | `bool` |
+
+**Used by:** GUI and web UI.
+
+## Infrastructure
+
+### CheckUpdate
+
+Pergunta ao GitHub se há release mais nova que o daemon. Só leitura: não instala nada. O resultado fica em cache no daemon (o GitHub limita a API anônima a 60 req/h por IP); `force` ignora o cache, mas o daemon ainda espaça consultas forçadas em ~1 min. Resposta: `UpdateInfo` (ou `Err` com `UpdateCheckFailed` se o GitHub não responder).
+
+```json
+{"CheckUpdate":{"force":false}}
+```
+
+| Field | Type |
+|---|---|
+| `force` | `bool` |
 
 **Used by:** GUI and web UI.
 
