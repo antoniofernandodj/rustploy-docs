@@ -155,6 +155,7 @@ The domain set in **Settings → Web Server** takes precedence over the file's.
 | `enabled` | `true` | `false`: the daemon does not ask GitHub at all (VPS with no internet access) |
 | `repo` | `antoniofernandodj/rustploy` | `owner/name` of the releases checked. Fixed in the config: the UI does not pick where an update comes from |
 | `cache_hours` | `6` | how long a result is valid (GitHub limits the anonymous API to 60 requests per hour per IP) |
+| `check_interval_hours` | `6` | how often the daemon checks on its own, so the "new version" dot lights up in open windows without anyone clicking "Check". `0`: only when asked |
 | `allow_agent_apply` | `false` | `true`: the MCP agent may request `ApplyUpdate` and `UpdateRollback`. See [the update helper](/en/operacao/seguranca-do-servidor/#the-update-helper) |
 
 ## Environment variables

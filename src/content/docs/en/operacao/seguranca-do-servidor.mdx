@@ -81,7 +81,8 @@ under the same rule as the firewall helper: minimal surface.
 - it **opens no network connection**: the daemon downloads the package, and the helper only checks and installs (so it runs without a network);
 - it accepts only two requests, *install* and *rollback*, and **only installs the `rustployd` package**: a signed `.deb` of
   another product (such as `rustploy-gui`) is refused;
-- it only installs what is **signed** with the project key (minisign/ed25519, embedded in the helper). The release's
+- it only installs what is **signed** with one of the project keys (minisign/ed25519, embedded in the helper; there are
+  two, one per machine that publishes releases, and each is the other's backup). The release's
   SHA-256 is not enough, because it comes from the same place as the file: whoever swapped the release would swap both. The
   signature carries the package name, version and architecture, and the helper checks they match the `.deb`;
 - it **never installs a version that is not newer** than the installed one (an old, legitimate, signed package does not come back);

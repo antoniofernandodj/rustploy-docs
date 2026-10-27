@@ -88,7 +88,8 @@ Instalar um `.deb` exige root, e o daemon **não** tem root. Quem instala é um 
 - **não abre conexão de rede**: quem baixa o pacote é o daemon, e o helper só confere e instala (por isso roda sem rede);
 - só aceita dois pedidos, *install* e *rollback*, e **só instala o pacote `rustployd`**: um `.deb` assinado de outro
   produto (como o `rustploy-gui`) é recusado;
-- só instala o que estiver **assinado** com a chave do projeto (minisign/ed25519, embutida no helper). O SHA-256 da release
+- só instala o que estiver **assinado** com uma das chaves do projeto (minisign/ed25519, embutidas no helper; há duas, uma
+  por máquina que publica releases, e cada uma é a reserva da outra). O SHA-256 da release
   não basta, porque sai do mesmo lugar do arquivo: quem trocasse a release trocaria os dois. A assinatura leva junto o
   nome, a versão e a arquitetura do pacote, e o helper confere que batem com o `.deb`;
 - **nunca instala uma versão que não seja mais nova** que a instalada (um pacote antigo, legítimo e assinado, não volta);
