@@ -113,6 +113,14 @@ The guarantees are the daemon helper's: it opens no network, only installs the `
 Without `pkexec` on the system, or in an app that did not come from the `.deb`, the button does not appear and the tab only
 shows the install command.
 
+**On Windows** there is no privilege to gain: the app installed by `install.ps1` lives in `%LOCALAPPDATA%\Rustploy`, a folder
+of yours. The app downloads the zip and the signature to `%LOCALAPPDATA%\Rustploy-update`, copies `rustploy-gui-update.exe`
+there and runs it: it checks the signature with the same code and the same keys as the Linux helper, checks that the signed
+comment is for the `rustploy-gui-windows` package and the same version as the file name, and refuses any file in the zip
+outside the app folder. Only then does the app close, and the helper replaces the folder and reopens the app (or, if the
+swap fails, puts the old folder back). This protects the download, not the computer: a program already running as you could
+change the folder anyway.
+
 ## Built-in registry
 
 Every route requires authentication, even on loopback. Use **pull** tokens where you only download and **push**

@@ -120,6 +120,13 @@ chave do projeto, e nunca uma versão que não seja mais nova. Além disso:
 
 Sem `pkexec` no sistema, ou num app que não veio do `.deb`, o botão não aparece e a aba mostra só o comando de instalação.
 
+**No Windows** não há privilégio a ganhar: o app instalado pelo `install.ps1` fica em `%LOCALAPPDATA%\Rustploy`, uma pasta
+sua. O app baixa o zip e a assinatura para `%LOCALAPPDATA%\Rustploy-update`, copia para lá o `rustploy-gui-update.exe` e o
+roda: ele confere a assinatura com o mesmo código e as mesmas chaves do helper do Linux, confere que o comentário assinado
+é do pacote `rustploy-gui-windows` e da mesma versão do nome do arquivo, e recusa qualquer arquivo do zip fora da pasta do
+app. Só então o app fecha, e o helper troca a pasta e reabre o app (ou, se a troca falhar, devolve a pasta antiga). Isso
+protege o download, não o computador: um programa que já roda como você poderia mexer na pasta de qualquer jeito.
+
 ## Registry embutido
 
 Toda rota exige autenticação, mesmo em loopback. Use tokens **pull** onde só se baixa
