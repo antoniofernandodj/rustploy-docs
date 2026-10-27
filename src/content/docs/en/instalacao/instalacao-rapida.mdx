@@ -106,6 +106,7 @@ sh install.sh --dry-run
 | to use Podman instead of Docker | `sudo sh install.sh --engine podman` (or `RUSTPLOY_ENGINE=podman`). See [Docker or Podman](/en/instalacao/instalar-daemon/#choosing-the-container-engine-docker-or-podman) |
 | to update | run the same command again. `config.toml` and the data are kept |
 | the Windows desktop at a specific version | `$env:RUSTPLOY_VERSION = 'v0.1.1'` before the `irm … \| iex` |
+| the Windows desktop without checking the signature (not recommended) | `$env:RUSTPLOY_NO_VERIFY = '1'` before the `irm … \| iex` |
 
 <Aside type="note" title="What the installer does not do">
   It does not open firewall ports or set up HTTPS. With `--remote`, the token travels **unencrypted** until you set

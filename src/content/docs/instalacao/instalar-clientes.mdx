@@ -43,8 +43,9 @@ No PowerShell, sem administrador:
 irm https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.ps1 | iex
 ```
 
-Baixa o zip portátil da última release, confere o SHA-256, instala em `%LOCALAPPDATA%\Rustploy` e cria o atalho no
-Menu Iniciar. As opções e o que fazer se ainda não houver release estão em
+Baixa o zip portátil da última release, confere o SHA-256 e a assinatura minisign (recusa o zip se não bater com
+uma chave do Rustploy; para conferir, baixa o `minisign.exe` oficial e confere o SHA-256 dele), instala em
+`%LOCALAPPDATA%\Rustploy` e cria o atalho no Menu Iniciar. As opções e o que fazer se ainda não houver release estão em
 [Instalação rápida](/instalacao/instalacao-rapida/).
 
 ### Pelo crates.io (Linux, Windows, macOS)

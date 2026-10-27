@@ -43,8 +43,9 @@ In PowerShell, without administrator rights:
 irm https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/install.ps1 | iex
 ```
 
-Downloads the portable zip from the latest release, checks the SHA-256, installs it in
-`%LOCALAPPDATA%\Rustploy` and creates the Start menu shortcut. The options and what to do if there is no release
+Downloads the portable zip from the latest release, checks the SHA-256 and the minisign signature (refuses the zip if
+it does not match a Rustploy key; to check it, it downloads the official `minisign.exe` and checks its SHA-256),
+installs it in `%LOCALAPPDATA%\Rustploy` and creates the Start menu shortcut. The options and what to do if there is no release
 yet are in [Quick install](/en/instalacao/instalacao-rapida/).
 
 ### From crates.io (Linux, Windows, macOS)
