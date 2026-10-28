@@ -20,7 +20,7 @@ O daemon reinicia, mas os containers dos seus serviços **continuam rodando**.
 - Se o serviço **não ficar estável** depois da instalação, os binários anteriores voltam sozinhos.
 - **Reverter para a versão anterior** restaura os binários do backup da última atualização. O banco **não** é revertido: se a
   versão nova migrou o esquema, o snapshot guardado antes fica em `<db_path>/update_snapshots/` (os 3 mais recentes).
-- No app desktop a janela volta ao login quando o daemon reinicia; entre de novo e a aba mostra o resultado. Na web UI o
+- No app desktop a janela volta ao login quando o daemon reinicia, e a tela de login mostra um aviso de que ele está atualizando; entre de novo e a aba mostra o resultado. Na web UI o
   progresso aparece ao vivo.
 
 O botão só aparece se o helper existe (instalação pelo `.deb`, com systemd). Em outras instalações use o comando abaixo.

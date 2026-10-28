@@ -21,7 +21,7 @@ containers **keep running**.
 - If the service **does not become stable** after the install, the previous binaries come back by themselves.
 - **Reverter para a versão anterior** (roll back) restores the binaries from the last update's backup. The database is **not**
   rolled back: if the new version migrated the schema, the snapshot kept before sits in `<db_path>/update_snapshots/` (the 3 most recent).
-- In the desktop app the window returns to the login when the daemon restarts; sign in again and the tab shows the result. In
+- In the desktop app the window returns to the login when the daemon restarts, and the login screen shows a notice that it is updating; sign in again and the tab shows the result. In
   the web UI the progress shows live.
 
 The button only appears if the helper exists (a `.deb` install, with systemd). For other installs use the command below. The
