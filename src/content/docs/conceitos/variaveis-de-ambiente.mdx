@@ -27,6 +27,20 @@ Um **job** parte do mesmo resultado que o serviço **gatilho** teria (projeto ma
 serviço) e aplica as variáveis do próprio job por cima. Num job **autônomo**
 (sem gatilho), a base são só as variáveis do projeto.
 
+## O que o daemon aceita como nome
+
+Ao salvar variáveis (projeto, serviço ou job; pela interface, pela API ou pelo MCP), o
+daemon recusa a gravação com `InvalidInput` quando:
+
+- o **nome é inválido**: tem de começar com letra ou `_`, e o resto só pode ter
+  letras, dígitos, `_`, `.` e `-` (`MINHA CHAVE`, `1ABC` e `A=B` são recusados);
+- há **chave repetida** na mesma lista.
+
+**Valor vazio** (`FOO=`) é válido. No editor `.env` da interface, cada linha que não
+pôde ser lida (sem `=`, nome inválido, chave repetida) aparece com o número da linha, e
+nada é gravado até você corrigir. No campo de adicionar, uma chave que já existe pede
+confirmação antes de sobrescrever.
+
 ## Como um secret vira valor
 
 Uma variável é de um de dois tipos: **comum** (`Plain`, o texto) ou **secret**

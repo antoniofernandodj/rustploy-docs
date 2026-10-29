@@ -25,6 +25,20 @@ sensitive (`Api_Key` and `API_KEY` are different variables).
 A **job** starts from the same result the **trigger** service would have (project plus service) and applies the
 job's own variables on top. In a **standalone** job (no trigger), the base is just the project's variables.
 
+## What the daemon accepts as a name
+
+When variables are saved (project, service or job; from the UI, the API or MCP), the
+daemon rejects the write with `InvalidInput` when:
+
+- the **name is invalid**: it must start with a letter or `_`, and the rest may only
+  contain letters, digits, `_`, `.` and `-` (`MY KEY`, `1ABC` and `A=B` are rejected);
+- a **key is repeated** in the same list.
+
+An **empty value** (`FOO=`) is valid. In the UI's `.env` editor, every line that could not
+be read (no `=`, invalid name, repeated key) is listed with its line number, and nothing is
+saved until you fix it. In the add field, a key that already exists asks for confirmation
+before overwriting.
+
 ## How a secret becomes a value
 
 A variable is one of two kinds: **plain** (`Plain`, the text) or **secret** (a reference to a secret's name,
