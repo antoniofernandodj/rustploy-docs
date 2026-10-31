@@ -68,6 +68,7 @@ export default defineConfig({
           { slug: 'interface/visao-geral' },
           { slug: 'interface/web-ui' },
           { slug: 'interface/entrar' },
+          { slug: 'interface/idioma' },
           { slug: 'interface/projetos' },
           { slug: 'interface/novo-servico' },
           { slug: 'interface/servico' },

@@ -1,0 +1,28 @@
+---
+title: Interface language
+description: The Rustploy desktop app and web UI speak English (default) and Portuguese (pt-BR). How to switch the language, where the choice is stored and what is not translated.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The desktop app and the web UI open in **English** and also speak **Portuguese (pt-BR)**. Both clients have the same switch: two buttons, **English** and **Português**, at the top of the window (next to *Stop All* and *Disconnect*) and on the login screen. Click and the whole interface changes right away, with no reload and no restart.
+
+## Where the choice is stored
+
+| Client | Where | Applies to |
+|---|---|---|
+| Desktop app | the app's `storage` (`~/.local/share/rustploy/.glacier-storage/`), key `language` | every window of the app, including the ones you open later |
+| Web UI | the browser's `localStorage`, key `rustploy.language` | that browser (each browser keeps its own) |
+
+With no previous choice, both open in English. The app's auxiliary windows (logs, new job, new service…) follow the main window's language and switch together with it.
+
+## What is translated (and what is not)
+
+- **Translated:** titles, labels, buttons, hints, help texts, notices (toasts), confirmation prompts and the status messages the interface builds.
+- **Not translated:** product names, commands, paths, config keys and the protocol's technical states. The **error messages that come from the daemon** (the API) appear as the daemon writes them.
+- **Text already written:** a status message or a notice that is already on screen stays in the language it was born in until something replaces it; the rest of the screen switches right away.
+- **System tray menu** (desktop app): stays in English, because the native menu is built once at startup.
+
+<Aside type="note">
+  Dates and numbers follow each screen's own pattern (for example `DD/MM` on jobs); switching the language does not change the time zone or the format of the data that comes from the server.
+</Aside>

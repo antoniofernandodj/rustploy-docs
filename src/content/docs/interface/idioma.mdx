@@ -1,0 +1,28 @@
+---
+title: Idioma da interface
+description: O app desktop e a web UI do Rustploy falam inglês (padrão) e português (pt-BR). Como trocar o idioma, onde a escolha fica guardada e o que não é traduzido.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+O app desktop e a web UI abrem em **inglês** e falam também **português (pt-BR)**. Os dois clientes têm o mesmo seletor: dois botões, **English** e **Português**, no topo da janela (ao lado de *Stop All* e *Disconnect*) e na tela de login. Clique e a interface inteira troca na hora, sem recarregar nem reiniciar.
+
+## Onde a escolha fica guardada
+
+| Cliente | Onde | Vale para |
+|---|---|---|
+| App desktop | no `storage` do app (`~/.local/share/rustploy/.glacier-storage/`), chave `language` | todas as janelas do app, inclusive as que você abrir depois |
+| Web UI | no `localStorage` do navegador, chave `rustploy.language` | aquele navegador (cada navegador guarda a sua) |
+
+Sem escolha anterior, os dois abrem em inglês. As janelas auxiliares do app (logs, novo job, novo serviço…) acompanham o idioma da janela principal e trocam junto com ela.
+
+## O que é traduzido (e o que não é)
+
+- **Traduzido:** títulos, rótulos, botões, dicas, textos de ajuda, avisos (toasts), pedidos de confirmação e as mensagens de status que a interface monta.
+- **Não traduzido:** nomes de produto, comandos, caminhos, chaves de configuração e os estados técnicos do protocolo. As **mensagens de erro que vêm do daemon** (a API) aparecem como o daemon as escreve.
+- **Textos já gravados:** uma mensagem de status ou um aviso que já está na tela continua no idioma em que nasceu até ser substituído por outro; o resto da tela troca na hora.
+- **Menu da bandeja do sistema** (app desktop): fica em inglês, porque o menu nativo é montado uma vez na abertura.
+
+<Aside type="note">
+  Datas e números seguem o padrão de cada tela (por exemplo `DD/MM` nos jobs); trocar o idioma não muda o fuso nem o formato dos dados vindos do servidor.
+</Aside>
