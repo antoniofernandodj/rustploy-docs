@@ -1,6 +1,6 @@
 ---
 title: Protocol responses
-description: "The 63 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
+description: "The 66 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
 ---
 
 Each [command](/en/referencia/comandos/) returns one of these variants. A response **with fields** is a one-key object; **without fields**, the bare string (`"Ok"`).
@@ -32,6 +32,9 @@ An error comes as `{"Err":{"code":"…","message":"…"}}`.
 | `ConnectionInfo` | `host: String`, `internal_url: String` |
 | `DaemonSettings` | `public_base_url: String`, `acme_email: Option<String>`, `registry_domain: Option<String>` |
 | `SecretNames` | `Vec<String>` |
+| `StateGit` | `StateGitStatus` |
+| `InfraAudit` | `Vec<PlaintextFinding>` |
+| `SecretValue` | `String` |
 | `ManifestReport` | `ApplyReport` |
 | `Manifest` | `String` |
 | `ManifestBundle` | `yaml: String`, `dotenv: String` |

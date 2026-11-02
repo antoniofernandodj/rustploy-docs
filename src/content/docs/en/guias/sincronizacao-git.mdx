@@ -1,0 +1,310 @@
+---
+title: Sync the state with a Git repository
+description: How to version Rustploy's state (projects, services, jobs, encrypted secrets) in a private Git repository, apply changes made outside the server, and how to resolve a diverged history - from the interface or by hand over SSH.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Rustploy keeps the **infrastructure you declare** (projects, services, jobs, encrypted secrets,
+Git providers) in YAML files under `<db_path>/infra/` (by default `/var/lib/rustploy/db/infra/`).
+This page explains how to send those files to a Git repository: you get a **history of every
+change**, a **backup** that rebuilds the server, and the option to **edit through Git** and let
+the server apply it.
+
+<Aside type="note" title="Off by default">
+  None of this happens on its own. Syncing only starts when you pick a mode in
+  **Settings → Sync**.
+</Aside>
+
+## What goes to Git (and what does not)
+
+| Goes to Git | Stays on the server only |
+|---|---|
+| Projects, services and their settings | Each service's status and container (`Running`, container id) |
+| Jobs and schedules | Deploy history and logs |
+| **Encrypted** secrets (`ENC[age:…]`) | The providers' login tokens |
+| Git providers (without the tokens) | TLS certificates and registry blobs |
+
+Status and containers are kept out on purpose: they change constantly and would only fill the
+history with noise.
+
+## Before you turn it on
+
+- **`git` installed on the server.** Rustploy calls the system `git` command
+  (`sudo apt-get install git`). Without it the screen warns you and refuses to turn it on.
+- **A private, empty repository** on GitHub or Gitea. The state reveals your topology and your
+  domains even without secrets; do not make it public.
+- **A connected Git provider** under **Settings → Git** (OAuth or token), with write access to the
+  repository. Rustploy uses its token to push and fetch.
+- **An `https://` address.** SSH addresses (`git@github.com:…`) are not accepted: the credential
+  is the provider's token.
+- **No plaintext values in the state.** See the next section.
+- **Recommended:** set `recovery_recipient` in `config.toml`. Without it, losing the server's
+  `config.toml` means losing every secret, including the ones stored in Git.
+
+### The gate: nothing in plaintext enters the history
+
+Git keeps everything forever. If a password entered a commit, deleting it later would **not**
+remove it from the history. That is why Rustploy only lets you turn syncing on when **no
+password, token or key is stored as plain text** in the state.
+
+The audit separates two kinds of finding:
+
+- **Certainties** that must become secrets: managed-database password, webhook token, an
+  unencrypted secret or `client_secret`.
+- **Suspicions**: environment variables with secret-looking names (`PASSWORD`, `TOKEN`,
+  `API_KEY`…), URLs with `user:password@`, similar compose lines. This is a heuristic: it can be
+  wrong in both directions.
+
+To fix a finding, use **move to secret** on the environment-variables screen. For a suspicion
+that is not really a secret (for example `PASSWORD_MIN_LENGTH=8`), mark it **"not a secret"**.
+Certainties cannot be waived.
+
+<Aside type="caution" title="The audit is a gate, not a guarantee">
+  It cannot see a secret with a bland name, nor one hidden inside a `Dockerfile` or a script.
+  Review what goes into the repository.
+</Aside>
+
+The gate applies **on every commit**, not only when turning it on. If someone later moves a
+secret back to a plaintext variable, the commit is suspended (the screen shows "commit
+suspended: N plaintext values") and resumes by itself once the state is clean. The value never
+reaches the history.
+
+## The three modes
+
+| Mode | What it does |
+|---|---|
+| **off** (default) | The files only exist on the server's disk. |
+| **commit** | Makes a local commit on every change. No network. |
+| **sync** | Commits, **pushes** to the repository and **fetches** what was changed from outside. |
+
+Commits wait 10 seconds after the last change, so several edits in a row become a single commit.
+With no difference there is no commit. The subject uses readable names (`Atualiza projeto Flow`).
+
+## Changes made from outside (GitOps)
+
+In **sync** mode the server checks the repository every 60 seconds (adjustable with
+`fetch_interval_secs` in the `[state_git]` section of `config.toml`) and also when you click
+**Sync now**. If someone changed the repository and the server has nothing new, it **reads what
+arrived, validates everything and applies it** as a single transaction.
+
+A commit coming from outside is **rejected** (and nothing is applied) when:
+
+- the YAML is invalid, or in a format newer than the daemon;
+- there is a broken reference (a job pointing at a service that does not exist);
+- there is a **cycle** in the service dependencies;
+- it carries a **plaintext value**, by the same audit as the gate;
+- it carries an `ENC[age:…]` that **cannot be decrypted on this server**.
+
+The screen shows which commit was rejected (its `sha`) and why. When the repository gets a newer
+valid commit on top, that one is applied. Applying does not produce a commit back: the files end
+up byte-for-byte identical to the commit.
+
+<Aside type="note" title="Writing a secret by hand">
+  Since plaintext is rejected, to write a secret straight into the YAML encrypt it first with the
+  server's **public** key, on any machine:
+
+  ```bash
+  printf '%s' 'my-password' | rustploy-cli secret encrypt --recipient age1…
+  ```
+
+  Paste the result (`ENC[age:…]`) into the file. The value is never accepted as a command
+  argument, so it does not end up in your shell history.
+</Aside>
+
+### A service changed in Git: "pending deploy"
+
+When an outside commit changes a service (or its project's variables), Rustploy updates what is
+**declared** but does **not redeploy on its own**. The service gets a **"change pending deploy"**
+badge until the next deploy.
+
+### A service removed in Git: the container stays
+
+<Aside type="danger" title="Deleting through Git does not stop the container">
+  If an outside commit **removes** a service (or a whole project) from the YAML, Rustploy drops it
+  from the state but does **not stop or delete the container, the volumes or the data**. This is
+  protection: a typo on GitHub should not destroy your database.
+
+  The effect is that the **domain goes offline** (the proxy builds its routes from the service
+  list) while the container keeps running, using memory and a port, without showing up as a
+  service. To delete a service **for real**, use the Rustploy interface, which stops and removes
+  everything properly.
+</Aside>
+
+The ownerless container shows up under **Docker/Podman → Containers** with the badge **"removed
+in git (service X)"**. To clean it up:
+
+<Steps>
+1. Under **Docker/Podman → Containers**, find the badged container and click **Stop**.
+2. Click **Remove**.
+3. If the service had data in volumes, remove them under **Volumes**. Check first: **volumes do not come back**.
+4. In the "removed in git" list (**Settings → Sync**), click **Dismiss**.
+</Steps>
+
+Rustploy refuses to stop, by this path, a container that still belongs to a service (otherwise
+the watchdog would start it again).
+
+#### If it was a mistake: rolling back in Git
+
+If you undo the removal in Git (a `git revert` of the commit, for example), the service **comes
+back with the same id**, and the containers are its again: Rustploy recognizes containers by the
+service id (or, for Compose services such as the wizard's databases, by the stack name, which is
+stored in the YAML). The "removed in git" badge disappears and the domain's route returns within
+30 seconds.
+
+<Aside type="caution">
+  This does not hold if you **recreate the service by hand**: it gets a new id and does not
+  recognize the old containers. Always prefer undoing through Git.
+</Aside>
+
+## Diverged history
+
+This happens when both the server **and** the repository gained different commits since the last
+sync. Example: you change something in the interface at 10:00; at 10:01 someone changes something
+else directly on GitHub. It also happens if you turn syncing on pointing at a repository that
+**already has other content**.
+
+Rustploy **does not decide which side wins**, because any choice would discard someone's work.
+It **pauses syncing** and shows why:
+
+> History diverged: the server has 1 commit the remote does not have and the remote has 1 the
+> server does not have. Syncing was paused.
+
+While paused, Rustploy **does not push, does not fetch and does not commit**. Your edits in the
+interface keep working normally; they will only be committed when you resume.
+
+There are two ways forward.
+
+### Option 1: from the interface
+
+Under **Settings → Sync**, choose:
+
+- **Use the repository's**: the server adopts the repository. What only the server had is saved in the
+  branch `rustploy-backup/local-<date>`, in the server's clone. Before adopting, the repository's
+  content goes through the same validations as an outside commit.
+- **Use the server's**: the repository adopts the server. What the repository had is copied to the branch
+  `rustploy-backup/remote-<date>` **in the repository itself** before being overwritten. If
+  someone pushes in the meantime, the operation is refused.
+
+Both discard one side. The backup exists, but it is a branch: recovering from it takes `git`.
+
+### Option 2: by hand, over SSH
+
+Use this when you want to **merge both sides** (keep each person's changes), or when the interface
+is not available.
+
+<Aside type="danger" title="Read before you start">
+  1. **Run `git` as the `rustploy` user** (`sudo -u rustploy`). As `root`, `git` creates files the
+     daemon can no longer write, and refuses the folder as "dubious ownership".
+  2. **Avoid editing in the interface** while you resolve. Those edits touch the same files.
+  3. **No network needed.** The daemon already fetched the repository; the commands below only use
+     what is on disk. The daemon does the pushing afterwards, when you resume.
+</Aside>
+
+<Steps>
+1. Log in to the server and go to the state folder. The commands below use `-C` so they do not
+   depend on the current directory:
+
+   ```bash
+   ssh user@your-server
+   REPO=/var/lib/rustploy/db/infra
+   G="sudo -u rustploy git -C $REPO"
+   ```
+
+2. Look at the situation and what each side has:
+
+   ```bash
+   $G status
+   $G log --oneline --graph --all -20
+   $G log --oneline main..origin/main    # only the repository has
+   $G log --oneline origin/main..main    # only the server has
+   $G diff main origin/main --stat       # files that differ
+   ```
+
+   Replace `main` with your branch name, if it is different.
+
+3. If there are **uncommitted changes** (`status` shows modified files), commit them first so they
+   are not lost:
+
+   ```bash
+   $G add -A
+   sudo -u rustploy env GIT_AUTHOR_NAME=me GIT_AUTHOR_EMAIL=me@example \
+     GIT_COMMITTER_NAME=me GIT_COMMITTER_EMAIL=me@example \
+     git -C $REPO commit -m "by hand: what was pending"
+   ```
+
+4. **Choose how to resolve:**
+
+   **a) Merge both sides** (the common case):
+
+   ```bash
+   sudo -u rustploy env GIT_AUTHOR_NAME=me GIT_AUTHOR_EMAIL=me@example \
+     GIT_COMMITTER_NAME=me GIT_COMMITTER_EMAIL=me@example \
+     git -C $REPO merge --no-edit origin/main
+   ```
+
+   On conflict, `git` marks the files `projects/<id>/project.yml` with `<<<<<<<`, `=======`,
+   `>>>>>>>`. Open the file, pick what stays, **delete the markers** and finish:
+
+   ```bash
+   sudo -u rustploy nano $REPO/projects/<id>/project.yml
+   $G add -A
+   sudo -u rustploy env GIT_AUTHOR_NAME=me GIT_AUTHOR_EMAIL=me@example \
+     GIT_COMMITTER_NAME=me GIT_COMMITTER_EMAIL=me@example \
+     git -C $REPO commit --no-edit
+   ```
+
+   To find the right project: `grep -l 'name: My Project' $REPO/projects/*/project.yml`.
+
+   **b) Keep the server's side** (discards the repository's side, recording that it was a decision):
+
+   ```bash
+   sudo -u rustploy env GIT_AUTHOR_NAME=me GIT_AUTHOR_EMAIL=me@example \
+     GIT_COMMITTER_NAME=me GIT_COMMITTER_EMAIL=me@example \
+     git -C $REPO merge -s ours --no-edit origin/main
+   ```
+
+   **c) Keep the repository's side** (discards the server's side; save it first):
+
+   ```bash
+   $G branch backup-manual main
+   $G reset --hard origin/main
+   ```
+
+5. Check that everything is committed and conflict-free:
+
+   ```bash
+   $G status      # should say "nothing to commit, working tree clean"
+   ```
+
+6. In the interface, click **Resume**. Rustploy **re-reads the folder**, validates it and only then
+   resumes syncing. If a conflict marker is left behind or the state is invalid, it refuses with
+   the cause and **stays paused**: fix the file and click again.
+</Steps>
+
+<Aside type="caution" title="Why 'Resume' re-reads the folder">
+  The daemon keeps the state in memory. If you changed the files by hand (a `reset`, a `merge`
+  with edits) and Rustploy did not re-read them, the next write from the interface would **undo**
+  what you resolved. "Resume" exists to prevent that too.
+</Aside>
+
+## Limits to know
+
+- **HTTPS with a token only.** SSH keys (deploy keys) are not supported.
+- **`git` must be installed** on the server.
+- **Removing through Git does not stop the container** (see above).
+- **`host_port: 0` written straight into the YAML is not allocated.** In the interface, "automatic
+  external port" picks a free port and opens the firewall. Through Git, always write a concrete
+  number inside the `[external_ports]` range (default 20000-20999).
+- **Editing `settings.yml` through Git** stores the values, but effects such as requesting a new
+  certificate only happen when you save from the Settings screen or restart the daemon.
+- **While the repository is slow, infrastructure writes may wait** a few moments: pushing does not
+  let the files change in the middle.
+- Rolling the daemon back to a version **before** this feature does not understand the YAML.
+
+## See also
+
+- [Variables and secrets](/en/guias/variaveis-e-secrets/)
+- [Backup and restore](/en/guias/backup/)
+- [Infrastructure as Code](/en/guias/infra-as-code/)
+- [Docker cleanup](/en/guias/limpeza-docker/)

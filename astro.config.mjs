@@ -103,6 +103,7 @@ export default defineConfig({
           { slug: 'guias/registry' },
           { slug: 'guias/limpeza-docker' },
           { slug: 'guias/backup' },
+          { slug: 'guias/sincronizacao-git' },
         ]},
         { label: 'Agentes de IA (MCP)', translations: { en: 'AI agents (MCP)' }, items: [
           { slug: 'agentes/visao-geral' },

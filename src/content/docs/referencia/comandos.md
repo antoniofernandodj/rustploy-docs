@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 113 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 124 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **113 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **124 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -599,12 +599,13 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 ### SecretSet
 
 ```json
-{"SecretSet":{"project_id":"prj_…","name":"…","value":"…"}}
+{"SecretSet":{"project_id":"prj_…","service_id":null,"name":"…","value":"…"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
+| `service_id` | `Option<String>` |
 | `name` | `String` |
 | `value` | `String` |
 
@@ -613,12 +614,13 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 ### SecretDelete
 
 ```json
-{"SecretDelete":{"project_id":"prj_…","name":"…"}}
+{"SecretDelete":{"project_id":"prj_…","service_id":null,"name":"…"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
+| `service_id` | `Option<String>` |
 | `name` | `String` |
 
 **Usado por:** GUI e web UI.
@@ -626,12 +628,162 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 ### SecretList
 
 ```json
-{"SecretList":{"project_id":"prj_…"}}
+{"SecretList":{"project_id":"prj_…","service_id":null}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
+| `service_id` | `Option<String>` |
+
+**Usado por:** só pela API e pelo MCP (nenhuma tela).
+
+### SecretReveal
+
+Devolve o **valor** de um secret (botão "ver valor"). Fica fora do MCP/`rpc` do agente e grava uma linha de auditoria (quem, qual secret, quando — nunca o valor).
+
+```json
+{"SecretReveal":{"project_id":"prj_…","service_id":null,"name":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>` |
+| `name` | `String` |
+
+**Usado por:** só pela API e pelo MCP (nenhuma tela).
+
+### InfraAudit
+
+Lista o que está em claro (ou parece estar) no estado de infra — a trava para ligar a sincronização com git, e o guia de "o que ainda falta mover para secret". Nunca devolve valores.
+
+```json
+"InfraAudit"
+```
+
+**Usado por:** só pela API e pelo MCP (nenhuma tela).
+
+### StateGitStatus
+
+Situação da sincronização do estado de infra com o git.
+
+```json
+"StateGitStatus"
+```
+
+**Usado por:** só pela API e pelo MCP (nenhuma tela).
+
+### StateGitConfigure
+
+Liga/desliga/configura a sincronização. `mode`: `off` | `commit` | `sync`. Ligar (`commit`/`sync`) é **recusado** enquanto houver valor em claro no estado (ver `InfraAudit`). `remote` só em `https://` (a credencial vem do `provider_id`) ou `file://` (testes/cópia local).
+
+```json
+{"StateGitConfigure":{"mode":"…","remote":null,"branch":null,"provider_id":null}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `mode` | `String` |
+| `remote` | `Option<String>` |
+| `branch` | `Option<String>` |
+| `provider_id` | `Option<String>` |
+
+**Usado por:** GUI e web UI.
+
+### StateGitSyncNow
+
+"Sincronizar agora": faz o commit pendente e, em `sync`, o `fetch`, a aplicação do que veio de fora e o `push`.
+
+```json
+"StateGitSyncNow"
+```
+
+**Usado por:** GUI e web UI.
+
+### StateGitResume
+
+Retoma a sincronização pausada por histórico divergido (depois de resolver no repositório).
+
+```json
+"StateGitResume"
+```
+
+**Usado por:** GUI e web UI.
+
+### StateGitResolve
+
+Resolve a divergência **sem usar o terminal**: descarta um dos lados, com cópia de segurança do que for descartado (ver `StateGitResolveChoice`). Só vale com a sincronização pausada.
+
+```json
+{"StateGitResolve":{"choice":"{…}"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `choice` | `StateGitResolveChoice` |
+
+**Usado por:** GUI e web UI.
+
+### StateGitDismissRemoval
+
+Esquece uma marca de "removido no git" (`id` vem em `StateGitStatus.removed_in_git`).
+
+```json
+{"StateGitDismissRemoval":{"id":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `id` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### InfraAuditAllow
+
+Marca (ou desmarca) uma **suspeita** da auditoria como "não é segredo", para não travar o git. Certezas (senha de banco, webhook…) não podem ser liberadas.
+
+```json
+{"InfraAuditAllow":{"project":"…","scope":"…","what":"…","allowed":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project` | `String` |
+| `scope` | `String` |
+| `what` | `String` |
+| `allowed` | `bool` |
+
+**Usado por:** GUI e web UI.
+
+### StopContainer
+
+Para um container (`id` completo, vindo de `DockerContainers`). **Recusa** container que ainda pertence a um serviço do estado: esses se param pelo serviço. Serve ao container órfão ("removido no git"): parar aqui e depois `RemoveContainer`.
+
+```json
+{"StopContainer":{"id":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `id` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### SecretMove
+
+Move um item entre env e secret, ou entre escopos. Sempre atômico: ou tudo muda, ou nada. Falha se o destino já tem um item com o mesmo nome. Ver `SecretMoveOp`.
+
+```json
+{"SecretMove":{"project_id":"prj_…","service_id":null,"name":"…","op":"{…}"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>`<br />Depende da operação (ver `SecretMoveOp`). |
+| `name` | `String`<br />Nome do secret — ou a chave da env, em `SecretMoveOp::EnvToSecret`. |
+| `op` | `SecretMoveOp` |
 
 **Usado por:** só pela API e pelo MCP (nenhuma tela).
 

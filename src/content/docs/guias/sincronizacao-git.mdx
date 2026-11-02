@@ -1,0 +1,307 @@
+---
+title: Sincronizar o estado com um repositório Git
+description: Como versionar o estado do Rustploy (projetos, serviços, jobs, secrets cifrados) num repositório Git privado, aplicar mudanças feitas por fora, e como resolver um histórico divergido - pela interface ou à mão, por SSH.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+O Rustploy guarda a **infraestrutura que você declara** (projetos, serviços, jobs, secrets
+cifrados, provedores Git) em arquivos YAML, em `<db_path>/infra/` (por padrão
+`/var/lib/rustploy/db/infra/`). Esta página explica como mandar esses arquivos para um
+repositório Git: você ganha **histórico de cada mudança**, um **backup** que reconstrói o
+servidor, e a opção de **editar pelo Git** e deixar o servidor aplicar.
+
+<Aside type="note" title="Desligado por padrão">
+  Nada disto acontece sozinho. A sincronização só liga quando você escolhe um modo em
+  **Settings → Sincronização**.
+</Aside>
+
+## O que vai (e o que não vai) para o Git
+
+| Vai para o Git | Fica só no servidor |
+|---|---|
+| Projetos, serviços e suas configurações | Status e container de cada serviço (`Running`, id do container) |
+| Jobs e agendamentos | Histórico de deploys e logs |
+| Secrets **cifrados** (`ENC[age:…]`) | Os tokens de login dos provedores Git |
+| Provedores Git (sem os tokens) | Certificados TLS e blobs do registry |
+
+O status e os containers **não** vão para o Git de propósito: mudam toda hora e só encheriam o
+histórico de ruído.
+
+## Antes de ligar
+
+- **`git` instalado no servidor.** O Rustploy chama o comando `git` do sistema
+  (`sudo apt-get install git`). Sem ele, a tela avisa e recusa ligar.
+- **Um repositório privado e vazio** no GitHub ou Gitea. O estado mostra a sua topologia e os
+  seus domínios mesmo sem segredos; não o deixe público.
+- **Um provedor Git conectado** em **Settings → Git** (OAuth ou token), com permissão de escrita
+  no repositório. O Rustploy usa o token dele para enviar e buscar.
+- **Endereço `https://`.** Endereços SSH (`git@github.com:…`) não são aceitos: a credencial é o
+  token do provedor.
+- **Nenhum valor em claro no estado.** Veja a próxima seção.
+- **Recomendado:** configure `recovery_recipient` no `config.toml`. Sem ela, perder o
+  `config.toml` do servidor significa perder todos os secrets, inclusive os que estão no Git.
+
+### A trava: nada em claro entra no histórico
+
+O Git guarda tudo para sempre. Se uma senha entrasse num commit, apagá-la depois **não** a
+tiraria do histórico. Por isso o Rustploy só deixa ligar quando **nenhuma senha, token ou chave
+está em texto puro** no estado.
+
+A auditoria separa dois tipos de achado:
+
+- **Certezas**, que têm de virar secret: senha de banco gerenciado, token de webhook, secret ou
+  `client_secret` sem cifra.
+- **Suspeitas**: variáveis de ambiente com nome de segredo (`PASSWORD`, `TOKEN`, `API_KEY`…), URLs
+  com `usuário:senha@`, linhas de compose parecidas. É uma heurística: pode errar para os dois
+  lados.
+
+Para resolver, use **mover para secret** na tela de variáveis de ambiente. Para uma suspeita
+que na verdade não é segredo (por exemplo `PASSWORD_MIN_LENGTH=8`), marque como **"não é
+segredo"**. Certezas não podem ser liberadas.
+
+<Aside type="caution" title="A auditoria é uma trava, não uma garantia">
+  Ela não vê um segredo com nome banal, nem um escondido dentro de um `Dockerfile` ou script.
+  Revise o que vai para o repositório.
+</Aside>
+
+A trava vale **a cada commit**, não só ao ligar. Se depois alguém mover um secret de volta para
+uma variável em claro, o commit é suspenso (a tela mostra "commit suspenso: N valores em claro")
+e volta sozinho quando o estado estiver limpo. O histórico nunca recebe o valor.
+
+## Os três modos
+
+| Modo | O que faz |
+|---|---|
+| **off** (padrão) | Os arquivos só existem no disco do servidor. |
+| **commit** | Faz um commit local a cada mudança. Não usa a rede. |
+| **sync** | Commit, **envia** ao repositório e **busca** o que foi mudado por fora. |
+
+Os commits esperam 10 segundos depois da última mudança, então várias edições seguidas viram um
+commit só. Sem diferença, não há commit. O assunto usa nomes legíveis (`Atualiza projeto Flow`).
+
+## Mudanças feitas por fora (GitOps)
+
+No modo **sync**, o servidor consulta o repositório a cada 60 segundos (ajustável com
+`fetch_interval_secs` na seção `[state_git]` do `config.toml`) e também quando você clica em
+**Sincronizar agora**. Se alguém mudou o repositório e o servidor não tem nada novo, ele **lê o
+que chegou, valida tudo e aplica** como uma única transação.
+
+Um commit vindo de fora é **recusado** (e nada é aplicado) quando:
+
+- o YAML está inválido ou numa versão de formato mais nova que o daemon;
+- há referência quebrada (um job que aponta para um serviço que não existe);
+- há **ciclo** nas dependências entre serviços;
+- traz **valor em claro**, pela mesma auditoria da trava;
+- traz um `ENC[age:…]` que **não decifra neste servidor**.
+
+A tela mostra qual commit foi recusado (o `sha`) e o motivo. Quando o repositório ganha um commit
+novo e válido por cima, é ele que se aplica. Aplicar não gera commit de volta: os arquivos ficam
+byte a byte iguais aos do commit.
+
+<Aside type="note" title="Escrever um secret à mão">
+  Como valor em claro é recusado, para escrever um secret direto no YAML cifre-o antes com a
+  chave **pública** do servidor, numa máquina qualquer:
+
+  ```bash
+  printf '%s' 'minha-senha' | rustploy-cli secret encrypt --recipient age1…
+  ```
+
+  Cole o resultado (`ENC[age:…]`) no arquivo. O valor nunca é aceito como argumento do comando,
+  para não ir parar no histórico do shell.
+</Aside>
+
+### Mudou o serviço no Git: "pendente de deploy"
+
+Quando um commit externo altera um serviço (ou as variáveis do projeto dele), o Rustploy atualiza
+o que está **declarado**, mas **não redeploya sozinho**. O serviço ganha o selo **"mudança
+pendente de deploy"** até o próximo deploy.
+
+### Removeu um serviço no Git: o container fica
+
+<Aside type="danger" title="Apagar pelo Git não para o container">
+  Se um commit externo **remove** um serviço (ou um projeto inteiro) do YAML, o Rustploy o retira
+  do estado, mas **não para nem apaga o container, os volumes ou os dados**. O motivo é proteção:
+  um erro de digitação no GitHub não deve destruir o seu banco de dados.
+
+  O efeito é que o **domínio sai do ar** (o proxy monta as rotas a partir da lista de serviços) e o
+  container continua rodando, gastando memória e porta, sem aparecer como serviço. Para apagar um
+  serviço **de verdade**, use a interface do Rustploy, que para e remove tudo corretamente.
+</Aside>
+
+O container que ficou sem dono aparece em **Docker/Podman → Containers** com a etiqueta
+**"removido no git (serviço X)"**. Para limpar:
+
+<Steps>
+1. Em **Docker/Podman → Containers**, ache o container com a etiqueta e clique em **Parar**.
+2. Clique em **Remover**.
+3. Se o serviço tinha dados em volumes, remova-os em **Volumes**. Cheque antes: **volumes não voltam**.
+4. Na lista de "removidos no git" (**Settings → Sincronização**), clique em **Esquecer**.
+</Steps>
+
+O Rustploy recusa parar, por esse caminho, um container que ainda pertence a um serviço (senão o
+watchdog o religaria).
+
+#### Se foi um engano: o rollback no Git
+
+Se você desfizer a remoção no Git (um `git revert` do commit, por exemplo), o serviço **volta com o
+mesmo id**, e os containers voltam a ser dele: o Rustploy reconhece os containers pelo id do
+serviço (ou, nos serviços Compose como os bancos do assistente, pelo nome da stack, que fica no
+YAML). A marca "removido no git" some, e a rota do domínio volta em até 30 segundos.
+
+<Aside type="caution">
+  Isto não vale se você **recriar o serviço à mão**: ele ganha um id novo e não reconhece os
+  containers antigos. Prefira sempre desfazer pelo Git.
+</Aside>
+
+## Histórico divergido
+
+Acontece quando o servidor **e** o repositório ganharam commits diferentes desde a última
+sincronização. Exemplo: você muda algo na interface às 10h00; às 10h01 alguém muda outra coisa
+direto no GitHub. Também acontece se você ligar a sincronização apontando para um repositório
+que **já tem outro conteúdo**.
+
+O Rustploy **não decide qual lado vence**, porque qualquer escolha descartaria o trabalho de
+alguém. Ele **pausa a sincronização** e mostra o motivo:
+
+> O histórico divergiu: o servidor tem 1 commit que o remoto não tem e o remoto tem 1 que o servidor
+> não tem. A sincronização foi pausada.
+
+Enquanto está pausada, o Rustploy **não envia, não busca e não faz commits**. Suas edições pela
+interface continuam valendo normalmente; elas só serão commitadas quando você retomar.
+
+Há dois caminhos.
+
+### Opção 1: pela interface
+
+Em **Settings → Sincronização**, escolha:
+
+- **Usar o do repositório**: o servidor adota o repositório. O que só o servidor tinha fica salvo na
+  branch `rustploy-backup/local-<data>`, no clone do servidor. Antes de adotar, o conteúdo do
+  repositório passa pelas mesmas validações de um commit externo.
+- **Usar o do servidor**: o repositório adota o servidor. O que o repositório tinha é copiado para a
+  branch `rustploy-backup/remote-<data>` **no próprio repositório** antes de ser sobrescrito. Se
+  alguém enviar algo nesse meio-tempo, a operação é recusada.
+
+Os dois descartam um lado. O backup existe, mas é uma branch: para recuperar, é preciso usar `git`.
+
+### Opção 2: à mão, por SSH
+
+Use quando quiser **juntar os dois lados** (guardar as mudanças de cada um) ou quando a interface
+não estiver disponível.
+
+<Aside type="danger" title="Leia antes de começar">
+  1. **Rode o `git` como o usuário `rustploy`** (`sudo -u rustploy`). Como `root`, o `git` cria
+     arquivos que o daemon não consegue mais escrever, e recusa a pasta por "dubious ownership".
+  2. **Evite editar pela interface** enquanto resolve. As edições mexem nos mesmos arquivos.
+  3. **Não precisa de rede.** O daemon já buscou o repositório; os comandos abaixo usam só o que
+     está no disco. Quem envia depois é o próprio daemon, ao retomar.
+</Aside>
+
+<Steps>
+1. Entre no servidor e vá para a pasta do estado. Os comandos abaixo usam `-C` para não
+   depender do diretório atual:
+
+   ```bash
+   ssh usuario@seu-servidor
+   REPO=/var/lib/rustploy/db/infra
+   G="sudo -u rustploy git -C $REPO"
+   ```
+
+2. Veja a situação e o que cada lado tem:
+
+   ```bash
+   $G status
+   $G log --oneline --graph --all -20
+   $G log --oneline main..origin/main    # só o repositório tem
+   $G log --oneline origin/main..main    # só o servidor tem
+   $G diff main origin/main --stat       # arquivos que diferem
+   ```
+
+   Troque `main` pelo nome da sua branch, se for outro.
+
+3. Se houver **mudanças ainda não commitadas** (`status` mostra arquivos alterados), commite-as
+   primeiro, para não se perderem:
+
+   ```bash
+   $G add -A
+   sudo -u rustploy env GIT_AUTHOR_NAME=eu GIT_AUTHOR_EMAIL=eu@exemplo \
+     GIT_COMMITTER_NAME=eu GIT_COMMITTER_EMAIL=eu@exemplo \
+     git -C $REPO commit -m "à mão: o que estava pendente"
+   ```
+
+4. **Escolha como resolver:**
+
+   **a) Juntar os dois lados** (o caso comum):
+
+   ```bash
+   sudo -u rustploy env GIT_AUTHOR_NAME=eu GIT_AUTHOR_EMAIL=eu@exemplo \
+     GIT_COMMITTER_NAME=eu GIT_COMMITTER_EMAIL=eu@exemplo \
+     git -C $REPO merge --no-edit origin/main
+   ```
+
+   Se houver conflito, o `git` marca nos arquivos `projects/<id>/project.yml` com
+   `<<<<<<<`, `=======`, `>>>>>>>`. Abra, escolha o que fica, **apague os marcadores** e conclua:
+
+   ```bash
+   sudo -u rustploy nano $REPO/projects/<id>/project.yml
+   $G add -A
+   sudo -u rustploy env GIT_AUTHOR_NAME=eu GIT_AUTHOR_EMAIL=eu@exemplo \
+     GIT_COMMITTER_NAME=eu GIT_COMMITTER_EMAIL=eu@exemplo \
+     git -C $REPO commit --no-edit
+   ```
+
+   Para achar o projeto certo: `grep -l 'name: Meu Projeto' $REPO/projects/*/project.yml`.
+
+   **b) Ficar com o servidor** (descarta o lado do repositório, registrando que foi uma decisão):
+
+   ```bash
+   sudo -u rustploy env GIT_AUTHOR_NAME=eu GIT_AUTHOR_EMAIL=eu@exemplo \
+     GIT_COMMITTER_NAME=eu GIT_COMMITTER_EMAIL=eu@exemplo \
+     git -C $REPO merge -s ours --no-edit origin/main
+   ```
+
+   **c) Ficar com o repositório** (descarta o lado do servidor; guarde-o antes):
+
+   ```bash
+   $G branch backup-manual main
+   $G reset --hard origin/main
+   ```
+
+5. Confira que ficou tudo commitado e sem conflito:
+
+   ```bash
+   $G status      # deve dizer "nothing to commit, working tree clean"
+   ```
+
+6. Na interface, clique em **Retomar**. O Rustploy **relê a pasta**, valida e só então volta a
+   sincronizar. Se sobrou algum marcador de conflito ou o estado é inválido, ele recusa com a
+   causa e **continua pausado**: corrija o arquivo e clique de novo.
+</Steps>
+
+<Aside type="caution" title="Por que o 'Retomar' relê a pasta">
+  O daemon mantém o estado em memória. Se você mudou os arquivos à mão (um `reset`, um `merge`
+  com edição) e o Rustploy não relesse, a próxima escrita pela interface **desfaria** o que você
+  resolveu. O "Retomar" existe também para evitar isso.
+</Aside>
+
+## Limites a conhecer
+
+- **Só HTTPS com token.** Chave SSH (deploy key) não é suportada.
+- **O `git` precisa estar instalado** no servidor.
+- **Remover pelo Git não para o container** (veja acima).
+- **`host_port: 0` escrito direto no YAML não é alocado.** Pela interface, "porta externa
+  automática" escolhe uma porta livre e libera o firewall. Pelo Git, escreva sempre um número
+  concreto dentro da faixa `[external_ports]` (padrão 20000-20999).
+- **Editar `settings.yml` pelo Git** grava os valores, mas efeitos como pedir um certificado novo
+  só acontecem ao salvar pela tela de Settings ou ao reiniciar o daemon.
+- **Enquanto o repositório está lento, escritas de infra podem esperar** alguns instantes: o envio
+  não deixa os arquivos mudarem no meio.
+- Rollback do daemon para uma versão **anterior** a esta funcionalidade não entende o YAML.
+
+## Veja também
+
+- [Variáveis e secrets](/guias/variaveis-e-secrets/)
+- [Backup e restauração](/guias/backup/)
+- [Infra as Code](/guias/infra-as-code/)
+- [Limpeza do Docker](/guias/limpeza-docker/)
