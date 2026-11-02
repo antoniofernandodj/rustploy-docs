@@ -53,7 +53,7 @@ The package restarts the service by itself. What is preserved:
 
 - **Your data**, in `/var/lib/rustploy` (the SQLite database, builds, the registry, variable backups).
 - **The configuration**, `/etc/rustploy/config.toml`. It is marked as a package configuration file: `dpkg` asks before overwriting it if you edited it.
-- **The master key** for secrets, at `/etc/rustploy/master.key`.
+- **The secrets keys**, in `/etc/rustploy/` (the `age` identity, and `master.key` if it exists).
 
 Your services' containers **keep running** during the daemon update: they belong to Docker, not to the
 Rustploy process.
@@ -72,6 +72,6 @@ inspected in Docker; `Promoting` is completed. The proxy's route table is rebuil
 - **Desktop app any other way** (zip unpacked in another folder, `cargo install`): the tab shows the new version and the install command. Run the command again (Linux: `… | sudo sh -s -- gui`; Windows: `irm … | iex`) or replace the portable zip's folder.
 
 :::tip
-Back up `/etc/rustploy/master.key` and `/var/lib/rustploy` before big updates. Without the master key,
-stored secrets cannot be decrypted.
+Back up `/etc/rustploy/` (mainly `age.key`) and `/var/lib/rustploy` before big updates. Without the `age`
+identity, stored secrets cannot be decrypted. See [Keys and secrets](/en/guias/chaves-e-segredos/).
 :::

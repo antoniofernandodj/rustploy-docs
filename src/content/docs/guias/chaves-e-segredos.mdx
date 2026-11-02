@@ -1,0 +1,96 @@
+---
+title: Chaves e segredos - o que é cada uma
+description: As chaves de um servidor Rustploy e o papel de cada uma - a identidade age do servidor (age.key ou age_identity), a chave de recuperação (recovery_recipient), o master.key antigo e o que não se confunde com elas - e o que guardar fora do servidor.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Um servidor Rustploy tem alguns arquivos e campos com "key" no nome. **Só dois grupos protegem os seus
+secrets**; o resto é outra coisa.
+
+## O mapa
+
+| Nome | Onde fica | É secreta? | Papel |
+|---|---|---|---|
+| **Identidade `age` do servidor** | `age_identity` em `[secrets]` do `config.toml` **ou** o arquivo `/etc/rustploy/age.key` | **sim** | A chave de verdade. Cifra e decifra todo secret (`ENC[age:…]`). O daemon a cria sozinho no primeiro boot. |
+| **`recovery_recipient`** | `config.toml`, em `[secrets]` | não (é pública, `age1…`) | O "cadeado extra": todo secret **gravado depois** fica legível pelo servidor **e** pela sua chave de recuperação. |
+| **Chave privada de recuperação** | **fora do servidor**, no seu cofre | **sim** | A única que abre os secrets se você perder o servidor. Nasce junto com a pública. |
+| **`master.key`** (legado) | `/etc/rustploy/master.key` | sim | Chave **antiga**. Só serve para ler secrets gravados no formato antigo. Servidores novos **não têm**. |
+
+## Como se encaixam
+
+- Um secret novo é gravado como `ENC[age:…]`, que só abre com a identidade do servidor **ou** com a chave de recuperação.
+- A `age_identity` do `config.toml` e o `age.key` são **a mesma coisa em dois lugares**. O daemon lê primeiro a do `config.toml` e, se não houver, o arquivo. Basta **um**.
+- Os arquivos do estado (e o repositório da [sincronização com git](/guias/sincronizacao-git/)) só contêm texto cifrado. Por isso é seguro versioná-los, **desde que as chaves não vão junto**.
+- Se o daemon não achar nenhuma identidade e já existirem secrets `ENC[age:…]`, ele **recusa subir**. É de propósito: gerar uma nova deixaria os secrets ilegíveis.
+
+<Aside type="danger" title="Não troque a identidade por outra">
+  Se você colocar em `age_identity` uma chave **diferente** da que cifrou os secrets, o daemon passa a usar a nova e os
+  secrets existentes ficam ilegíveis, **sem aviso**. Para mover a identidade do `age.key` para o `config.toml`,
+  copie o **mesmo** valor e confira que são iguais antes de apagar o arquivo.
+</Aside>
+
+## O `master.key`
+
+Era a chave dos secrets antes do formato `age`. Hoje ele só existe para **ler** o que foi gravado naquele formato (o
+daemon regrava no formato novo ao subir).
+
+- **A partir do daemon 0.1.24 ele não é mais criado.** Um servidor que nunca teve secret antigo não tem o arquivo e não precisa dele.
+- Se o arquivo existir, o daemon o lê normalmente, e você pode apagá-lo **depois** de confirmar que não há nada no formato antigo.
+- Num daemon anterior à 0.1.24, apagar o arquivo não adianta: ele cria outro, aleatório, no próximo boot.
+- Um valor no formato antigo sem o arquivo dá o erro "regrave o secret".
+
+## Configurar a chave de recuperação
+
+Faça isso uma vez, **na sua máquina** (não no servidor):
+
+```bash
+rustploy-cli keygen
+```
+
+A saída tem duas partes:
+
+```text
+# chave pública: age1xxxxxxxx…
+AGE-SECRET-KEY-1XXXXXXXX…
+```
+
+1. Guarde a linha `AGE-SECRET-KEY-1…` num **cofre, fora do servidor**. Ela nunca vai para o servidor.
+2. No servidor, copie o `config.toml`, ponha **só a pública** em `[secrets]` e valide antes de reiniciar:
+
+```bash
+sudo cp -a /etc/rustploy/config.toml /etc/rustploy/config.toml.bak
+sudo sed -i '/^\[secrets\]$/a recovery_recipient = "age1SUA_PUBLICA"' /etc/rustploy/config.toml
+sudo python3 -c "import tomllib; tomllib.load(open('/etc/rustploy/config.toml','rb')); print('TOML válido')"
+sudo systemctl restart rustployd
+```
+
+<Aside type="caution" title="Só vale para secrets gravados depois">
+  O `recovery_recipient` não recifra o que já existe. Para um secret antigo ficar legível pela chave de recuperação,
+  **salve-o de novo** com o mesmo nome.
+</Aside>
+
+## O que guardar fora do servidor
+
+| O quê | Por quê |
+|---|---|
+| `/etc/rustploy/age.key` (ou o `age_identity` do `config.toml`) | abre todos os secrets |
+| A chave **privada de recuperação** | abre os secrets mesmo sem o servidor |
+| `/etc/rustploy/config.toml` | token da API, domínios, ACME (e a identidade, se estiver nele) |
+| `/var/lib/rustploy/db` | o estado inteiro (projetos, serviços, secrets cifrados) |
+| `/etc/rustploy/master.key`, **se existir** | só para quem ainda tem secrets no formato antigo |
+
+Guarde a chave privada de recuperação **separada** do resto: um backup que junta o banco, a identidade e a chave de
+recuperação abre tudo para quem o roubar. Veja também [Backup e restauração](/guias/backup/).
+
+## E se eu perder...
+
+- **O `age.key`, mas tenho a chave de recuperação (e os secrets foram gravados depois de configurá-la):** os secrets
+  ainda abrem com ela.
+- **O `age.key` e não tenho recuperação:** os secrets gravados **não voltam**. Recrie-os.
+- **O `master.key`, num servidor sem secrets antigos:** nada acontece.
+
+## O que não se confunde com estas chaves
+
+- **`[api] token` e `connection_token`:** só autenticam quem fala com a API. Não cifram nada. Veja [Segurança do servidor](/operacao/seguranca-do-servidor/).
+- **As chaves de assinatura das releases (minisign):** só confirmam que um pacote vem do mantenedor. Nada a ver com os seus secrets.

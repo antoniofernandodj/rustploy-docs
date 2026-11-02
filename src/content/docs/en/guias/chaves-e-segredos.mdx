@@ -1,0 +1,95 @@
+---
+title: Keys and secrets - what each one is
+description: The keys on a Rustploy server and the role of each - the server's age identity (age.key or age_identity), the recovery key (recovery_recipient), the legacy master.key, and what is not to be confused with them - and what to keep off the server.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A Rustploy server has a few files and fields with "key" in the name. **Only two groups protect your secrets**;
+the rest is something else.
+
+## The map
+
+| Name | Where | Secret? | Role |
+|---|---|---|---|
+| **The server's `age` identity** | `age_identity` under `[secrets]` in `config.toml` **or** the file `/etc/rustploy/age.key` | **yes** | The real key. Encrypts and decrypts every secret (`ENC[age:…]`). The daemon creates it on its own on first boot. |
+| **`recovery_recipient`** | `config.toml`, under `[secrets]` | no (public, `age1…`) | The extra lock: every secret **saved afterwards** is readable by the server **and** by your recovery key. |
+| **The recovery private key** | **off the server**, in your vault | **yes** | The only one that opens the secrets if you lose the server. It is born together with the public one. |
+| **`master.key`** (legacy) | `/etc/rustploy/master.key` | yes | The **old** key. It only serves to read secrets saved in the old format. New servers **do not have it**. |
+
+## How they fit together
+
+- A new secret is stored as `ENC[age:…]`, which opens only with the server's identity **or** with the recovery key.
+- The `config.toml` `age_identity` and `age.key` are **the same thing in two places**. The daemon reads the `config.toml` one first and, if absent, the file. **One** is enough.
+- The state files (and the [git sync](/en/guias/sincronizacao-git/) repository) only contain ciphertext. That is why versioning them is safe, **as long as the keys do not go along**.
+- If the daemon finds no identity and `ENC[age:…]` secrets already exist, it **refuses to start**. That is on purpose: generating a new one would leave the secrets unreadable.
+
+<Aside type="danger" title="Do not swap the identity for another one">
+  If you put a **different** key in `age_identity` than the one that encrypted the secrets, the daemon starts using the
+  new one and the existing secrets become unreadable, **with no warning**. To move the identity from `age.key` to
+  `config.toml`, copy the **same** value and check they are equal before deleting the file.
+</Aside>
+
+## `master.key`
+
+It was the secrets key before the `age` format. Today it exists only to **read** what was stored in that format (the
+daemon rewrites it in the new format on startup).
+
+- **From daemon 0.1.24 on it is no longer created.** A server that never had an old secret has no such file and does not need it.
+- If the file exists, the daemon reads it as usual, and you can delete it **after** confirming nothing is in the old format.
+- On a daemon older than 0.1.24, deleting it is pointless: it creates another, random one on the next boot.
+- A value in the old format without the file gives the error "save the secret again".
+
+## Set up the recovery key
+
+Do this once, **on your own machine** (not on the server):
+
+```bash
+rustploy-cli keygen
+```
+
+The output has two parts:
+
+```text
+# chave pública: age1xxxxxxxx…
+AGE-SECRET-KEY-1XXXXXXXX…
+```
+
+1. Keep the `AGE-SECRET-KEY-1…` line in a **vault, off the server**. It never goes to the server.
+2. On the server, copy `config.toml`, put **only the public one** under `[secrets]`, and validate before restarting:
+
+```bash
+sudo cp -a /etc/rustploy/config.toml /etc/rustploy/config.toml.bak
+sudo sed -i '/^\[secrets\]$/a recovery_recipient = "age1YOUR_PUBLIC_KEY"' /etc/rustploy/config.toml
+sudo python3 -c "import tomllib; tomllib.load(open('/etc/rustploy/config.toml','rb')); print('TOML valid')"
+sudo systemctl restart rustployd
+```
+
+<Aside type="caution" title="Only applies to secrets saved afterwards">
+  `recovery_recipient` does not re-encrypt what already exists. For an old secret to become readable by the recovery
+  key, **save it again** with the same name.
+</Aside>
+
+## What to keep off the server
+
+| What | Why |
+|---|---|
+| `/etc/rustploy/age.key` (or the `config.toml` `age_identity`) | opens every secret |
+| The recovery **private** key | opens the secrets even without the server |
+| `/etc/rustploy/config.toml` | API token, domains, ACME (and the identity, if it lives there) |
+| `/var/lib/rustploy/db` | the entire state (projects, services, encrypted secrets) |
+| `/etc/rustploy/master.key`, **if it exists** | only for those who still have secrets in the old format |
+
+Keep the recovery private key **separate** from the rest: a backup that puts the database, the identity and the
+recovery key together opens everything for whoever steals it. See also [Backup and restore](/en/guias/backup/).
+
+## What if I lose...
+
+- **`age.key`, but I have the recovery key (and the secrets were saved after configuring it):** the secrets still open with it.
+- **`age.key` and I have no recovery key:** the stored secrets **do not come back**. Recreate them.
+- **`master.key`, on a server with no old secrets:** nothing happens.
+
+## What is not to be confused with these keys
+
+- **`[api] token` and `connection_token`:** they only authenticate whoever talks to the API. They encrypt nothing. See [Server security](/en/operacao/seguranca-do-servidor/).
+- **The release signing keys (minisign):** they only confirm a package comes from the maintainer. Nothing to do with your secrets.

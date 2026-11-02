@@ -118,7 +118,11 @@ precedence** over the file and requires restarting the daemon.
 
 | Key | Default | |
 |---|---|---|
-| `master_key_path` | `/etc/rustploy/master.key` | the key that encrypts secrets. **Back it up.** |
+| `master_key_path` | `/etc/rustploy/master.key` | path of the **old** (legacy) key. From daemon 0.1.24 the file is **no longer created**; it is only read if it exists. |
+| `age_identity` | generated on first boot | the server's `age` identity (`AGE-SECRET-KEY-1…`), which encrypts the secrets. If it is not here, it lives in `age.key`, next to `master_key_path`. **Secret: back it up off the server.** |
+| `recovery_recipient` | (empty) | **public** recovery key (`age1…`): secrets saved afterwards also open with its private key, kept off the server. |
+
+See [Keys and secrets](/en/guias/chaves-e-segredos/) for the role of each one.
 
 ### `[external_ports]` (optional)
 

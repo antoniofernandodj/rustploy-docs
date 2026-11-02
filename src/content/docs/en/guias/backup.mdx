@@ -1,6 +1,6 @@
 ---
 title: Backup and restore
-description: What to back up on a Rustploy server - the daemon's SQLite database, the secrets master key, config.toml, certificates, the data of the services' databases - and how to automate it with jobs.
+description: What to back up on a Rustploy server - the daemon's state, the secrets age identity, config.toml, certificates, the data of the services' databases - and how to automate it with jobs.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -11,17 +11,19 @@ Two sets of data need a backup: **Rustploy's own state** and **your applications
 
 | What | Where | Why |
 |---|---|---|
-| The daemon's database (projects, services, deploys, jobs) | `/var/lib/rustploy/db` | it is the platform's entire state |
-| **Master key** | `/etc/rustploy/master.key` | without it, stored secrets **cannot be decrypted** |
+| The daemon's folder (`infra/` with the YAML state, and the runtime SQLite) | `/var/lib/rustploy/db` | it is the platform's entire state |
+| **`age` identity** | `/etc/rustploy/age.key` (or `age_identity` in `config.toml`) | without it, stored secrets **cannot be decrypted** |
+| `master.key` | `/etc/rustploy/master.key` | **only if it exists** (legacy; daemons from 0.1.24 on do not create it) |
 | Configuration | `/etc/rustploy/config.toml` | API token, domains, ACME |
 | TLS certificates | `<db_path>/certs/` | avoids reissuing (Let's Encrypt rate-limits) |
 | Built-in registry | `<db_path>/registry/` | only if you use it |
 
-<Aside type="danger" title="The master key is irreplaceable">
-  Keep `master.key` **off the server**, in a vault. A database backup without the key leaves every secret unreadable.
+<Aside type="danger" title="The age identity is irreplaceable">
+  Keep `age.key` **off the server**, in a vault, and set up a **recovery key**. A database backup without the
+  identity leaves every secret unreadable. See [Keys and secrets](/en/guias/chaves-e-segredos/).
 </Aside>
 
-Make the copy with the daemon stopped, or use a consistent copy of SQLite.
+Make the copy with the daemon stopped, or use a consistent copy of SQLite. The `infra/` files are YAML and can be versioned by the [git sync](/en/guias/sincronizacao-git/).
 
 ### A cheaper shortcut: the manifest
 
@@ -30,8 +32,9 @@ does **not** carry secrets or data. It complements the database backup, it does 
 
 ### Variable backup
 
-The daemon already writes, every 60 s, snapshots of the variables to `<db_path>/env_backups/`. It protects against
-a wrong edit, not against losing the server: copy that folder too.
+The automatic variable snapshot every 60 s was **turned off** (the `config.toml` `[env_backup]` section is still
+accepted, but ignored). Variable history now comes from the [git sync](/en/guias/sincronizacao-git/); without it,
+use the manual [manifest](/en/guias/infra-as-code/) export.
 
 ## 2. Your applications' data
 

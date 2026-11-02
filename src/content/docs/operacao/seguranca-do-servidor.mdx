@@ -54,7 +54,7 @@ impede.
 ## Secrets
 
 - São cifrados com `age` antes de ir para o banco; listar devolve só os nomes.
-- A **chave mestra** fica em `/etc/rustploy/master.key`. O arquivo é criado com as permissões padrão do processo; quem o protege é o diretório `/etc/rustploy`, com modo `750` e dono `rustploy`. Mantenha assim, e guarde uma cópia **fora do servidor**.
+- A **identidade `age`** do servidor fica em `/etc/rustploy/age.key` (ou em `age_identity` no `config.toml`), com modo `600`; o diretório `/etc/rustploy` tem modo `750` e dono `rustploy`. Mantenha assim, e guarde uma cópia **fora do servidor**. Configure também uma chave de recuperação. Veja [Chaves e segredos](/guias/chaves-e-segredos/).
 - Em stacks Compose e jobs, os valores decifrados passam por um `.env` temporário em disco. Veja [Como as variáveis são resolvidas](/conceitos/variaveis-de-ambiente/#compose-via-arquivo-env).
 - As senhas geradas por **templates** ficam como variáveis comuns, não como secrets.
 
@@ -144,7 +144,7 @@ constante. A URL funciona como senha: guarde-a como secret do seu CI e use
 2. `[api].domain` com HTTPS, **ou** API só em loopback com VPN ou túnel SSH.
 3. Firewall do servidor (ufw ou do provedor): libere só 22, 80, 443 e, se preciso, a 9797.
 4. SSH por **chave**, sem senha, e sem login de root.
-5. [Backup](/guias/backup/) da `master.key` e de `/var/lib/rustploy`, **fora** do servidor.
+5. [Backup](/guias/backup/) do `age.key` e de `/var/lib/rustploy`, **fora** do servidor.
 6. Atualizações do sistema e do Docker em dia.
 7. Imagens de fontes confiáveis; não monte o `docker.sock` em containers.
 8. Senhas fortes em bancos expostos externamente, ou não os exponha.

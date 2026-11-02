@@ -90,8 +90,8 @@ export const sections = [
       {
         q: { pt: 'Como atualizo o Rustploy?', en: 'How do I update Rustploy?' },
         a: {
-          pt: 'Instale o `.deb` novo por cima do antigo com `sudo dpkg -i`. Seus dados em `/var/lib/rustploy`, o `config.toml` e a `master.key` são preservados, e os containers dos serviços continuam rodando. Veja [Atualizar o Rustploy](/instalacao/atualizar/).',
-          en: 'Install the new `.deb` over the old one with `sudo dpkg -i`. Your data in `/var/lib/rustploy`, `config.toml` and `master.key` are preserved, and the service containers keep running. See [Update Rustploy](/instalacao/atualizar/).',
+          pt: 'Instale o `.deb` novo por cima do antigo com `sudo dpkg -i`. Seus dados em `/var/lib/rustploy`, o `config.toml` e as chaves dos secrets (`age.key`) são preservados, e os containers dos serviços continuam rodando. Veja [Atualizar o Rustploy](/instalacao/atualizar/).',
+          en: 'Install the new `.deb` over the old one with `sudo dpkg -i`. Your data in `/var/lib/rustploy`, `config.toml` and the secrets keys (`age.key`) are preserved, and the service containers keep running. See [Update Rustploy](/instalacao/atualizar/).',
         },
       },
     ],
@@ -217,8 +217,8 @@ export const sections = [
       {
         q: { pt: 'O Rustploy faz backup dos meus bancos de dados?', en: 'Does Rustploy back up my databases?' },
         a: {
-          pt: 'Não, o Rustploy não faz backup dos dados dos seus bancos nem dos volumes. Use um job agendado que roda `pg_dump`, `mysqldump` ou `mongodump` para um caminho do host e copie esse caminho para fora do servidor. Faça também backup do estado do próprio Rustploy e da `master.key`. Veja [Backup e restauração](/guias/backup/).',
-          en: 'No, Rustploy does not back up the data in your databases or volumes. Use a scheduled job that runs `pg_dump`, `mysqldump` or `mongodump` to a host path and copy that path off the server. Also back up Rustploy\'s own state and the `master.key`. See [Backup and restore](/guias/backup/).',
+          pt: 'Não, o Rustploy não faz backup dos dados dos seus bancos nem dos volumes. Use um job agendado que roda `pg_dump`, `mysqldump` ou `mongodump` para um caminho do host e copie esse caminho para fora do servidor. Faça também backup do estado do próprio Rustploy e do `age.key`. Veja [Backup e restauração](/guias/backup/).',
+          en: 'No, Rustploy does not back up the data in your databases or volumes. Use a scheduled job that runs `pg_dump`, `mysqldump` or `mongodump` to a host path and copy that path off the server. Also back up Rustploy\'s own state and the `age.key`. See [Backup and restore](/guias/backup/).',
         },
       },
       {
@@ -243,10 +243,10 @@ export const sections = [
         },
       },
       {
-        q: { pt: 'Perdi a master.key. Consigo recuperar os secrets?', en: 'I lost master.key. Can I recover the secrets?' },
+        q: { pt: 'Perdi a chave dos secrets (age.key). Consigo recuperar?', en: 'I lost the secrets key (age.key). Can I recover them?' },
         a: {
-          pt: 'Não: sem a chave mestra em `/etc/rustploy/master.key`, os secrets gravados não podem ser decifrados, e um backup do banco sozinho não resolve. Guarde uma cópia da chave fora do servidor. Você precisará recriar os secrets. Veja [Variáveis de ambiente e secrets](/guias/variaveis-e-secrets/).',
-          en: 'No: without the master key at `/etc/rustploy/master.key`, stored secrets cannot be decrypted, and a database backup alone does not help. Keep a copy of the key off the server. You will have to recreate the secrets. See [Environment variables and secrets](/guias/variaveis-e-secrets/).',
+          pt: 'Só se você configurou uma chave de recuperação (`recovery_recipient`) antes de gravar os secrets: ela também os abre. Sem isso, sem a identidade `age` do servidor (`/etc/rustploy/age.key`) os secrets gravados não podem ser decifrados, e um backup do banco sozinho não resolve; você precisará recriá-los. Já o `master.key` é a chave antiga e não é mais criado pelo daemon. Veja [Chaves e segredos](/guias/chaves-e-segredos/).',
+          en: 'Only if you set up a recovery key (`recovery_recipient`) before saving the secrets: it opens them too. Otherwise, without the server\'s `age` identity (`/etc/rustploy/age.key`) stored secrets cannot be decrypted, and a database backup alone does not help; you will have to recreate them. `master.key` is the old key and the daemon no longer creates it. See [Keys and secrets](/guias/chaves-e-segredos/).',
         },
       },
       {

@@ -636,7 +636,7 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
 
-**Usado por:** só pela API e pelo MCP (nenhuma tela).
+**Usado por:** GUI e web UI.
 
 ### SecretReveal
 
@@ -785,7 +785,7 @@ Move um item entre env e secret, ou entre escopos. Sempre atômico: ou tudo muda
 | `name` | `String`<br />Nome do secret — ou a chave da env, em `SecretMoveOp::EnvToSecret`. |
 | `op` | `SecretMoveOp` |
 
-**Usado por:** só pela API e pelo MCP (nenhuma tela).
+**Usado por:** GUI e web UI.
 
 ## Infra as Code
 

@@ -120,7 +120,11 @@ O e-mail do ACME também se define em **Settings → Web Server**. O valor dessa
 
 | Chave | Padrão | |
 |---|---|---|
-| `master_key_path` | `/etc/rustploy/master.key` | a chave que cifra os secrets. **Faça backup.** |
+| `master_key_path` | `/etc/rustploy/master.key` | caminho da chave **antiga** (legado). A partir do daemon 0.1.24 o arquivo **não é mais criado**; só é lido se existir. |
+| `age_identity` | gerada no 1º boot | a identidade `age` do servidor (`AGE-SECRET-KEY-1…`), que cifra os secrets. Se não estiver aqui, fica em `age.key`, ao lado do `master_key_path`. **Secreta: faça backup fora do servidor.** |
+| `recovery_recipient` | (vazio) | chave **pública** (`age1…`) de recuperação: os secrets gravados depois também abrem com a chave privada dela, guardada fora do servidor. |
+
+Veja [Chaves e segredos](/guias/chaves-e-segredos/) para o papel de cada uma.
 
 ### `[external_ports]` (opcional)
 

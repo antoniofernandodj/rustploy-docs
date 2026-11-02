@@ -87,6 +87,7 @@ export default defineConfig({
           { slug: 'guias/zip' },
           { slug: 'guias/compose' },
           { slug: 'guias/variaveis-e-secrets' },
+          { slug: 'guias/chaves-e-segredos' },
           { slug: 'guias/healthcheck' },
           { slug: 'guias/dominios-e-tls' },
           { slug: 'guias/diagnosticar-502' },

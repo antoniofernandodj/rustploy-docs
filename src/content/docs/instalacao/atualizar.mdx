@@ -51,7 +51,7 @@ O pacote reinicia o serviço sozinho. O que é preservado:
 
 - **Seus dados**, em `/var/lib/rustploy` (banco SQLite, builds, registry, backups de variáveis).
 - **A configuração**, `/etc/rustploy/config.toml`. Ela é marcada como arquivo de configuração do pacote: o `dpkg` pergunta antes de sobrescrever se você a editou.
-- **A chave mestra** dos secrets, em `/etc/rustploy/master.key`.
+- **As chaves dos secrets**, em `/etc/rustploy/` (a identidade `age`, e o `master.key` se existir).
 
 Os containers dos seus serviços **continuam rodando** durante a atualização do
 daemon: eles são do Docker, não do processo do Rustploy.
@@ -72,6 +72,7 @@ um *rollback* seguro; uma troca em curso é inspecionada no Docker; `Promoting`
 
 
 :::tip
-Faça backup de `/etc/rustploy/master.key` e `/var/lib/rustploy` antes de atualizações
-grandes. Sem a chave mestra, os secrets gravados não podem ser decifrados.
+Faça backup de `/etc/rustploy/` (principalmente o `age.key`) e de `/var/lib/rustploy` antes de
+atualizações grandes. Sem a identidade `age`, os secrets gravados não podem ser decifrados. Veja
+[Chaves e segredos](/guias/chaves-e-segredos/).
 :::
