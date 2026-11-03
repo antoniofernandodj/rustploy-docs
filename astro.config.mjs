@@ -94,6 +94,7 @@ export default defineConfig({
           { slug: 'guias/webhooks' },
           { slug: 'guias/fila-de-deploys' },
           { slug: 'guias/pre-deploy' },
+          { slug: 'guias/dependencias-e-religar' },
           { slug: 'guias/jobs' },
           { slug: 'guias/bancos-e-brokers' },
           { slug: 'guias/templates' },

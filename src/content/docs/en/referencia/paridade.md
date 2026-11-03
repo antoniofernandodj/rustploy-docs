@@ -5,11 +5,10 @@ description: "Which Rustploy commands exist only through the API and the MCP, wh
 
 The desktop GUI and the web UI talk to the same API, but cover slightly different sets. This list is generated from the code on every release.
 
-## Not called directly by any screen (30)
+## Not called directly by any screen (28)
 
 No screen fires these commands directly. Some data (the Docker lists, the jobs) shows up on the screens anyway, because it arrives in the dashboard *snapshot*. To act on them, use `curl`, the `rpc` tool of the [MCP](/en/agentes/ferramentas/) or an AI agent.
 
-- [`ServiceList`](/en/referencia/comandos/#servicelist)
 - [`RecentDeployments`](/en/referencia/comandos/#recentdeployments)
 - [`LogsUnsubscribe`](/en/referencia/comandos/#logsunsubscribe)
 - [`MetricsUnsubscribe`](/en/referencia/comandos/#metricsunsubscribe)
@@ -17,7 +16,6 @@ No screen fires these commands directly. Some data (the Docker lists, the jobs) 
 - [`SharedAccessGrant`](/en/referencia/comandos/#sharedaccessgrant)
 - [`SharedAccessRevoke`](/en/referencia/comandos/#sharedaccessrevoke)
 - [`MigrationGet`](/en/referencia/comandos/#migrationget)
-- [`SecretReveal`](/en/referencia/comandos/#secretreveal)
 - [`InfraAudit`](/en/referencia/comandos/#infraaudit)
 - [`StateGitStatus`](/en/referencia/comandos/#stategitstatus)
 - [`ManifestApply`](/en/referencia/comandos/#manifestapply)
@@ -40,8 +38,9 @@ No screen fires these commands directly. Some data (the Docker lists, the jobs) 
 - [`RegistryStatus`](/en/referencia/comandos/#registrystatus)
 - [`RegistryRepoList`](/en/referencia/comandos/#registryrepolist)
 
-## Desktop GUI only (1)
+## Desktop GUI only (2)
 
+- [`ServiceList`](/en/referencia/comandos/#servicelist)
 - [`JobList`](/en/referencia/comandos/#joblist)
 
 ## Web UI only (2)

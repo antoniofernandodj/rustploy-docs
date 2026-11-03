@@ -156,7 +156,7 @@ The value is a `ServiceSpec`.
 |---|---|
 | `project_id` | `String` |
 
-**Used by:** only by the API and the MCP (no screen).
+**Used by:** GUI.
 
 ### ServiceGet
 
@@ -652,7 +652,7 @@ Devolve o **valor** de um secret (botão "ver valor"). Fica fora do MCP/`rpc` do
 | `service_id` | `Option<String>` |
 | `name` | `String` |
 
-**Used by:** only by the API and the MCP (no screen).
+**Used by:** GUI and web UI.
 
 ### InfraAudit
 

@@ -1,0 +1,32 @@
+---
+title: Dependências e religar no boot
+description: Como dizer ao Rustploy que um serviço depende de outro (a API depende do banco) e como fazer os serviços voltarem sozinhos quando o daemon sobe.
+---
+
+Num projeto com banco, cache e API, a ordem importa: o banco precisa estar no ar
+antes da API. Duas opções do serviço cuidam disso, na aba **Advanced**.
+
+## Depende de
+
+Em **Depende de**, escolha no seletor os outros serviços **do mesmo projeto** dos
+quais este depende e use **Add dependency**. Remova com **✕**. Cada mudança é
+salva na hora.
+
+- Só aparecem serviços do mesmo projeto; o próprio serviço e os já escolhidos ficam de fora.
+- O daemon recusa **ciclos** (A depende de B, que depende de A) e o erro aparece na tela.
+- Não dá para excluir um serviço de que outro depende.
+
+## Religar quando o daemon subir
+
+Com **Religar quando o daemon subir** ligado (`autostart`), o serviço volta
+sozinho depois de um reinício do daemon ou do servidor, **desde que estivesse
+rodando antes**. Um serviço que você parou à mão continua parado.
+
+No boot, o daemon sobe os serviços de cada projeto **na ordem das dependências**,
+esperando cada um. Se uma dependência falhar, quem depende dela **não sobe** e
+fica com o erro explicando qual dependência falhou.
+
+## Onde configurar
+
+- **App desktop e web UI:** serviço → aba **Advanced** → **Depende de** e o toggle de religar.
+- **YAML (`infra/`):** campos `depends_on` (lista de ids de serviço) e `autostart` no serviço.

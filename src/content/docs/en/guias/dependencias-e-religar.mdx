@@ -1,0 +1,32 @@
+---
+title: Dependencies and restart on boot
+description: How to tell Rustploy that one service depends on another (the API depends on the database) and how to bring services back automatically when the daemon starts.
+---
+
+In a project with a database, a cache and an API, order matters: the database
+must be up before the API. Two service options handle this, in the **Advanced** tab.
+
+## Depends on
+
+Under **Depends on**, pick from the selector the other services **in the same
+project** that this one needs and use **Add dependency**. Remove with **✕**. Each
+change is saved immediately.
+
+- Only services from the same project are listed; the service itself and those already chosen are left out.
+- The daemon rejects **cycles** (A depends on B, which depends on A) and the error shows on screen.
+- You cannot delete a service that another one depends on.
+
+## Start on daemon boot
+
+With **Start on daemon boot** on (`autostart`), the service comes back
+on its own after a daemon or server restart, **provided it was running before**.
+A service you stopped by hand stays stopped.
+
+On boot the daemon brings up each project's services **in dependency order**,
+waiting for each one. If a dependency fails, whatever depends on it **does not
+start** and shows an error naming the dependency that failed.
+
+## Where to set it
+
+- **Desktop app and web UI:** service → **Advanced** tab → **Depends on** and the restart toggle.
+- **YAML (`infra/`):** the `depends_on` (list of service ids) and `autostart` fields on the service.
