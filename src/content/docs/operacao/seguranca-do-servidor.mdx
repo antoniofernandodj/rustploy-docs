@@ -79,6 +79,35 @@ Abrir uma porta no `ufw` exige root, então isso fica num processo separado, o
 Expor um banco **abre a porta na internet**, protegida só pela senha dele. Restrinja
 por IP no próprio `ufw` quando puder.
 
+## Podman e ufw: DNS dos serviços e saída para a internet
+
+Com o **Podman** como motor e o `ufw` ativo (o padrão é `deny incoming` e `deny routed`), os containers **se alcançam por IP, mas os nomes dos serviços
+(`rp_db`, `rp_cache`…) não resolvem e nada sai para a internet**. Parece um problema de rede e é do firewall: o DNS do Podman
+(`aardvark-dns`) escuta no **endereço do host** de cada rede (por exemplo `10.89.0.1:53`, e não em loopback), e a saída
+dos containers é tráfego roteado. Com Docker isso não acontece.
+
+O instalador resolve isso sozinho quando você escolhe `--engine podman` e a atualização do pacote também (se o ufw estiver ativo), com o
+auxiliar `/usr/libexec/rustploy-podman-ufw`. Ele:
+
+- detecta as faixas de rede dos containers (as redes `rp_net_*` que já existem e o `default_subnet_pools` do `containers.conf`; padrão
+  `10.89.0.0/16`) e **não** mexe na rede `podman` padrão (`10.88.0.0/16`);
+- libera **só** o DNS (porta 53) dentro dessa faixa, e a saída dos containers para a internet;
+- **isola as redes dos projetos entre si**, antes de liberar a saída.
+
+```bash
+sudo /usr/libexec/rustploy-podman-ufw status   # faixas e regras
+sudo /usr/libexec/rustploy-podman-ufw apply    # (re)aplica; é idempotente
+sudo /usr/libexec/rustploy-podman-ufw remove   # apaga as regras "rustploy:"
+```
+
+Para outra faixa: `RUSTPLOY_PODMAN_SUBNET=10.50.0.0/16 sudo -E /usr/libexec/rustploy-podman-ufw apply`. Para gerir o `ufw` à mão, defina
+`RUSTPLOY_PODMAN_UFW=0`. O `rustployd-fw` **não muda**: as portas externas são um proxy TCP do próprio daemon.
+
+<Aside type="note" title="O que foi e o que não foi testado">
+  Testado num servidor real (Podman e `ufw`): DNS por nome, saída para a internet e comunicação dentro da rede, com o isolamento ativo.
+  O isolamento **entre dois projetos** ainda não foi exercitado.
+</Aside>
+
 ## O helper de atualização
 
 Instalar um `.deb` exige root, e o daemon **não** tem root. Quem instala é um segundo processo, o

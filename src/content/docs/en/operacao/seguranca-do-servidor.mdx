@@ -72,6 +72,35 @@ Opening a port in `ufw` requires root, so that lives in a separate process, **`r
 Exposing a database **opens the port to the internet**, protected only by its password. Restrict by IP in `ufw`
 itself when you can.
 
+## Podman and ufw: service DNS and internet access
+
+With **Podman** as the engine and `ufw` active (the default is `deny incoming` and `deny routed`), containers **reach each other by IP, but service
+names (`rp_db`, `rp_cache`…) do not resolve and nothing gets out to the internet**. It looks like a network problem and it is the firewall:
+Podman's DNS (`aardvark-dns`) listens on the **host address** of each network (for example `10.89.0.1:53`, not loopback), and the containers'
+outbound traffic is routed traffic. With Docker this does not happen.
+
+The installer fixes this by itself when you pick `--engine podman`, and so does a package upgrade (if `ufw` is active), through the helper
+`/usr/libexec/rustploy-podman-ufw`. It:
+
+- detects the containers' network ranges (the `rp_net_*` networks that already exist and the `default_subnet_pools` of `containers.conf`; default
+  `10.89.0.0/16`) and does **not** touch the default `podman` network (`10.88.0.0/16`);
+- opens **only** DNS (port 53) inside that range, and the containers' outbound traffic;
+- **isolates project networks from each other**, before opening outbound traffic.
+
+```bash
+sudo /usr/libexec/rustploy-podman-ufw status   # ranges and rules
+sudo /usr/libexec/rustploy-podman-ufw apply    # (re)apply; idempotent
+sudo /usr/libexec/rustploy-podman-ufw remove   # delete the "rustploy:" rules
+```
+
+For another range: `RUSTPLOY_PODMAN_SUBNET=10.50.0.0/16 sudo -E /usr/libexec/rustploy-podman-ufw apply`. To manage `ufw` by hand, set
+`RUSTPLOY_PODMAN_UFW=0`. `rustployd-fw` **does not change**: external ports are a TCP proxy inside the daemon itself.
+
+<Aside type="note" title="What was and was not tested">
+  Tested on a real server (Podman and `ufw`): DNS by name, internet access and communication inside the network, with isolation on.
+  Isolation **between two projects** has not been exercised yet.
+</Aside>
+
 ## The update helper
 
 Installing a `.deb` needs root, and the daemon does **not** have root. A second process installs it, **`rustployd-update`**,

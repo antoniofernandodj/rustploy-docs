@@ -70,15 +70,21 @@ the project, with the Storage as *trigger service* and `bucket` as the main serv
 ```yaml
 services:
   bucket:
-    image: docker.io/amazon/aws-cli
-    command: ["--endpoint-url", "http://rp_files:9000", "s3", "mb", "s3://my-bucket"]
+    image: docker.io/curlimages/curl
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["curl -sS -f -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user \"$$AK:$$SK\" -o /dev/null -w 'HTTP %{http_code}\\n' http://rp_files:9000/my-bucket"]
     environment:
-      AWS_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY}
-      AWS_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY}
-      AWS_DEFAULT_REGION: us-east-1
+      AK: ${RUSTFS_ACCESS_KEY}
+      SK: ${RUSTFS_SECRET_KEY}
 ```
 
-For MinIO, swap the two variables for `${MINIO_ROOT_USER}` and `${MINIO_ROOT_PASSWORD}`. Running the job again is safe.
+For MinIO, swap the two variables for `${MINIO_ROOT_USER}` and `${MINIO_ROOT_PASSWORD}`. The `HTTP 200` output means the bucket
+exists; running the job again is safe.
+
+<Aside type="caution" title="Why curl and not aws-cli">
+  `aws-cli` (botocore) rejects host names with `_` and answers `Invalid endpoint: http://rp_files:9000`, and services'
+  internal names are `rp_<name>`. `curl --aws-sigv4` accepts the name.
+</Aside>
 
 <Aside type="note" title="This is the administrator key">
   Today the application would use the Storage's **root** key. A dedicated key, with permission on the bucket only, is not

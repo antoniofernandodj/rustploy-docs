@@ -71,15 +71,21 @@ como *serviço gatilho* e o serviço principal `bucket`, e rode-o:
 ```yaml
 services:
   bucket:
-    image: docker.io/amazon/aws-cli
-    command: ["--endpoint-url", "http://rp_arquivos:9000", "s3", "mb", "s3://meu-bucket"]
+    image: docker.io/curlimages/curl
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["curl -sS -f -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user \"$$AK:$$SK\" -o /dev/null -w 'HTTP %{http_code}\\n' http://rp_arquivos:9000/meu-bucket"]
     environment:
-      AWS_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY}
-      AWS_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY}
-      AWS_DEFAULT_REGION: us-east-1
+      AK: ${RUSTFS_ACCESS_KEY}
+      SK: ${RUSTFS_SECRET_KEY}
 ```
 
-No MinIO, troque as duas variáveis por `${MINIO_ROOT_USER}` e `${MINIO_ROOT_PASSWORD}`. Repetir o job é seguro.
+No MinIO, troque as duas variáveis por `${MINIO_ROOT_USER}` e `${MINIO_ROOT_PASSWORD}`. A saída `HTTP 200` indica que o bucket
+existe; repetir o job é seguro.
+
+<Aside type="caution" title="Por que curl e não aws-cli">
+  O `aws-cli` (botocore) rejeita nomes de host com `_` e responde `Invalid endpoint: http://rp_arquivos:9000`, e os nomes
+  internos dos serviços são `rp_<nome>`. O `curl --aws-sigv4` aceita o nome.
+</Aside>
 
 <Aside type="note" title="A chave é a de administrador">
   Hoje a aplicação usaria a chave **root** do Storage. Uma chave própria, com permissão só no bucket, ainda não é gerada
