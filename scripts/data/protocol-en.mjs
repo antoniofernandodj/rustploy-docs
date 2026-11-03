@@ -1,6 +1,9 @@
 // Traduções para o inglês das docs vindas dos comentários em pt-BR de protocol.rs.
 // Chave ausente = o texto original (que já pode estar em inglês) é mantido.
 export const DOCS = {
+  EnvKeyRename: 'Renames the **key** of an env var (project-wide, or a service\'s if `service_id` is given) keeping its value — `Plain` or `Secret` — without the value passing through the caller, and carrying along the `.env` editor comments anchored to it. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.',
+  SecretRename: 'Renames a **secret** (project-wide, or a service\'s if `service_id` is given) and, in the same transaction, repoints every `Secret(from)` env var that resolved to it. The encrypted value is not read. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.',
+  SecretMove: 'Moves an item between env and secret, or between scopes. Always atomic: either everything changes or nothing does. Fails if the destination already has an item with the same name. The agent (MCP) cannot use `SecretToEnv`, which would expose the value.',
   ServiceConnectionInfo: 'Host and connection URL **inside** the project Docker network (assembled in the daemon by `shared::connection`, so the GUI and the web UI never diverge).',
   SharedAccessList: 'Projects authorized to reach a shared database server.',
   SharedAccessGrant: 'Authorizes a project: connects the server to its network under the global alias.',

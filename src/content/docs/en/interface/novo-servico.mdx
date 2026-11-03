@@ -1,6 +1,6 @@
 ---
 title: Create a service (the New service wizard)
-description: A step-by-step guide to the desktop app's New service wizard in Rustploy - Application, Database, Broker, Compose, Template and Import - with the database form (Postgres) and the template search.
+description: A step-by-step guide to the desktop app's New service wizard in Rustploy - Application, Database, Broker, Storage, Compose, Template and Import - with the database form (Postgres) and the template search.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -12,6 +12,8 @@ import wizKafka from '../../../../assets/ui/novo-servico-kafka.png';
 import wizNats from '../../../../assets/ui/novo-servico-nats.png';
 import wizCompose from '../../../../assets/ui/novo-servico-compose.png';
 import wizImport from '../../../../assets/ui/novo-servico-importar.png';
+import wizStorage from '../../../../assets/ui/novo-servico-storage.png';
+import wizRustfs from '../../../../assets/ui/novo-servico-rustfs.png';
 import tipos from '../../../../assets/ui/novo-servico-tipos.png';
 import banco from '../../../../assets/ui/novo-servico-banco.png';
 import postgres from '../../../../assets/ui/novo-servico-postgres.png';
@@ -25,7 +27,7 @@ service and click **Deploy**.
 
 <Shot
   src={tipos}
-  alt="The New service window with the six types: Application, Database, Broker, Compose, Template and Importar."
+  alt="The New service window with the seven types: Application, Database, Broker, Storage, Compose, Template and Importar."
   caption="First step: the service type."
 />
 
@@ -34,6 +36,7 @@ service and click **Deploy**.
 | **Application** | "Web app via Git ou imagem" (web app via Git or image) | your code or a ready-made image. See [Git](/en/guias/git/) and [zip](/en/guias/zip/) |
 | **Database** | "Banco de dados gerenciado" (managed database) | Postgres, MySQL, MariaDB, MongoDB or Redis |
 | **Broker** | "Mensageria: Kafka, RabbitMQ, NATS" (messaging) | queues and events |
+| **Storage** | S3-compatible object storage: RustFS, MinIO | files and uploads, with an S3 API |
 | **Compose** | "Stack Docker Compose" | several containers together. See [Compose](/en/guias/compose/) |
 | **Template** | "A partir de um preset" (from a preset) | ready-made apps from the [catalog](/en/templates/) |
 | **Importar** | "Recriar um serviço exportado de outro servidor" (recreate a service exported from another server) | bring a service from one Rustploy to another |
@@ -73,15 +76,17 @@ Click **Selecionar ›** (Select) on the type's row.
 | **NOME** (Name) | the **service** name in Rustploy (e.g. `my-database`) |
 | **DATABASE NAME** | the database created inside the server (default `app`) |
 | **USER** | the user (default `postgres`) |
-| **PASSWORD** | **generated** for you, and you can change it |
+| **PASSWORD** | leave it **empty** and the server generates a strong password (24 characters); if you type one, it applies |
 | **Gerar URL de conexão externa** (Generate external connection URL) | tick it to reach the database from **outside the server** (see below) |
 | **DOCKER IMAGE** | the image, e.g. `postgres:18` |
 
 Click **Criar PostgreSQL** (Create PostgreSQL). The fields change by database: MySQL and MariaDB also ask for the root password, and
 MongoDB has **Use Replica Sets**.
 
-<Aside type="caution" title="Note the password">
-  The password shown is the one that will apply. Copy it before creating, or look it up afterwards on the service's **Environment** tab.
+<Aside type="note" title="Where the password lives">
+  The **generated** password is stored **encrypted**, as a service [secret](/en/guias/variaveis-e-secrets/), and is not
+  shown on the creation screen. To see it, open the service's **Environment** tab and use the secret's **👁** (the access is
+  audited). An AI agent (MCP) **cannot** read it.
 </Aside>
 
 #### External connection URL
@@ -90,7 +95,7 @@ Ticking **"Gerar URL de conexão externa (porta e firewall automáticos)"** (gen
 firewall), Rustploy allocates a free port from the `[external_ports]` range (default 20000–20999), opens that port in `ufw` and
 shows the **External URL** on the service's **Connection** tab. This makes the database reachable from the **internet**, protected
 only by its password. Use a strong password. Without it, the database is only reachable from inside the project. Details in
-[Databases and brokers](/en/guias/bancos-e-brokers/).
+[Databases, brokers and storage](/en/guias/bancos-e-brokers/).
 
 ## Template
 
@@ -130,30 +135,56 @@ Three options, each with the image that will run: **Apache Kafka** (`apache/kafk
 <Shot
   src={wizRabbit}
   alt="The New RabbitMQ form with name, user, generated password, the external connection URL option, the Docker image and the Criar RabbitMQ button."
-  caption="RabbitMQ asks for **USER** and **PASSWORD** (the password comes generated; the values are blurred)."
+  caption="RabbitMQ asks for **USER** and **PASSWORD** (leave the password empty for the server to generate one)."
 />
 
 <Shot
   src={wizKafka}
   alt="The New Apache Kafka form with name, generated password, the external connection URL option, the Docker image and the Criar Apache Kafka button."
-  caption="Kafka: just **NOME** and **PASSWORD**."
+  caption="Kafka: just the **NOME** (no user or password)."
 />
 
 <Shot
   src={wizNats}
   alt="The New NATS form with name, generated password, the external connection URL option, the Docker image and the Criar NATS button."
-  caption="NATS: also just **NOME** and **PASSWORD**."
+  caption="NATS: also just the **NOME**."
 />
 
 | Field | What it is |
 |---|---|
 | **NOME** (name) | the service name |
 | **USER** | RabbitMQ only (default `rabbit`) |
-| **PASSWORD (gerada, pode trocar)** (generated, you can change it) | the password. It comes filled in: change it if you want |
+| **PASSWORD (deixe vazio para gerar)** (leave empty to generate) | RabbitMQ only. Empty, the server generates it and stores it encrypted |
 | **Gerar URL de conexão externa** (generate an external connection URL) | opens a TCP port on the server and in the firewall, and shows the outside URL. Off, the broker is only reachable on the project network |
 | **DOCKER IMAGE** | the image, just to check |
 
-See [Databases and brokers](/en/guias/bancos-e-brokers/).
+See [Databases, brokers and storage](/en/guias/bancos-e-brokers/).
+
+## Storage
+
+<Shot
+  src={wizStorage}
+  alt="List of storages with RustFS (rustfs/rustfs:latest) and MinIO (cgr.dev/chainguard/minio:latest), each with a Selecionar button."
+  caption="Choosing the storage."
+/>
+
+Two options of S3-compatible object storage: **RustFS** and **MinIO**. After **Selecionar ›** (Select):
+
+<Shot
+  src={wizRustfs}
+  alt="The New RustFS form with name, user rustfsadmin, the password with the hint to leave it empty, the external connection URL option, the Docker image and the Criar RustFS button."
+  caption="RustFS: **USER** is the access key and **PASSWORD** is the secret key."
+/>
+
+| Field | What it is |
+|---|---|
+| **NOME** (name) | the service name |
+| **USER** | the *access key* (default `rustfsadmin` or `minioadmin`) |
+| **PASSWORD (deixe vazio para gerar)** (leave empty to generate) | the *secret key*. Empty, the server generates it and stores it encrypted |
+| **Gerar URL de conexão externa** (generate external connection URL) | opens a TCP port on the server and in the firewall |
+| **DOCKER IMAGE** | the image (MinIO's default is the Chainguard build) |
+
+The Storage **does not create a bucket by itself**. See how in [Databases, brokers and storage](/en/guias/bancos-e-brokers/#create-a-bucket).
 
 ## Compose
 

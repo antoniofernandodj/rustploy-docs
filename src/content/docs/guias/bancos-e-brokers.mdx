@@ -1,11 +1,11 @@
 ---
-title: Bancos de dados e brokers de mensagens
-description: Como criar Postgres, MySQL, MariaDB, MongoDB, Redis, Kafka, RabbitMQ e NATS no Rustploy com o assistente - credenciais geradas, URL de conexão interna, URL externa com porta e firewall automáticos e backup.
+title: Bancos de dados, brokers e storage
+description: Como criar Postgres, MySQL, MariaDB, MongoDB, Redis, Kafka, RabbitMQ, NATS e storage S3 (RustFS e MinIO) no Rustploy com o assistente - credenciais geradas e cifradas, URL de conexão interna, URL externa com porta e firewall automáticos e backup.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-O assistente **Novo serviço** cria bancos e brokers prontos, já com credenciais
+O assistente **Novo serviço** cria bancos, brokers e storage prontos, já com credenciais
 geradas e uma URL de conexão. Eles são stacks Docker Compose por baixo.
 
 ## O que existe
@@ -20,6 +20,8 @@ geradas e uma URL de conexão. Eles são stacks Docker Compose por baixo.
 | **Broker** | Kafka | `apache/kafka:3.9.0` | 9092 |
 | | RabbitMQ | `rabbitmq:4-management` | 5672 |
 | | NATS | `nats:2` | 4222 |
+| **Storage** | RustFS | `rustfs/rustfs:latest` | 9000 |
+| | MinIO | `cgr.dev/chainguard/minio:latest` | 9000 |
 
 <Aside type="caution" title="MongoDB 8 e kernels novos">
   A imagem `mongo:8` não inicia em kernels Linux 6.19 ou mais novos (um problema
@@ -32,9 +34,57 @@ geradas e uma URL de conexão. Eles são stacks Docker Compose por baixo.
 <Steps>
 1. No projeto, **+ Novo serviço**, e escolha **Database** (ou **Broker**).
 2. Escolha o motor.
-3. Preencha o formulário. O nome do serviço é o único campo obrigatório; usuário e senha são **gerados** se você deixar em branco. Dependendo do motor aparecem também **nome do banco**, **usuário**, **senha**, **senha do root**, a **imagem** e, no MongoDB, **Use Replica Sets**.
+3. Preencha o formulário. O nome do serviço é o único campo obrigatório; usuário e senha são **gerados** se você deixar em branco: a senha é gerada pelo servidor, com 24 caracteres aleatórios, e guardada **cifrada** como [secret](/guias/variaveis-e-secrets/) do serviço — ela não aparece na resposta da criação nem no estado em texto puro. Para vê-la, use o **👁** do secret (fica na auditoria). Dependendo do motor aparecem também **nome do banco**, **usuário**, **senha**, **senha do root**, a **imagem** e, no MongoDB, **Use Replica Sets**.
 4. Crie e faça o **Deploy**.
 </Steps>
+
+## Storage S3 (RustFS e MinIO)
+
+**Novo serviço → Storage** cria um servidor de objetos compatível com S3, na mesma lógica dos bancos: uma stack
+Compose (`rp_<nome>`), com as credenciais **geradas e guardadas cifradas**.
+
+| Opção | Imagem padrão | API S3 | Console |
+|---|---|---|---|
+| **RustFS** | `rustfs/rustfs:latest` | 9000 | 9001 |
+| **MinIO** | `cgr.dev/chainguard/minio:latest` | 9000 | 9001 |
+
+- **Usuário** é a *access key* e **Senha** é a *secret key*. Deixe os dois em branco e o servidor gera: o usuário padrão
+  (`rustfsadmin` ou `minioadmin`) e uma senha forte de 24 caracteres.
+- A aplicação usa o endpoint interno `http://rp_<nome>:9000`, que aparece na aba **Connection**. As chaves ficam como
+  [secrets](/guias/variaveis-e-secrets/) do serviço (`RUSTFS_ACCESS_KEY`/`RUSTFS_SECRET_KEY`, ou
+  `MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD`). Para dá-las a uma aplicação **sem copiar o valor**, referencie o secret na
+  variável da aplicação (`S3_ACCESS_KEY_ID` = `<secret:RUSTFS_ACCESS_KEY>`) ou use o ✏️ para renomear a chave.
+- O Compose gerado **não** abre CORS (`*`). Quem precisar de CORS acrescenta no Compose do serviço.
+
+<Aside type="caution" title="Imagem do MinIO">
+  `minio/minio` e `minio/mc` **deixaram de ser puxáveis** (Docker Hub e Quay respondem *access denied*). Por isso o
+  padrão é o build do Chainguard, que usa o mesmo comando e as mesmas variáveis. Se preferir outra origem, troque a imagem
+  no formulário. O template `minio` do catálogo de *Templates* ainda aponta para a imagem antiga.
+</Aside>
+
+### Criar um bucket
+
+O Storage **não cria bucket sozinho**. O jeito que não expõe a chave é um **job** com o Storage como serviço gatilho: o
+job herda o ambiente dele (com os secrets decifrados só na memória). Em **Jobs**, crie um job no projeto, com o Storage
+como *serviço gatilho* e o serviço principal `bucket`, e rode-o:
+
+```yaml
+services:
+  bucket:
+    image: docker.io/amazon/aws-cli
+    command: ["--endpoint-url", "http://rp_arquivos:9000", "s3", "mb", "s3://meu-bucket"]
+    environment:
+      AWS_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY}
+      AWS_DEFAULT_REGION: us-east-1
+```
+
+No MinIO, troque as duas variáveis por `${MINIO_ROOT_USER}` e `${MINIO_ROOT_PASSWORD}`. Repetir o job é seguro.
+
+<Aside type="note" title="A chave é a de administrador">
+  Hoje a aplicação usaria a chave **root** do Storage. Uma chave própria, com permissão só no bucket, ainda não é gerada
+  pelo Rustploy.
+</Aside>
 
 ## Como a aplicação se conecta
 

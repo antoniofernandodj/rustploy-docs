@@ -198,8 +198,8 @@ export const sections = [
       {
         q: { pt: 'Como acesso um banco de fora do servidor?', en: 'How do I reach a database from outside the server?' },
         a: {
-          pt: 'Abra uma porta TCP do host: na aba Domains do serviço use **PORTA TCP DO HOST** (Salvar porta ou Automática), ou marque a opção de URL externa no assistente da GUI. O Rustploy aloca uma porta da faixa 20000–20999 e a libera no firewall. Isso expõe o banco à internet, protegido só pela senha: use uma senha forte. Veja [Bancos e brokers](/guias/bancos-e-brokers/).',
-          en: 'Open a host TCP port: on the service\'s Domains tab use **PORTA TCP DO HOST** (Salvar porta or Automática), or tick the external URL option in the desktop wizard. Rustploy allocates a port from the 20000–20999 range and opens it in the firewall. This exposes the database to the internet, protected only by its password: use a strong one. See [Databases and brokers](/guias/bancos-e-brokers/).',
+          pt: 'Abra uma porta TCP do host: na aba Domains do serviço use **PORTA TCP DO HOST** (Salvar porta ou Automática), ou marque a opção de URL externa no assistente da GUI. O Rustploy aloca uma porta da faixa 20000–20999 e a libera no firewall. Isso expõe o banco à internet, protegido só pela senha: use uma senha forte. Veja [Bancos, brokers e storage](/guias/bancos-e-brokers/).',
+          en: 'Open a host TCP port: on the service\'s Domains tab use **PORTA TCP DO HOST** (Salvar porta or Automática), or tick the external URL option in the desktop wizard. Rustploy allocates a port from the 20000–20999 range and opens it in the firewall. This exposes the database to the internet, protected only by its password: use a strong one. See [Databases, brokers and storage](/guias/bancos-e-brokers/).',
         },
       },
       {
@@ -231,8 +231,8 @@ export const sections = [
       {
         q: { pt: 'Existe somente leitura ou controle de acesso por usuário?', en: 'Is there read-only access or per-user access control?' },
         a: {
-          pt: 'Não, a API usa um único token de administrador, sem escopo e sem usuários. Quem tem o token faz qualquer coisa, inclusive ler secrets decifrados, e comandos destrutivos não pedem confirmação. Proteja o token como a senha de root, use HTTPS e, se possível, VPN. Veja [Segurança do servidor](/operacao/seguranca-do-servidor/).',
-          en: 'No, the API uses a single administrator token, with no scopes and no users. Whoever has the token can do anything, including reading decrypted secrets, and destructive commands do not ask for confirmation. Protect the token like the root password, use HTTPS and, if possible, a VPN. See [Server security](/operacao/seguranca-do-servidor/).',
+          pt: 'Não, a API usa um único token de administrador, sem escopo e sem usuários. Quem tem o token faz qualquer coisa (o MCP esconde os valores de secrets do agente, mas o mesmo token em `/api/rpc` não passa por esse filtro), e comandos destrutivos não pedem confirmação. Proteja o token como a senha de root, use HTTPS e, se possível, VPN. Veja [Segurança do servidor](/operacao/seguranca-do-servidor/).',
+          en: 'No, the API uses a single administrator token, with no scopes and no users. Whoever has the token can do anything (MCP hides secret values from the agent, but the same token on `/api/rpc` does not go through that filter), and destructive commands do not ask for confirmation. Protect the token like the root password, use HTTPS and, if possible, a VPN. See [Server security](/operacao/seguranca-do-servidor/).',
         },
       },
       {

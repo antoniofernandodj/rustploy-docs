@@ -1,6 +1,6 @@
 ---
 title: Criar um serviço (assistente Novo serviço)
-description: Passo a passo do assistente Novo serviço do app desktop do Rustploy - Application, Database, Broker, Compose, Template e Importar - com o formulário de banco de dados (Postgres) e a busca de templates.
+description: Passo a passo do assistente Novo serviço do app desktop do Rustploy - Application, Database, Broker, Storage, Compose, Template e Importar - com o formulário de banco de dados (Postgres) e a busca de templates.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -12,6 +12,8 @@ import wizKafka from '../../../assets/ui/novo-servico-kafka.png';
 import wizNats from '../../../assets/ui/novo-servico-nats.png';
 import wizCompose from '../../../assets/ui/novo-servico-compose.png';
 import wizImport from '../../../assets/ui/novo-servico-importar.png';
+import wizStorage from '../../../assets/ui/novo-servico-storage.png';
+import wizRustfs from '../../../assets/ui/novo-servico-rustfs.png';
 import tipos from '../../../assets/ui/novo-servico-tipos.png';
 import banco from '../../../assets/ui/novo-servico-banco.png';
 import postgres from '../../../assets/ui/novo-servico-postgres.png';
@@ -26,7 +28,7 @@ Criar um serviço **não faz deploy**: depois de criado, abra o serviço e cliqu
 
 <Shot
   src={tipos}
-  alt="Janela Novo serviço com os seis tipos: Application, Database, Broker, Compose, Template e Importar."
+  alt="Janela Novo serviço com os sete tipos: Application, Database, Broker, Storage, Compose, Template e Importar."
   caption="Primeiro passo: o tipo de serviço."
 />
 
@@ -35,6 +37,7 @@ Criar um serviço **não faz deploy**: depois de criado, abra o serviço e cliqu
 | **Application** | Web app via Git ou imagem | seu código ou uma imagem pronta. Veja [Git](/guias/git/) e [zip](/guias/zip/) |
 | **Database** | Banco de dados gerenciado | Postgres, MySQL, MariaDB, MongoDB ou Redis |
 | **Broker** | Mensageria: Kafka, RabbitMQ, NATS | filas e eventos |
+| **Storage** | Armazenamento de objetos S3: RustFS, MinIO | arquivos e uploads, com API S3 |
 | **Compose** | Stack Docker Compose | vários containers juntos. Veja [Compose](/guias/compose/) |
 | **Template** | A partir de um preset | aplicações prontas do [catálogo](/templates/) |
 | **Importar** | Recriar um serviço exportado de outro servidor | levar um serviço de um Rustploy para outro |
@@ -75,16 +78,17 @@ Clique em **Selecionar ›** na linha do tipo.
 | **NOME** | o nome do **serviço** no Rustploy (ex.: `meu-banco`) |
 | **DATABASE NAME** | o database criado dentro do servidor (padrão `app`) |
 | **USER** | o usuário (padrão `postgres`) |
-| **PASSWORD** | **gerada** para você, e você pode trocar |
+| **PASSWORD** | deixe **vazio** e o servidor gera uma senha forte (24 caracteres); se digitar uma, ela vale |
 | **Gerar URL de conexão externa** | marque para acessar o banco de **fora do servidor** (veja abaixo) |
 | **DOCKER IMAGE** | a imagem, ex. `postgres:18` |
 
 Clique em **Criar PostgreSQL**. Os campos mudam conforme o banco: MySQL e MariaDB
 pedem também a senha do root, e o MongoDB tem **Use Replica Sets**.
 
-<Aside type="caution" title="Anote a senha">
-  A senha mostrada é a que vai valer. Copie-a antes de criar, ou consulte depois na
-  aba **Environment** do serviço.
+<Aside type="note" title="Onde fica a senha">
+  A senha **gerada** é guardada **cifrada**, como [secret](/guias/variaveis-e-secrets/) do serviço, e não aparece
+  na tela de criação. Para vê-la, abra a aba **Environment** do serviço e use o **👁** do secret (o acesso fica
+  registrado na auditoria). Um agente de IA (MCP) **não** consegue lê-la.
 </Aside>
 
 #### URL de conexão externa
@@ -94,7 +98,7 @@ Rustploy aloca uma porta livre da faixa `[external_ports]` (padrão 20000–2099
 libera essa porta no `ufw` e mostra a **External URL** na aba **Connection** do
 serviço. Isso deixa o banco acessível pela **internet**, protegido só pela senha.
 Use uma senha forte. Sem marcar, o banco só é alcançável de dentro do projeto.
-Detalhes em [Bancos e brokers](/guias/bancos-e-brokers/).
+Detalhes em [Bancos, brokers e storage](/guias/bancos-e-brokers/).
 
 ## Template
 
@@ -135,30 +139,56 @@ Três opções, cada uma com a imagem que vai rodar: **Apache Kafka** (`apache/k
 <Shot
   src={wizRabbit}
   alt="Formulário Nova RabbitMQ com nome, user, password gerada, a opção de gerar URL de conexão externa, a imagem Docker e o botão Criar RabbitMQ."
-  caption="RabbitMQ pede **USER** e **PASSWORD** (a senha vem gerada; os valores estão borrados)."
+  caption="RabbitMQ pede **USER** e **PASSWORD** (deixe a senha vazia para o servidor gerar uma)."
 />
 
 <Shot
   src={wizKafka}
   alt="Formulário Nova Apache Kafka com nome, password gerada, a opção de gerar URL de conexão externa, a imagem Docker e o botão Criar Apache Kafka."
-  caption="Kafka: só **NOME** e **PASSWORD**."
+  caption="Kafka: só o **NOME** (não usa usuário nem senha)."
 />
 
 <Shot
   src={wizNats}
   alt="Formulário Nova NATS com nome, password gerada, a opção de gerar URL de conexão externa, a imagem Docker e o botão Criar NATS."
-  caption="NATS: também só **NOME** e **PASSWORD**."
+  caption="NATS: também só o **NOME**."
 />
 
 | Campo | O que é |
 |---|---|
 | **NOME** | o nome do serviço |
 | **USER** | só no RabbitMQ (padrão `rabbit`) |
-| **PASSWORD (gerada, pode trocar)** | a senha. Já vem preenchida: troque se quiser |
+| **PASSWORD (deixe vazio para gerar)** | só no RabbitMQ. Vazio, o servidor gera e guarda cifrada |
 | **Gerar URL de conexão externa** | abre uma porta TCP no servidor e no firewall, e mostra a URL de fora. Desligado, o broker só é alcançável pela rede do projeto |
 | **DOCKER IMAGE** | a imagem, só para conferir |
 
-Veja [Bancos e brokers](/guias/bancos-e-brokers/).
+Veja [Bancos, brokers e storage](/guias/bancos-e-brokers/).
+
+## Storage
+
+<Shot
+  src={wizStorage}
+  alt="Lista de storages com RustFS (rustfs/rustfs:latest) e MinIO (cgr.dev/chainguard/minio:latest), cada um com o botão Selecionar."
+  caption="Escolha do storage."
+/>
+
+Duas opções de armazenamento de objetos compatível com S3: **RustFS** e **MinIO**. Depois de **Selecionar ›**:
+
+<Shot
+  src={wizRustfs}
+  alt="Formulário Nova RustFS com nome, user rustfsadmin, a senha com a dica para deixar vazio, a opção de URL de conexão externa, a imagem Docker e o botão Criar RustFS."
+  caption="RustFS: **USER** é a access key e **PASSWORD** é a secret key."
+/>
+
+| Campo | O que é |
+|---|---|
+| **NOME** | o nome do serviço |
+| **USER** | a *access key* (padrão `rustfsadmin` ou `minioadmin`) |
+| **PASSWORD (deixe vazio para gerar)** | a *secret key*. Vazio, o servidor gera e guarda cifrada |
+| **Gerar URL de conexão externa** | abre uma porta TCP no servidor e no firewall |
+| **DOCKER IMAGE** | a imagem (o padrão do MinIO é o build do Chainguard) |
+
+O Storage **não cria bucket sozinho**. Veja como em [Bancos, brokers e storage](/guias/bancos-e-brokers/#criar-um-bucket).
 
 ## Compose
 

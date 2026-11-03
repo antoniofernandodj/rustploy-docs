@@ -41,6 +41,28 @@ porta do domínio e o alvo de ingress.
 O agente usa `rpc` com `WizardCatalog` para achar o template e `WizardCreate`
 para criá-lo. Peça que ele mostre o que vai criar **antes** de executar.
 
+## Criar um banco, um broker ou um storage sem ver a senha
+
+> Crie no projeto `loja` um RabbitMQ chamado `fila` e um RustFS chamado `arquivos`.
+
+O agente usa `rpc` com `WizardCreate` (`kind` = `broker` / `storage`, `password` vazio). O servidor **gera a senha e a
+guarda cifrada**; a resposta traz só a referência a um secret, nunca o valor. Para conectar uma aplicação, o agente
+referencia o secret numa variável (`<secret:NOME>`) em vez de copiar a senha.
+
+## Alinhar os nomes das variáveis entre serviços
+
+> O broker usa `RABBITMQ_DEFAULT_PASS` e o meu código lê `RABBITMQ_PASS`. Ajuste sem eu precisar colar a senha.
+
+O agente chama `EnvKeyRename` (ou `SecretRename`, se for o nome do secret). O valor nunca passa por ele.
+
+## Criar o bucket de um Storage
+
+> Crie o bucket `uploads` no storage `arquivos`.
+
+O agente cria um **job** com o Storage como serviço gatilho (o job herda o ambiente dele, com os secrets decifrados só
+na memória) rodando `aws s3 mb`, e o executa com `JobRunNow`. A receita completa está em
+[Bancos, brokers e storage](/guias/bancos-e-brokers/#criar-um-bucket).
+
 ## Boas práticas ao pedir
 
 - Diga o **servidor** quando houver mais de um registrado (`rustploy-producao`).

@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 124 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 126 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **124 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **126 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -772,7 +772,7 @@ Para um container (`id` completo, vindo de `DockerContainers`). **Recusa** conta
 
 ### SecretMove
 
-Move um item entre env e secret, ou entre escopos. Sempre atômico: ou tudo muda, ou nada. Falha se o destino já tem um item com o mesmo nome. Ver `SecretMoveOp`.
+Moves an item between env and secret, or between scopes. Always atomic: either everything changes or nothing does. Fails if the destination already has an item with the same name. The agent (MCP) cannot use `SecretToEnv`, which would expose the value.
 
 ```json
 {"SecretMove":{"project_id":"prj_…","service_id":null,"name":"…","op":"{…}"}}
@@ -784,6 +784,40 @@ Move um item entre env e secret, ou entre escopos. Sempre atômico: ou tudo muda
 | `service_id` | `Option<String>`<br />Depende da operação (ver `SecretMoveOp`). |
 | `name` | `String`<br />Nome do secret — ou a chave da env, em `SecretMoveOp::EnvToSecret`. |
 | `op` | `SecretMoveOp` |
+
+**Used by:** GUI and web UI.
+
+### EnvKeyRename
+
+Renames the **key** of an env var (project-wide, or a service's if `service_id` is given) keeping its value — `Plain` or `Secret` — without the value passing through the caller, and carrying along the `.env` editor comments anchored to it. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.
+
+```json
+{"EnvKeyRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>` |
+| `from` | `String` |
+| `to` | `String` |
+
+**Used by:** GUI and web UI.
+
+### SecretRename
+
+Renames a **secret** (project-wide, or a service's if `service_id` is given) and, in the same transaction, repoints every `Secret(from)` env var that resolved to it. The encrypted value is not read. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.
+
+```json
+{"SecretRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>` |
+| `from` | `String` |
+| `to` | `String` |
 
 **Used by:** GUI and web UI.
 

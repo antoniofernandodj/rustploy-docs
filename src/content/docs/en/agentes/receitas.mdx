@@ -40,6 +40,28 @@ needs more, it continues with `build_logs`.
 The agent uses `rpc` with `WizardCatalog` to find the template and `WizardCreate` to create it. Ask it to show you
 what it will create **before** running it.
 
+## Create a database, a broker or a storage without seeing the password
+
+> Create in project `shop` a RabbitMQ called `queue` and a RustFS called `files`.
+
+The agent uses `rpc` with `WizardCreate` (`kind` = `broker` / `storage`, empty `password`). The server **generates the
+password and stores it encrypted**; the response carries only a reference to a secret, never the value. To connect an
+application, the agent references the secret in a variable (`<secret:NAME>`) instead of copying the password.
+
+## Align variable names across services
+
+> The broker uses `RABBITMQ_DEFAULT_PASS` and my code reads `RABBITMQ_PASS`. Fix it without me pasting the password.
+
+The agent calls `EnvKeyRename` (or `SecretRename`, if it is the secret's name). The value never passes through it.
+
+## Create a Storage's bucket
+
+> Create the `uploads` bucket in the `files` storage.
+
+The agent creates a **job** with the Storage as its trigger service (the job inherits its environment, with secrets
+decrypted only in memory) running `aws s3 mb`, and runs it with `JobRunNow`. The full recipe is in
+[Databases, brokers and storage](/en/guias/bancos-e-brokers/#create-a-bucket).
+
 ## Good practices when asking
 
 - Say the **server** when more than one is registered (`rustploy-production`).

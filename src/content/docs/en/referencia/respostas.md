@@ -56,7 +56,7 @@ An error comes as `{"Err":{"code":"…","message":"…"}}`.
 | `DockerContainers` | `Vec<DockerContainerInfo>` |
 | `StopAllResult` | `count: u32` |
 | `IngressRoutes` | `IngressSnapshot` |
-| `WizardCatalog` | `dbs: String`, `brokers: String`, `templates: String` |
+| `WizardCatalog` | `dbs: String`, `brokers: String`, `storages: String`, `templates: String` |
 | `Snapshot` | `String` |
 | `Job` | `Job` |
 | `Jobs` | `Vec<Job>` |

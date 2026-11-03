@@ -6,8 +6,9 @@ description: Rustploy's token is an administrator's, with no scope and no confir
 import { Aside } from '@astrojs/starlight/components';
 
 <Aside type="danger" title="Read before connecting an agent">
-  The API token is a **single, unscoped bearer**. Whoever has it creates projects, reads decrypted secrets, starts
-  containers and takes stacks down. There is no read-only mode.
+  The API token is a **single, unscoped bearer**. Whoever has it creates projects, starts containers and takes stacks
+  down. There is no read-only mode. Through **MCP** the agent does not receive secret values (see below), but the same
+  token on `/api/rpc` — which the GUI and the web UI use — does not go through that protection.
 </Aside>
 
 ## What the agent can do
@@ -15,6 +16,29 @@ import { Aside } from '@astrojs/starlight/components';
 Everything the administrator can. The agent **sees** the token, because it is what authenticates. Destructive
 commands **do not ask for confirmation** on the server: `ServiceDelete`, `Prune*`, `Remove*`, `StopAllManaged`,
 `RegistryRepoDelete`.
+
+## What the agent (via MCP) never receives
+
+MCP and `rpc` go through a layer that **hides secrets** before answering. It is a safety net against accidental leaks;
+it is **not** a vault.
+
+- **Secret values**: `SecretReveal` is forbidden to the agent.
+- **Plain variables that look secret**: if the key contains `PASSWORD`, `PASS`, `SECRET`, `TOKEN` or `KEY`
+  (`POSTGRES_PASSWORD`, `S3_ACCESS_KEY_ID`…), the value arrives as `***`. It is generous on purpose: it hides even
+  `VAPID_PUBLIC_KEY`.
+- **Passwords in URLs**: any `user:password@host` arrives as `user:***@host`, including the internal URL from
+  `ServiceConnectionInfo`.
+- **Exports**: the `.env` and the YAMLs follow the same rule.
+- **Forbidden to the agent**: `SecretReveal`, `SecretMove` with `SecretToEnv` (it would become a plain variable),
+  `RegistryTokenCreate` (returns the token in clear text) and `ServiceExport` with values.
+- **Editing without corrupting**: if the agent sends back a spec containing `***` (the `ServiceGet` → edit →
+  `ServiceUpdate` path), the daemon **restores the real value**. If there is no previous value, it refuses.
+
+This does **not** stop everything. An agent that has the token and a shell calls `/api/rpc` directly; a service it
+creates can print its own variables to the log. To create infrastructure without seeing credentials, use the wizard
+(`WizardCreate` generates the password and stores it encrypted) and the [rename](/en/guias/variaveis-e-secrets/#rename)
+commands. If a password **was already shown** to an agent before this protection (a service created by older versions),
+consider it exposed and change it.
 
 ## How to protect yourself
 

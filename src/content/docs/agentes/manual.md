@@ -175,7 +175,14 @@ Comandos, por área (campos entre chaves):
 - **Logs de container**: `LogsGet{service_id, tail}` (para acompanhar ao vivo,
   use o SSE `/api/services/<id>/logs`)
 - **Segredos**: `SecretList{project_id}` · `SecretSet{project_id, name, value}` ·
-  `SecretDelete{project_id, name}`
+  `SecretDelete{project_id, name}` ·
+  `SecretMove{project_id, service_id?, name, op}` (`EnvToSecret`, escopos…) ·
+  `EnvKeyRename{project_id, service_id?, from, to}` — troca só a **chave** de uma
+  variável, mantendo o valor (que você não vê) ·
+  `SecretRename{project_id, service_id?, from, to}` — renomeia o secret e reaponta
+  as variáveis que o usam. Use estes dois para alinhar nomes entre serviços (ex.:
+  `RABBITMQ_DEFAULT_PASS` do broker × `RABBITMQ_PASS` do código) sem tocar em senha.
+  `service_id` omitido = escopo do projeto.
 - **Infra as code**: `ManifestExport{project_id}` · `ManifestExportAll` ·
   `ManifestImport{yaml, dotenv, prune, deploy}` · `ManifestApply{manifests, prune, deploy}` ·
   `ServiceExportPlan{service_id}` · `ServiceExport{service_id, include_values, project_env_keys}` ·
@@ -191,7 +198,16 @@ Comandos, por área (campos entre chaves):
   `ManagedDatabaseListAll` · `ManagedDatabaseCreate(…)` · `ManagedDatabaseDelete{id}`
 - **Migrações**: `MigrationStart(…)` · `MigrationGet{id}` · `MigrationList{project_id}` ·
   `MigrationRollback{id}` · `MigrationDiscard{id}`
-- **Templates**: `WizardCatalog{search}` · `WizardCreate(…)`
+- **Templates e wizard**: `WizardCatalog{search}` · `WizardCreate(…)`. O `WizardCreate` com
+  `kind` = `database`, `broker` ou `storage` (RustFS, MinIO) **gera a senha** quando você
+  manda `password` vazio e a guarda como secret do serviço: a resposta traz só a referência,
+  nunca o valor. É o jeito de criar infra sem ver credencial.
+  **Bucket num Storage:** o Storage não cria bucket sozinho. Crie um job com
+  `trigger_service_id` = o serviço do Storage (o job herda o ambiente dele, já com os
+  secrets decifrados só em memória) e `JobRunNow`. Receita testada (RustFS e MinIO):
+  `compose` = `services:\n  bucket:\n    image: docker.io/amazon/aws-cli\n    command: ["--endpoint-url","http://rp_<nome-do-storage>:9000","s3","mb","s3://<bucket>"]\n    environment:\n      AWS_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY}\n      AWS_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY}\n      AWS_DEFAULT_REGION: us-east-1`
+  (MinIO: `${MINIO_ROOT_USER}` / `${MINIO_ROOT_PASSWORD}`), `main_service` = `bucket`.
+  Não use `minio/mc`: a imagem não é mais puxável.
 - **Docker**: `DockerContainers` · `DockerImages` · `DockerVolumes` ·
   `DockerNetworks` · `RemoveContainer{id}` · `RemoveImage{id}` ·
   `RemoveVolume{name}` · `RemoveNetwork{id}` · `StopAllManaged` ·
@@ -222,6 +238,18 @@ existente primeiro (`ServiceGet`, `JobListAll`) e use-o de molde.
 - **Log de container não é persistido.** `LogsGet` lê do Docker ao vivo, e o
   swap de deploy destrói o container antigo junto com o log. Build log
   (`GetBuildLogs`/`build_logs`) esse sim fica guardado.
+- **Você não vê senhas — por desenho.** O daemon mascara o que o agente recebe:
+  env `Plain` cuja chave parece segredo (`*PASSWORD*`, `*PASS*`, `*SECRET*`,
+  `*TOKEN*`, `*KEY*`) vem como `***`; a senha em qualquer `://user:senha@host`
+  (a `internal_url` do `ServiceConnectionInfo`, `DATABASE_URL`…) vem como
+  `user:***@host`; o `.env` e os YAMLs de exportação seguem a mesma regra. Valor
+  `Secret` aparece só como referência. É de propósito generoso (esconde até
+  `VAPID_PUBLIC_KEY`). Proibidos ao agente: `SecretReveal`, `SecretMove` com
+  `SecretToEnv`, `RegistryTokenCreate` e `ServiceExport` com `include_values`.
+  Se você devolver um spec com `***` num `ServiceUpdate`/`ProjectEnvSet`, o
+  daemon restaura o valor real; se não houver original, recusa. Para dar um
+  segredo a um app, referencie um secret (`<secret:NOME>`), não escreva o valor.
+  Isto reduz o risco de engano; não é um cofre (o token é de administrador).
 - **Sem escopo.** O token é o de administrador: não existe modo
   somente-leitura. Comandos destrutivos (`ServiceDelete`, `Prune*`,
   `Remove*`, `StopAllManaged`, `RegistryRepoDelete`) não pedem confirmação —

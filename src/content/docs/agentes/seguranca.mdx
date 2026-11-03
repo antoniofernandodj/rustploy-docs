@@ -7,8 +7,9 @@ import { Aside } from '@astrojs/starlight/components';
 
 <Aside type="danger" title="Leia antes de conectar um agente">
   O token da API é um **bearer único e sem escopo**. Quem o tem cria projetos,
-  lê segredos decifrados, sobe containers e derruba stacks. Não existe modo
-  somente leitura.
+  sobe containers e derruba stacks. Não existe modo somente leitura. Pelo **MCP** o
+  agente não recebe valores de secrets (veja abaixo), mas o mesmo token em
+  `/api/rpc` — como a GUI e a web UI usam — não passa por essa proteção.
 </Aside>
 
 ## O que o agente consegue
@@ -16,6 +17,29 @@ import { Aside } from '@astrojs/starlight/components';
 Tudo o que o administrador consegue. O agente **vê** o token, porque é ele que
 autentica. Comandos destrutivos **não pedem confirmação** no servidor:
 `ServiceDelete`, `Prune*`, `Remove*`, `StopAllManaged`, `RegistryRepoDelete`.
+
+## O que o agente (via MCP) nunca recebe
+
+O MCP e o `rpc` passam por uma camada que **esconde segredos** antes de responder. É uma rede de segurança contra
+vazamento por engano; **não** é um cofre.
+
+- **Valores de secrets**: o `SecretReveal` é proibido ao agente.
+- **Variáveis em claro de aparência secreta**: se a chave contém `PASSWORD`, `PASS`, `SECRET`, `TOKEN` ou `KEY`
+  (`POSTGRES_PASSWORD`, `S3_ACCESS_KEY_ID`…), o valor chega como `***`. É generoso de propósito: esconde até
+  `VAPID_PUBLIC_KEY`.
+- **Senhas em URLs**: qualquer `usuario:senha@host` chega como `usuario:***@host`, inclusive a URL interna do
+  `ServiceConnectionInfo`.
+- **Exportações**: o `.env` e os YAMLs seguem a mesma regra.
+- **Proibido ao agente**: `SecretReveal`, `SecretMove` com `SecretToEnv` (viraria uma variável em claro),
+  `RegistryTokenCreate` (devolve o token em texto) e `ServiceExport` com valores.
+- **Editar sem corromper**: se o agente reenviar um spec com o `***` (o caminho `ServiceGet` → editar →
+  `ServiceUpdate`), o daemon **restaura o valor real**. Se não houver valor anterior, recusa.
+
+Isto **não** impede tudo. Um agente que tenha o token e um shell chama `/api/rpc` direto; um serviço criado por ele pode
+imprimir as próprias variáveis no log. Para criar infra sem ver credencial, use o assistente
+(`WizardCreate` gera a senha e a guarda cifrada) e os comandos de [renomear](/guias/variaveis-e-secrets/#renomear).
+Se uma senha **já foi exibida** a um agente antes dessa proteção (um serviço criado por versões antigas), considere-a
+exposta e troque-a.
 
 ## Como se proteger
 

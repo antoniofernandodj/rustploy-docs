@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 124 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 126 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **124 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **126 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -784,6 +784,40 @@ Move um item entre env e secret, ou entre escopos. Sempre atômico: ou tudo muda
 | `service_id` | `Option<String>`<br />Depende da operação (ver `SecretMoveOp`). |
 | `name` | `String`<br />Nome do secret — ou a chave da env, em `SecretMoveOp::EnvToSecret`. |
 | `op` | `SecretMoveOp` |
+
+**Usado por:** GUI e web UI.
+
+### EnvKeyRename
+
+Renomeia a **chave** de uma env (do projeto, ou do serviço se `service_id` vier), mantendo o valor — `Plain` ou `Secret` — sem que ele passe pelo chamador, e acompanhando os comentários do editor `.env` ancorados nela. Falha se `from` não existe ou `to` já existe no escopo. Resposta: `Ok`.
+
+```json
+{"EnvKeyRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>` |
+| `from` | `String` |
+| `to` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### SecretRename
+
+Renomeia um **secret** (do projeto, ou do serviço se `service_id` vier) e atualiza, na mesma transação, toda env `Secret(from)` que resolvia para ele. O valor cifrado não é lido. Falha se `from` não existe ou `to` já existe no escopo. Resposta: `Ok`.
+
+```json
+{"SecretRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>` |
+| `from` | `String` |
+| `to` | `String` |
 
 **Usado por:** GUI e web UI.
 
