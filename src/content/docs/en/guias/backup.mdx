@@ -13,7 +13,6 @@ Two sets of data need a backup: **Rustploy's own state** and **your applications
 |---|---|---|
 | The daemon's folder (`infra/` with the YAML state, and the runtime SQLite) | `/var/lib/rustploy/db` | it is the platform's entire state |
 | **`age` identity** | `/etc/rustploy/age.key` (or `age_identity` in `config.toml`) | without it, stored secrets **cannot be decrypted** |
-| `master.key` | `/etc/rustploy/master.key` | **only if it exists** (legacy; daemons from 0.1.24 on do not create it) |
 | Configuration | `/etc/rustploy/config.toml` | API token, domains, ACME |
 | TLS certificates | `<db_path>/certs/` | avoids reissuing (Let's Encrypt rate-limits) |
 | Built-in registry | `<db_path>/registry/` | only if you use it |

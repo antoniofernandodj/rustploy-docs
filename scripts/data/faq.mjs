@@ -245,8 +245,8 @@ export const sections = [
       {
         q: { pt: 'Perdi a chave dos secrets (age.key). Consigo recuperar?', en: 'I lost the secrets key (age.key). Can I recover them?' },
         a: {
-          pt: 'Só se você configurou uma chave de recuperação (`recovery_recipient`) antes de gravar os secrets: ela também os abre. Sem isso, sem a identidade `age` do servidor (`/etc/rustploy/age.key`) os secrets gravados não podem ser decifrados, e um backup do banco sozinho não resolve; você precisará recriá-los. Já o `master.key` é a chave antiga e não é mais criado pelo daemon. Veja [Chaves e segredos](/guias/chaves-e-segredos/).',
-          en: 'Only if you set up a recovery key (`recovery_recipient`) before saving the secrets: it opens them too. Otherwise, without the server\'s `age` identity (`/etc/rustploy/age.key`) stored secrets cannot be decrypted, and a database backup alone does not help; you will have to recreate them. `master.key` is the old key and the daemon no longer creates it. See [Keys and secrets](/guias/chaves-e-segredos/).',
+          pt: 'Só se você configurou uma chave de recuperação (`recovery_recipient`) antes de gravar os secrets: ela também os abre. Sem isso, sem a identidade `age` do servidor (`/etc/rustploy/age.key`) os secrets gravados não podem ser decifrados, e um backup do banco sozinho não resolve; você precisará recriá-los. Veja [Chaves e segredos](/guias/chaves-e-segredos/).',
+          en: 'Only if you set up a recovery key (`recovery_recipient`) before saving the secrets: it opens them too. Otherwise, without the server\'s `age` identity (`/etc/rustploy/age.key`) stored secrets cannot be decrypted, and a database backup alone does not help; you will have to recreate them. See [Keys and secrets](/guias/chaves-e-segredos/).',
         },
       },
       {

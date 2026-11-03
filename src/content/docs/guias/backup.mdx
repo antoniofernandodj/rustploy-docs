@@ -14,7 +14,6 @@ Dois conjuntos de dados precisam de backup: o **estado do próprio Rustploy** e 
 |---|---|---|
 | Pasta do daemon (`infra/` com o estado em YAML, e o SQLite do runtime) | `/var/lib/rustploy/db` | é o estado inteiro da plataforma |
 | **Identidade `age`** | `/etc/rustploy/age.key` (ou `age_identity` no `config.toml`) | sem ela, os secrets gravados **não podem ser decifrados** |
-| `master.key` | `/etc/rustploy/master.key` | **só se existir** (legado; daemons a partir da 0.1.24 não o criam) |
 | Configuração | `/etc/rustploy/config.toml` | token da API, domínios, ACME |
 | Certificados TLS | `<db_path>/certs/` | evita reemitir (o Let's Encrypt limita) |
 | Registry embutido | `<db_path>/registry/` | só se você o usa |

@@ -53,7 +53,7 @@ The package restarts the service by itself. What is preserved:
 
 - **Your data**, in `/var/lib/rustploy` (the SQLite database, builds, the registry, variable backups).
 - **The configuration**, `/etc/rustploy/config.toml`. It is marked as a package configuration file: `dpkg` asks before overwriting it if you edited it.
-- **The secrets keys**, in `/etc/rustploy/` (the `age` identity, and `master.key` if it exists).
+- **The secrets keys**, in `/etc/rustploy/` (the `age` identity, in the `age.key` file).
 
 Your services' containers **keep running** during the daemon update: they belong to Docker, not to the
 Rustploy process.

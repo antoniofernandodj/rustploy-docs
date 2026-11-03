@@ -51,7 +51,7 @@ O pacote reinicia o serviço sozinho. O que é preservado:
 
 - **Seus dados**, em `/var/lib/rustploy` (banco SQLite, builds, registry, backups de variáveis).
 - **A configuração**, `/etc/rustploy/config.toml`. Ela é marcada como arquivo de configuração do pacote: o `dpkg` pergunta antes de sobrescrever se você a editou.
-- **As chaves dos secrets**, em `/etc/rustploy/` (a identidade `age`, e o `master.key` se existir).
+- **As chaves dos secrets**, em `/etc/rustploy/` (a identidade `age`, no arquivo `age.key`).
 
 Os containers dos seus serviços **continuam rodando** durante a atualização do
 daemon: eles são do Docker, não do processo do Rustploy.
