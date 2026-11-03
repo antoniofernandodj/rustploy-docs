@@ -30,8 +30,7 @@ histórico de ruído.
 
 ## Antes de ligar
 
-- **`git` instalado no servidor.** O Rustploy chama o comando `git` do sistema
-  (`sudo apt-get install git`). Sem ele, a tela avisa e recusa ligar.
+- **`git` instalado no servidor.** O pacote `rustployd` já depende dele (o `install.sh` o instala). O Rustploy chama o comando `git` do sistema; sem ele, a tela avisa e recusa ligar.
 - **Um repositório privado e vazio** no GitHub ou Gitea. O estado mostra a sua topologia e os
   seus domínios mesmo sem segredos; não o deixe público.
 - **Um provedor Git conectado** em **Settings → Git** (OAuth ou token), com permissão de escrita
@@ -284,6 +283,25 @@ não estiver disponível.
   com edição) e o Rustploy não relesse, a próxima escrita pela interface **desfaria** o que você
   resolveu. O "Retomar" existe também para evitar isso.
 </Aside>
+
+## Restaurar num servidor novo
+
+Se você perdeu o servidor, o repositório traz a configuração de volta:
+
+1. Instale o Rustploy no servidor novo (`install.sh`). Ele já traz o `git`.
+2. Em `/etc/rustploy/config.toml`, na seção `[secrets]`, ponha como `age_identity` a **chave privada de
+   recuperação** (a que você guardou fora do servidor) ou o `age.key` do servidor antigo. Sem isso os
+   secrets não decifram e a restauração é **recusada**, com a mensagem dizendo qual secret falhou.
+3. Reinicie o daemon e, em **Settings → Sincronização**, ligue o modo **sync** com o **mesmo
+   repositório**. (Repositório `https://` precisa do provedor Git conectado antes.)
+
+Um servidor **sem nenhum projeto e sem histórico** que liga o sync num repositório com história **traz o
+estado de volta** em vez de criar um histórico vazio que divergiria. Os serviços com religar no boot
+ligado sobem **na ordem das dependências**, como no boot.
+
+O que **não** volta: os dados dos bancos e volumes, os zips enviados e os blobs do registry embutido. As
+imagens são baixadas ou construídas de novo, o que leva tempo. Um servidor que **já tem projetos** nunca é
+sobrescrito: ele segue o fluxo normal e, se os históricos divergirem, pausa (veja "Histórico divergido").
 
 ## Limites a conhecer
 

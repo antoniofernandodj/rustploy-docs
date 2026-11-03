@@ -288,6 +288,25 @@ is not available.
   what you resolved. "Resume" exists to prevent that too.
 </Aside>
 
+## Restoring on a new server
+
+If you lost the server, the repository brings the configuration back:
+
+1. Install Rustploy on the new server (`install.sh`). It already brings `git`.
+2. In `/etc/rustploy/config.toml`, section `[secrets]`, set `age_identity` to the **recovery private
+   key** (the one you kept off the server) or the old server's `age.key`. Without it the secrets cannot
+   be decrypted and the restore is **refused**, naming the secret that failed.
+3. Restart the daemon and, in **Settings → Sync**, turn on **sync** mode with the **same
+   repository**. (An `https://` repository needs the Git provider connected first.)
+
+A server with **no projects and no history** that turns on sync against a repository that has history
+**brings the state back** instead of creating an empty history that would diverge. Services with
+start-on-boot enabled come up **in dependency order**, as on boot.
+
+What does **not** come back: database and volume data, uploaded zips and the embedded registry blobs.
+Images are pulled or built again, which takes time. A server that **already has projects** is never
+overwritten: it follows the normal flow and, if histories diverge, pauses (see "Diverged history").
+
 ## Limits to know
 
 - **HTTPS with a token only.** SSH keys (deploy keys) are not supported.
