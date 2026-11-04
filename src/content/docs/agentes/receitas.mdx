@@ -63,14 +63,12 @@ O agente cria um **job** com o Storage como serviço gatilho (o job herda o ambi
 na memória) rodando `aws s3 mb`, e o executa com `JobRunNow`. A receita completa está em
 [Bancos, brokers e storage](/guias/bancos-e-brokers/#criar-um-bucket).
 
-## Rotacionar a senha de um banco sem ver a nova
+## Gerar ou rotacionar uma senha sem o agente ver o valor
 
-> Troque a senha do Postgres do projeto `loja`. Eu não quero ver a senha nova.
-
-O agente cria um banco descartável pelo assistente (o daemon gera a senha e a guarda como secret), move o secret para o projeto,
-roda um job com `ALTER USER` que usa as duas senhas por variável de ambiente, troca os nomes dos secrets e faz o **redeploy** dos
-serviços. Depois, um job confirma que a nova conecta e a antiga é recusada. O valor nunca passa pelo agente. `ServiceReload` não
-serve aqui: ele não relê secrets.
+**Ainda não há um comando para isso**, e a receita não deve ser improvisada: nem criando um serviço descartável só para ganhar uma
+senha gerada, nem pedindo que o agente escolha o valor com `SecretSet`. Hoje o agente só consegue criar um banco, broker ou
+storage **novo** pelo assistente (o daemon gera a senha e a guarda como secret), e uma **pessoa** gera ou troca um secret
+existente na GUI ou na web UI. O comando de verdade (`SecretGenerate` e `SecretRotate`) está planejado.
 
 ## Boas práticas ao pedir
 

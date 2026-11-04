@@ -86,7 +86,7 @@ Com o **Podman** como motor e o `ufw` ativo (o padrão é `deny incoming` e `den
 (`aardvark-dns`) escuta no **endereço do host** de cada rede (por exemplo `10.89.0.1:53`, e não em loopback), e a saída
 dos containers é tráfego roteado. Com Docker isso não acontece.
 
-**A partir do daemon 0.1.30** (release v0.1.36), o instalador resolve isso sozinho quando você escolhe `--engine podman`, e a atualização do pacote também
+**A partir do daemon 0.1.31** (release v0.1.37), o instalador resolve isso sozinho quando você escolhe `--engine podman`, e a atualização do pacote também
 (se o ufw estiver ativo), com o auxiliar `/usr/libexec/rustploy-podman-ufw`. Em versões anteriores, aplique à mão as regras abaixo. Ele:
 
 - detecta as faixas de rede dos containers (as redes `rp_net_*` que já existem e o `default_subnet_pools` do `containers.conf`; padrão

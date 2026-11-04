@@ -79,7 +79,7 @@ names (`rp_db`, `rp_cache`…) do not resolve and nothing gets out to the intern
 Podman's DNS (`aardvark-dns`) listens on the **host address** of each network (for example `10.89.0.1:53`, not loopback), and the containers'
 outbound traffic is routed traffic. With Docker this does not happen.
 
-**From daemon 0.1.30 on** (release v0.1.36), the installer fixes this by itself when you pick `--engine podman`, and so does a package upgrade (if `ufw` is
+**From daemon 0.1.31 on** (release v0.1.37), the installer fixes this by itself when you pick `--engine podman`, and so does a package upgrade (if `ufw` is
 active), through the helper `/usr/libexec/rustploy-podman-ufw`. On earlier versions, apply the rules below by hand. It:
 
 - detects the containers' network ranges (the `rp_net_*` networks that already exist and the `default_subnet_pools` of `containers.conf`; default

@@ -62,14 +62,13 @@ The agent creates a **job** with the Storage as its trigger service (the job inh
 decrypted only in memory) running `aws s3 mb`, and runs it with `JobRunNow`. The full recipe is in
 [Databases, brokers and storage](/en/guias/bancos-e-brokers/#create-a-bucket).
 
-## Rotate a database password without seeing the new one
+## Generate or rotate a password without the agent seeing the value
 
-> Change the Postgres password of project `shop`. I do not want to see the new password.
-
-The agent creates a throwaway database through the wizard (the daemon generates the password and stores it as a secret), moves the
-secret to the project, runs a job with `ALTER USER` that uses both passwords through environment variables, swaps the secrets'
-names and **redeploys** the services. Then a job confirms that the new one connects and the old one is refused. The value never
-passes through the agent. `ServiceReload` does not work here: it does not re-read secrets.
+**There is no command for this yet**, and the recipe must not be improvised: neither by creating a throwaway service just to
+get a generated password, nor by asking the agent to choose the value with `SecretSet`. Today the agent can only create a
+**new** database, broker or storage through the wizard (the daemon generates the password and stores it as a secret), and a
+**person** generates or changes an existing secret in the GUI or the web UI. The real command (`SecretGenerate` and
+`SecretRotate`) is planned.
 
 ## Good practices when asking
 
