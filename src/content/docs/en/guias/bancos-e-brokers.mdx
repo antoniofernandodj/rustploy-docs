@@ -63,27 +63,39 @@ stack (`rp_<name>`) with the credentials **generated and stored encrypted**.
 
 ### Create a bucket
 
-The Storage **does not create a bucket by itself**. The way that does not expose the key is a **job** with the Storage as
-its trigger service: the job inherits its environment (secrets decrypted only in memory). Under **Jobs**, create a job in
-the project, with the Storage as *trigger service* and `bucket` as the main service, and run it:
+The Storage **does not create a bucket by itself**, and your application **should not** create one at startup: that is
+provisioning, and mixing it into the server makes every replica retry it and puts the admin key inside the process that
+serves the public. The recommended way is a **separate provisioning step** that runs as a **pre-deploy**.
 
-```yaml
-services:
-  bucket:
-    image: docker.io/curlimages/curl
-    entrypoint: ["/bin/sh", "-c"]
-    command: ["curl -sS -f -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user \"$$AK:$$SK\" -o /dev/null -w 'HTTP %{http_code}\\n' http://rp_files:9000/my-bucket"]
-    environment:
-      AK: ${RUSTFS_ACCESS_KEY}
-      SK: ${RUSTFS_SECRET_KEY}
-```
+1. In the application repository, a small provisioning program (for example `setup bucket`) that reads `S3_ENDPOINT`,
+   `S3_BUCKET_NAME_1` and the keys, creates the bucket if missing, and is **idempotent**.
+2. A project `git_source` **job** that runs it (with `build:` in the job's Compose). It inherits the project variables and
+   secrets, decrypted only in memory.
+3. The job goes into the **pre-deploy** list of the service that uses the bucket: it runs on every deploy, before the
+   service starts, and the deploy aborts if it fails.
 
-For MinIO, swap the two variables for `${MINIO_ROOT_USER}` and `${MINIO_ROOT_PASSWORD}`. The `HTTP 200` output means the bucket
-exists; running the job again is safe.
+The same goes for database **migrations**: a pre-deploy job, not a step of the server's startup. Tip: give provisioning
+its own branch (or the same repository with the job pointing at it) so a new migration does not trigger a redeploy of
+every service.
 
-<Aside type="caution" title="Why curl and not aws-cli">
-  `aws-cli` (botocore) rejects host names with `_` and answers `Invalid endpoint: http://rp_files:9000`, and services'
-  internal names are `rp_<name>`. `curl --aws-sigv4` accepts the name.
+<Aside type="note" title="No code of your own: a curl job">
+  If the application has no such step, an inline job with the Storage as *trigger service* does it (it inherits the
+  Storage environment). Under **Jobs**, main service `bucket`:
+
+  ```yaml
+  services:
+    bucket:
+      image: docker.io/curlimages/curl
+      entrypoint: ["/bin/sh", "-c"]
+      command: ["curl -sS -f -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user \"$$AK:$$SK\" -o /dev/null -w 'HTTP %{http_code}\\n' http://rp_arquivos:9000/my-bucket"]
+      environment:
+        AK: ${RUSTFS_ACCESS_KEY}
+        SK: ${RUSTFS_SECRET_KEY}
+  ```
+
+  On MinIO, use `${MINIO_ROOT_USER}` and `${MINIO_ROOT_PASSWORD}`. `HTTP 200` means the bucket exists; repeating is safe. Use
+  `curl`, not `aws-cli`: `aws-cli` rejects hostnames with `_` (`Invalid endpoint: http://rp_arquivos:9000`) and internal
+  service names are `rp_<name>`.
 </Aside>
 
 <Aside type="note" title="This is the administrator key">

@@ -64,27 +64,39 @@ Compose (`rp_<nome>`), com as credenciais **geradas e guardadas cifradas**.
 
 ### Criar um bucket
 
-O Storage **não cria bucket sozinho**. O jeito que não expõe a chave é um **job** com o Storage como serviço gatilho: o
-job herda o ambiente dele (com os secrets decifrados só na memória). Em **Jobs**, crie um job no projeto, com o Storage
-como *serviço gatilho* e o serviço principal `bucket`, e rode-o:
+O Storage **não cria bucket sozinho**, e a aplicação **não deveria** criá-lo na própria subida: criar bucket é
+provisionamento, e misturá-lo com o servidor faz cada réplica tentar de novo e exige a chave de administrador dentro do
+processo que atende o público. O jeito recomendado é um **passo de provisionamento separado**, que roda como **pré-deploy**.
 
-```yaml
-services:
-  bucket:
-    image: docker.io/curlimages/curl
-    entrypoint: ["/bin/sh", "-c"]
-    command: ["curl -sS -f -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user \"$$AK:$$SK\" -o /dev/null -w 'HTTP %{http_code}\\n' http://rp_arquivos:9000/meu-bucket"]
-    environment:
-      AK: ${RUSTFS_ACCESS_KEY}
-      SK: ${RUSTFS_SECRET_KEY}
-```
+1. No repositório da aplicação, uma pequena crate/programa de provisionamento (por exemplo `setup bucket`) que lê
+   `S3_ENDPOINT`, `S3_BUCKET_NAME_1` e as chaves, cria o bucket se faltar e é **idempotente**.
+2. Um **job** `git_source` do projeto que o executa (com `build:` no Compose do job). Ele herda as variáveis e os secrets do
+   projeto, decifrados só na memória.
+3. O job entra na lista de **pré-deploy** do serviço que usa o bucket: roda a cada deploy, antes do serviço subir, e o deploy
+   aborta se ele falhar.
 
-No MinIO, troque as duas variáveis por `${MINIO_ROOT_USER}` e `${MINIO_ROOT_PASSWORD}`. A saída `HTTP 200` indica que o bucket
-existe; repetir o job é seguro.
+O mesmo vale para as **migrations** do banco: um job de pré-deploy, não um passo da subida do servidor. Dica: dê ao
+provisionamento uma branch própria (ou o mesmo repositório, com o job apontando para ela), para uma migration nova não
+disparar o redeploy de todos os serviços.
 
-<Aside type="caution" title="Por que curl e não aws-cli">
-  O `aws-cli` (botocore) rejeita nomes de host com `_` e responde `Invalid endpoint: http://rp_arquivos:9000`, e os nomes
-  internos dos serviços são `rp_<nome>`. O `curl --aws-sigv4` aceita o nome.
+<Aside type="note" title="Sem código próprio: um job com curl">
+  Se a aplicação não tem esse passo, um job inline com o Storage como *serviço gatilho* resolve (ele herda o ambiente do
+  Storage). Em **Jobs**, serviço principal `bucket`:
+
+  ```yaml
+  services:
+    bucket:
+      image: docker.io/curlimages/curl
+      entrypoint: ["/bin/sh", "-c"]
+      command: ["curl -sS -f -X PUT --aws-sigv4 aws:amz:us-east-1:s3 --user \"$$AK:$$SK\" -o /dev/null -w 'HTTP %{http_code}\\n' http://rp_arquivos:9000/meu-bucket"]
+      environment:
+        AK: ${RUSTFS_ACCESS_KEY}
+        SK: ${RUSTFS_SECRET_KEY}
+  ```
+
+  No MinIO, troque as variáveis por `${MINIO_ROOT_USER}` e `${MINIO_ROOT_PASSWORD}`. `HTTP 200` indica que o bucket existe;
+  repetir é seguro. Use `curl` e não o `aws-cli`: o `aws-cli` rejeita hostnames com `_` (`Invalid endpoint:
+  http://rp_arquivos:9000`) e os nomes internos são `rp_<nome>`.
 </Aside>
 
 <Aside type="note" title="A chave é a de administrador">
