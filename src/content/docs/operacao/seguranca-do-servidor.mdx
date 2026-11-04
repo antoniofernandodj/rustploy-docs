@@ -86,7 +86,7 @@ Com o **Podman** como motor e o `ufw` ativo (o padrão é `deny incoming` e `den
 (`aardvark-dns`) escuta no **endereço do host** de cada rede (por exemplo `10.89.0.1:53`, e não em loopback), e a saída
 dos containers é tráfego roteado. Com Docker isso não acontece.
 
-**A partir do daemon 0.1.31** (release v0.1.37), o instalador resolve isso sozinho quando você escolhe `--engine podman`, e a atualização do pacote também
+**A partir do daemon 0.1.32** (release v0.1.38), o instalador resolve isso sozinho quando você escolhe `--engine podman`, e a atualização do pacote também
 (se o ufw estiver ativo), com o auxiliar `/usr/libexec/rustploy-podman-ufw`. Em versões anteriores, aplique à mão as regras abaixo. Ele:
 
 - detecta as faixas de rede dos containers (as redes `rp_net_*` que já existem e o `default_subnet_pools` do `containers.conf`; padrão
@@ -112,8 +112,9 @@ Para outra faixa: `RUSTPLOY_PODMAN_SUBNET=10.50.0.0/16 sudo -E /usr/libexec/rust
 `RUSTPLOY_PODMAN_UFW=0`. O `rustployd-fw` **não muda**: as portas externas são um proxy TCP do próprio daemon.
 
 <Aside type="note" title="O que foi e o que não foi testado">
-  Testado num servidor real (Podman e `ufw`): DNS por nome, saída para a internet e comunicação dentro da rede, com o isolamento ativo.
-  O isolamento **entre dois projetos** ainda não foi exercitado.
+  Num servidor real (Podman e `ufw`): DNS por nome, saída para a internet e comunicação dentro da rede, com o isolamento ativo.
+  O isolamento **entre dois projetos** foi exercitado num laboratório de redes com `ufw` e `iptables` reais (o teste
+  `tests/e2e-podman-ufw/run.sh`, que também cobre regras na ordem errada, repetição e remoção); ainda não num servidor com dois projetos.
 </Aside>
 
 ## O helper de atualização

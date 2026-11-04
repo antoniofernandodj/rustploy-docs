@@ -79,7 +79,7 @@ names (`rp_db`, `rp_cache`…) do not resolve and nothing gets out to the intern
 Podman's DNS (`aardvark-dns`) listens on the **host address** of each network (for example `10.89.0.1:53`, not loopback), and the containers'
 outbound traffic is routed traffic. With Docker this does not happen.
 
-**From daemon 0.1.31 on** (release v0.1.37), the installer fixes this by itself when you pick `--engine podman`, and so does a package upgrade (if `ufw` is
+**From daemon 0.1.32 on** (release v0.1.38), the installer fixes this by itself when you pick `--engine podman`, and so does a package upgrade (if `ufw` is
 active), through the helper `/usr/libexec/rustploy-podman-ufw`. On earlier versions, apply the rules below by hand. It:
 
 - detects the containers' network ranges (the `rp_net_*` networks that already exist and the `default_subnet_pools` of `containers.conf`; default
@@ -105,8 +105,9 @@ For another range: `RUSTPLOY_PODMAN_SUBNET=10.50.0.0/16 sudo -E /usr/libexec/rus
 `RUSTPLOY_PODMAN_UFW=0`. `rustployd-fw` **does not change**: external ports are a TCP proxy inside the daemon itself.
 
 <Aside type="note" title="What was and was not tested">
-  Tested on a real server (Podman and `ufw`): DNS by name, internet access and communication inside the network, with isolation on.
-  Isolation **between two projects** has not been exercised yet.
+  On a real server (Podman and `ufw`): DNS by name, internet access and communication inside the network, with isolation on.
+  Isolation **between two projects** was exercised in a network lab with real `ufw` and `iptables` (the
+  `tests/e2e-podman-ufw/run.sh` test, which also covers rules in the wrong order, repetition and removal); not yet on a server with two projects.
 </Aside>
 
 ## The update helper
