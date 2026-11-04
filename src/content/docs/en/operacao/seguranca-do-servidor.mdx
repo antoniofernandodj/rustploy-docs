@@ -79,8 +79,8 @@ names (`rp_db`, `rp_cache`…) do not resolve and nothing gets out to the intern
 Podman's DNS (`aardvark-dns`) listens on the **host address** of each network (for example `10.89.0.1:53`, not loopback), and the containers'
 outbound traffic is routed traffic. With Docker this does not happen.
 
-The installer fixes this by itself when you pick `--engine podman`, and so does a package upgrade (if `ufw` is active), through the helper
-`/usr/libexec/rustploy-podman-ufw`. It:
+**From daemon 0.1.30 on** (release v0.1.36), the installer fixes this by itself when you pick `--engine podman`, and so does a package upgrade (if `ufw` is
+active), through the helper `/usr/libexec/rustploy-podman-ufw`. On earlier versions, apply the rules below by hand. It:
 
 - detects the containers' network ranges (the `rp_net_*` networks that already exist and the `default_subnet_pools` of `containers.conf`; default
   `10.89.0.0/16`) and does **not** touch the default `podman` network (`10.88.0.0/16`);
@@ -91,6 +91,14 @@ The installer fixes this by itself when you pick `--engine podman`, and so does 
 sudo /usr/libexec/rustploy-podman-ufw status   # ranges and rules
 sudo /usr/libexec/rustploy-podman-ufw apply    # (re)apply; idempotent
 sudo /usr/libexec/rustploy-podman-ufw remove   # delete the "rustploy:" rules
+```
+
+To apply by hand on an earlier version (replace the range with your networks', `podman network inspect <network>`):
+
+```bash
+sudo ufw allow from 10.89.0.0/16 to 10.89.0.0/16 port 53
+sudo ufw route deny  from 10.89.0.0/16 to 10.89.0.0/16
+sudo ufw route allow from 10.89.0.0/16
 ```
 
 For another range: `RUSTPLOY_PODMAN_SUBNET=10.50.0.0/16 sudo -E /usr/libexec/rustploy-podman-ufw apply`. To manage `ufw` by hand, set

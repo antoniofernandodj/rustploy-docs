@@ -62,6 +62,15 @@ The agent creates a **job** with the Storage as its trigger service (the job inh
 decrypted only in memory) running `aws s3 mb`, and runs it with `JobRunNow`. The full recipe is in
 [Databases, brokers and storage](/en/guias/bancos-e-brokers/#create-a-bucket).
 
+## Rotate a database password without seeing the new one
+
+> Change the Postgres password of project `shop`. I do not want to see the new password.
+
+The agent creates a throwaway database through the wizard (the daemon generates the password and stores it as a secret), moves the
+secret to the project, runs a job with `ALTER USER` that uses both passwords through environment variables, swaps the secrets'
+names and **redeploys** the services. Then a job confirms that the new one connects and the old one is refused. The value never
+passes through the agent. `ServiceReload` does not work here: it does not re-read secrets.
+
 ## Good practices when asking
 
 - Say the **server** when more than one is registered (`rustploy-production`).

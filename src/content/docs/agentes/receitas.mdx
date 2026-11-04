@@ -63,6 +63,15 @@ O agente cria um **job** com o Storage como serviço gatilho (o job herda o ambi
 na memória) rodando `aws s3 mb`, e o executa com `JobRunNow`. A receita completa está em
 [Bancos, brokers e storage](/guias/bancos-e-brokers/#criar-um-bucket).
 
+## Rotacionar a senha de um banco sem ver a nova
+
+> Troque a senha do Postgres do projeto `loja`. Eu não quero ver a senha nova.
+
+O agente cria um banco descartável pelo assistente (o daemon gera a senha e a guarda como secret), move o secret para o projeto,
+roda um job com `ALTER USER` que usa as duas senhas por variável de ambiente, troca os nomes dos secrets e faz o **redeploy** dos
+serviços. Depois, um job confirma que a nova conecta e a antiga é recusada. O valor nunca passa pelo agente. `ServiceReload` não
+serve aqui: ele não relê secrets.
+
 ## Boas práticas ao pedir
 
 - Diga o **servidor** quando houver mais de um registrado (`rustploy-producao`).
