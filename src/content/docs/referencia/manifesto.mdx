@@ -174,7 +174,7 @@ para o arquivo ser aceito.
 | `context` | texto | não | ausente | Pasta enviada como contexto de build. Padrão `.`. |
 | `build_stage` | texto | não | ausente | Gravado, mas o deploy ainda **não usa**. |
 | `submodules` | verdadeiro/falso | não | `false` | Gravado, mas o deploy ainda **não usa**. |
-| `watch_paths` | lista de textos | não | vazio | Gravado, mas o deploy ainda **não usa**. |
+| `watch_paths` | lista de textos | não | vazio | Caminhos (relativos à raiz do repositório; aceita `*` e `**`) que um push precisa tocar para o **webhook** disparar o deploy. Vazio: todo push da branch dispara. Ver [Webhooks](/guias/webhooks/#filtro-por-caminhos-watch_paths). |
 | `username` | texto | não | ausente | Usuário do clone, se o provedor exigir. |
 | `credentials` | texto | não | ausente | O **nome** de um secret do projeto com o token de clone. |
 | `provider` | texto | não | ausente | O **nome** de uma conta Git conectada. Se não existir no destino (nem no arquivo de variáveis), a importação **aborta**. |

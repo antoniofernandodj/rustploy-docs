@@ -251,13 +251,15 @@ curl -s -X POST $RP/webhook/svc_…/<token>
 |---|---|---|
 | `200` | `deploy triggered` | the deploy was queued |
 | `200` | `skipped: branch mismatch` | the payload is a push to a different branch than the one configured on the service |
+| `200` | `skipped: no watched path changed` | the service has `watch_paths` and no file in the push matches them |
 | `401` | `invalid token` | wrong token, or the service has no webhook |
 | `404` | `not found` | the URL is not in the `/webhook/<id>/<token>` format |
 | `405` | `method not allowed` | the method is not `POST` |
 
-The request body is **ignored**, except for the branch filter: in a push payload with
+The request body is **ignored**, except for the branch and path filters: in a push payload with
 `"ref": "refs/heads/<branch>"`, a Git service with a configured branch only deploys if the branch
-matches. Any other body (Docker Hub, a `curl` with no body) triggers the deploy. Per-provider
+matches; and with `watch_paths`, only if some file in `commits[]` matches (when in doubt, it deploys).
+Any other body (Docker Hub, a `curl` with no body) triggers the deploy. Per-provider
 recipes are in [Deploy webhooks](/en/guias/webhooks/).
 
 ## `GET /oauth/gitea/callback` and `GET /oauth/github/callback`

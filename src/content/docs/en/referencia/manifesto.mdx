@@ -174,7 +174,7 @@ present for the file to be accepted.
 | `context` | text | no | absent | Folder sent as the build context. Default `.`. |
 | `build_stage` | text | no | absent | Stored, but the deploy does **not use it** yet. |
 | `submodules` | true/false | no | `false` | Stored, but the deploy does **not use it** yet. |
-| `watch_paths` | list of texts | no | empty | Stored, but the deploy does **not use it** yet. |
+| `watch_paths` | list of texts | no | empty | Paths (relative to the repository root; `*` and `**` allowed) that a push must touch for the **webhook** to trigger a deploy. Empty: every push to the branch triggers. See [Webhooks](/en/guias/webhooks/#path-filter-watch_paths). |
 | `username` | text | no | absent | Clone user, if the provider requires one. |
 | `credentials` | text | no | absent | The **name** of a project secret holding the clone token. |
 | `provider` | text | no | absent | The **name** of a connected Git account. If it does not exist at the destination (or in the variables file), the import **aborts**. |

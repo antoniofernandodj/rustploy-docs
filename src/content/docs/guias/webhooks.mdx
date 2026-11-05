@@ -79,8 +79,24 @@ e troca o container.
 
 Se o serviço é de fonte **Git** e tem uma branch configurada, o Rustploy lê o
 `ref` do payload (GitHub, Gitea e Gogs enviam `refs/heads/<branch>`) e **ignora
-pushes para outras branches**. Para filtros mais finos (só tags, só certos
-caminhos), use um GitHub Action.
+pushes para outras branches**. Para filtros mais finos (só tags), use um GitHub Action.
+
+## Filtro por caminhos (`watch_paths`)
+
+Com **WATCH PATHS** preenchido no formulário do serviço Git (separados por vírgula), o
+push só dispara o deploy se mexeu em algum desses caminhos. Serve para **vários serviços na
+mesma branch**: cada um reage só ao que é dele (por exemplo `crates/api, crates/core,
+dockerfiles/api.dockerfile, Cargo.lock` para a api).
+
+- Os caminhos são **relativos à raiz do repositório**. `src` casa o arquivo ou o diretório
+  (`src/a/b.rs` casa; `srcs/a.rs` não). `.` casa o repositório inteiro.
+- Aceita glob simples: `*` não atravessa `/`, `**` atravessa (`crates/**`,
+  `dockerfiles/*.dockerfile`, `**/Cargo.toml`).
+- O Rustploy lê os arquivos de `commits[].added|modified|removed` do payload (GitHub, GitLab, Gitea
+  e Gogs). **Na dúvida, faz o deploy**: corpo sem essa lista (Docker Hub, `curl`), push sem
+  commits, commit sem arquivos (um merge), ou **10 commits ou mais** (os provedores truncam a lista).
+- Deixar **WATCH PATHS** vazio mantém o comportamento de sempre: todo push da branch dispara.
+- O deploy **manual** e o do MCP (`deploy`) ignoram o filtro: ele só vale para o webhook.
 
 ## GitHub Actions
 

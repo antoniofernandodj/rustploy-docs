@@ -250,13 +250,15 @@ curl -s -X POST $RP/webhook/svc_…/<token>
 |---|---|---|
 | `200` | `deploy triggered` | o deploy foi enfileirado |
 | `200` | `skipped: branch mismatch` | o payload é de um push em outra branch que a configurada no serviço |
+| `200` | `skipped: no watched path changed` | o serviço tem `watch_paths` e nenhum arquivo do push casa com eles |
 | `401` | `invalid token` | token errado, ou o serviço não tem webhook |
 | `404` | `not found` | a URL não tem o formato `/webhook/<id>/<token>` |
 | `405` | `method not allowed` | o método não é `POST` |
 
-O corpo da requisição é **ignorado**, exceto para o filtro de branch: num payload de push com
-`"ref": "refs/heads/<branch>"`, um serviço Git com branch configurada só faz deploy se a branch
-conferir. Qualquer outro corpo (Docker Hub, `curl` sem corpo) dispara o deploy. Receitas por
+O corpo da requisição é **ignorado**, exceto para os filtros de branch e de caminhos: num payload de
+push com `"ref": "refs/heads/<branch>"`, um serviço Git com branch configurada só faz deploy se a
+branch conferir; e, com `watch_paths`, só se algum arquivo de `commits[]` casar (na dúvida, faz o
+deploy). Qualquer outro corpo (Docker Hub, `curl` sem corpo) dispara o deploy. Receitas por
 provedor, em [Webhooks de deploy](/guias/webhooks/).
 
 ## `GET /oauth/gitea/callback` e `GET /oauth/github/callback`

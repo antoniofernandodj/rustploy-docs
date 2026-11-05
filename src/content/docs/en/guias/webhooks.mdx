@@ -74,8 +74,23 @@ when you publish a new image, Rustploy pulls it and swaps the container.
 ## Branch filter
 
 If the service has a **Git** source and a configured branch, Rustploy reads the payload's `ref` (GitHub, Gitea
-and Gogs send `refs/heads/<branch>`) and **ignores pushes to other branches**. For finer filters (tags only,
-certain paths only), use a GitHub Action.
+and Gogs send `refs/heads/<branch>`) and **ignores pushes to other branches**. For finer filters (tags only),
+use a GitHub Action.
+
+## Path filter (`watch_paths`)
+
+With **WATCH PATHS** filled in on the Git service form (comma separated), a push only triggers the
+deploy if it touched one of those paths. It is meant for **several services on the same branch**: each one reacts
+only to what is its own (for example `crates/api, crates/core, dockerfiles/api.dockerfile, Cargo.lock` for the api).
+
+- Paths are **relative to the repository root**. `src` matches the file or the directory (`src/a/b.rs` matches;
+  `srcs/a.rs` does not). `.` matches the whole repository.
+- Simple globs work: `*` does not cross `/`, `**` does (`crates/**`, `dockerfiles/*.dockerfile`, `**/Cargo.toml`).
+- Rustploy reads the files from `commits[].added|modified|removed` in the payload (GitHub, GitLab, Gitea and Gogs).
+  **When in doubt, it deploys**: a body without that list (Docker Hub, `curl`), a push with no commits, a commit
+  with no files (a merge), or **10 commits or more** (providers truncate the list).
+- Leaving **WATCH PATHS** empty keeps the usual behavior: every push to the branch triggers.
+- A **manual** deploy and the MCP `deploy` ignore the filter: it only applies to the webhook.
 
 ## GitHub Actions
 
