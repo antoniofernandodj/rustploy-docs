@@ -79,6 +79,11 @@ use a GitHub Action.
 
 ## Path filter (`watch_paths`)
 
+<Aside type="note">
+  Available from daemon **0.1.33** (release v0.1.39). In earlier versions the field was stored but ignored, and
+  every push to the branch triggered the deploy.
+</Aside>
+
 With **WATCH PATHS** filled in on the Git service form (comma separated), a push only triggers the
 deploy if it touched one of those paths. It is meant for **several services on the same branch**: each one reacts
 only to what is its own (for example `crates/api, crates/core, dockerfiles/api.dockerfile, Cargo.lock` for the api).
