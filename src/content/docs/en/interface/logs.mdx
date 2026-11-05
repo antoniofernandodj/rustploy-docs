@@ -54,11 +54,31 @@ A deploy still in progress shows the build **live**. One that failed carries, at
 
 ## What is stored
 
-<Aside type="caution" title="Runtime is not stored; build is">
-  The **build log is stored** in the database and can be opened later. The **runtime log is not**: it is read from Docker live. When a
-  deploy swaps the container, the old one's log disappears. If you need application log history, ship it off the server (for example
-  with a template such as Loki or Grafana from the [catalog](/en/templates/)).
+The **build log** is stored in the database and can be opened later. The **runtime log** is stored too, in files on the
+server (see below), and survives the container swap on a deploy.
+
+### Stored runtime log
+
+<Aside type="note">Available from daemon 0.1.34 (release v0.1.40). Before that, the runtime log was live-only.</Aside>
+
+The daemon records each container's log while it runs and, **before removing a container** (the deploy swap and the
+rollback of a failed deploy), saves what had not been recorded yet. So you can see "what happened before the last
+deploy" and the cause of a new container that crashed within seconds.
+
+- When the window opens, the lines come from the stored log (the 500 most recent) and new ones keep arriving live.
+- **Carregar anteriores** (Load earlier, the button on top) brings the older page of log, above. Where the container
+  changed between two lines, the separator *"— other container: …"* appears.
+- Retention: **14 days** and **50 MiB per service** (the oldest goes first), adjustable in the
+  [`[logs]`](/en/instalacao/config-toml/) section of `config.toml`. Deleting the service deletes its log.
+- **Compose** services remain live-only.
+
+<Aside type="caution" title="The log may contain secrets">
+  If the application prints a password, it is in the log, live and now also on disk (`0700` folder, `0600`
+  files). Avoid logging secrets and, if you need longer retention or search, ship the logs off the server (for
+  example with a template such as Loki or Grafana from the [catalog](/en/templates/)).
 </Aside>
+
+An agent reads the history with the `LogsHistory` command.
 
 The window keeps at most **6,000 lines** on screen: past that, it discards the oldest and keeps the 4,000 most recent.
 

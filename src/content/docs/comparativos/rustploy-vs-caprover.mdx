@@ -39,7 +39,7 @@ funcionando"*.
 - **Fluxo de deploy.** No CapRover o caminho comum é a linha de comando: `caprover deploy` na pasta do projeto. No Rustploy não há CLI: você dispara pela tela, por webhook (por exemplo no GitHub Actions) ou por um agente de IA.
 - **DNS.** O CapRover pede um registro `A` curinga (`*.apps.exemplo.com`). No Rustploy você aponta cada domínio individualmente, o que serve também para domínios que não compartilham um sufixo.
 - **Swarm.** O CapRover traz o modelo de Swarm, que facilita crescer para mais nós. O Rustploy não usa Swarm: é uma máquina.
-- **Sem lock-in.** O Rustploy também não impede a saída: os containers são containers Docker comuns e o manifesto de Infra as Code exporta a configuração.
+- **Sem lock-in.** O Rustploy também não impede a saída: os containers são containers Docker comuns e a opção Baixar a infra exporta a configuração.
 
 ## O que o Rustploy tem e não consta nas fontes consultadas
 

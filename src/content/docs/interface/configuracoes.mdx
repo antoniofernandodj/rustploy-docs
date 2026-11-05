@@ -1,23 +1,18 @@
 ---
 title: Configurações (Settings) no app desktop
-description: As cinco abas de Settings do app desktop do Rustploy - Web Server (URL da API, token de conexão e comando do agente de IA), Git (contas GitHub e Gitea), Infra as Code (exportar e importar zip), Manutenção (limpeza automática do Docker) e Atualizações (versão nova do daemon).
+description: As cinco abas de Settings do app desktop do Rustploy - Web Server (URL da API, token de conexão e comando do agente de IA), Git (contas GitHub e Gitea), Manutenção (limpeza automática do Docker) e Atualizações (versão nova do daemon).
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
-import iacWebInicial from '../../../assets/ui/webui-iac-inicial.png';
-import iacWebExportar from '../../../assets/ui/webui-iac-exportar.png';
-import iacWebImportar from '../../../assets/ui/webui-iac-importar.png';
-import iacWebResultado from '../../../assets/ui/webui-iac-resultado.png';
 import web from '../../../assets/ui/settings-web-server.png';
 import git from '../../../assets/ui/settings-git.png';
 import gitOauth from '../../../assets/ui/settings-git-oauth.png';
-import iac from '../../../assets/ui/settings-iac.png';
 import manutencao from '../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../assets/ui/settings-manutencao-fim.png';
 
 **Settings** (no rodapé do menu lateral) tem cinco abas: **Web Server**, **Git**,
-**Infra as Code**, **Manutenção** e **Atualizações**.
+**Manutenção**, **Sincronização** e **Atualizações**.
 
 ## Web Server
 
@@ -78,58 +73,12 @@ repositórios (escopo `repo`). **Atualizar lista** recarrega as contas.
 
 Detalhes e o uso nos serviços: [Fazer deploy a partir de Git](/guias/git/).
 
-## Infra as Code
+## Sincronização
 
-<Shot
-  src={iac}
-  alt="Aba Infra as Code com os blocos Exportar e Importar, as opções prune e disparar deploy e os botões para exportar e importar um arquivo zip."
-  caption="Aba Infra as Code."
-/>
-
-| Bloco | O que faz |
-|---|---|
-| **Exportar para um .zip…** | gera um `.zip` com `rustploy.yml` e `rustploy.vars.toml` no lugar que você escolher. Os valores das variáveis ficam só no TOML; **secrets nunca saem do daemon** |
-| **Importar de um .zip…** | lê um `.zip` do mesmo formato, com **exatamente um** `.yml` e um `.toml` na raiz |
-
-Na [web UI](/interface/web-ui/) a aba é a mesma: **Exportar para um .zip…** baixa o arquivo pelo
-navegador (`rustploy-infra.zip`) e mostra os dois textos para conferir ou copiar, e a importação aceita o `.zip` pelo
-seletor de arquivo **ou** o texto colado. Nas duas interfaces o app **pede confirmação** antes de aplicar.
-
-<Shot
-  src={iacWebInicial}
-  alt="Aba Infra as Code da web UI, com os blocos Exportar e Importar, as opções prune e disparar deploy e o seletor de arquivo .zip."
-  caption="A aba Infra as Code na web UI."
-/>
-
-<Shot
-  src={iacWebExportar}
-  alt="Aba Infra as Code da web UI depois de exportar, com o aviso de arquivo baixado e os textos de rustploy.yml e rustploy.vars.toml para copiar."
-  caption="Depois de exportar: o zip é baixado e os dois textos ficam à mostra (dados de exemplo)."
-/>
-
-<Shot
-  src={iacWebImportar}
-  alt="Bloco de importação da web UI com a opção prune marcada, o nome do zip carregado e os campos de texto com o YAML e o TOML."
-  caption="Importar: o zip escolhido preenche os campos de texto (dados de exemplo)."
-/>
-
-<Shot
-  src={iacWebResultado}
-  alt="Resultado de uma importação na web UI, com as ações Updated, Unchanged e Deleted e a linha dos serviços removidos pelo prune."
-  caption="O resultado lista cada ação e os serviços removidos pelo prune (dados de exemplo)."
-/>
-
-Opções da importação:
-
-| Opção | Efeito |
-|---|---|
-| **Remover serviços ausentes do manifesto (prune)** | apaga os serviços que não estão no manifesto |
-| **Disparar deploy dos serviços criados/alterados** | faz o deploy depois de sincronizar |
-
-Se faltar o valor de alguma variável usada no YAML, a importação é **cancelada antes
-de aplicar qualquer coisa**, e a mensagem diz qual variável falta, rotulada com o
-escopo (por exemplo `Chiquitos/api: APP_PORT`). Detalhes em
-[Infra as Code](/guias/infra-as-code/).
+A aba **Sincronização** configura a [sincronização do estado com o git](/guias/sincronizacao-git/). No fim dela
+há o bloco **Baixar a infra**: **Baixar infra** salva um `rustploy-infra.zip` com os mesmos arquivos que a
+sincronização grava no repositório, com os secrets cifrados. É igual na [web UI](/interface/web-ui/).
+Detalhes em [Baixar a infra](/guias/infra-as-code/).
 
 ## Manutenção
 

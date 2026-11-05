@@ -20,10 +20,9 @@ atravessa, e quem o carrega é você.
 | Você quer | Use |
 |---|---|
 | copiar **um** serviço para um projeto de outro servidor | **Exportar serviço** e **Importar** (esta página) |
-| descrever **todo** o servidor num arquivo e reconciliar (criar, atualizar, apagar) | [Infra as Code](/guias/infra-as-code/) |
+| ter uma cópia da infra **inteira** do servidor | [Baixar a infra](/guias/infra-as-code/) e a [sincronização com o git](/guias/sincronizacao-git/) |
 
-O pacote é **aditivo**: o IaC reconcilia o servidor com o arquivo e, com `prune`, apaga o que não
-está nele. O import de serviço só **acrescenta** um serviço ao projeto que você escolheu.
+O import de serviço só **acrescenta** um serviço ao projeto que você escolheu; nunca altera nem apaga nada.
 
 ## O que viaja e o que não viaja
 
@@ -85,7 +84,7 @@ exportar.
 ## O arquivo
 
 É um YAML por serviço. O corpo de `service` é o mesmo formato do
-[manifesto](/referencia/manifesto/#item-de-services); o resto é do pacote:
+[formato do serviço](/referencia/manifesto/#service); o resto é do pacote:
 
 ```yaml
 apiVersion: rustploy/v1
@@ -117,7 +116,7 @@ project_env:
 | Campo | O que é |
 |---|---|
 | `apiVersion` | `rustploy/v1`. Outra versão é recusada |
-| `kind` | tem que ser `Service`. Um YAML do IaC (sem `kind`) **não** é aceito aqui |
+| `kind` | tem que ser `Service`. Um YAML sem `kind` **não** é aceito aqui |
 | `origin` | informativo: de onde saiu. O import não depende dele |
 | `service` | o serviço (veja o manifesto) |
 | `project_env` | só as variáveis do projeto que você marcou |
@@ -220,15 +219,15 @@ faltavam em `vars`, `project_vars` e `secrets`.
 
 - **Só configuração.** Dados de volumes e bancos não são copiados.
 - **Zip não exporta.** Serviço de origem zip precisa ter o zip reenviado no destino.
-- **Só cria.** Não há "atualizar um serviço existente" por pacote; para isso, use o
-  [IaC](/guias/infra-as-code/).
+- **Só cria.** Não há "atualizar um serviço existente" por pacote; para isso, edite o serviço
+  na tela (ou o YAML no Git, com a [sincronização](/guias/sincronizacao-git/)).
 - **Sem fila de pré-deploy, jobs nem webhook.** Recrie no destino.
 - **Segredo em texto.** Um pacote exportado com valores guarda as variáveis em texto puro.
 
 ## Se deu errado
 
 - **Erro de `kind` ou de campo desconhecido:** o arquivo não é um pacote de serviço. Um
-  manifesto do [IaC](/guias/infra-as-code/) (o do servidor inteiro) tem outro formato e **não** é
+  arquivo da [infra inteira](/guias/infra-as-code/) tem outro formato e **não** é
   aceito aqui. Exporte o pacote com **Exportar serviço**.
 - **`apiVersion '…' não suportada`:** o pacote é de uma versão do formato que este daemon não lê.
   Atualize o daemon de destino.
@@ -239,5 +238,5 @@ faltavam em `vars`, `project_vars` e `secrets`.
 ## Próximos passos
 
 - [Variáveis de ambiente e secrets](/guias/variaveis-e-secrets/).
-- [Infra as Code](/guias/infra-as-code/): descrever e reconciliar o servidor inteiro.
-- [Referência do manifesto](/referencia/manifesto/): os campos de `service`.
+- [Baixar a infra](/guias/infra-as-code/): uma cópia do servidor inteiro.
+- [Formato do serviço](/referencia/manifesto/): os campos de `service`.

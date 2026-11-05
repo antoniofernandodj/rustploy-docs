@@ -109,6 +109,16 @@ O e-mail do ACME também se define em **Settings → Web Server**. O valor dessa
 | `drain_secs` | `10` | espera, depois da troca de rota, antes de remover o container antigo |
 | `image_cache` | `2` | |
 
+### `[logs]`
+
+Log de runtime dos containers guardado em disco (`<dados>/logs/<serviço>/`). Seção **opcional**: todas as chaves têm padrão.
+
+| Chave | Padrão | |
+|---|---|---|
+| `enabled` | `true` | liga a gravação. Desligada, o log segue só ao vivo |
+| `retention_days` | `14` | apaga o log mais velho que isso |
+| `max_bytes_per_service` | `52428800` (50 MiB) | teto de disco **por serviço**; o mais antigo sai primeiro |
+
 ### `[metrics]`
 
 | Chave | Padrão |

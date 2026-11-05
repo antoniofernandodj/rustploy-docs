@@ -26,18 +26,18 @@ Dois conjuntos de dados precisam de backup: o **estado do próprio Rustploy** e 
 
 Faça a cópia com o daemon parado, ou use uma cópia consistente do SQLite. Os arquivos de `infra/` são YAML e podem ser versionados pela [sincronização com git](/guias/sincronizacao-git/).
 
-### Um atalho mais barato: o manifesto
+### Um atalho mais barato: a infra
 
-O [manifesto de Infra as Code](/guias/infra-as-code/) recria projetos e serviços
-em outro servidor. Ele **não** leva secrets nem dados. Complementa o backup do
-banco, não o substitui.
+A [sincronização com o git](/guias/sincronizacao-git/) (ou o [zip da infra](/guias/infra-as-code/))
+recria projetos e serviços em outro servidor. Ela **não** leva os dados dos volumes, e os secrets
+vão cifrados. Complementa o backup do banco, não o substitui.
 
 ### Backup de variáveis
 
 O snapshot automático das variáveis a cada 60 s foi **desligado** (a seção `[env_backup]` do
 `config.toml` ainda é aceita, mas ignorada). O histórico das variáveis agora vem da
-[sincronização com git](/guias/sincronizacao-git/); sem ela, use o export manual do
-[manifesto](/guias/infra-as-code/).
+[sincronização com git](/guias/sincronizacao-git/); sem ela, use
+[Baixar a infra](/guias/infra-as-code/).
 
 ## 2. Os dados das suas aplicações
 

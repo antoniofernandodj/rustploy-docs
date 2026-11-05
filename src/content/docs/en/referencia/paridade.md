@@ -5,7 +5,7 @@ description: "Which Rustploy commands exist only through the API and the MCP, wh
 
 The desktop GUI and the web UI talk to the same API, but cover slightly different sets. This list is generated from the code on every release.
 
-## Not called directly by any screen (28)
+## Not called directly by any screen (26)
 
 No screen fires these commands directly. Some data (the Docker lists, the jobs) shows up on the screens anyway, because it arrives in the dashboard *snapshot*. To act on them, use `curl`, the `rpc` tool of the [MCP](/en/agentes/ferramentas/) or an AI agent.
 
@@ -18,8 +18,6 @@ No screen fires these commands directly. Some data (the Docker lists, the jobs) 
 - [`MigrationGet`](/en/referencia/comandos/#migrationget)
 - [`InfraAudit`](/en/referencia/comandos/#infraaudit)
 - [`StateGitStatus`](/en/referencia/comandos/#stategitstatus)
-- [`ManifestApply`](/en/referencia/comandos/#manifestapply)
-- [`ManifestExport`](/en/referencia/comandos/#manifestexport)
 - [`JobListAll`](/en/referencia/comandos/#joblistall)
 - [`JobRunHistory`](/en/referencia/comandos/#jobrunhistory)
 - [`JobWarmStatus`](/en/referencia/comandos/#jobwarmstatus)

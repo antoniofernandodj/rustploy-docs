@@ -1,131 +1,61 @@
 ---
-title: Infra as Code (manifesto YAML)
-description: Como exportar e importar todos os projetos e serviços do Rustploy como um manifesto YAML versionável, com um arquivo TOML de variáveis, para recriar um servidor, clonar ambientes e fazer GitOps.
+title: Baixar a infra
+description: Como baixar a infraestrutura do Rustploy (projetos, serviços, jobs e secrets cifrados) num .zip com os mesmos arquivos que a sincronização grava no Git, para ter uma cópia fora do servidor.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-O Rustploy descreve projetos e serviços num **manifesto YAML**: dá para exportar o
-estado atual, guardar no Git e importar em outro servidor.
+O Rustploy guarda o estado da infraestrutura (projetos, serviços, jobs, contas Git e as
+configurações) em arquivos YAML. **Baixar a infra** entrega esses arquivos num `.zip`: é uma
+cópia fora do servidor e fora do GitHub, boa para guardar e para conferir o que está gravado.
 
-## O par de arquivos
+<Aside type="note" title="Isto substituiu o antigo Infra as Code">
+  Havia uma aba **Infra as Code** que exportava e importava um manifesto próprio
+  (`rustploy.yml` + `rustploy.vars.toml`). Era um formato paralelo ao estado real e foi removido,
+  junto com os comandos `ManifestApply`, `ManifestExport`, `ManifestExportAll` e `ManifestImport`.
+  Quem os usava por agente ou script precisa migrar para o fluxo abaixo.
+</Aside>
 
-A exportação gera **dois** arquivos:
+## Como baixar
+
+<Aside type="note">Disponível a partir do daemon 0.1.34 (release v0.1.40).</Aside>
+
+**Settings → Sincronização → Baixar a infra → Baixar infra**, no app desktop ou na web UI. O arquivo é
+`rustploy-infra.zip`. Um agente usa o comando `InfraDownload`.
+
+## O que vem no zip
+
+A mesma árvore que a [sincronização com o git](/guias/sincronizacao-git/) grava no repositório:
 
 | Arquivo | Conteúdo |
 |---|---|
-| `rustploy.yml` | projetos e serviços. Valores de variável **nunca** aparecem: no lugar vai `${NOME}` |
-| `rustploy.vars.toml` | os valores reais das variáveis comuns, organizados por projeto e serviço, mais os dados não secretos das contas Git |
+| `MANIFEST.json` | versão do formato |
+| `settings.yml` | configurações do daemon |
+| `providers.yml` | contas Git conectadas (sem token em claro) |
+| `projects/<id>/project.yml` | um projeto, com seus serviços e jobs |
 
-Os **secrets não saem do daemon**: no YAML ficam como `secret:NOME`, sem valor.
-O YAML pode ir para o Git sem medo; o TOML tem valores, **trate-o como segredo**.
+Os segredos vão como `ENC[age:…]`: cifrados com a chave do servidor (e, se configurada, a de
+recuperação). **Nada sai em claro.**
 
-## Exportar
-
-**Settings → Infra as Code.**
-
-Nas duas interfaces, **Exportar para um .zip…** gera um `.zip` com `rustploy.yml` e
-`rustploy.vars.toml`. O app desktop pergunta onde salvar; a web UI baixa o arquivo
-(`rustploy-infra.zip`) pelo navegador e mostra os dois textos logo abaixo, para conferir ou copiar.
-
-## Importar
-
-**Settings → Infra as Code → Importar.** Escolha o `.zip` (**Importar de um .zip…** no app desktop; o seletor de arquivo na web UI). Ele precisa ter **exatamente um** `.yml` e um `.toml` na raiz e nada mais, senão a importação é recusada. Na web UI também dá para **colar** o `rustploy.yml` e o `rustploy.vars.toml`.
-Antes de aplicar, as duas interfaces **pedem confirmação** e mostram o que você marcou (com o prune em destaque).
-Duas opções:
-
-| Opção | Efeito |
-|---|---|
-| **Remover serviços ausentes do manifesto (prune)** | apaga os serviços do projeto que não estão no manifesto |
-| **Disparar deploy dos serviços criados/alterados** | faz o rollout depois de sincronizar |
-
-Por padrão a importação é **aditiva e idempotente**: casa projetos e serviços **por
-nome**, cria os que faltam, atualiza os alterados e **não apaga nada**. Rodar duas
-vezes dá o mesmo resultado. O painel **RESULTADO** lista o que foi criado,
-atualizado ou deixado igual.
-
-<Aside type="caution" title="O casamento é por nome">
-  Se você renomeou um projeto ou serviço, um manifesto antigo cria um **novo** em
-  vez de atualizar o existente.
+<Aside type="caution" title="O download recusa quando há valor em claro">
+  Se o estado tem um valor que deveria estar cifrado (veja **A trava** em
+  [Sincronização com o git](/guias/sincronizacao-git/#a-trava-nada-em-claro-entra-no-histórico)),
+  o download é **recusado**, com a mesma lista do `InfraAudit`: ele não entrega o que o Git não aceitaria.
+  Mova os valores para secrets e tente de novo.
 </Aside>
 
-Variáveis `${NOME}` sem valor no TOML abortam a importação, listando o que falta.
-Nada é aplicado pela metade.
+## Restaurar
 
-## Formato
+Não há "importar o zip". Restaurar é pôr a árvore num repositório e **sincronizar**: aponte o servidor
+novo para o repositório e use a mesma chave de recuperação. O passo a passo está em
+[Restaurar num servidor novo](/guias/sincronizacao-git/#restaurar-num-servidor-novo).
 
-```yaml
-apiVersion: rustploy/v1
-projects:
-  - project:
-      name: minha-app
-      description: API e front
-      env:
-        LOG_LEVEL: info
-        DB_PASS: ${DB_PASS}
-    services:
-      - name: web
-        source:
-          git:
-            url: https://github.com/acme/web.git
-            branch: main
-            dockerfile: Dockerfile
-        port: 3000
-        domains:
-          - { domain: app.exemplo.com, port: 3000, tls: true }
-        env:
-          API_KEY: secret:API_KEY
-        healthcheck: { type: http, path: /health, status: 200 }
-        replicas: 2
-      - name: cache
-        source:
-          registry: redis:7
-        port: 6379
-```
+## Para copiar só um serviço
 
-### Campos do serviço
+Use o [pacote de serviço](/guias/copiar-servico/) (**Exportar serviço** e **Importar**). Os campos do
+`service` estão na [referência do formato](/referencia/manifesto/).
 
-| Campo | Observação |
-|---|---|
-| `source` | `registry: <imagem>`, `git: {…}` ou `compose: <yaml>`. Use **uma**: havendo mais, vale a primeira nessa ordem |
-| `source.compose_ingress` | serviço do compose que recebe o domínio |
-| `port`, `host_port` | porta do container; porta externa (TCP) |
-| `domains` | lista de `{domain, port, tls}` |
-| `env` | mapa; valor `secret:NOME` referencia um secret |
-| `volumes` | lista `host:container[:ro]` |
-| `healthcheck` | `type: none \| tcp \| http \| docker`, `path`, `status`, `interval`, `timeout`, `retries`, `start_period` |
-| `replicas`, `resources` | `resources: { cpu_shares, mem: 256m }` |
-| `command`, `args` | sobrescreve o comando da imagem |
-| `db`, `shared` | tipo de banco e marca de servidor compartilhado |
+## Veja também
 
-`source.git` aceita `url`, `branch`, `dockerfile`, `context`, `username`,
-`credentials` e `provider` (o **nome** da conta Git conectada).
-
-O `include:` de um item de `projects:` (que apontava para outro arquivo) **não é aceito** pela
-importação do daemon: declare os projetos no próprio arquivo.
-
-Todos os campos, com tipo, padrão e as regras de cada um, estão na
-[Referência do manifesto](/referencia/manifesto/).
-
-## Cuidado ao importar sobre o que já existe
-
-<Aside type="danger">
-  Um serviço que já existe e é diferente do manifesto tem o **spec inteiro substituído**. O que
-  o manifesto não descreve volta ao padrão: em especial a **fila de pré-deploy**, que não faz
-  parte do manifesto. Os **jobs** também não fazem. Antes de importar num servidor com
-  serviços, exporte e compare. Os detalhes, regra por regra, estão em
-  [O que a importação faz](/referencia/manifesto/#o-que-a-importação-faz).
-</Aside>
-
-## Limites
-
-- Um serviço de fonte **zip** (Archive) **não cabe** no manifesto.
-- Contas Git: o TOML leva só os dados não secretos. Depois de importar, **complete a autenticação** (OAuth ou token) em **Settings → Git**.
-- Não há linha de comando: o CLI `rustploy apply` foi removido junto com a TUI. A importação e a exportação passam pela tela ou pela API (`ManifestImport`, `ManifestExportAll`).
-
-## Pela API
-
-```bash
-curl -s -H "Authorization: Bearer $TOKEN" https://SERVIDOR:9797/api/rpc \
-  -d '"ManifestExportAll"'
-```
+- [Sincronização com o git](/guias/sincronizacao-git/)
+- [Backup](/guias/backup/)

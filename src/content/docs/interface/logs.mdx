@@ -57,12 +57,31 @@ linha `==> Erro em [Estado]: …` com a **causa**. Veja
 
 ## O que fica guardado
 
-<Aside type="caution" title="Runtime não é guardado; build é">
-  O **build log fica guardado** no banco e pode ser aberto depois. O **log de runtime não**:
-  ele é lido do Docker ao vivo. Quando um deploy troca o container, o log do antigo some. Se
-  você precisa de histórico de logs da aplicação, envie-os para fora do servidor (por exemplo
-  com um template como Loki ou Grafana do [catálogo](/templates/)).
+O **build log** fica guardado no banco e pode ser aberto depois. O **log de runtime** também é
+guardado, em arquivos no servidor (veja abaixo), e sobrevive à troca de container num deploy.
+
+### Log de runtime guardado
+
+<Aside type="note">Disponível a partir do daemon 0.1.34 (release v0.1.40). Antes, o log de runtime era só ao vivo.</Aside>
+
+O daemon grava o log de cada container enquanto ele roda e, **antes de remover um container**
+(a troca do deploy e o rollback de um deploy que falhou), guarda o que ainda não tinha sido gravado. Por isso
+dá para ver "o que aconteceu antes do último deploy" e a causa de um container novo que caiu em segundos.
+
+- Ao abrir a janela, as linhas vêm do log guardado (as 500 mais recentes) e as novas continuam chegando ao vivo.
+- **Carregar anteriores** (botão em cima) traz a página de log mais antiga, por cima. Onde o container mudou entre
+  duas linhas aparece o separador *"— outro container: …"*.
+- Retenção: **14 dias** e **50 MiB por serviço** (o mais antigo sai primeiro), ajustável na seção
+  [`[logs]`](/instalacao/config-toml/) do `config.toml`. Apagar o serviço apaga o log dele.
+- Serviços **Compose** continuam só ao vivo.
+
+<Aside type="caution" title="O log pode conter segredos">
+  Se a aplicação imprime uma senha, ela está no log, ao vivo e agora também no disco (pasta `0700`, arquivos
+  `0600`). Evite logar segredos e, se precisar de retenção maior ou busca, envie os logs para fora do servidor
+  (por exemplo com um template como Loki ou Grafana do [catálogo](/templates/)).
 </Aside>
+
+Um agente lê o histórico com o comando `LogsHistory`.
 
 A janela guarda no máximo **6 000 linhas** na tela: ao passar disso, descarta as mais antigas
 e mantém as 4 000 mais recentes.

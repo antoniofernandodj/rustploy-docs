@@ -20,10 +20,9 @@ crosses over, and you carry it.
 | You want | Use |
 |---|---|
 | to copy **one** service into a project on another server | **Export service** and **Import** (this page) |
-| to describe the **whole** server in a file and reconcile it (create, update, delete) | [Infrastructure as Code](/en/guias/infra-as-code/) |
+| a copy of the **whole** server infrastructure | [Download the infra](/en/guias/infra-as-code/) and [git sync](/en/guias/sincronizacao-git/) |
 
-The bundle is **additive**: IaC reconciles the server with the file and, with `prune`, deletes what
-is not in it. The service import only **adds** a service to the project you choose.
+The service import only **adds** a service to the project you choose; it never changes or deletes anything.
 
 ## What travels and what does not
 
@@ -86,7 +85,7 @@ nothing to export.
 ## The file
 
 It is one YAML per service. The body of `service` is the same format as the
-[manifest](/en/referencia/manifesto/#item-of-services); the rest belongs to the bundle:
+[service format](/en/referencia/manifesto/#service); the rest belongs to the bundle:
 
 ```yaml
 apiVersion: rustploy/v1
@@ -118,7 +117,7 @@ project_env:
 | Field | What it is |
 |---|---|
 | `apiVersion` | `rustploy/v1`. Another version is refused |
-| `kind` | must be `Service`. An IaC YAML (no `kind`) is **not** accepted here |
+| `kind` | must be `Service`. A YAML with no `kind` is **not** accepted here |
 | `origin` | informational: where it came from. The import does not depend on it |
 | `service` | the service (see the manifest) |
 | `project_env` | only the project variables you ticked |
@@ -221,15 +220,15 @@ missing values in `vars`, `project_vars` and `secrets`.
 
 - **Configuration only.** Volume and database data are not copied.
 - **Zip cannot be exported.** A zip-source service needs the zip re-uploaded on the target.
-- **Create only.** There is no "update an existing service" by bundle; for that, use
-  [IaC](/en/guias/infra-as-code/).
+- **Create only.** There is no "update an existing service" by bundle; for that, edit the service
+  on screen (or the YAML in Git, with [git sync](/en/guias/sincronizacao-git/)).
 - **No pre-deploy queue, jobs or webhook.** Recreate them on the target.
 - **Secret in plain text.** A bundle exported with values holds the variables in plain text.
 
 ## If it went wrong
 
-- **A `kind` error or an unknown field:** the file is not a service bundle. An
-  [IaC](/en/guias/infra-as-code/) manifest (the whole-server one) has another format and is **not**
+- **A `kind` error or an unknown field:** the file is not a service bundle. A
+  [whole-infra](/en/guias/infra-as-code/) file has another format and is **not**
   accepted here. Export a bundle with **Export service**.
 - **`apiVersion '…' não suportada`:** the bundle is from a format version this daemon cannot read.
   Update the target daemon.
@@ -242,5 +241,5 @@ missing values in `vars`, `project_vars` and `secrets`.
 ## Next steps
 
 - [Environment variables and secrets](/en/guias/variaveis-e-secrets/).
-- [Infrastructure as Code](/en/guias/infra-as-code/): describe and reconcile the whole server.
-- [Manifest reference](/en/referencia/manifesto/): the fields of `service`.
+- [Download the infra](/en/guias/infra-as-code/): a copy of the whole server.
+- [Service format](/en/referencia/manifesto/): the fields of `service`.

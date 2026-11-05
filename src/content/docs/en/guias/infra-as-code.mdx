@@ -1,127 +1,60 @@
 ---
-title: Infrastructure as Code (YAML manifest)
-description: How to export and import all of Rustploy's projects and services as a versionable YAML manifest, with a variables TOML file, to recreate a server, clone environments and do GitOps.
+title: Download the infra
+description: How to download Rustploy's infrastructure (projects, services, jobs and encrypted secrets) as a .zip with the same files git sync writes, to keep a copy outside the server.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-Rustploy describes projects and services in a **YAML manifest**: you can export the current state, keep it in Git
-and import it on another server.
+Rustploy keeps the infrastructure state (projects, services, jobs, Git accounts and settings) in
+YAML files. **Download the infra** hands those files over as a `.zip`: a copy outside the server and
+outside GitHub, good to keep and to check what is stored.
 
-## The pair of files
-
-The export produces **two** files:
-
-| File | Contents |
-|---|---|
-| `rustploy.yml` | projects and services. Variable values **never** appear: `${NAME}` goes in their place |
-| `rustploy.vars.toml` (the variables file) | the real values of plain variables, organized by project and service, plus the non-secret data of Git accounts |
-
-**Secrets never leave the daemon**: in the YAML they stay as `secret:NAME`, with no value. The YAML can go into
-Git without worry; the TOML has values, so **treat it as a secret**.
-
-## Export
-
-**Settings → Infra as Code.**
-
-In both interfaces, **Exportar para um .zip…** (Export to a .zip) produces a `.zip` with
-`rustploy.yml` and `rustploy.vars.toml`. The desktop app asks where to save; the web UI downloads the
-file (`rustploy-infra.zip`) through the browser and shows the two texts right below, to check or copy.
-
-## Import
-
-**Settings → Infra as Code → Importar** (Import). Choose the `.zip` (**Importar de um .zip…** in the desktop app; the file picker in the web UI). It must have **exactly one** `.yml` and one `.toml` at the root and nothing else, otherwise the import is refused. In the web UI you can also **paste** the `rustploy.yml` and the `rustploy.vars.toml`.
-Before applying, both interfaces **ask for confirmation** and show what you ticked (with prune highlighted).
-Two options:
-
-| Option | Effect |
-|---|---|
-| **Remover serviços ausentes do manifesto (prune)** | deletes the project's services that are not in the manifest |
-| **Disparar deploy dos serviços criados/alterados** | does the rollout after syncing |
-
-By default the import is **additive and idempotent**: it matches projects and services **by name**, creates the
-missing ones, updates the changed ones and **deletes nothing**. Running it twice gives the same result. The
-**RESULTADO** (result) panel lists what was created, updated or left as it was.
-
-<Aside type="caution" title="Matching is by name">
-  If you renamed a project or service, an old manifest creates a **new** one instead of updating the existing one.
+<Aside type="note" title="This replaced the old Infra as Code">
+  There used to be an **Infra as Code** tab that exported and imported a manifest of its own
+  (`rustploy.yml` + `rustploy.vars.toml`). It was a format parallel to the real state and was
+  removed, along with the `ManifestApply`, `ManifestExport`, `ManifestExportAll` and `ManifestImport`
+  commands. Agents or scripts that used them must move to the flow below.
 </Aside>
 
-`${NAME}` variables with no value in the TOML abort the import, listing what is missing. Nothing is applied
-halfway.
+## How to download
 
-## Format
+<Aside type="note">Available from daemon 0.1.34 (release v0.1.40).</Aside>
 
-```yaml
-apiVersion: rustploy/v1
-projects:
-  - project:
-      name: my-app
-      description: API and front
-      env:
-        LOG_LEVEL: info
-        DB_PASS: ${DB_PASS}
-    services:
-      - name: web
-        source:
-          git:
-            url: https://github.com/acme/web.git
-            branch: main
-            dockerfile: Dockerfile
-        port: 3000
-        domains:
-          - { domain: app.example.com, port: 3000, tls: true }
-        env:
-          API_KEY: secret:API_KEY
-        healthcheck: { type: http, path: /health, status: 200 }
-        replicas: 2
-      - name: cache
-        source:
-          registry: redis:7
-        port: 6379
-```
+**Settings → Sincronização (Sync) → Baixar a infra (Download the infra) → Download infra**, in the desktop
+app or the web UI. The file is `rustploy-infra.zip`. An agent uses the `InfraDownload` command.
 
-### Service fields
+## What is in the zip
 
-| Field | Note |
+The same tree [git sync](/en/guias/sincronizacao-git/) writes to the repository:
+
+| File | Content |
 |---|---|
-| `source` | `registry: <image>`, `git: {…}` or `compose: <yaml>`. Use **one**: if there is more than one, the first in that order wins |
-| `source.compose_ingress` | the compose service that receives the domain |
-| `port`, `host_port` | container port; external (TCP) port |
-| `domains` | a list of `{domain, port, tls}` |
-| `env` | a map; a `secret:NAME` value references a secret |
-| `volumes` | a `host:container[:ro]` list |
-| `healthcheck` | `type: none \| tcp \| http \| docker`, `path`, `status`, `interval`, `timeout`, `retries`, `start_period` |
-| `replicas`, `resources` | `resources: { cpu_shares, mem: 256m }` |
-| `command`, `args` | overrides the image's command |
-| `db`, `shared` | the database type and the shared-server flag |
+| `MANIFEST.json` | format version |
+| `settings.yml` | daemon settings |
+| `providers.yml` | connected Git accounts (no plaintext token) |
+| `projects/<id>/project.yml` | one project, with its services and jobs |
 
-`source.git` accepts `url`, `branch`, `dockerfile`, `context`, `username`, `credentials` and `provider` (the
-**name** of the connected Git account).
+Secrets are written as `ENC[age:…]`: encrypted with the server key (and the recovery key, if set).
+**Nothing leaves in plaintext.**
 
-The `include:` of a `projects:` item (which pointed to another file) is **not accepted** by the daemon's import:
-declare the projects in the file itself.
-
-All the fields, with type, default and the rules for each, are in the [Manifest reference](/en/referencia/manifesto/).
-
-## Careful when importing over what already exists
-
-<Aside type="danger">
-  A service that already exists and differs from the manifest has its **whole spec replaced**. What the manifest
-  does not describe goes back to the default: in particular the **pre-deploy queue**, which is not part of the
-  manifest. **Jobs** are not either. Before importing on a server that has services, export and compare. The
-  details, rule by rule, are in [What the import does](/en/referencia/manifesto/#what-the-import-does).
+<Aside type="caution" title="The download refuses when there is a plaintext value">
+  If the state has a value that should be encrypted (see **The gate** in
+  [Git sync](/en/guias/sincronizacao-git/#the-gate-nothing-in-plaintext-enters-the-history)), the download is **refused**, with the same list as
+  `InfraAudit`: it does not hand over what Git would not accept. Move the values to secrets and try again.
 </Aside>
 
-## Limits
+## Restoring
 
-- A **zip** (Archive) source service **does not fit** in the manifest.
-- Git accounts: the TOML only carries the non-secret data. After importing, **complete the authentication** (OAuth or token) in **Settings → Git**.
-- There is no command line: the `rustploy apply` CLI was removed together with the TUI. Import and export go through the screen or the API (`ManifestImport`, `ManifestExportAll`).
+There is no "import the zip". Restoring means putting the tree in a repository and **syncing**: point
+the new server at the repository and use the same recovery key. The steps are in
+[Restoring on a new server](/en/guias/sincronizacao-git/#restoring-on-a-new-server).
 
-## Through the API
+## To copy just one service
 
-```bash
-curl -s -H "Authorization: Bearer $TOKEN" https://SERVER:9797/api/rpc \
-  -d '"ManifestExportAll"'
-```
+Use the [service bundle](/en/guias/copiar-servico/) (**Exportar serviço** and **Importar**). The
+`service` fields are in the [format reference](/en/referencia/manifesto/).
+
+## See also
+
+- [Git sync](/en/guias/sincronizacao-git/)
+- [Backup](/en/guias/backup/)

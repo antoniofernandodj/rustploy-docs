@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 126 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 124 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **126 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **124 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -33,7 +33,7 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 - [Webhooks](#webhooks)
 - [Daemon](#daemon)
 - [Secrets](#secrets)
-- [Infra as Code](#infra-as-code)
+- [Infra (download)](#infra-download)
 - [Copy a service between servers](#copy-a-service-between-servers)
 - [Jobs](#jobs)
 - [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
@@ -307,6 +307,23 @@ Host and connection URL **inside** the project Docker network (assembled in the 
 |---|---|
 | `service_id` | `String` |
 | `tail` | `usize` |
+
+**Used by:** GUI and web UI.
+
+### LogsHistory
+
+Persisted runtime log of the service (survives the container swap on deploy and rollbacks). Returns up to `limit` lines in chronological order, older than `before` (or the most recent ones); to page backwards, repeat with the response `next_before`. `container_id` filters by one container (short id). Does not cover Compose services (live only, via `LogsGet`).
+
+```json
+{"LogsHistory":{"service_id":"svc_…","before":null,"limit":20,"container_id":null}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `before` | `Option<chrono::DateTime<chrono::Utc>>` |
+| `limit` | `usize` |
+| `container_id` | `Option<String>` |
 
 **Used by:** GUI and web UI.
 
@@ -821,62 +838,15 @@ Renames a **secret** (project-wide, or a service's if `service_id` is given) and
 
 **Used by:** GUI and web UI.
 
-## Infra as Code
+## Infra (download)
 
-### ManifestApply
+### InfraDownload
 
-Reconciles projects/services from YAML manifests already interpolated by the client (one `ProjectManifest` document per string). Additive: creates/updates, never deletes. Does not trigger a deploy. Manifests travel as YAML (not as structs) so the daemon receives exactly the text of the file the user edits; parsing lives in one place, with `serde_yaml`. See `docs/infra-as-code.md`.
-
-```json
-{"ManifestApply":{"manifests":[],"prune":false,"deploy":false}}
-```
-
-| Field | Type |
-|---|---|
-| `manifests` | `Vec<String>` |
-| `prune` | `bool`<br />Deletes services that exist in the project but are not in the manifest. |
-| `deploy` | `bool`<br />Triggers a deploy of the created/changed services after syncing. |
-
-**Used by:** only by the API and the MCP (no screen).
-
-### ManifestExport
-
-Exports the current state of a project as a YAML manifest (secrets redacted).
+Downloads the infra: the same files git sync writes to the repository (`settings.yml`, `providers.yml`, `projects/<id>/project.yml`), with secrets as `ENC[age:…]`. Refused while there is a plaintext value that would block the git commit (see `InfraAudit`). Response: `InfraFiles`.
 
 ```json
-{"ManifestExport":{"project_id":"prj_…"}}
+"InfraDownload"
 ```
-
-| Field | Type |
-|---|---|
-| `project_id` | `String` |
-
-**Used by:** only by the API and the MCP (no screen).
-
-### ManifestExportAll
-
-Exports ALL projects + services in a single root manifest (`ServerManifest`). Every `Plain` env var value is redacted to `${KEY}` (the real value never goes in the YAML); `Secret` stays as `secret:NAME`. Response: `ManifestBundle` (YAML + a complementary `.env` with the real values of the `Plain` vars).
-
-```json
-"ManifestExportAll"
-```
-
-**Used by:** GUI and web UI.
-
-### ManifestImport
-
-Imports a root manifest (`projects:`) or a single-project one (`project:`) together with the `.env` text that resolves the `${VAR}` used in it. Interpolation runs in the daemon (reusing `ProjectManifest::interpolate`); if any `${VAR}` is left without a value in any project, nothing is applied and the response is `MissingEnvVars`. With none missing, it reconciles exactly like `ManifestApply` (additive by default; `prune`/`deploy` with the same semantics).
-
-```json
-{"ManifestImport":{"yaml":"…","dotenv":"…","prune":false,"deploy":false}}
-```
-
-| Field | Type |
-|---|---|
-| `yaml` | `String` |
-| `dotenv` | `String` |
-| `prune` | `bool`<br />Deletes services that exist in the project but are not in the manifest. |
-| `deploy` | `bool`<br />Triggers a deploy of the created/changed services after syncing. |
 
 **Used by:** GUI and web UI.
 

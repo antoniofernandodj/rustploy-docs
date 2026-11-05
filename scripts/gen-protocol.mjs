@@ -166,7 +166,7 @@ const groupOf = (variant) => {
     [/^SharedAccess|^ManagedDatabase/, 'Banco compartilhado'],
     [/^Migration/, 'Migração de banco'],
     [/^Secret/, 'Secrets'],
-    [/^Manifest/, 'Infra as Code'],
+    [/^InfraDownload$/, 'Infra (baixar)'],
     [/Job/, 'Jobs'],
     [/^Prune|^Docker|^Remove|^StopAllManaged$/, 'Docker'],
     [/^Ingress/, 'Ingress'],

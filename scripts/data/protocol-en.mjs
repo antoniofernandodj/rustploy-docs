@@ -15,10 +15,8 @@ export const DOCS = {
   MigrationRollback: 'Points the app back to the old database (env var + services).',
   MigrationDiscard: 'Removes the old database (**deletes its data**) after the observation period.',
   Snapshot: 'Full dashboard snapshot as JSON (the same one the SSE `/api/events` pushes every 2s). The client uses it after a mutation to reflect the change right away, without waiting for the next tick. Response: `Snapshot(String)`.',
-  ManifestApply: 'Reconciles projects/services from YAML manifests already interpolated by the client (one `ProjectManifest` document per string). Additive: creates/updates, never deletes. Does not trigger a deploy. Manifests travel as YAML (not as structs) so the daemon receives exactly the text of the file the user edits; parsing lives in one place, with `serde_yaml`. See `docs/infra-as-code.md`.',
-  ManifestExport: 'Exports the current state of a project as a YAML manifest (secrets redacted).',
-  ManifestExportAll: 'Exports ALL projects + services in a single root manifest (`ServerManifest`). Every `Plain` env var value is redacted to `${KEY}` (the real value never goes in the YAML); `Secret` stays as `secret:NAME`. Response: `ManifestBundle` (YAML + a complementary `.env` with the real values of the `Plain` vars).',
-  ManifestImport: 'Imports a root manifest (`projects:`) or a single-project one (`project:`) together with the `.env` text that resolves the `${VAR}` used in it. Interpolation runs in the daemon (reusing `ProjectManifest::interpolate`); if any `${VAR}` is left without a value in any project, nothing is applied and the response is `MissingEnvVars`. With none missing, it reconciles exactly like `ManifestApply` (additive by default; `prune`/`deploy` with the same semantics).',
+  InfraDownload: 'Downloads the infra: the same files git sync writes to the repository (`settings.yml`, `providers.yml`, `projects/<id>/project.yml`), with secrets as `ENC[age:…]`. Refused while there is a plaintext value that would block the git commit (see `InfraAudit`). Response: `InfraFiles`.',
+  LogsHistory: 'Persisted runtime log of the service (survives the container swap on deploy and rollbacks). Returns up to `limit` lines in chronological order, older than `before` (or the most recent ones); to page backwards, repeat with the response `next_before`. `container_id` filters by one container (short id). Does not cover Compose services (live only, via `LogsGet`).',
   ServiceExportPlan: 'What can be taken from the service: its variables and the project ones (with the suggested pre-selection). Never returns values. Response: `ServiceExportPlan`.',
   ServiceExport: 'Generates the service package (YAML). `project_env_keys` are the project variables the user ticked (the others stay out of the file); `include_values: false` carries only the names (`${KEY}`). Response: `ServiceBundleYaml`.',
   ServiceImport: 'Creates ONE new service from a package, overwriting nothing. `dry_run` only returns the report. Response: `ServiceImportReport`.',
@@ -53,16 +51,12 @@ export const DOCS = {
 };
 
 export const FIELD_DOCS = {
-  'ManifestApply.prune': 'Deletes services that exist in the project but are not in the manifest.',
-  'ManifestApply.deploy': 'Triggers a deploy of the created/changed services after syncing.',
-  'ManifestImport.prune': 'Deletes services that exist in the project but are not in the manifest.',
-  'ManifestImport.deploy': 'Triggers a deploy of the created/changed services after syncing.',
   'JobCreate.git_source': '`Some` = clones this repo on every run instead of using `compose` (the client sends `compose: ""` in that case). `#[serde(default)]`: clients only include this key in Git mode (a Luau/JS table constructor with a Lua/JS `nil`/`undefined` value does not produce the key).',
 };
 
 export const GROUPS = {
   Projetos: 'Projects', 'Serviços': 'Services', 'Copiar serviço entre servidores': 'Copy a service between servers', Deploys: 'Deploys', 'Fila de deploys': 'Deploy queue',
-  'Logs e métricas': 'Logs and metrics', 'Banco compartilhado': 'Shared database', 'Migração de banco': 'Database migration', Secrets: 'Secrets', 'Infra as Code': 'Infra as Code',
+  'Logs e métricas': 'Logs and metrics', 'Banco compartilhado': 'Shared database', 'Migração de banco': 'Database migration', Secrets: 'Secrets', 'Infra (baixar)': 'Infra (download)', 'Infra as Code': 'Infra as Code',
   Jobs: 'Jobs', Docker: 'Docker', Ingress: 'Ingress', 'Backup de variáveis': 'Variables backup', 'Provedores Git': 'Git providers', 'Assistente e templates': 'Wizard and templates',
   'Registry embutido': 'Built-in registry', Webhooks: 'Webhooks', Daemon: 'Daemon', 'Webhooks e configuração do daemon': 'Webhooks and daemon settings',
   'Ciclo de vida do serviço': 'Service lifecycle', 'Visões globais': 'Global views', 'Observabilidade': 'Observability', 'Infraestrutura': 'Infrastructure',

@@ -1,138 +1,25 @@
 ---
-title: Referência do manifesto (rustploy.yml)
-description: "Referência completa do manifesto YAML de Infra as Code do Rustploy: todos os campos de projeto, serviço, origem, healthcheck e domínios, o arquivo de variáveis TOML, as regras de importação (casamento por nome, prune, deploy) e os erros."
+title: Formato do serviço no pacote (referência)
+description: "Referência dos campos do `service` que viaja no pacote de serviço do Rustploy (Exportar serviço / Importar): origem, domínios, variáveis, healthcheck e recursos."
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-O **manifesto** descreve projetos e serviços em YAML. O arquivo de **variáveis** (TOML) leva os
-valores das variáveis. Para exportar, importar e as limitações do fluxo, veja
-[Infra as Code](/guias/infra-as-code/). Esta página é a **referência de campos**, gerada do
-código do daemon e do `rustploy-shared`.
+O **pacote de serviço** (veja [Copiar um serviço entre servidores](/guias/copiar-servico/)) leva um
+`service` em YAML. Esta página é a **referência dos campos** desse `service`, gerada do código do
+daemon e do `rustploy-shared`.
 
-## As duas formas
-
-| Forma | Chave no topo | Use quando |
-|---|---|---|
-| **Raiz** | `projects:` (lista) | vários projetos, ou o que a exportação gera |
-| **Projeto único** | `project:` e `services:` | um projeto só |
-
-Sem `projects:` nem `project:` no topo, a importação recusa o arquivo
-(*"manifesto inválido: esperado a chave `project:` ou `projects:` no topo"*).
-
-## Exemplo completo
-
-Este exemplo foi validado contra o parser do daemon:
-
-```yaml
-apiVersion: rustploy/v1
-projects:
-  - project:
-      name: loja
-      description: Loja virtual
-      env:
-        LOG_LEVEL: info
-        SMTP_PASSWORD: secret:SMTP_PASSWORD
-    services:
-      - name: web
-        source:
-          git:
-            url: https://github.com/acme/loja-web.git
-            branch: main
-            dockerfile: Dockerfile
-            context: .
-            provider: meu-github
-        port: 3000
-        domains:
-          - { domain: loja.exemplo.com, port: 3000, tls: true }
-        env:
-          API_URL: http://rp_api:8080
-          SESSION_KEY: ${SESSION_KEY}
-        volumes:
-          - /srv/loja/uploads:/app/uploads
-          - /srv/loja/config:/app/config:ro
-        healthcheck:
-          type: http
-          path: /health
-          status: 200
-          interval: 5
-          timeout: 3
-          retries: 10
-          start_period: 5
-        replicas: 2
-        resources:
-          cpu_shares: 512
-          mem: 512m
-      - name: api
-        source:
-          registry: ghcr.io/acme/loja-api:1.4.0
-        port: 8080
-        command: ./server
-        args: ["--workers", "4"]
-      - name: cache
-        source:
-          registry: redis:7
-        port: 6379
-        host_port: 0
-      - name: banco
-        source:
-          compose: |
-            services:
-              rp_banco:
-                image: postgres:18
-                environment:
-                  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        port: 5432
-        env:
-          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        db: postgres
-        shared: true
-```
-
-E o arquivo de variáveis que o acompanha (`rustploy.vars.toml`, dentro do zip da exportação):
-
-```toml
-[project."loja".service."web".env]
-SESSION_KEY = "um-valor-longo-e-aleatorio"
-
-[project."loja".service."banco".env]
-POSTGRES_PASSWORD = "outra-senha-forte"
-
-[git_provider."meu-github"]
-kind = "github"
-base_url = ""
-auth_mode = "pat"
-```
+<Aside type="note" title="O manifesto do servidor inteiro não existe mais">
+  O antigo manifesto de Infra as Code (`rustploy.yml` + `rustploy.vars.toml`, com `projects:`)
+  foi removido. Para uma cópia da infra inteira, use [Baixar a infra](/guias/infra-as-code/); para
+  restaurar, a [sincronização com o git](/guias/sincronizacao-git/).
+</Aside>
 
 ## Campos
 
-As tabelas abaixo vêm direto dos tipos do código. **Obrigatório** diz se o campo precisa existir
-para o arquivo ser aceito.
+**Obrigatório** diz se o campo precisa existir para o arquivo ser aceito.
 
-### Manifesto raiz
-
-| Campo | Tipo | Obrigatório | Padrão | |
-|---|---|---|---|---|
-| `apiVersion` | texto | não | ausente | Sempre `rustploy/v1`. Opcional; hoje não é validado. |
-| `projects` | lista de projetos | não | vazio | Os projetos. Cada item é um projeto declarado ali mesmo. (`include:` não é aceito pela importação do daemon.) |
-
-### Manifesto de um projeto
-
-| Campo | Tipo | Obrigatório | Padrão | |
-|---|---|---|---|---|
-| `apiVersion` | texto | não | ausente | Sempre `rustploy/v1`. Opcional. |
-| `project` | objeto `project` | sim | — | Nome, descrição e variáveis do projeto. |
-| `services` | lista de serviços | não | vazio | Os serviços do projeto. |
-
-### `project`
-
-| Campo | Tipo | Obrigatório | Padrão | |
-|---|---|---|---|---|
-| `name` | texto | sim | — | Obrigatório e não pode ser vazio. **É a chave de casamento**: um projeto com este nome é atualizado, senão é criado. |
-| `description` | texto | não | ausente | Descrição do projeto. |
-| `env` | mapa texto → texto | não | vazio | Variáveis herdadas por todos os serviços. Valor `secret:NOME` referencia um secret do projeto; `${CHAVE}` é resolvido pelo arquivo de variáveis. |
-
-### Item de `services`
+### `service`
 
 | Campo | Tipo | Obrigatório | Padrão | |
 |---|---|---|---|---|
@@ -213,122 +100,20 @@ para o arquivo ser aceito.
 | `text` | texto | sim | — | A linha completa, incluindo o `#`. |
 | `before_key` | texto | não | ausente | A chave que vem logo depois do comentário. Omitida, é um comentário solto, no fim. |
 
-### Arquivo de variáveis (TOML)
 
-| Campo | Tipo | Obrigatório | Padrão | |
-|---|---|---|---|---|
-| `project` | tabelas por projeto | não | vazio | Uma tabela `[project."NOME"]` por projeto. |
-| `git_provider` | tabelas por provedor | não | vazio | Uma tabela `[git_provider."NOME"]` por conta Git referenciada. |
+## Valores de variáveis: `secret:NOME`
 
-### `[project."NOME"]` do TOML
-
-| Campo | Tipo | Obrigatório | Padrão | |
-|---|---|---|---|---|
-| `env` | mapa texto → texto | não | vazio | Valores das variáveis **do projeto**. |
-| `service` | tabelas por serviço | não | vazio | Uma tabela `[project."NOME".service."SERVIÇO"]` por serviço. |
-
-### `[project."NOME".service."SERVIÇO"]` do TOML
-
-| Campo | Tipo | Obrigatório | Padrão | |
-|---|---|---|---|---|
-| `env` | mapa texto → texto | não | vazio | Valores das variáveis **do serviço**. |
-
-### `[git_provider."NOME"]` do TOML
-
-| Campo | Tipo | Obrigatório | Padrão | |
-|---|---|---|---|---|
-| `kind` | texto | sim | — | `gitea` ou `github`. |
-| `base_url` | texto | sim | — | URL base do provedor (vazia no github.com). |
-| `auth_mode` | texto | sim | — | `oauth` ou `pat`. |
-| `oauth_client_id` | texto | não | ausente | Só para `oauth`. O *client secret* **nunca** é exportado. |
-
-
-## Variáveis: `${CHAVE}` e `secret:NOME`
-
-Um valor de `env` pode ser de três formas:
-
-| Forma | Significa |
-|---|---|
-| `texto` | valor comum, gravado como está |
-| `${CHAVE}` | o valor vem do **arquivo de variáveis** |
-| `secret:NOME` | referência a um **secret do projeto** (o valor não vai no manifesto) |
-
-O `${CHAVE}` é procurado **com escopo**:
-
-- no `env` do **projeto**: só na tabela `[project."NOME".env]`;
-- no `env` de um **serviço**: primeiro em `[project."NOME".service."SERVIÇO".env]` e, se não achar, em `[project."NOME".env]`.
-
-Se sobrar alguma `${CHAVE}` sem valor, a importação **aborta antes de aplicar qualquer coisa** e lista
-cada faltante com o escopo (`loja/web: SESSION_KEY`). No serviço Compose, o `${CHAVE}` **dentro do YAML do compose não é tocado** pela importação: declare a variável no `env` do serviço (como no `banco` do exemplo) e o Compose a lê do `.env` na hora do deploy. Os `secret:NOME` **não são criados** pela
-importação: crie os secrets no projeto de destino, senão a variável chega vazia. Veja
+Um valor de `env` é um texto comum ou `secret:NOME`, a referência a um **secret do projeto** (o valor
+não vai no arquivo). Ao exportar **sem valores**, os valores comuns saem redigidos. Veja
 [Como as variáveis são resolvidas](/conceitos/variaveis-de-ambiente/).
-
-## O que a importação faz
-
-A importação **reconcilia** o manifesto com o que já existe, casando tudo **por nome**.
-
-| Situação | Resultado |
-|---|---|
-| projeto com esse nome não existe | é **criado** |
-| projeto existe e a descrição mudou | é **atualizado** |
-| projeto existe e o manifesto traz `env` | as variáveis do projeto são **substituídas** (e os comentários do `.env` do projeto, apagados) |
-| projeto existe e o manifesto **não** traz `env` | as variáveis existentes são **preservadas** |
-| serviço com esse nome não existe | é **criado** |
-| serviço existe e é idêntico | fica `unchanged` |
-| serviço existe e é diferente | tem o spec **inteiro substituído** pelo do manifesto |
-| serviço existe e o manifesto não traz `env` | as variáveis do serviço são **preservadas** |
-| `prune` ligado | os serviços do projeto que **não estão** no manifesto são **removidos** |
-| `deploy` ligado | os serviços criados ou alterados entram na fila de deploy |
-| `host_port: 0` | reaproveita a porta já alocada ao serviço de mesmo nome, ou aloca uma nova e libera no firewall |
-
-<Aside type="danger" title="Atualizar um serviço apaga o que o manifesto não descreve">
-  O spec do serviço é **substituído** pelo do manifesto. Tudo o que o manifesto **não** pode
-  representar volta ao padrão: em especial a **fila de pré-deploy**, que não existe no manifesto.
-  Importar sobre um serviço que tem pré-deploy configurado **zera essa fila**. O mesmo vale
-  para as opções que você pôs só pela tela. Exporte antes de importar para ver o que o manifesto cobre.
-</Aside>
-
-Os **Git providers** do arquivo de variáveis que ainda não existem no destino são criados
-**pendentes**, sem token nem *client secret*: complete a autenticação em **Settings → Git**.
-Um provider que já existe com o mesmo nome **não é tocado**.
 
 ## Comportamentos que surpreendem
 
-Testados contra o parser real:
-
 | Você escreve | O que acontece |
 |---|---|
-| um campo com **erro de digitação** (`replica: 5`, `domian: …`) | é **ignorado em silêncio**: o parser não rejeita campos desconhecidos |
+| um campo com **erro de digitação** (`replica: 5`) | é **ignorado em silêncio**: o parser não rejeita campos desconhecidos |
 | duas chaves em `source` (`registry` e `git`) | vale a **primeira** na ordem `registry`, `git`, `compose`; sem erro |
-| nenhuma chave em `source` | o serviço fica com imagem **vazia** e o deploy é recusado |
-| `source` ausente | erro (campo obrigatório) |
 | `port` ausente | vale `0`, sem erro |
 | `healthcheck: { path: /saude }` sem `type` | vale `tcp`; o `path` é ignorado |
-| um volume sem `:` ou com lado vazio | é **descartado**; `/a:/b:rw` vale como leitura e escrita |
+| um volume sem `:` ou com lado vazio | é **descartado** |
 | `replicas: 0` | vira `1` |
-| serviço com origem **zip** (Archive) na exportação | sai como `registry: ""` (imagem vazia): **não cabe** no manifesto |
-
-## Erros
-
-| Código | Quando |
-|---|---|
-| `InvalidManifest` | YAML inválido, sem `project:`/`projects:` no topo, projeto sem nome, ou campo obrigatório ausente |
-| `InvalidEnvVars` | o arquivo de variáveis não é um TOML válido |
-| `MissingEnvVars` | sobrou `${CHAVE}` sem valor (a resposta lista cada uma, com o escopo) |
-| `InvalidGitProvider` | `kind` ou `auth_mode` desconhecido em `[git_provider]` |
-| provider não resolvido | um `source.git.provider` nomeia uma conta que não existe no destino nem no arquivo de variáveis |
-| `include: não suportado` | um item de `projects:` usa `include:`, que só funcionava no CLI antigo |
-
-<Aside type="tip" title="Mensagem de erro opaca na forma raiz">
-  Na forma **raiz**, qualquer erro *dentro* de um projeto aparece como
-  *"data did not match any variant of untagged enum ProjectEntry"*, sem dizer qual campo. Para
-  ver o erro de verdade, valide o projeto na forma **única** (`project:` e `services:` no topo):
-  a mensagem passa a ser algo como ``services[0]: missing field `source` at line 4 column 5``.
-</Aside>
-
-## Não cabem no manifesto
-
-Jobs (Schedules), a fila de pré-deploy, os valores dos secrets, os databases gerenciados e as
-autorizações do banco compartilhado, serviços de origem zip e as contas Git com credenciais.
-Para copiar **um serviço** entre servidores, incluindo o que o manifesto não leva, use
-**Exportar serviço** e **Importar** na tela do serviço.

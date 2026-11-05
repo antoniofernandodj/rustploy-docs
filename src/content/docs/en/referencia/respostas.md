@@ -1,6 +1,6 @@
 ---
 title: Protocol responses
-description: "The 66 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
+description: "The 64 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
 ---
 
 Each [command](/en/referencia/comandos/) returns one of these variants. A response **with fields** is a one-key object; **without fields**, the bare string (`"Ok"`).
@@ -17,6 +17,7 @@ An error comes as `{"Err":{"code":"…","message":"…"}}`.
 | `Deployment` | `Deployment` |
 | `Deployments` | `Vec<Deployment>` |
 | `Logs` | `Vec<LogEntry>` |
+| `LogsHistory` | `entries: Vec<LogHistoryEntry>`, `next_before: Option<chrono::DateTime<chrono::Utc>>` |
 | `BuildLogs` | `Vec<BuildLogLine>` |
 | `DeploymentSummaries` | `Vec<DeploymentSummary>` |
 | `DaemonStatus` | `DaemonStatus` |
@@ -34,14 +35,11 @@ An error comes as `{"Err":{"code":"…","message":"…"}}`.
 | `SecretNames` | `Vec<String>` |
 | `StateGit` | `StateGitStatus` |
 | `InfraAudit` | `Vec<PlaintextFinding>` |
+| `InfraFiles` | `Vec<InfraFile>` |
 | `SecretValue` | `String` |
-| `ManifestReport` | `ApplyReport` |
-| `Manifest` | `String` |
-| `ManifestBundle` | `yaml: String`, `dotenv: String` |
 | `ServiceExportPlan` | `ServiceExportPlan` |
 | `ServiceBundleYaml` | `yaml: String`, `filename: String` |
 | `ServiceImportReport` | `ServiceImportReport` |
-| `MissingEnvVars` | `Vec<String>` |
 | `GitProviders` | `Vec<GitProvider>` |
 | `GitProviderInfo` | `GitProvider` |
 | `OAuthUrl` | `String` |

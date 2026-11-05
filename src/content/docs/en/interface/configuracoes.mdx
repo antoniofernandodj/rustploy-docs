@@ -1,22 +1,17 @@
 ---
 title: Settings in the desktop app
-description: The five Settings tabs of the Rustploy desktop app - Web Server (API URL, connection token and the AI agent command), Git (GitHub and Gitea accounts), Infrastructure as Code (export and import zip) and Maintenance (automatic Docker cleanup).
+description: The five Settings tabs of the Rustploy desktop app - Web Server (API URL, connection token and the AI agent command), Git (GitHub and Gitea accounts), Maintenance (automatic Docker cleanup), Sync (git sync and download of the infra) and Updates.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
-import iacWebInicial from '../../../../assets/ui/webui-iac-inicial.png';
-import iacWebExportar from '../../../../assets/ui/webui-iac-exportar.png';
-import iacWebImportar from '../../../../assets/ui/webui-iac-importar.png';
-import iacWebResultado from '../../../../assets/ui/webui-iac-resultado.png';
 import web from '../../../../assets/ui/settings-web-server.png';
 import git from '../../../../assets/ui/settings-git.png';
 import gitOauth from '../../../../assets/ui/settings-git-oauth.png';
-import iac from '../../../../assets/ui/settings-iac.png';
 import manutencao from '../../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../../assets/ui/settings-manutencao-fim.png';
 
-**Settings** (at the foot of the side menu) has five tabs: **Web Server**, **Git**, **Infra as Code**, **Manutenção** (Maintenance) and **Atualizações** (Updates).
+**Settings** (at the foot of the side menu) has five tabs: **Web Server**, **Git**, **Manutenção** (Maintenance), **Sincronização** (Sync) and **Atualizações** (Updates).
 
 ## Web Server
 
@@ -76,55 +71,12 @@ With **Token (PAT)**, paste a *Personal Access Token* with read access to the re
 
 Details and the use in services: [Deploy from a Git repository](/en/guias/git/).
 
-## Infra as Code
+## Sincronização
 
-<Shot
-  src={iac}
-  alt="The Infra as Code tab with the Export and Import blocks, the prune and trigger-deploy options and the buttons to export and import a zip file."
-  caption="The Infra as Code tab."
-/>
-
-| Block | What it does |
-|---|---|
-| **Exportar para um .zip…** (Export to a .zip) | writes a `.zip` with `rustploy.yml` and `rustploy.vars.toml` wherever you choose. Variable values live only in the TOML; **secrets never leave the daemon** |
-| **Importar de um .zip…** (Import from a .zip) | reads a `.zip` of the same format, with **exactly one** `.yml` and one `.toml` at the root |
-
-In the [web UI](/en/interface/web-ui/) the tab is the same: **Exportar para um .zip…** downloads the file through the browser (`rustploy-infra.zip`) and shows the two texts to check or copy, and the import accepts the `.zip` through the file picker **or** pasted text. In both interfaces the app **asks for confirmation** before applying.
-
-<Shot
-  src={iacWebInicial}
-  alt="The Infrastructure as Code tab of the web UI, with the Export and Import blocks, the prune and trigger-deploy options and the .zip file picker."
-  caption="The Infrastructure as Code tab in the web UI."
-/>
-
-<Shot
-  src={iacWebExportar}
-  alt="The web UI Infrastructure as Code tab after exporting, with the downloaded-file notice and the rustploy.yml and rustploy.vars.toml texts to copy."
-  caption="After exporting: the zip is downloaded and the two texts are shown (sample data)."
-/>
-
-<Shot
-  src={iacWebImportar}
-  alt="The web UI import block with prune ticked, the loaded zip name and the text fields with the YAML and the TOML."
-  caption="Import: the chosen zip fills the text fields (sample data)."
-/>
-
-<Shot
-  src={iacWebResultado}
-  alt="Result of an import in the web UI, with the Updated, Unchanged and Deleted actions and the line for services removed by prune."
-  caption="The result lists each action and the services removed by prune (sample data)."
-/>
-
-Import options:
-
-| Option | Effect |
-|---|---|
-| **Remover serviços ausentes do manifesto (prune)** | deletes the services that are not in the manifest |
-| **Disparar deploy dos serviços criados/alterados** | deploys after syncing |
-
-If the value of a variable used in the YAML is missing, the import is **cancelled before applying anything**, and the message says which variable is
-missing, labelled with its scope (for example `Chiquitos/api: APP_PORT`, where `Chiquitos` is a project name and `api` a service). Details in
-[Infrastructure as Code](/en/guias/infra-as-code/).
+The **Sincronização** (Sync) tab sets up [git sync](/en/guias/sincronizacao-git/) of the infrastructure state.
+At the bottom it has **Baixar a infra** (Download the infra): **Download infra** saves a
+`rustploy-infra.zip` with the same files the sync writes to the repository, with secrets encrypted. It is
+the same on the [web UI](/en/interface/web-ui/). Details in [Download the infra](/en/guias/infra-as-code/).
 
 ## Manutenção (Maintenance)
 

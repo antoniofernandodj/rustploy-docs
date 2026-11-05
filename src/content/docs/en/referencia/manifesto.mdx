@@ -1,138 +1,25 @@
 ---
-title: Manifest reference (rustploy.yml)
-description: "Complete reference for the Rustploy Infrastructure as Code YAML manifest: every project, service, source, healthcheck and domain field, the TOML variables file, the import rules (matching by name, prune, deploy) and the errors."
+title: Service format in the bundle (reference)
+description: "Reference of the `service` fields carried by the Rustploy service bundle (Export service / Import): source, domains, variables, healthcheck and resources."
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-The **manifest** describes projects and services in YAML. The **variables** file (TOML) holds
-the variable values. To export, import and for the limits of the flow, see
-[Infra as Code](/en/guias/infra-as-code/). This page is the **field reference**, generated from
-the daemon and `rustploy-shared` code.
+The **service bundle** (see [Copy a service between servers](/en/guias/copiar-servico/)) carries one
+`service` as YAML. This page is the **field reference** for that `service`, generated from the
+daemon and `rustploy-shared` code.
 
-## The two shapes
-
-| Shape | Top-level key | Use when |
-|---|---|---|
-| **Root** | `projects:` (list) | several projects, or what the export produces |
-| **Single project** | `project:` and `services:` | just one project |
-
-With neither `projects:` nor `project:` at the top, the import rejects the file
-(*"manifesto inválido: esperado a chave `project:` ou `projects:` no topo"*, that is, "invalid manifest: expected a `project:` or `projects:` key at the top").
-
-## Complete example
-
-This example was validated against the daemon parser:
-
-```yaml
-apiVersion: rustploy/v1
-projects:
-  - project:
-      name: loja
-      description: Online store
-      env:
-        LOG_LEVEL: info
-        SMTP_PASSWORD: secret:SMTP_PASSWORD
-    services:
-      - name: web
-        source:
-          git:
-            url: https://github.com/acme/loja-web.git
-            branch: main
-            dockerfile: Dockerfile
-            context: .
-            provider: my-github
-        port: 3000
-        domains:
-          - { domain: shop.example.com, port: 3000, tls: true }
-        env:
-          API_URL: http://rp_api:8080
-          SESSION_KEY: ${SESSION_KEY}
-        volumes:
-          - /srv/loja/uploads:/app/uploads
-          - /srv/loja/config:/app/config:ro
-        healthcheck:
-          type: http
-          path: /health
-          status: 200
-          interval: 5
-          timeout: 3
-          retries: 10
-          start_period: 5
-        replicas: 2
-        resources:
-          cpu_shares: 512
-          mem: 512m
-      - name: api
-        source:
-          registry: ghcr.io/acme/loja-api:1.4.0
-        port: 8080
-        command: ./server
-        args: ["--workers", "4"]
-      - name: cache
-        source:
-          registry: redis:7
-        port: 6379
-        host_port: 0
-      - name: banco
-        source:
-          compose: |
-            services:
-              rp_banco:
-                image: postgres:18
-                environment:
-                  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        port: 5432
-        env:
-          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        db: postgres
-        shared: true
-```
-
-And the variables file that goes with it (`rustploy.vars.toml`, inside the export zip):
-
-```toml
-[project."loja".service."web".env]
-SESSION_KEY = "a-long-random-value"
-
-[project."loja".service."banco".env]
-POSTGRES_PASSWORD = "another-strong-password"
-
-[git_provider."my-github"]
-kind = "github"
-base_url = ""
-auth_mode = "pat"
-```
+<Aside type="note" title="The whole-server manifest no longer exists">
+  The old Infrastructure as Code manifest (`rustploy.yml` + `rustploy.vars.toml`, with `projects:`)
+  was removed. For a copy of the whole infrastructure use [Download the infra](/en/guias/infra-as-code/);
+  to restore, use [git sync](/en/guias/sincronizacao-git/).
+</Aside>
 
 ## Fields
 
-The tables below come straight from the code types. **Required** says whether the field must be
-present for the file to be accepted.
+**Required** says whether the field must exist for the file to be accepted.
 
-### Root manifest
-
-| Field | Type | Required | Default | |
-|---|---|---|---|---|
-| `apiVersion` | text | no | absent | Always `rustploy/v1`. Optional; not validated today. |
-| `projects` | list of projects | no | empty | The projects. Each item is a project declared right there. (`include:` is not accepted by the daemon import.) |
-
-### Single-project manifest
-
-| Field | Type | Required | Default | |
-|---|---|---|---|---|
-| `apiVersion` | text | no | absent | Always `rustploy/v1`. Optional. |
-| `project` | `project` object | yes | — | Name, description and variables of the project. |
-| `services` | list of services | no | empty | The project services. |
-
-### `project`
-
-| Field | Type | Required | Default | |
-|---|---|---|---|---|
-| `name` | text | yes | — | Required and cannot be empty. **It is the matching key**: a project with this name is updated, otherwise it is created. |
-| `description` | text | no | absent | Project description. |
-| `env` | map text → text | no | empty | Variables inherited by every service. A `secret:NAME` value references a project secret; `${KEY}` is resolved from the variables file. |
-
-### Item of `services`
+### `service`
 
 | Field | Type | Required | Default | |
 |---|---|---|---|---|
@@ -213,122 +100,20 @@ present for the file to be accepted.
 | `text` | text | yes | — | The full line, including the `#`. |
 | `before_key` | text | no | absent | The key that comes right after the comment. If omitted, it is a loose comment at the end. |
 
-### Variables file (TOML)
 
-| Field | Type | Required | Default | |
-|---|---|---|---|---|
-| `project` | tables per project | no | empty | One `[project."NAME"]` table per project. |
-| `git_provider` | tables per provider | no | empty | One `[git_provider."NAME"]` table per referenced Git account. |
+## Variable values: `secret:NAME`
 
-### `[project."NAME"]` in the TOML
-
-| Field | Type | Required | Default | |
-|---|---|---|---|---|
-| `env` | map text → text | no | empty | Values of the **project** variables. |
-| `service` | tables per service | no | empty | One `[project."NAME".service."SERVICE"]` table per service. |
-
-### `[project."NAME".service."SERVICE"]` in the TOML
-
-| Field | Type | Required | Default | |
-|---|---|---|---|---|
-| `env` | map text → text | no | empty | Values of the **service** variables. |
-
-### `[git_provider."NAME"]` in the TOML
-
-| Field | Type | Required | Default | |
-|---|---|---|---|---|
-| `kind` | text | yes | — | `gitea` or `github`. |
-| `base_url` | text | yes | — | Provider base URL (empty on github.com). |
-| `auth_mode` | text | yes | — | `oauth` or `pat`. |
-| `oauth_client_id` | text | no | absent | `oauth` only. The *client secret* is **never** exported. |
-
-
-## Variables: `${KEY}` and `secret:NAME`
-
-An `env` value can take three forms:
-
-| Form | Meaning |
-|---|---|
-| `text` | plain value, stored as is |
-| `${KEY}` | the value comes from the **variables file** |
-| `secret:NAME` | reference to a **project secret** (the value does not go in the manifest) |
-
-`${KEY}` is looked up **with scope**:
-
-- in the **project** `env`: only in the `[project."NAME".env]` table;
-- in a **service** `env`: first in `[project."NAME".service."SERVICE".env]` and, if not found, in `[project."NAME".env]`.
-
-If any `${KEY}` is left without a value, the import **aborts before applying anything** and lists
-each missing one with its scope (`loja/web: SESSION_KEY`). In a Compose service, a `${KEY}` **inside the compose YAML is not touched** by the import: declare the variable in the service `env` (as in `banco` in the example) and Compose reads it from the `.env` at deploy time. `secret:NAME` references are **not created** by the
-import: create the secrets in the destination project, otherwise the variable arrives empty. See
+An `env` value is plain text or `secret:NAME`, a reference to a **project secret** (the value is not in
+the file). When exporting **without values**, plain values are redacted. See
 [How variables are resolved](/en/conceitos/variaveis-de-ambiente/).
 
-## What the import does
-
-The import **reconciles** the manifest with what already exists, matching everything **by name**.
-
-| Situation | Result |
-|---|---|
-| no project with that name | it is **created** |
-| project exists and the description changed | it is **updated** |
-| project exists and the manifest has `env` | the project variables are **replaced** (and the project `.env` comments erased) |
-| project exists and the manifest has **no** `env` | the existing variables are **preserved** |
-| no service with that name | it is **created** |
-| service exists and is identical | stays `unchanged` |
-| service exists and differs | its **entire** spec is replaced by the manifest one |
-| service exists and the manifest has no `env` | the service variables are **preserved** |
-| `prune` on | the project services that are **not in** the manifest are **removed** |
-| `deploy` on | created or changed services go into the deploy queue |
-| `host_port: 0` | reuses the port already allocated to the service with the same name, or allocates a new one and opens it in the firewall |
-
-<Aside type="danger" title="Updating a service erases what the manifest does not describe">
-  The service spec is **replaced** by the manifest one. Everything the manifest **cannot**
-  represent goes back to the default: notably the **pre-deploy queue**, which does not exist in the manifest.
-  Importing over a service that has pre-deploy configured **resets that queue**. The same goes
-  for options you set only through the screen. Export before importing to see what the manifest covers.
-</Aside>
-
-The **Git providers** in the variables file that do not yet exist at the destination are created
-**pending**, with no token or *client secret*: finish the authentication in **Settings → Git**.
-A provider that already exists with the same name is **left alone**.
-
-## Behaviors that surprise
-
-Tested against the real parser:
+## Surprising behaviors
 
 | You write | What happens |
 |---|---|
-| a field with a **typo** (`replica: 5`, `domian: …`) | it is **silently ignored**: the parser does not reject unknown fields |
-| two keys in `source` (`registry` and `git`) | the **first** in the order `registry`, `git`, `compose` wins; no error |
-| no key in `source` | the service ends up with an **empty** image and the deploy is refused |
-| `source` missing | error (required field) |
+| a field with a **typo** (`replica: 5`) | it is **silently ignored**: the parser does not reject unknown fields |
+| two keys in `source` (`registry` and `git`) | the **first** wins in the order `registry`, `git`, `compose`; no error |
 | `port` missing | it is `0`, no error |
-| `healthcheck: { path: /health }` without `type` | it is `tcp`; the `path` is ignored |
-| a volume without `:` or with an empty side | it is **dropped**; `/a:/b:rw` counts as read-write |
+| `healthcheck: { path: /saude }` without `type` | it is `tcp`; the `path` is ignored |
+| a volume without `:` or with an empty side | it is **dropped** |
 | `replicas: 0` | becomes `1` |
-| service with a **zip** (Archive) source on export | comes out as `registry: ""` (empty image): it **does not fit** the manifest |
-
-## Errors
-
-| Code | When |
-|---|---|
-| `InvalidManifest` | invalid YAML, no `project:`/`projects:` at the top, a project without a name, or a missing required field |
-| `InvalidEnvVars` | the variables file is not valid TOML |
-| `MissingEnvVars` | a `${KEY}` was left without a value (the response lists each one, with its scope) |
-| `InvalidGitProvider` | unknown `kind` or `auth_mode` in `[git_provider]` |
-| unresolved provider | a `source.git.provider` names an account that exists neither at the destination nor in the variables file |
-| `include: não suportado` | an item of `projects:` uses `include:`, which only worked in the old CLI |
-
-<Aside type="tip" title="Opaque error message in the root shape">
-  In the **root** shape, any error *inside* a project shows up as
-  *"data did not match any variant of untagged enum ProjectEntry"*, without saying which field. To
-  see the real error, validate the project in the **single** shape (`project:` and `services:` at the top):
-  the message becomes something like ``services[0]: missing field `source` at line 4 column 5``.
-</Aside>
-
-## What does not fit in the manifest
-
-Jobs (Schedules), the pre-deploy queue, secret values, managed databases and the
-shared-database authorizations, zip-source services and Git accounts with credentials.
-To copy **one service** between servers, including what the manifest does not carry, use
-**Exportar serviço** (Export service) and **Importar** (Import) on the service screen.

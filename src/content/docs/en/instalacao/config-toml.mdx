@@ -107,6 +107,16 @@ precedence** over the file and requires restarting the daemon.
 | `drain_secs` | `10` | wait, after the route swap, before removing the old container |
 | `image_cache` | `2` | |
 
+### `[logs]`
+
+Container runtime logs kept on disk (`<data>/logs/<service>/`). **Optional** section: every key has a default.
+
+| Key | Default | |
+|---|---|---|
+| `enabled` | `true` | turns recording on. When off, the log stays live-only |
+| `retention_days` | `14` | deletes logs older than this |
+| `max_bytes_per_service` | `52428800` (50 MiB) | disk ceiling **per service**; the oldest goes first |
+
 ### `[metrics]`
 
 | Key | Default |

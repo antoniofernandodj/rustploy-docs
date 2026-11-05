@@ -39,7 +39,7 @@ working"*.
 - **Deploy flow.** In CapRover the usual path is the command line: `caprover deploy` in the project folder. Rustploy has no CLI: you trigger a deploy from the UI, from a webhook (for example in GitHub Actions) or from an AI agent.
 - **DNS.** CapRover asks for a wildcard `A` record (`*.apps.example.com`). In Rustploy you point each domain individually, which also suits domains that do not share a suffix.
 - **Swarm.** CapRover brings the Swarm model, which makes growing to more nodes easier. Rustploy does not use Swarm: it is one machine.
-- **No lock-in.** Rustploy does not trap you either: the containers are plain Docker containers and the Infrastructure as Code manifest exports the configuration.
+- **No lock-in.** Rustploy does not trap you either: the containers are plain Docker containers and the Download-the-infra option exports the configuration.
 
 ## What Rustploy has that is not stated in the sources consulted
 

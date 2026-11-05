@@ -297,8 +297,8 @@ export const sections = [
       {
         q: { pt: 'Como copio um serviço para outro servidor?', en: 'How do I copy a service to another server?' },
         a: {
-          pt: 'Use **Exportar serviço** na tela do serviço para gerar um arquivo e **Importar** no assistente Novo serviço do outro servidor. O serviço é criado sem deploy e nada é sobrescrito. Só a configuração viaja: dados, volumes e secrets não. Para levar o servidor inteiro, use o [manifesto de Infra as Code](/guias/infra-as-code/).',
-          en: 'Use **Exportar serviço** on the service screen to generate a file and **Importar** in the New service wizard on the other server. The service is created without a deploy and nothing is overwritten. Only the configuration travels: data, volumes and secrets do not. To move the whole server, use the [Infrastructure as Code manifest](/guias/infra-as-code/).',
+          pt: 'Use **Exportar serviço** na tela do serviço para gerar um arquivo e **Importar** no assistente Novo serviço do outro servidor. O serviço é criado sem deploy e nada é sobrescrito. Só a configuração viaja: dados, volumes e secrets não. Para levar o servidor inteiro, use a [sincronização com o git](/guias/sincronizacao-git/) (ou [Baixar a infra](/guias/infra-as-code/)).',
+          en: 'Use **Exportar serviço** on the service screen to generate a file and **Importar** in the New service wizard on the other server. The service is created without a deploy and nothing is overwritten. Only the configuration travels: data, volumes and secrets do not. To move the whole server, use [git sync](/en/guias/sincronizacao-git/) (or [Download the infra](/en/guias/infra-as-code/)).',
         },
       },
       {
