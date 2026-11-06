@@ -116,8 +116,8 @@ Log de runtime dos containers guardado em disco (`<dados>/logs/<serviço>/`). Se
 | Chave | Padrão | |
 |---|---|---|
 | `enabled` | `true` | liga a gravação. Desligada, o log segue só ao vivo |
-| `retention_days` | `14` | apaga o log mais velho que isso |
-| `max_bytes_per_service` | `52428800` (50 MiB) | teto de disco **por serviço**; o mais antigo sai primeiro |
+| `retention_days` | `14` | apaga as **execuções** (um container cada) cujo último log é mais velho que isso; a mais recente do serviço nunca sai |
+| `max_bytes_per_service` | `52428800` (50 MiB) | teto de disco **por serviço**; a execução mais antiga sai primeiro (inteira) |
 
 ### `[metrics]`
 

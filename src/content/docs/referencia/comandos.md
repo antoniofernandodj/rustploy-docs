@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 124 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 126 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **124 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **126 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -315,7 +315,7 @@ Host e URL de conexão **dentro** da rede Docker do projeto (montada no daemon p
 Log de runtime **persistido** do serviço (sobrevive à troca de container no deploy e ao rollback). Devolve até `limit` linhas em ordem cronológica, anteriores a `before` (ou as mais recentes, se omitido); para paginar para trás, repita com o `next_before` da resposta. `container_id` filtra por um container (id curto). Resposta: `LogsHistory`. Não cobre serviços Compose (só ao vivo, por `LogsGet`).
 
 ```json
-{"LogsHistory":{"service_id":"svc_…","before":null,"limit":20,"container_id":null}}
+{"LogsHistory":{"service_id":"svc_…","before":null,"limit":20,"container_id":null,"container_ids":[]}}
 ```
 
 | Campo | Tipo |
@@ -324,6 +324,36 @@ Log de runtime **persistido** do serviço (sobrevive à troca de container no de
 | `before` | `Option<chrono::DateTime<chrono::Utc>>` |
 | `limit` | `usize` |
 | `container_id` | `Option<String>` |
+| `container_ids` | `Vec<String>`<br />Vários containers de uma vez (uma execução com réplicas); soma-se a `container_id`. Vazio (e sem `container_id`) = o serviço inteiro. |
+
+**Usado por:** GUI e web UI.
+
+### LogsExecutions
+
+As execuções (um container = uma execução) com log guardado, da mais nova para a mais velha: início/fim, deploy, imagem, linhas, bytes e desfecho do deploy. Resposta: `LogsExecutions`. Não cobre serviços Compose.
+
+```json
+{"LogsExecutions":{"service_id":"svc_…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### LogsExecutionDelete
+
+Apaga o log guardado de execuções (irreversível; vários de uma vez). A execução atual é recusada (`ExecutionRunning`); id inexistente é ignorado. Resposta: `LogsExecutionsDeleted`.
+
+```json
+{"LogsExecutionDelete":{"service_id":"svc_…","container_ids":[]}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+| `container_ids` | `Vec<String>` |
 
 **Usado por:** GUI e web UI.
 

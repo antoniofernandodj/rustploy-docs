@@ -19,9 +19,11 @@ escreve muito não trava a interface. A janela é a mesma para os dois tipos de 
   caption="Janela de logs de runtime. Os identificadores foram borrados nesta imagem."
 />
 
-É a saída (stdout e stderr) do **container em execução**. Para abrir:
+É a saída (stdout e stderr) da **execução atual** — só a dela: os containers de deploys antigos
+ficam na lista de [execuções anteriores](#execuções-anteriores) (e, com o serviço parado, a janela mostra a
+execução mais recente). Para abrir:
 
-- na tela do serviço, aba **Logs → Abrir logs em janela**; ou
+- na tela do serviço, aba **Logs → Logs de execução**; ou
 - o botão **Logs de runtime** do painel lateral.
 
 O título é `Logs · nome-do-serviço`. Em cima, o contador (*"15 linhas · ao vivo"*) e três botões:
@@ -60,6 +62,30 @@ linha `==> Erro em [Estado]: …` com a **causa**. Veja
 O **build log** fica guardado no banco e pode ser aberto depois. O **log de runtime** também é
 guardado, em arquivos no servidor (veja abaixo), e sobrevive à troca de container num deploy.
 
+## Execuções anteriores
+
+<Aside type="note">Disponível a partir do daemon 0.1.36 e do `rustploy-shared` 0.19.0.</Aside>
+
+Uma **execução** é a vida de um container: cada deploy cria uma nova. Na aba **Logs**, abaixo do botão, a lista
+**Execuções anteriores** mostra, para cada execução que já passou:
+
+- o intervalo (`dd/mm/aaaa HH:MM:SS → dd/mm/aaaa HH:MM:SS`);
+- o deploy (`dep_…`), a imagem, o número de linhas e o tamanho;
+- o **desfecho do deploy**: *Substituída* (um deploy mais novo tomou o lugar), *Falhou* (em vermelho), *Ativa*, ou
+  *sem deploy associado* (execuções gravadas antes do registro do deploy);
+- *parcial*, quando a execução sozinha passou do teto de tamanho e as linhas mais antigas dela foram descartadas.
+
+Cada linha tem três ações:
+
+| Ação | Efeito |
+|---|---|
+| **Ver logs** | abre uma janela só dessa execução, com **data e hora** em cada linha. É só histórico (sem ao vivo); **Carregar anteriores** pagina dentro dela |
+| **Excluir** | apaga o log guardado dessa execução (pede confirmação) |
+| ☐ / **Limpar selecionados** | marque várias (ou **Selecionar todas**) e apague de uma vez; a confirmação diz quantas execuções e quantos MiB |
+
+Excluir é **irreversível**. A execução **atual** não aparece na lista e o daemon recusa apagá-la.
+Serviços **Compose** continuam só ao vivo e não têm a lista.
+
 ### Log de runtime guardado
 
 <Aside type="note">Disponível a partir do daemon 0.1.34 (release v0.1.40). Antes, o log de runtime era só ao vivo.</Aside>
@@ -71,7 +97,9 @@ dá para ver "o que aconteceu antes do último deploy" e a causa de um container
 - Ao abrir a janela, as linhas vêm do log guardado (as 500 mais recentes) e as novas continuam chegando ao vivo.
 - **Carregar anteriores** (botão em cima) traz a página de log mais antiga, por cima. Onde o container mudou entre
   duas linhas aparece o separador *"— outro container: …"*.
-- Retenção: **14 dias** e **50 MiB por serviço** (o mais antigo sai primeiro), ajustável na seção
+- Retenção: **14 dias** e **50 MiB por serviço**; a retenção apaga **execuções inteiras**, da mais velha para a mais
+  nova, e nunca a mais recente (a que está rodando). Se só ela passar do teto, as linhas mais antigas dela saem e a execução
+  fica *parcial*. Ajustável na seção
   [`[logs]`](/instalacao/config-toml/) do `config.toml`. Apagar o serviço apaga o log dele.
 - Serviços **Compose** continuam só ao vivo.
 
@@ -81,7 +109,7 @@ dá para ver "o que aconteceu antes do último deploy" e a causa de um container
   (por exemplo com um template como Loki ou Grafana do [catálogo](/templates/)).
 </Aside>
 
-Um agente lê o histórico com o comando `LogsHistory`.
+Um agente lê o histórico com `LogsHistory`, lista as execuções com `LogsExecutions` e apaga com `LogsExecutionDelete`.
 
 A janela guarda no máximo **6 000 linhas** na tela: ao passar disso, descarta as mais antigas
 e mantém as 4 000 mais recentes.

@@ -1,6 +1,6 @@
 ---
 title: Protocol responses
-description: "The 64 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
+description: "The 66 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
 ---
 
 Each [command](/en/referencia/comandos/) returns one of these variants. A response **with fields** is a one-key object; **without fields**, the bare string (`"Ok"`).
@@ -18,6 +18,8 @@ An error comes as `{"Err":{"code":"…","message":"…"}}`.
 | `Deployments` | `Vec<Deployment>` |
 | `Logs` | `Vec<LogEntry>` |
 | `LogsHistory` | `entries: Vec<LogHistoryEntry>`, `next_before: Option<chrono::DateTime<chrono::Utc>>` |
+| `LogsExecutions` | `Vec<LogExecution>` |
+| `LogsExecutionsDeleted` | `deleted: u32`, `freed_bytes: u64` |
 | `BuildLogs` | `Vec<BuildLogLine>` |
 | `DeploymentSummaries` | `Vec<DeploymentSummary>` |
 | `DaemonStatus` | `DaemonStatus` |

@@ -114,8 +114,8 @@ Container runtime logs kept on disk (`<data>/logs/<service>/`). **Optional** sec
 | Key | Default | |
 |---|---|---|
 | `enabled` | `true` | turns recording on. When off, the log stays live-only |
-| `retention_days` | `14` | deletes logs older than this |
-| `max_bytes_per_service` | `52428800` (50 MiB) | disk ceiling **per service**; the oldest goes first |
+| `retention_days` | `14` | deletes the **executions** (one container each) whose last log line is older than this; the service's most recent one is never removed |
+| `max_bytes_per_service` | `52428800` (50 MiB) | disk ceiling **per service**; the oldest execution goes first (whole) |
 
 ### `[metrics]`
 

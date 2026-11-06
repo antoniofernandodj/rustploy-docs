@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 124 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 126 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **124 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **126 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -312,10 +312,10 @@ Host and connection URL **inside** the project Docker network (assembled in the 
 
 ### LogsHistory
 
-Persisted runtime log of the service (survives the container swap on deploy and rollbacks). Returns up to `limit` lines in chronological order, older than `before` (or the most recent ones); to page backwards, repeat with the response `next_before`. `container_id` filters by one container (short id). Does not cover Compose services (live only, via `LogsGet`).
+Persisted runtime log of the service (survives the container swap on deploy and rollbacks). Returns up to `limit` lines in chronological order, older than `before` (or the most recent ones); to page backwards, repeat with the response `next_before`. `container_id` filters by one container (short id); `container_ids` by several at once (one execution with replicas). Does not cover Compose services (live only, via `LogsGet`).
 
 ```json
-{"LogsHistory":{"service_id":"svc_…","before":null,"limit":20,"container_id":null}}
+{"LogsHistory":{"service_id":"svc_…","before":null,"limit":20,"container_id":null,"container_ids":[]}}
 ```
 
 | Field | Type |
@@ -324,6 +324,36 @@ Persisted runtime log of the service (survives the container swap on deploy and 
 | `before` | `Option<chrono::DateTime<chrono::Utc>>` |
 | `limit` | `usize` |
 | `container_id` | `Option<String>` |
+| `container_ids` | `Vec<String>`<br />Vários containers de uma vez (uma execução com réplicas); soma-se a `container_id`. Vazio (e sem `container_id`) = o serviço inteiro. |
+
+**Used by:** GUI and web UI.
+
+### LogsExecutions
+
+The executions (one container = one execution) with a stored log, newest first: start/end, deploy, image, lines, bytes, whether it is the current one and the deploy outcome. Response: `LogsExecutions`. Does not cover Compose services.
+
+```json
+{"LogsExecutions":{"service_id":"svc_…"}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+
+**Used by:** GUI and web UI.
+
+### LogsExecutionDelete
+
+Deletes the stored log of executions (irreversible; several at once). The current execution is refused (`ExecutionRunning`); an unknown id is ignored. Response: `LogsExecutionsDeleted`.
+
+```json
+{"LogsExecutionDelete":{"service_id":"svc_…","container_ids":[]}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `container_ids` | `Vec<String>` |
 
 **Used by:** GUI and web UI.
 

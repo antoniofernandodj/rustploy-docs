@@ -19,9 +19,11 @@ interface. The window is the same for both kinds of log.
   caption="The runtime log window. The identifiers were blurred in this image."
 />
 
-It is the output (stdout and stderr) of the **running container**. To open it:
+It is the output (stdout and stderr) of the **current execution** — only that one: containers from old deploys
+are in the [previous executions](#previous-executions) list (and, with the service stopped, the window shows the most
+recent execution). To open it:
 
-- on the service screen, the **Logs → Abrir logs em janela** (Open logs in a window) tab; or
+- on the service screen, the **Logs → Logs de execução** (Execution logs) tab; or
 - the **Logs de runtime** button in the side panel.
 
 The title is `Logs · service-name`. At the top, the counter (*"15 linhas · ao vivo"*, 15 lines, live) and three buttons:
@@ -57,6 +59,30 @@ A deploy still in progress shows the build **live**. One that failed carries, at
 The **build log** is stored in the database and can be opened later. The **runtime log** is stored too, in files on the
 server (see below), and survives the container swap on a deploy.
 
+## Previous executions
+
+<Aside type="note">Available from daemon 0.1.36 and `rustploy-shared` 0.19.0.</Aside>
+
+An **execution** is a container's lifetime: each deploy creates a new one. On the **Logs** tab, below the button,
+the **Execuções anteriores** (Previous executions) list shows, for every execution that has ended:
+
+- the interval (`dd/mm/yyyy HH:MM:SS → dd/mm/yyyy HH:MM:SS`);
+- the deploy (`dep_…`), the image, the number of lines and the size;
+- the **deploy outcome**: *Substituída* (Replaced: a newer deploy took its place), *Falhou* (Failed, in red), *Ativa*
+  (Active), or *sem deploy associado* (no associated deploy, for executions recorded before deploys were tracked);
+- *parcial* (partial), when the execution alone went over the size ceiling and its oldest lines were discarded.
+
+Each row has three actions:
+
+| Action | Effect |
+|---|---|
+| **Ver logs** (View logs) | opens a window for that execution only, with the **date and time** on every line. History only (not live); **Carregar anteriores** pages inside it |
+| **Excluir** (Delete) | deletes that execution's stored log (asks for confirmation) |
+| ☐ / **Limpar selecionados** (Clear selected) | tick several (or **Selecionar todas**, Select all) and delete them at once; the confirmation says how many executions and how many MiB |
+
+Deleting is **irreversible**. The **current** execution is not listed and the daemon refuses to delete it.
+**Compose** services remain live-only and have no list.
+
 ### Stored runtime log
 
 <Aside type="note">Available from daemon 0.1.34 (release v0.1.40). Before that, the runtime log was live-only.</Aside>
@@ -68,7 +94,9 @@ deploy" and the cause of a new container that crashed within seconds.
 - When the window opens, the lines come from the stored log (the 500 most recent) and new ones keep arriving live.
 - **Carregar anteriores** (Load earlier, the button on top) brings the older page of log, above. Where the container
   changed between two lines, the separator *"— other container: …"* appears.
-- Retention: **14 days** and **50 MiB per service** (the oldest goes first), adjustable in the
+- Retention: **14 days** and **50 MiB per service**; retention deletes **whole executions**, oldest first, and never the
+  most recent one (the one running). If it alone goes over the ceiling, its oldest lines are dropped and the execution is
+  marked *partial*. Adjustable in the
   [`[logs]`](/en/instalacao/config-toml/) section of `config.toml`. Deleting the service deletes its log.
 - **Compose** services remain live-only.
 
@@ -78,7 +106,7 @@ deploy" and the cause of a new container that crashed within seconds.
   example with a template such as Loki or Grafana from the [catalog](/en/templates/)).
 </Aside>
 
-An agent reads the history with the `LogsHistory` command.
+An agent reads the history with `LogsHistory`, lists executions with `LogsExecutions` and deletes them with `LogsExecutionDelete`.
 
 The window keeps at most **6,000 lines** on screen: past that, it discards the oldest and keeps the 4,000 most recent.
 
