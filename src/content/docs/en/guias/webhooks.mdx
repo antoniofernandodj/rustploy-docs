@@ -53,7 +53,7 @@ curl -X POST https://rustploy.mysite.com:9797/webhook/svc_…/a3f8e2c1…
 <Steps>
 1. In the repository: **Settings → Webhooks → Add webhook**.
 2. **Payload URL**: the webhook URL.
-3. **Content type**: `application/json`.
+3. **Content type**: `application/json` or `application/x-www-form-urlencoded` (GitHub's default); the daemon accepts both, with branch and `watch_paths` filtering in either. The `ping` GitHub sends when you create the webhook is answered without triggering a deploy.
 4. **Secret**: blank (authentication is the token in the URL).
 5. Event: **Just the push event**.
 </Steps>
