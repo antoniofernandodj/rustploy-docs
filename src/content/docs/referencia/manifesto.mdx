@@ -38,7 +38,7 @@ daemon e do `rustploy-shared`.
 | `resources` | objeto `resources` | não | ausente | Limites de CPU e memória. |
 | `command` | texto | não | ausente | Sobrescreve o comando da imagem. |
 | `args` | lista de textos | não | vazio | Argumentos do comando. |
-| `db` | texto | não | ausente | Tipo de banco: `postgres`, `mongodb`, `mariadb`, `mysql` ou `redis`. |
+| `product` | texto | não | ausente | Produto gerenciado que roda no serviço: banco (`postgres`, `mongodb`, `mariadb`, `mysql`, `redis`), broker (`kafka`, `rabbitmq`, `nats`) ou storage (`rustfs`, `minio`). Ausente = serviço comum. Pacotes antigos com a chave `db:` ainda são aceitos. |
 | `shared` | verdadeiro/falso | não | `false` | Marca o serviço como **servidor de banco compartilhado**. Os projetos autorizados ficam no daemon, não no manifesto. |
 
 ### `source` (use **uma** das chaves)

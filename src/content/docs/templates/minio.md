@@ -13,7 +13,7 @@ sidebar:
 |---|---|
 | **Identificador** | `minio` |
 | **Containers** | 1 (`minio`) |
-| **Imagens** | `minio/minio` |
+| **Imagens** | `cgr.dev/chainguard/minio:latest` |
 | **Porta da interface** | 9001, no serviço `minio` |
 | **Tipo no Rustploy** | Stack Compose |
 
@@ -54,10 +54,9 @@ sidebar:
 ```yaml
 services:
   minio:
-    # after RELEASE.2025-04-22T22-12-26Z, minio removed most of the admin UI, if you want to use the admin UI, uncomment the line below
-    # image: minio/minio:RELEASE.2025-04-22T22-12-26Z
-    # if you uncommented the line above, comment the line below
-    image: minio/minio
+    # `minio/minio` (Docker Hub e Quay) deixou de ser puxável ("access denied", 2026-11-03). O build
+    # do Chainguard aceita o mesmo comando e as mesmas variáveis (mesma imagem que o wizard usa).
+    image: cgr.dev/chainguard/minio:latest
     restart: unless-stopped
     volumes:
       # by default, the MinIO container will use a volume named minio-data

@@ -38,7 +38,7 @@ daemon and `rustploy-shared` code.
 | `resources` | `resources` object | no | absent | CPU and memory limits. |
 | `command` | text | no | absent | Overrides the image command. |
 | `args` | list of texts | no | empty | Command arguments. |
-| `db` | text | no | absent | Database type: `postgres`, `mongodb`, `mariadb`, `mysql` or `redis`. |
+| `product` | text | no | absent | Managed product running in the service: database (`postgres`, `mongodb`, `mariadb`, `mysql`, `redis`), broker (`kafka`, `rabbitmq`, `nats`) or storage (`rustfs`, `minio`). Absent = ordinary service. Older bundles with the `db:` key are still accepted. |
 | `shared` | true/false | no | `false` | Marks the service as a **shared database server**. The authorized projects live in the daemon, not in the manifest. |
 
 ### `source` (use **one** of the keys)
