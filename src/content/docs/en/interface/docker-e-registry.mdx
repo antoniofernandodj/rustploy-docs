@@ -44,6 +44,21 @@ the registry is off, the screen warns you; turn it on under `[registry]` in
 
 Content is only created by `docker push`: the screen does not upload images.
 
+### Push-to-deploy
+
+A service whose source is an **image** from the registry itself (`127.0.0.1:5100/app/api:prod`, or the registry's
+domain) can **redeploy by itself** on every push. In the service's **Advanced** tab, turn on
+**Redeploy on every push to the embedded registry**. From then on the CI flow is just:
+
+```bash
+docker login registry.example.com          # token with push scope
+docker build -t registry.example.com/app/api:prod .
+docker push registry.example.com/app/api:prod   # Rustploy redeploys the service
+```
+
+No HTTP webhook and no Git on the server. The deploy fires when the **tag** changes: it matches the repository **and** the tag
+of the service's image (no tag on the image means `latest`); a push by digest triggers nothing.
+
 ### Create a token
 
 With no token at all, **no push or pull is authenticated**: create one before using the registry. Click **+ Novo token**.

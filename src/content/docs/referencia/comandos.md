@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 126 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 127 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **126 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **127 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -848,6 +848,23 @@ Renomeia a **chave** de uma env (do projeto, ou do serviço se `service_id` vier
 | `service_id` | `Option<String>` |
 | `from` | `String` |
 | `to` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### EnvValueSet
+
+Troca só o **valor** de uma env existente (do projeto, ou do serviço se `service_id` vier), na mesma posição da lista — edição "no lugar", sem reenviar a lista inteira como o `ProjectEnvSet`/`ServiceUpdate` (que são substituição total e perdem o que o cliente não conhece). `value` é `{"Plain":"…"}` ou `{"Secret":"NOME"}`; um `Secret` precisa existir no escopo (do serviço ou, caindo para ele, do projeto). Falha se a chave não existe, se o valor é a máscara `***` (cópia de uma tela que escondeu o segredo) ou se o secret não existe. Resposta: `Ok`.
+
+```json
+{"EnvValueSet":{"project_id":"prj_…","service_id":null,"key":"…","value":"{…}"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>` |
+| `key` | `String` |
+| `value` | `EnvVarValue` |
 
 **Usado por:** GUI e web UI.
 

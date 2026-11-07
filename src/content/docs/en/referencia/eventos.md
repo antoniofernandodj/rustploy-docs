@@ -1,6 +1,6 @@
 ---
 title: Real-time events (SSE)
-description: "The 15 events the Rustploy daemon publishes on GET /api/events (Server-Sent Events): deploy state changes, build logs, metrics and service status."
+description: "The 16 events the Rustploy daemon publishes on GET /api/events (Server-Sent Events): deploy state changes, build logs, metrics and service status."
 ---
 
 `GET /api/events` is an **SSE** stream. It delivers a full dashboard **snapshot** every 2 seconds and the **events** below as soon as they happen. Each record carries a `kind` field in the JSON `data`: `"snapshot"` or `"bus"`.
@@ -143,3 +143,13 @@ A service warm-up started (`warming: true`) or finished (`warming: false`, with 
 | `warming` | `bool` |
 | `success` | `Option<bool>` |
 | `error` | `Option<String>` |
+
+### RegistryPush
+
+A `PUT /v2/<repo>/manifests/<tag>` on the embedded registry was accepted: the image `<repo>:<tag>` changed. Applies to every client (the Registry tab updates live) and is the trigger for push-to-deploy of services with `registry_auto_deploy`.
+
+| Field | Type |
+|---|---|
+| `repo` | `String` |
+| `tag` | `String` |
+| `digest` | `String` |

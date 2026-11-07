@@ -2,6 +2,7 @@
 // Chave ausente = o texto original (que já pode estar em inglês) é mantido.
 export const DOCS = {
   EnvKeyRename: 'Renames the **key** of an env var (project-wide, or a service\'s if `service_id` is given) keeping its value — `Plain` or `Secret` — without the value passing through the caller, and carrying along the `.env` editor comments anchored to it. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.',
+  EnvValueSet: 'Changes only the **value** of an existing env var (project-wide, or a service\'s if `service_id` is given), at the same position in the list — an "in place" edit, without resending the whole list like `ProjectEnvSet`/`ServiceUpdate` (which replace everything and lose what the client does not know). `value` is `{"Plain":"…"}` or `{"Secret":"NAME"}`; a `Secret` must exist in the scope (the service\'s or, falling back, the project\'s). Fails if the key does not exist, if the value is the `***` mask (a copy from a screen that hid the secret) or if the secret does not exist. Response: `Ok`.',
   SecretRename: 'Renames a **secret** (project-wide, or a service\'s if `service_id` is given) and, in the same transaction, repoints every `Secret(from)` env var that resolved to it. The encrypted value is not read. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.',
   SecretMove: 'Moves an item between env and secret, or between scopes. Always atomic: either everything changes or nothing does. Fails if the destination already has an item with the same name. The agent (MCP) cannot use `SecretToEnv`, which would expose the value.',
   ServiceConnectionInfo: 'Host and connection URL **inside** the project Docker network (assembled in the daemon by `shared::connection`, so the GUI and the web UI never diverge).',
@@ -48,6 +49,7 @@ export const DOCS = {
   JobRunStateChanged: 'Start/end of a job run.',
   DeployQueueChanged: 'The global deploy queue changed (queued, started, finished, reordered, cancelled or paused/resumed). A light signal: the client re-fetches `DeployEngineStatus` when it receives it. Deliberately appended at the end of the enum.',
   DockerCleanupCompleted: 'An automatic cleanup (or "Run now") finished — triggered by `maintenance::scheduler_loop` or by `Command::DockerCleanupRunNow`. It is not per-service, so it falls in the "always true" arm of `matches`.',
+  RegistryPush: 'A `PUT /v2/<repo>/manifests/<tag>` on the embedded registry was accepted: the image `<repo>:<tag>` changed. Applies to every client (the Registry tab updates live) and is the trigger for push-to-deploy of services with `registry_auto_deploy`.',
   ServiceWarmChanged: 'A service warm-up started (`warming: true`) or finished (`warming: false`, with `success` and, on failure, `error`). Applies to every client (it is not filtered by service): the list screen needs it.',
   JobWarmChanged: 'A job warm-up started (`warming: true`) or finished (`warming: false`, with `success` and, on failure, `error`).',
 };

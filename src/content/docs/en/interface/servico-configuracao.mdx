@@ -78,6 +78,7 @@ configure one before using it in production.
 |---|---|
 | **REPLICAS** | how many containers of the service run. All get the same name on the network and DNS spreads requests |
 | **RUN COMMAND** | overrides the image's command. Blank means the `(padrão da imagem)` (image default). **Run args atuais** shows the stored arguments |
+| **Redeploy on every push to the embedded registry** | only shown on a service whose source is an **image** (Registry). When on, each `docker push` of the same image and tag to the [embedded registry](/en/interface/docker-e-registry/#push-to-deploy) redeploys the service by itself. Off by default |
 
 Click **Save**.
 

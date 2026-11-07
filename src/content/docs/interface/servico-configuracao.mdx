@@ -83,6 +83,7 @@ de usar em produção.
 |---|---|
 | **REPLICAS** | quantos containers do serviço rodam. Todos recebem o mesmo nome na rede e o DNS distribui |
 | **RUN COMMAND** | sobrescreve o comando da imagem. Em branco, vale o `(padrão da imagem)`. **Run args atuais** mostra os argumentos gravados |
+| **Redeployar a cada push no registry embutido** | só aparece num serviço cuja origem é uma **imagem** (Registry). Ligado, cada `docker push` da mesma imagem e tag para o [registry embutido](/interface/docker-e-registry/#push-to-deploy) redeploya o serviço sozinho. Desligado por padrão |
 
 Clique em **Save**.
 

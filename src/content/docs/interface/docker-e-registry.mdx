@@ -45,6 +45,21 @@ registry estiver desligado, a tela avisa; ligue-o em `[registry]` no
 
 Criar conteúdo só acontece por `docker push`: a tela não envia imagens.
 
+### Push-to-deploy
+
+Um serviço cuja origem é uma **imagem** do próprio registry (`127.0.0.1:5100/app/api:prod`, ou o domínio
+do registry) pode **redeployar sozinho** a cada push. Na aba **Advanced** do serviço, ligue
+**Redeployar a cada push no registry embutido**. A partir daí, o fluxo de CI é só:
+
+```bash
+docker login registry.exemplo.com          # token com escopo push
+docker build -t registry.exemplo.com/app/api:prod .
+docker push registry.exemplo.com/app/api:prod   # o Rustploy redeploya o serviço
+```
+
+Sem webhook HTTP e sem Git no servidor. O deploy dispara quando a **tag** muda: casa o repositório **e** a
+tag da imagem do serviço (sem tag na imagem, vale `latest`); um push por digest não dispara nada.
+
 ### Criar um token
 
 Sem token nenhum, **nenhum push ou pull é autenticado**: crie um antes de usar o
