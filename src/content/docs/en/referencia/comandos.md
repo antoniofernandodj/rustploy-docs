@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 131 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 132 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **131 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **132 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -95,6 +95,21 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 
 **Used by:** GUI and web UI.
 
+### ProjectServicesReorder
+
+Sets the display order of a project's services: `service_ids` in the desired order, saved in the project's own `project.yml` (`service_order`) and therefore in git. Ids left out stay at the end in the order they already had; an id that is not from the project, or is repeated, is an error. Response: `Ok`.
+
+```json
+{"ProjectServicesReorder":{"project_id":"prj_…","service_ids":[]}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+| `service_ids` | `Vec<String>` |
+
+**Used by:** GUI and web UI.
+
 ### ProjectEnvSet
 
 ```json
@@ -122,6 +137,8 @@ Deploys **every service of the project** and its dependencies, queued in the ord
 | `project_id` | `String` |
 | `skip_running` | `bool` |
 
+**Used by:** GUI and web UI.
+
 ### ProjectDeployPlan
 
 Dry run of `ProjectDeploy`: returns the order in which each service would be queued, without queueing anything. Response: `DeployBatch`.
@@ -134,6 +151,8 @@ Dry run of `ProjectDeploy`: returns the order in which each service would be que
 |---|---|
 | `project_id` | `String` |
 | `skip_running` | `bool` |
+
+**Used by:** GUI and web UI.
 
 ## Services
 
@@ -261,6 +280,8 @@ Deploys the service **and its whole dependency tree** (`depends_on` plus the imp
 | `service_id` | `String` |
 | `skip_running` | `bool` |
 
+**Used by:** GUI and web UI.
+
 ### DeployWithDependenciesPlan
 
 Dry run of `DeployWithDependencies`: returns the order in which each service would be queued, without queueing anything. Response: `DeployBatch`.
@@ -273,6 +294,8 @@ Dry run of `DeployWithDependencies`: returns the order in which each service wou
 |---|---|
 | `service_id` | `String` |
 | `skip_running` | `bool` |
+
+**Used by:** GUI and web UI.
 
 ### DeployAbort
 

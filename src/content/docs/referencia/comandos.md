@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 131 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 132 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **131 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **132 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -95,6 +95,21 @@ Uma falha vem como `{"Err":{"code":"…","message":"…"}}`. Os exemplos abaixo 
 
 **Usado por:** GUI e web UI.
 
+### ProjectServicesReorder
+
+Define a ordem de exibição dos serviços do projeto: `service_ids` na ordem desejada. Guardada no próprio `project.yml` (a posição de cada serviço na lista `services`), logo vai para o git. Ids que sobrarem (serviço criado enquanto a tela estava aberta) ficam no fim, na ordem em que já estavam; id que não é do projeto ou repetido é erro. Response: `Ok`.
+
+```json
+{"ProjectServicesReorder":{"project_id":"prj_…","service_ids":[]}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `service_ids` | `Vec<String>` |
+
+**Usado por:** GUI e web UI.
+
 ### ProjectEnvSet
 
 ```json
@@ -122,6 +137,8 @@ Faz o deploy de **todos os serviços do projeto**, cada um com as suas dependên
 | `project_id` | `String` |
 | `skip_running` | `bool` |
 
+**Usado por:** GUI e web UI.
+
 ### ProjectDeployPlan
 
 Como `DeployWithDependenciesPlan`, para o `ProjectDeploy` (o projeto inteiro).
@@ -134,6 +151,8 @@ Como `DeployWithDependenciesPlan`, para o `ProjectDeploy` (o projeto inteiro).
 |---|---|
 | `project_id` | `String` |
 | `skip_running` | `bool` |
+
+**Usado por:** GUI e web UI.
 
 ## Serviços
 
@@ -261,6 +280,8 @@ Faz o deploy de um serviço **e da árvore de dependências dele**: enfileira, n
 | `service_id` | `String` |
 | `skip_running` | `bool` |
 
+**Usado por:** GUI e web UI.
+
 ### DeployWithDependenciesPlan
 
 **Só mostra** o plano de `DeployWithDependencies`, sem enfileirar nada: a ordem em que os serviços entrariam na fila (`Queued` = entraria; `Skipped` = ficaria de fora, com o motivo em `message`). É o que a tela mostra antes de a pessoa confirmar. Resposta: `DeployBatch` (sem `deployment_id`).
@@ -273,6 +294,8 @@ Faz o deploy de um serviço **e da árvore de dependências dele**: enfileira, n
 |---|---|
 | `service_id` | `String` |
 | `skip_running` | `bool` |
+
+**Usado por:** GUI e web UI.
 
 ### DeployAbort
 

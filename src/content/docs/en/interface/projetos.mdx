@@ -48,7 +48,7 @@ Confirm with **Criar projeto** (Create project). Rustploy creates the project's 
 
 ## Inside a project
 
-**Abrir ›** takes you to the project screen. At the top, **‹ Projetos** returns to the list, and on the right are **Deploy** (shows the order of every service and dependency and, once accepted, queues them all; see [dependencies](/en/guias/dependencias-e-religar/)), **+ Novo serviço**
+**Abrir ›** takes you to the project screen. At the top, **‹ Projetos** returns to the list, and on the right are **Deploy** (shows the order of every service and dependency and, once accepted, queues them all; see [dependencies](/en/guias/dependencias-e-religar/)), **Reorder services**, **+ Novo serviço**
 (opens the [wizard](/en/interface/novo-servico/)) and **Editar projeto** (Edit project: name and description).
 
 Four tabs:
@@ -61,6 +61,14 @@ Four tabs:
 | **Jobs (N)** | the project's [jobs](/en/guias/jobs/) |
 
 The number in parentheses is each tab's item count.
+
+### Reordering services
+
+**Reorder services** opens a window listing the project's services. Drag the rows (in the app
+and in the web UI; the web UI also has ↑ and ↓ buttons) into the order you prefer and click
+**Reorder**: the cards are rearranged right away. **Cancel** discards. The order is stored on the
+server, in `project.yml` (the `service_order` field), so it goes to git with everything else and
+applies to every client. A service created later goes to the end.
 
 ### The service card
 

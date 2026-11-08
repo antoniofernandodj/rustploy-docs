@@ -32,7 +32,7 @@ The same tree [git sync](/en/guias/sincronizacao-git/) writes to the repository:
 | `MANIFEST.json` | format version |
 | `settings.yml` | daemon settings |
 | `providers.yml` | connected Git accounts (no plaintext token) |
-| `projects/<id>/project.yml` | one project, with its services and jobs |
+| `projects/<id>/project.yml` | one project, with its services and jobs (and `service_order`, the order the cards are shown in, once you reorder them by hand) |
 
 Secrets are written as `ENC[age:…]`: encrypted with the server key (and the recovery key, if set).
 **Nothing leaves in plaintext.**

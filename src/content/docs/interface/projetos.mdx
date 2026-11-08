@@ -51,7 +51,7 @@ vez que ela é necessária.
 ## Dentro de um projeto
 
 **Abrir ›** leva à tela do projeto. No topo, **‹ Projetos** volta à lista, e à direita
-ficam **Deploy** (mostra a ordem de todos os serviços e das dependências e, ao aceitar, enfileira tudo; veja [dependências](/guias/dependencias-e-religar/)), **+ Novo serviço** (abre o [assistente](/interface/novo-servico/)) e **Editar
+ficam **Deploy** (mostra a ordem de todos os serviços e das dependências e, ao aceitar, enfileira tudo; veja [dependências](/guias/dependencias-e-religar/)), **+ Novo serviço** (abre o [assistente](/interface/novo-servico/)) e **Reordenar serviços**, **Editar
 projeto** (nome e descrição).
 
 Quatro abas:
@@ -64,6 +64,14 @@ Quatro abas:
 | **Jobs (N)** | os [jobs](/guias/jobs/) do projeto |
 
 O número entre parênteses é a contagem de itens de cada aba.
+
+### Reordenar os serviços
+
+**Reordenar serviços** abre uma janela com a lista dos serviços do projeto. Arraste as linhas
+(no app e na web UI; na web UI também há os botões ↑ e ↓) para a ordem que preferir e clique
+em **Reordenar**: os cartões se reordenam na hora. **Cancelar** descarta. A ordem fica gravada
+no servidor, no `project.yml` (campo `service_order`), então vai para o git junto com o resto e
+vale para todos os clientes. Um serviço criado depois entra no fim.
 
 ### O cartão de serviço
 

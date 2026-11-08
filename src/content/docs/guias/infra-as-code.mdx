@@ -32,7 +32,7 @@ A mesma árvore que a [sincronização com o git](/guias/sincronizacao-git/) gra
 | `MANIFEST.json` | versão do formato |
 | `settings.yml` | configurações do daemon |
 | `providers.yml` | contas Git conectadas (sem token em claro) |
-| `projects/<id>/project.yml` | um projeto, com seus serviços e jobs |
+| `projects/<id>/project.yml` | um projeto, com seus serviços e jobs (e `service_order`, a ordem em que os cards são mostrados, quando você a reordena à mão) |
 
 Os segredos vão como `ENC[age:…]`: cifrados com a chave do servidor (e, se configurada, a de
 recuperação). **Nada sai em claro.**
