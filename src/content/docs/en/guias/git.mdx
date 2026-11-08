@@ -61,6 +61,14 @@ repositories and branches to pick from.
   the **REDIRECT URI**.
 </Aside>
 
+<Aside type="note" title="The credential only goes to the provider's server">
+  The connected account's token is only sent to the **provider's own server** (`github.com`, or the host of the
+  **BASE URL**, with the same port). If the repository URL of a service, a job or the
+  [state backup to git](/en/guias/infra-as-code/) points at another server, the clone goes ahead **without** the
+  credential (and a private repository fails as "inaccessible"), instead of handing the token to that server.
+  If your Gitea or GitHub Enterprise answers at an address different from the **BASE URL**, fix the **BASE URL**.
+</Aside>
+
 ## Branch, Dockerfile and context
 
 | Field | What it does | Default |

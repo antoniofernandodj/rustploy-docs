@@ -64,6 +64,14 @@ tela lista as suas contas, repositórios e branches para você escolher.
   pelo seu navegador no endereço que está na **REDIRECT URI**.
 </Aside>
 
+<Aside type="note" title="A credencial só vai para o servidor do provedor">
+  O token da conta conectada só é enviado ao **próprio servidor do provedor** (o `github.com`, ou o host da
+  **BASE URL**, com a mesma porta). Se a URL do repositório de um serviço, de um job ou do
+  [backup do estado em git](/guias/infra-as-code/) apontar para outro servidor, o clone segue **sem** a
+  credencial (e um repositório privado falha com "inacessível"), em vez de entregar o token a esse servidor.
+  Se o seu Gitea ou GitHub Enterprise responde num endereço diferente da **BASE URL**, corrija a **BASE URL**.
+</Aside>
+
 ## Branch, Dockerfile e contexto
 
 | Campo | O que faz | Padrão |
