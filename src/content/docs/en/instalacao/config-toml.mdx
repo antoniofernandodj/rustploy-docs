@@ -69,7 +69,9 @@ Under systemd, the unit sets `RUSTPLOY_DB_PATH`, which **takes priority** over t
 | `enabled` | `true` | turning it off also turns off webhooks, the web UI and MCP |
 | `bind_address` | `127.0.0.1` | |
 | `port` | `9797` | |
-| `token` | none | the API token |
+| `token` | none | the API token. With `master_token` set, it becomes the **visitor** key |
+| `master_token` | none | the **master** key (optional): only it has full access. Generate it with `rustployd access-key --master`. See [master and visitor keys](/en/agentes/seguranca/#master-key-and-visitor-key) |
+| `visitor_level` | `operator` | how far the visitor key goes: `observer`, `operator` or `admin` |
 | `domain` | none | with a domain, the API terminates TLS **on its own port** (ACME) |
 | `max_connections` | `32` | |
 

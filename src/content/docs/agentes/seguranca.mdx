@@ -6,10 +6,11 @@ description: O token do Rustploy é de administrador, sem escopo nem confirmaç�
 import { Aside } from '@astrojs/starlight/components';
 
 <Aside type="danger" title="Leia antes de conectar um agente">
-  O token da API é um **bearer único e sem escopo**. Quem o tem cria projetos,
-  sobe containers e derruba stacks. Não existe modo somente leitura. Pelo **MCP** o
-  agente não recebe valores de secrets (veja abaixo), mas o mesmo token em
-  `/api/rpc` — como a GUI e a web UI usam — não passa por essa proteção.
+  Por padrão o token da API é um **bearer único e sem escopo**. Quem o tem cria
+  projetos, sobe containers e derruba stacks. Pelo **MCP** o agente não recebe
+  valores de secrets (veja abaixo), mas o mesmo token em `/api/rpc` não passava
+  por essa proteção. Para dar ao agente uma chave limitada, gere uma
+  [chave mestra](#chave-mestra-e-chave-de-visitante).
 </Aside>
 
 ## O que o agente consegue
@@ -55,8 +56,38 @@ exposta e troque-a.
 2. Reinicie o daemon. O `connection_token` se regrava sozinho.
 3. Remova e registre o MCP de novo nas máquinas legítimas.
 
-## O que ainda não existe
+## Chave mestra e chave de visitante
 
-Token com escopo (somente leitura, somente deploy, administrador). O ponto onde
-ele entraria é um único `if` no gate de autenticação da API. Até lá, a
-barreira é a sua rede e a sua disciplina de uso.
+Por padrão o servidor tem **uma chave só**, e quem a tem faz tudo. As proibições acima valem no **MCP**; o
+`POST /api/rpc` com o mesmo token as ignorava, então um agente com um terminal as contornava.
+
+Para fechar isso, gere uma **chave mestra**:
+
+```bash
+sudo rustployd access-key --master      # grava [api].master_token e imprime o token de conexão da mestra
+sudo systemctl restart rustployd
+```
+
+- Gerar a mestra é o ato que **liga a proteção**. Sem ela, nada muda.
+- Com a mestra, a chave que você já tinha (`[api].token`) passa a ser a de **visitante**: é a que você entrega
+  a um agente (a tela **Conectar um agente** já copia essa). Ela passa pelas regras em **qualquer rota**, `/mcp`
+  e `/api/rpc`.
+- Você entra na GUI e na webui com o token de conexão da **mestra**. Quem continuar com a chave antiga vê
+  "proibido" nas ações que o nível dela não cobre.
+- A mestra **nunca sai pela API**: `GET /api/access-key` e o login do agente só tratam da chave de visitante.
+
+O que o visitante pode fazer é o `[api].visitor_level`:
+
+| Nível | O que faz |
+|---|---|
+| `observer` | só lê: listas, estado, logs, auditoria |
+| `operator` (padrão) | opera o que **já existe**: deploy, parar e reiniciar, variáveis, secrets, domínios, réplicas, ligar e desligar jobs. **Não** muda o que roda (fonte, imagem, comando, volumes, compose) nem cria ou apaga nada |
+| `admin` | também cria e apaga projetos, serviços, jobs, providers e recursos do Docker. Quem tem `admin` consegue, no limite, montar pastas do servidor num container próprio: trate-o como acesso total |
+
+Em qualquer nível o visitante continua sem poder revelar secrets, criar token do registry, exportar com valores,
+liberar suspeitas da auditoria nem resolver divergência do `state_git`, e **nunca vê** as senhas em claro
+(`GET /api/events`, que as traz, também é recusado).
+
+<Aside type="note" title="Perdeu a mestra?">
+  Edite `[api].master_token` no `config.toml` do servidor e reinicie. Quem administra o servidor sempre consegue.
+</Aside>

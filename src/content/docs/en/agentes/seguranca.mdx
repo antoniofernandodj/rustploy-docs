@@ -6,8 +6,8 @@ description: Rustploy's token is an administrator's, with no scope and no confir
 import { Aside } from '@astrojs/starlight/components';
 
 <Aside type="danger" title="Read before connecting an agent">
-  The API token is a **single, unscoped bearer**. Whoever has it creates projects, starts containers and takes stacks
-  down. There is no read-only mode. Through **MCP** the agent does not receive secret values (see below), but the same
+  By default the API token is a **single, unscoped bearer**. Whoever has it creates projects, starts containers and takes
+  stacks down. To give an agent a limited key, generate a [master key](#master-key-and-visitor-key). Through **MCP** the agent does not receive secret values (see below), but the same
   token on `/api/rpc` — which the GUI and the web UI use — does not go through that protection.
 </Aside>
 
@@ -54,7 +54,38 @@ consider it exposed and change it.
 2. Restart the daemon. The `connection_token` rewrites itself.
 3. Remove and register the MCP again on the legitimate machines.
 
-## What does not exist yet
+## Master key and visitor key
 
-A scoped token (read-only, deploy-only, administrator). The place where it would go is a single `if` in the API's
-authentication gate. Until then, the barrier is your network and your discipline in using it.
+By default the server has **a single key**, and whoever has it does everything. The prohibitions above apply on
+**MCP**; `POST /api/rpc` with the same token ignored them, so an agent with a terminal could bypass them.
+
+To close that, generate a **master key**:
+
+```bash
+sudo rustployd access-key --master      # writes [api].master_token and prints the master's connection token
+sudo systemctl restart rustployd
+```
+
+- Generating the master is what **turns the protection on**. Without it, nothing changes.
+- With the master, the key you already had (`[api].token`) becomes the **visitor** key: it is the one you hand to an
+  agent (the **Conectar um agente** screen already copies that one). It goes through the rules on **every route**,
+  `/mcp` and `/api/rpc`.
+- You sign in to the GUI and the web UI with the **master's** connection token. Anyone who keeps the old key sees
+  "forbidden" on the actions its level does not cover.
+- The master **never leaves through the API**: `GET /api/access-key` and the agent login only deal with the visitor key.
+
+What the visitor can do is `[api].visitor_level`:
+
+| Level | What it does |
+|---|---|
+| `observer` | read-only: lists, state, logs, audit |
+| `operator` (default) | operates what **already exists**: deploy, stop and restart, variables, secrets, domains, replicas, turning jobs on and off. It does **not** change what runs (source, image, command, volumes, compose) nor create or delete anything |
+| `admin` | also creates and deletes projects, services, jobs, providers and Docker resources. Someone with `admin` can, at the limit, mount server folders into a container of their own: treat it as full access |
+
+At any level the visitor still cannot reveal secrets, create a registry token, export with values, release audit
+suspicions or resolve a `state_git` divergence, and **never sees** plaintext passwords (`GET /api/events`, which carries
+them, is also refused).
+
+<Aside type="note" title="Lost the master?">
+  Edit `[api].master_token` in the server's `config.toml` and restart. Whoever administers the server always can.
+</Aside>

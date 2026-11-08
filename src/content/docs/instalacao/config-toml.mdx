@@ -71,7 +71,9 @@ arquivo. Editar `db_path` no arquivo não muda nada nesse caso.
 | `enabled` | `true` | desligar também desliga webhooks, web UI e MCP |
 | `bind_address` | `127.0.0.1` | |
 | `port` | `9797` | |
-| `token` | nenhum | o token da API |
+| `token` | nenhum | o token da API. Com `master_token` configurado, vira a chave de **visitante** |
+| `master_token` | nenhum | a chave **mestra** (opcional): só ela tem acesso total. Gere com `rustployd access-key --master`. Veja [chave mestra e visitante](/agentes/seguranca/#chave-mestra-e-chave-de-visitante) |
+| `visitor_level` | `operator` | até onde vai a chave de visitante: `observer`, `operator` ou `admin` |
 | `domain` | nenhum | com domínio, a API termina TLS **na própria porta** (ACME) |
 | `max_connections` | `32` | |
 
