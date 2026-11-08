@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 127 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 131 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **127 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **131 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -108,6 +108,32 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 | `env_comments` | `Vec<EnvComment>` |
 
 **Used by:** GUI and web UI.
+
+### ProjectDeploy
+
+Deploys **every service of the project** and its dependencies, queued in the order that makes everything work (dependency waves). `skip_running: true` leaves out services that are already running. Response: `DeployBatch`.
+
+```json
+{"ProjectDeploy":{"project_id":"prj_…","skip_running":false}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+| `skip_running` | `bool` |
+
+### ProjectDeployPlan
+
+Dry run of `ProjectDeploy`: returns the order in which each service would be queued, without queueing anything. Response: `DeployBatch`.
+
+```json
+{"ProjectDeployPlan":{"project_id":"prj_…","skip_running":false}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+| `skip_running` | `bool` |
 
 ## Services
 
@@ -221,6 +247,32 @@ Host and connection URL **inside** the project Docker network (assembled in the 
 | `service_id` | `String` |
 
 **Used by:** GUI and web UI.
+
+### DeployWithDependencies
+
+Deploys the service **and its whole dependency tree** (`depends_on` plus the implicit edges from shared-database access): queues everything in dependency order and, if a dependency fails, the services that wait for it are skipped. `skip_running: true` leaves out services that are already running. Response: `DeployBatch`.
+
+```json
+{"DeployWithDependencies":{"service_id":"svc_…","skip_running":false}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `skip_running` | `bool` |
+
+### DeployWithDependenciesPlan
+
+Dry run of `DeployWithDependencies`: returns the order in which each service would be queued, without queueing anything. Response: `DeployBatch`.
+
+```json
+{"DeployWithDependenciesPlan":{"service_id":"svc_…","skip_running":false}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `skip_running` | `bool` |
 
 ### DeployAbort
 

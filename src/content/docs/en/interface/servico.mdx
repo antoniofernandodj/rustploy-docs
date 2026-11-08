@@ -26,7 +26,7 @@ At the top: **‹ project-name** (back to the project), the **service name** and
 
 | Button | What it does |
 |---|---|
-| **Deploy** | starts a deploy of the service (it joins the [queue](/en/guias/fila-de-deploys/)) |
+| **Deploy** | starts a deploy of the service (it joins the [queue](/en/guias/fila-de-deploys/)). With dependencies it first shows the order in a modal: Confirm, Only the service or Reject ([details](/en/guias/dependencias-e-religar/)) |
 | **Reload** | **restarts** the container that is running, with no redeploy. It does not apply new variables |
 | **Rebuild** | today does **exactly the same as Deploy** |
 | **Stop** | stops the service. It asks for confirmation: traffic stays interrupted until a new deploy |

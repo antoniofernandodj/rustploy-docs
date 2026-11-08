@@ -13,8 +13,20 @@ project** that this one needs and use **Add dependency**. Remove with **✕**. E
 change is saved immediately.
 
 - Only services from the same project are listed; the service itself and those already chosen are left out.
-- The daemon rejects **cycles** (A depends on B, which depends on A) and the error shows on screen.
+- The daemon rejects **cycles** (A depends on B, which depends on A) and dependencies that **cannot be resolved** (another project, a missing service, or a cycle through a shared database grant); the error shows on screen and nothing is saved.
 - You cannot delete a service that another one depends on.
+
+## Deploy with dependencies
+
+The service's **Deploy** button looks at the dependency tree. If there is
+anything besides the service itself, a **modal** shows the **order** in which
+everything joins the queue, with three buttons: **Confirm** (queues everything,
+dependencies first), **Only the service** (ignores the dependencies) and
+**Reject**. Without dependencies the deploy goes straight out, as before.
+
+The **project** screen has a **Deploy** button: the modal shows the order of
+everything that will be deployed, with **Accept** and **Reject**. If a
+dependency fails, the services that depend on it are skipped in the queue.
 
 ## Start on daemon boot
 

@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 127 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 131 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **127 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **131 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -108,6 +108,32 @@ Uma falha vem como `{"Err":{"code":"…","message":"…"}}`. Os exemplos abaixo 
 | `env_comments` | `Vec<EnvComment>` |
 
 **Usado por:** GUI e web UI.
+
+### ProjectDeploy
+
+Faz o deploy de **todos os serviços do projeto**, cada um com as suas dependências, na ordem necessária para todos funcionarem (o mesmo plano do `DeployWithDependencies`, para o projeto inteiro). Resposta: `DeployBatch`.
+
+```json
+{"ProjectDeploy":{"project_id":"prj_…","skip_running":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `skip_running` | `bool` |
+
+### ProjectDeployPlan
+
+Como `DeployWithDependenciesPlan`, para o `ProjectDeploy` (o projeto inteiro).
+
+```json
+{"ProjectDeployPlan":{"project_id":"prj_…","skip_running":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `skip_running` | `bool` |
 
 ## Serviços
 
@@ -221,6 +247,32 @@ Host e URL de conexão **dentro** da rede Docker do projeto (montada no daemon p
 | `service_id` | `String` |
 
 **Usado por:** GUI e web UI.
+
+### DeployWithDependencies
+
+Faz o deploy de um serviço **e da árvore de dependências dele**: enfileira, na ordem certa (quem não depende de ninguém primeiro), todas as dependências (diretas e indiretas, inclusive o banco compartilhado a que o projeto tem acesso) e por último o serviço. Se o deploy de uma dependência falhar, quem depende dela **não roda** (fica "Failed: a dependência … não foi implantada"). Com `skip_running`, as dependências que já estão no ar não entram na fila. Resposta: `DeployBatch`.
+
+```json
+{"DeployWithDependencies":{"service_id":"svc_…","skip_running":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+| `skip_running` | `bool` |
+
+### DeployWithDependenciesPlan
+
+**Só mostra** o plano de `DeployWithDependencies`, sem enfileirar nada: a ordem em que os serviços entrariam na fila (`Queued` = entraria; `Skipped` = ficaria de fora, com o motivo em `message`). É o que a tela mostra antes de a pessoa confirmar. Resposta: `DeployBatch` (sem `deployment_id`).
+
+```json
+{"DeployWithDependenciesPlan":{"service_id":"svc_…","skip_running":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+| `skip_running` | `bool` |
 
 ### DeployAbort
 

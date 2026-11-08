@@ -13,8 +13,20 @@ quais este depende e use **Add dependency**. Remova com **✕**. Cada mudança �
 salva na hora.
 
 - Só aparecem serviços do mesmo projeto; o próprio serviço e os já escolhidos ficam de fora.
-- O daemon recusa **ciclos** (A depende de B, que depende de A) e o erro aparece na tela.
+- O daemon recusa **ciclos** (A depende de B, que depende de A) e dependências **impossíveis de resolver** (outro projeto, serviço inexistente ou ciclo formado pelo acesso a um banco compartilhado); o erro aparece na tela e nada é salvo.
 - Não dá para excluir um serviço de que outro depende.
+
+## Deploy com dependências
+
+O botão **Deploy** do serviço olha a árvore de dependências. Se há algo além do
+próprio serviço, abre um **modal** com a **ordem** em que tudo entra na fila e
+três botões: **Confirmar** (enfileira tudo, dependências primeiro), **Só o
+serviço** (ignora as dependências) e **Rejeitar**. Sem dependências, o deploy sai
+direto, como antes.
+
+Na tela do **projeto** há um botão **Deploy**: o modal mostra a ordem de tudo
+que será deployado, com **Aceitar** e **Rejeitar**. Se uma dependência falha, os
+serviços que dependem dela são pulados na fila.
 
 ## Religar quando o daemon subir
 
