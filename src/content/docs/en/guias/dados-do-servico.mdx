@@ -46,6 +46,7 @@ Safety rules:
 - the package only enters a service that has the same parts; a different engine (MySQL ↔ MariaDB included) is refused, and the destination version cannot be older than the source's;
 - everything is checked **before** touching any volume;
 - before replacing, Rustploy keeps the current content; if anything fails midway, it **puts back** what it already swapped;
+- for a database, the database is **recreated** from the dump on Postgres and MySQL/MariaDB (whatever was not in the package goes away); on MongoDB only the package's collections are replaced;
 - for a database, import does **not** stop the service (the restore needs it up): stop whatever uses it first. At the end Rustploy compares per-table counts with the export — differences are normal if the source database was receiving writes during the dump;
 - for a plain volume, the service is stopped during the swap and restarted afterwards.
 

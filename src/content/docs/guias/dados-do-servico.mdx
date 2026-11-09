@@ -46,6 +46,7 @@ Regras de segurança:
 - o pacote só entra em um serviço que tenha as mesmas partes; motor diferente (MySQL ↔ MariaDB inclusive) é recusado, e a versão do destino não pode ser mais antiga que a da origem;
 - tudo é conferido **antes** de tocar em qualquer volume;
 - antes de substituir, o Rustploy guarda o conteúdo atual; se algo falhar no meio, **devolve** o que já tinha trocado;
+- num banco, o database é **recriado** a partir do dump no Postgres e no MySQL/MariaDB (o que não estava no pacote some); no MongoDB só as coleções do pacote são substituídas;
 - num banco, a importação **não para** o serviço (o restore precisa dele no ar): pare antes quem o usa. No fim, o Rustploy compara as contagens por tabela com as do export — diferenças são normais se o banco de origem recebia escritas durante o dump;
 - num volume comum, o serviço é parado durante a troca e religado depois.
 
