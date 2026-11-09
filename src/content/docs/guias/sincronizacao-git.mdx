@@ -59,6 +59,11 @@ Para resolver, use **mover para secret** na tela de variáveis de ambiente. Para
 que na verdade não é segredo (por exemplo `PASSWORD_MIN_LENGTH=8`), marque como **"não é
 segredo"**. Certezas não podem ser liberadas.
 
+Servidores que vieram de versões antigas podem ter **tokens de webhook** e o **`client_secret`**
+de um provedor Git em claro, sobras da migração para YAML. A partir do daemon 0.1.45 o Rustploy
+cifra isso sozinho, no boot, **sem mudar o valor** (a URL do webhook cadastrada no provedor segue
+valendo). Se a trava ainda acusar esses achados, atualize o daemon e reinicie.
+
 <Aside type="caution" title="A auditoria é uma trava, não uma garantia">
   Ela não vê um segredo com nome banal, nem um escondido dentro de um `Dockerfile` ou script.
   Revise o que vai para o repositório.
