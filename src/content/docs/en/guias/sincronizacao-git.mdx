@@ -60,11 +60,12 @@ To fix a finding, use **move to secret** on the environment-variables screen. Fo
 that is not really a secret (for example `PASSWORD_MIN_LENGTH=8`), mark it **"not a secret"**.
 Certainties cannot be waived.
 
-Servers upgraded from old versions may still hold **webhook tokens** and a Git provider's
-**`client_secret`** in plaintext, leftovers of the YAML migration. Since daemon 0.1.45 Rustploy
-encrypts them by itself at boot, **without changing the value** (the webhook URL already
-registered at the provider keeps working). If the gate still reports them, update the daemon
-and restart.
+Servers upgraded from old versions may still hold **webhook tokens**, a Git provider's
+**`client_secret`** and its **login tokens** in plaintext, leftovers of the YAML migration.
+Since daemon 0.1.46 Rustploy encrypts them by itself at boot, **without changing the value**
+(the webhook URL already registered at the provider keeps working). The login tokens do not
+show up in the audit, but in plaintext saving the sync fails with "value is not in ENC[age:…]
+format". If the gate or that error appears, update the daemon and restart.
 
 <Aside type="caution" title="The audit is a gate, not a guarantee">
   It cannot see a secret with a bland name, nor one hidden inside a `Dockerfile` or a script.
