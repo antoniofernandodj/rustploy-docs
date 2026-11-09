@@ -1,0 +1,56 @@
+---
+title: Exportar e importar os dados de um serviço
+description: Como levar os volumes (ou o dump do banco) de um serviço para um arquivo .rpdata e trazê-los de volta em outro serviço, aqui ou em outro servidor.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A aba **Dados** do serviço leva os **dados** dele para um arquivo `.rpdata` e os traz de volta em outro
+serviço do mesmo tipo, no mesmo servidor ou em outro. A **configuração** do serviço vai à parte
+([Copiar um serviço](/guias/copiar-servico/)): primeiro crie o serviço no destino, depois importe os dados.
+
+<Aside type="caution" title="Só a chave mestra">
+  Um pacote de dados contém tudo o que um agente nunca pode ver (senhas de usuários, dados dos seus
+  clientes). Exportar e importar exigem a **chave mestra**; um visitante (agente, MCP) só vê o plano.
+  O pacote pode ser **cifrado com `age`**: fica ligado por padrão quando há chave de recuperação (`recovery_recipient`) configurada, e abre no servidor de origem, ou em qualquer servidor restaurado com a identidade/chave de recuperação. Para levar a um servidor sem essa identidade, desmarque **Cifrar o pacote**. Em claro, trate o arquivo como um backup do banco.
+</Aside>
+
+## O que entra no pacote
+
+| Serviço | O que vai | Como |
+|---|---|---|
+| Postgres, MySQL, MariaDB, MongoDB | um **dump lógico** do banco | feito dentro do container do próprio serviço, com ele no ar |
+| Qualquer outro com volumes (Redis, Kafka, uploads…) | um **tar** de cada volume | o serviço é **parado** durante a cópia e religado depois |
+| Sem volumes | nada | a aba avisa que não há dados |
+
+Bancos usam dump lógico porque o tar do diretório de um banco no ar pode sair corrompido e só serve para a
+mesma versão do motor. Um banco **parado** não pode ser exportado: ligue-o antes. Servidores de banco
+**compartilhados** ainda não entram.
+
+Das pastas do servidor que o serviço monta, só entram as que ele declara, e nunca as do próprio Rustploy
+(`/etc/rustploy`, `/var/lib/rustploy`) nem as do sistema.
+
+## Exportar
+
+1. Abra o serviço → aba **Dados**. A lista mostra o que será levado (`BD` = banco, `VOL` = volume).
+2. **Exportar dados** e guarde o `.rpdata`.
+
+## Importar
+
+1. No serviço de destino (já criado, do **mesmo tipo**) → aba **Dados** → escolha o `.rpdata`.
+2. **Conferir pacote**: o Rustploy verifica a integridade (SHA-256) e mostra o que será substituído. Nada muda ainda.
+3. **Substituir os dados** e confirme.
+
+Regras de segurança:
+
+- o pacote só entra em um serviço que tenha as mesmas partes; motor diferente (MySQL ↔ MariaDB inclusive) é recusado, e a versão do destino não pode ser mais antiga que a da origem;
+- tudo é conferido **antes** de tocar em qualquer volume;
+- antes de substituir, o Rustploy guarda o conteúdo atual; se algo falhar no meio, **devolve** o que já tinha trocado;
+- num banco, a importação **não para** o serviço (o restore precisa dele no ar): pare antes quem o usa. No fim, o Rustploy compara as contagens por tabela com as do export — diferenças são normais se o banco de origem recebia escritas durante o dump;
+- num volume comum, o serviço é parado durante a troca e religado depois.
+
+## Pela API
+
+`ServiceDataPlan{service_id}` devolve o plano (permitido ao observador). Os bytes vão por
+`GET /api/services/<id>/data/export?stop=true|false` e `POST /api/services/<id>/data/import?confirm=true|false`
+(sem `confirm`, só confere).

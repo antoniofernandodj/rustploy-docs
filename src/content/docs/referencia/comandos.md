@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 132 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 133 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **132 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **133 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -35,6 +35,7 @@ Uma falha vem como `{"Err":{"code":"…","message":"…"}}`. Os exemplos abaixo 
 - [Secrets](#secrets)
 - [Infra (baixar)](#infra-baixar)
 - [Copiar serviço entre servidores](#copiar-servico-entre-servidores)
+- [Pacote de serviço (copiar um serviço entre servidores)](#pacote-de-servico-copiar-um-servico-entre-servidores)
 - [Jobs](#jobs)
 - [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
 - [Docker](#docker)
@@ -1013,6 +1014,22 @@ Cria UM serviço novo a partir de um pacote, sem sobrescrever nada. `dry_run` s�
 ```
 
 O valor é um `ServiceImportReq`.
+
+**Usado por:** GUI e web UI.
+
+## Pacote de serviço (copiar um serviço entre servidores)
+
+### ServiceDataPlan
+
+Dados do serviço (volumes): o que um export levaria. Só olha, não muda nada. Os bytes vão por `GET /api/services/<id>/data/export` e `POST /api/services/<id>/data/import`. Resposta: `ServiceDataPlan`.
+
+```json
+{"ServiceDataPlan":{"service_id":"svc_…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
 
 **Usado por:** GUI e web UI.
 

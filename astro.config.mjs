@@ -102,6 +102,7 @@ export default defineConfig({
           { slug: 'guias/migrar-banco' },
           { slug: 'guias/infra-as-code' },
           { slug: 'guias/copiar-servico' },
+          { slug: 'guias/dados-do-servico' },
           { slug: 'guias/registry' },
           { slug: 'guias/limpeza-docker' },
           { slug: 'guias/backup' },

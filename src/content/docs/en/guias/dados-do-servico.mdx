@@ -1,0 +1,56 @@
+---
+title: Export and import a service's data
+description: How to take a service's volumes (or its database dump) into an .rpdata file and bring them back into another service, here or on another server.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The service's **Data** tab takes its **data** to an `.rpdata` file and brings it back into another service
+of the same kind, on the same server or another. The service **configuration** goes separately
+([Copy a service](/en/guias/copiar-servico/)): create the service at the destination first, then import the data.
+
+<Aside type="caution" title="Master key only">
+  A data package holds everything an agent must never see (user passwords, your customers' data). Export
+  and import require the **master key**; a visitor (agent, MCP) only sees the plan. The package can be
+  **encrypted with `age`**: on by default when a recovery key (`recovery_recipient`) is configured, and it opens on the source server or any server restored with that identity/recovery key. To take it to a server without that identity, untick **Encrypt the package**. In the clear, treat the file like a database backup.
+</Aside>
+
+## What goes in the package
+
+| Service | What goes | How |
+|---|---|---|
+| Postgres, MySQL, MariaDB, MongoDB | a **logical dump** of the database | made inside the service's own container, while it keeps running |
+| Anything else with volumes (Redis, Kafka, uploads…) | a **tar** of each volume | the service is **stopped** during the copy and restarted afterwards |
+| No volumes | nothing | the tab says there is no data |
+
+Databases use a logical dump because a tar of a running database directory can come out corrupted and only
+works for the same engine version. A **stopped** database cannot be exported: start it first. **Shared**
+database servers are not covered yet.
+
+Of the server folders a service mounts, only the ones it declares are included, never Rustploy's own
+(`/etc/rustploy`, `/var/lib/rustploy`) nor system ones.
+
+## Export
+
+1. Open the service → **Data** tab. The list shows what will be taken (`BD` = database, `VOL` = volume).
+2. **Export data** and keep the `.rpdata`.
+
+## Import
+
+1. On the destination service (already created, of the **same kind**) → **Data** tab → choose the `.rpdata`.
+2. **Check package**: Rustploy verifies integrity (SHA-256) and shows what will be replaced. Nothing changes yet.
+3. **Replace the data** and confirm.
+
+Safety rules:
+
+- the package only enters a service that has the same parts; a different engine (MySQL ↔ MariaDB included) is refused, and the destination version cannot be older than the source's;
+- everything is checked **before** touching any volume;
+- before replacing, Rustploy keeps the current content; if anything fails midway, it **puts back** what it already swapped;
+- for a database, import does **not** stop the service (the restore needs it up): stop whatever uses it first. At the end Rustploy compares per-table counts with the export — differences are normal if the source database was receiving writes during the dump;
+- for a plain volume, the service is stopped during the swap and restarted afterwards.
+
+## Through the API
+
+`ServiceDataPlan{service_id}` returns the plan (allowed for the observer level). The bytes go through
+`GET /api/services/<id>/data/export?stop=true|false` and `POST /api/services/<id>/data/import?confirm=true|false`
+(without `confirm`, it only checks).
