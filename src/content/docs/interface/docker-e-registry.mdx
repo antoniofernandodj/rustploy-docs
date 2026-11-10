@@ -40,10 +40,28 @@ registry estiver desligado, a tela avisa; ligue-o em `[registry]` no
 |---|---|
 | Tabela **REPOSITÓRIO / TAGS / TAMANHO / CRIADO / AÇÃO** | os repositórios publicados e suas tags. Vazia, mostra *"Faça `docker push` para o registry embutido."* |
 | **Executar GC** | o *garbage collector*: remove manifests sem tag e blobs que ninguém usa |
+| **Manter só as últimas tags de cada repositório** + **TAGS A MANTER** | a [retenção de tags](#retenção-de-tags): antes de cada GC, apaga as tags mais antigas. Desligada por padrão |
 | **TOKENS DE ACESSO (N)** | as credenciais de `docker login` |
 | **+ Novo token** | cria um token |
 
 Criar conteúdo só acontece por `docker push`: a tela não envia imagens.
+
+### Retenção de tags
+
+O GC só apaga o que **nenhuma tag aponta**, e uma tag aponta para sempre. Um CI que publica uma tag
+por commit (`app/api:<sha>`) acumula uma imagem por push, e o GC não solta nenhuma. A retenção resolve
+isso: ligada, **antes de cada GC** (o diário e o do botão **Executar GC**) ela apaga, em cada
+repositório, as tags mais antigas e deixa as **N mais recentes**, contadas pela data em que a tag foi
+publicada ou movida. O manifest e as camadas que ficarem sem tag saem do disco no GC logo em seguida.
+
+- **Desligada por padrão.** Apagar dado sem o dono pedir seria surpresa. Ligue o interruptor, escolha
+  **TAGS A MANTER** (mínimo 1, padrão 10) e clique em **Salvar**.
+- **Nunca apaga a tag que um serviço usa.** Se um serviço de fonte Registry aponta para
+  `app/api:prod`, essa tag fica mesmo sendo a mais antiga, com ou sem push-to-deploy.
+- **Só a tag, nunca por digest.** Um rebuild idêntico dá o mesmo digest a duas tags; apagar por digest
+  levaria junto a que ainda vale.
+- A política é gravada no `settings.yml` da infra, então entra no [sync com o git](/guias/sincronizacao-git/).
+- Pelo agente: `RegistryRetentionSet{config:{enabled, keep_last}}`; a leitura vem em `RegistryStatus`.
 
 ### Push-to-deploy
 

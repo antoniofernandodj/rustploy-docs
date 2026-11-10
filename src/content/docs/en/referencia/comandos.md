@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 133 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 134 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **133 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **134 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -1715,6 +1715,20 @@ Registry garbage collection: removes dangling manifests (no tag and not referenc
 ```json
 "RegistryGc"
 ```
+
+**Used by:** GUI and web UI.
+
+### RegistryRetentionSet
+
+Grava a política de retenção de tags (ligar/desligar e quantas manter). A leitura vem em `RegistryStatus(.retention)`. Resposta: `Ok`.
+
+```json
+{"RegistryRetentionSet":{"config":"{…}"}}
+```
+
+| Field | Type |
+|---|---|
+| `config` | `crate::RegistryRetentionConfig` |
 
 **Used by:** GUI and web UI.
 

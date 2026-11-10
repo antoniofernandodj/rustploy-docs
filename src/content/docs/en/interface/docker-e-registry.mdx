@@ -39,10 +39,30 @@ the registry is off, the screen warns you; turn it on under `[registry]` in
 |---|---|
 | The **REPOSITÓRIO / TAGS / TAMANHO / CRIADO / AÇÃO** table | the published repositories and their tags. Empty, it shows *"Faça `docker push` para o registry embutido."* (Do a `docker push` to the built-in registry.) |
 | **Executar GC** (Run GC) | the *garbage collector*: removes manifests with no tag and blobs nobody uses |
+| **Manter só as últimas tags de cada repositório** (keep only the latest tags) + **TAGS A MANTER** (tags to keep) | the [tag retention](#tag-retention): before every GC it deletes the oldest tags. Off by default |
 | **TOKENS DE ACESSO (N)** (access tokens) | the `docker login` credentials |
 | **+ Novo token** | creates a token |
 
 Content is only created by `docker push`: the screen does not upload images.
+
+### Tag retention
+
+The GC only deletes what **no tag points to**, and a tag points forever. A CI that publishes one tag
+per commit (`app/api:<sha>`) piles up one image per push, and the GC releases none of them. Retention
+fixes that: when on, **before every GC** (the daily one and the one from the **Run GC** button) it
+deletes, in each repository, the oldest tags and keeps the **N most recent**, counted by the date the
+tag was published or moved. The manifest and layers left without a tag are freed from disk by the GC
+right after.
+
+- **Off by default.** Deleting data the owner did not ask to delete would be a surprise. Turn the
+  switch on, pick **TAGS A MANTER** (tags to keep; minimum 1, default 10) and click **Save**.
+- **It never deletes a tag a service uses.** If a Registry-source service points to `app/api:prod`,
+  that tag stays even when it is the oldest, with or without push-to-deploy.
+- **Tag only, never by digest.** An identical rebuild gives two tags the same digest; deleting by
+  digest would take the one that still matters with it.
+- The policy is stored in the infra `settings.yml`, so it goes through the
+  [git sync](/en/guias/sincronizacao-git/).
+- Through the agent: `RegistryRetentionSet{config:{enabled, keep_last}}`; reading comes in `RegistryStatus`.
 
 ### Push-to-deploy
 
