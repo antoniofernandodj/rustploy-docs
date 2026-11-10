@@ -26,7 +26,19 @@ In the side menu, **Deploy Engine**, with three tabs:
 | **Cancel** a queued one | removes it from the queue |
 | **Abort** the running one | interrupts the task immediately, **with no rollback**: the deploy ends `Failed` and the service is left in `Error` until a new Deploy |
 
-Jobs and deploys share the same queue.
+## Jobs and warm-ups in the same queue
+
+A [job](/en/interface/schedules/) run (scheduled or **Run now**) and a job's **warm-up** are **items of
+the same queue** as deploys: they wait their turn in the same order, show up in all three tabs
+(**Queue**, **Running** and **History**) with a **[job]** or **[warm-up]** tag before the name, and the same
+actions apply: **promote**, **reorder**, **pause** and **cancel**.
+
+- Cancelling a job that is **still waiting** removes only that run from the queue (it stays as cancelled;
+  the job remains scheduled). With the job **running**, **■** cancels it like the *Cancel* button in Schedules.
+- A warm-up only exists while it waits or runs: it does not go to the history, and a warm-up that is
+  **already running** cannot be interrupted (only removed from the queue before it starts).
+- The **pre-deploy** job (the check before a deploy) does **not** go through the queue: it runs inside
+  the deploy, which already holds the turn.
 
 ## Through the agent
 

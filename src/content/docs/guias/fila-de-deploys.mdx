@@ -26,7 +26,19 @@ No menu lateral, **Deploy Engine**, com três abas:
 | **Cancelar** um enfileirado | remove da fila |
 | **Abortar** o em execução | interrompe a tarefa na hora, **sem rollback**: o deploy fica `Failed` e o serviço fica `Error` até um novo Deploy |
 
-Jobs e deploys compartilham a mesma fila.
+## Jobs e aquecimentos na mesma fila
+
+A execução de um [job](/interface/schedules/) (agendada ou **Executar agora**) e o **aquecimento** de um
+job são **itens da mesma fila** dos deploys: esperam a vez na mesma ordem, aparecem nas três abas
+(**Fila**, **Executando** e **Histórico**) com o selo **[job]** ou **[aquecimento]** antes do nome, e
+valem as mesmas ações: **promover**, **reordenar**, **pausar** e **cancelar**.
+
+- Cancelar um job que **ainda espera** a vez tira só aquela execução da fila (ela fica como cancelada;
+  o job continua agendado). Com o job **rodando**, **■** o cancela como o botão *Cancelar* de Agendamentos.
+- O aquecimento só existe enquanto espera ou roda: não vai ao histórico, e um aquecimento **já rodando**
+  não pode ser interrompido (só tirado da fila antes de começar).
+- O job de **pré-deploy** (a verificação antes do deploy) **não** entra na fila: roda por dentro do deploy,
+  que já tem a vez.
 
 ## Pelo agente
 
