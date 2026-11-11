@@ -15,6 +15,9 @@ serviço do mesmo tipo, no mesmo servidor ou em outro. A **configuração** do s
   O pacote pode ser **cifrado com `age`**: fica ligado por padrão quando há chave de recuperação (`recovery_recipient`) configurada, e abre no servidor de origem, ou em qualquer servidor restaurado com a identidade/chave de recuperação. Para levar a um servidor sem essa identidade, desmarque **Cifrar o pacote**. Em claro, trate o arquivo como um backup do banco.
 </Aside>
 
+Para fazer isso **sozinho e em horários marcados**, enviando para um S3, veja
+[Backup dos dados no S3](/guias/backup-no-s3/): é o mesmo pacote, com agendamento, retenção e restauração num clique.
+
 ## O que entra no pacote
 
 | Serviço | O que vai | Como |

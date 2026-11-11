@@ -30,6 +30,12 @@ Make the copy with the daemon stopped, or use a consistent copy of SQLite. The `
 services on another server. It does **not** carry volume data, and secrets travel encrypted. It complements the
 database backup, it does not replace it.
 
+### Application data on S3
+
+Your **services' data** (volumes and databases) can be copied, **encrypted**, to S3 automatically, and a whole server can be
+rebuilt from git and those backups: [Data backup to S3](/en/guias/backup-no-s3/) and
+[Recover a server](/en/guias/recuperar-servidor/).
+
 ### Variable backup
 
 The automatic variable snapshot every 60 s was **turned off** (the `config.toml` `[env_backup]` section is still

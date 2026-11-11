@@ -32,7 +32,9 @@ vazamento por engano; **não** é um cofre.
   `ServiceConnectionInfo`.
 - **Exportações**: o `.env` e os YAMLs seguem a mesma regra.
 - **Proibido ao agente**: `SecretReveal`, `SecretMove` com `SecretToEnv` (viraria uma variável em claro),
-  `RegistryTokenCreate` (devolve o token em texto) e `ServiceExport` com valores.
+  `RegistryTokenCreate` (devolve o token em texto), `ServiceExport` com valores, `BackupDestinationSet`/`Test` (levam a
+  chave secreta do S3), `ServiceBackupRestore`/`Delete` (substituem dados / apagam um backup) e os comandos
+  `ServerRecover*` (levam a chave de recuperação e um token).
 - **Editar sem corromper**: se o agente reenviar um spec com o `***` (o caminho `ServiceGet` → editar →
   `ServiceUpdate`), o daemon **restaura o valor real**. Se não houver valor anterior, recusa.
 

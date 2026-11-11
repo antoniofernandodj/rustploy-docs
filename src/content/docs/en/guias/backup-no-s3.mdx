@@ -1,0 +1,101 @@
+---
+title: Data backup to S3
+description: How to copy your services' data (volumes and databases) to S3 storage - AWS, Backblaze, R2, MinIO or RustFS - automatically and encrypted, and restore it in one click.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+[Git sync](/en/guias/sincronizacao-git/) keeps the server's **configuration**. Your services' **data** (what the database
+and containers write to volumes) is left out. This guide covers the rest: copying that data, **encrypted**, to **S3**
+storage and bringing it back in one click.
+
+It works with any S3-compatible storage: AWS S3, Backblaze B2, Cloudflare R2, MinIO, RustFS, or Rustploy's own
+[Storage](/en/guias/bancos-e-brokers/) on **another** machine. Databases (Postgres, MySQL, MariaDB, MongoDB) go out as a
+**logical dump**; everything else (Redis, Kafka, uploads…) as a **tar of the volumes**. It is the same `.rpdata` package
+as the [data export](/en/guias/dados-do-servico/).
+
+<Aside type="caution" title="Always encrypted, so it requires the recovery key">
+  Nothing is uploaded in plain text. The backup is encrypted with `age` for the server **and** for your
+  [recovery key](/en/guias/chaves-e-segredos/). Without the recovery key configured (`recovery_recipient`), only this server
+  could open the backup and it would be useless for restoring a new server, so Rustploy **refuses** to turn backup on.
+  Configure the key first.
+</Aside>
+
+## 1. Set the destination (once per server)
+
+**Settings → Backups** (in the [web UI](/en/interface/web-ui/) and the app). Fill in:
+
+| Field | What it is |
+|---|---|
+| **Endpoint** | the provider's `https://…`, without the bucket. On an internal MinIO/RustFS it can be `http://…` |
+| **Bucket** | the bucket, already created (Rustploy does not create it) |
+| **Region** | the provider's; use `us-east-1` if it does not ask for one |
+| **Folder in the bucket** | optional: `rustploy/my-server`. Useful for several servers in one bucket |
+| **Path-style** | on for MinIO, RustFS, R2 and Backblaze; **off** for AWS S3 |
+| **Access key / secret key** | the bucket credential |
+
+The bucket user needs to **list, read, write and delete** objects (including multipart upload). Click
+**Test connection**: Rustploy writes, reads and deletes a small object, and reports a wrong credential, bucket or endpoint.
+
+The secret key is stored **encrypted** on the server, **never comes back** to the screen (the field stays empty; empty
+means "keep the one already saved"), and the **destination travels in the git** of the sync, so after
+[recovering a server](/en/guias/recuperar-servidor/) backups carry on by themselves.
+
+## 2. Turn on a service's backup
+
+Open the service → **Data** tab → **Backup to S3**.
+
+- **Back up now**: runs immediately, in the background. The line below shows `in progress…` and then `completed` (with
+  the size) or `failed: reason`.
+- **Automatic backup**: turn it on, choose the frequency (**every N hours**, **every day** or **every week**, with the
+  time in **UTC**), how many backups to **keep** (1 to 365; default 7) and whether the service **stops during the copy**
+  of a volume (recommended). The screen shows the **next backup**.
+
+How it works:
+
+- **Database:** the dump is taken with the service **up** and does not interrupt it.
+- **Plain volume:** the service is **stopped** during the copy and restarted afterwards (unless you untick it).
+- **One thing at a time:** the backup waits its turn in the [deploy queue](/en/guias/fila-de-deploys/), so it does not run
+  together with a build or another backup.
+- **Retention:** the oldest are deleted only **after** the new one has uploaded successfully, and the new one is never deleted.
+- **Missed time:** if the server was off at the scheduled time, the backup runs **once** when it comes back.
+- **Failure:** the reason shows on screen and Rustploy only tries again at the next scheduled time (it does not keep retrying).
+- Each backup is an object `<folder>/<project>/<service>/<date>.rpdata.age` (large uploads go in 32 MiB parts).
+
+## 3. Restore
+
+In the same list, each backup has **Restore**. **This replaces the service's current data** with the backup's. It is the
+same [data import](/en/guias/dados-do-servico/), with the same safety net: everything is checked (SHA-256) before anything
+is touched, the current content is kept aside and, if something fails midway, Rustploy **puts back** what it had already replaced.
+The **✕** deletes a backup from S3.
+
+To restore a **whole server** (infra and data), see [Recover a server](/en/guias/recuperar-servidor/).
+
+## Limits to know
+
+- **Not incremental:** each backup is a full package. Volumes of tens of GB cost space and time.
+- **The package goes through the server's disk** before uploading; you need free space the size of it.
+- **Old backups after a recovery:** those encrypted for the **old** server only open again with the recovery key (see
+  [Recover a server](/en/guias/recuperar-servidor/)); new ones open normally.
+- **A stopped database** cannot be saved: start it first. **Shared** database servers are not covered yet.
+- **MongoDB:** on restore, only the collections in the package are replaced.
+- **Times are in UTC.** To run at 03:00 in Brasília, choose 06:00.
+
+## Through the API
+
+| Command | Level | What for |
+|---|---|---|
+| `BackupDestinationGet` / `Set` / `Clear` / `Test` | admin | the S3 destination. `Set` and `Test` carry the secret key and are **forbidden to the agent** |
+| `ServiceBackupList{service_id}` | observer | the backups, the last operation, the policy and `next_run_at` |
+| `ServiceBackupNow{service_id, stop?, keep?}` | operator | starts a backup (in the background; follow it through `ServiceBackupList`) |
+| `ServiceBackupPolicySet{service_id, policy}` | admin | turns on/off and schedules; `policy: null` deletes it |
+| `ServiceBackupRestore{service_id, key, confirm}` / `ServiceBackupDelete` | admin | replace data / delete a backup: **forbidden to the agent** |
+
+Details in the [agent manual](/en/agentes/manual/).
+
+## See also
+
+- [Recover a server](/en/guias/recuperar-servidor/)
+- [Export and import a service's data](/en/guias/dados-do-servico/)
+- [Keys and secrets](/en/guias/chaves-e-segredos/)
+- [Backup and restore](/en/guias/backup/)

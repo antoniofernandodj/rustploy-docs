@@ -30,7 +30,9 @@ it is **not** a vault.
   `ServiceConnectionInfo`.
 - **Exports**: the `.env` and the YAMLs follow the same rule.
 - **Forbidden to the agent**: `SecretReveal`, `SecretMove` with `SecretToEnv` (it would become a plain variable),
-  `RegistryTokenCreate` (returns the token in clear text) and `ServiceExport` with values.
+  `RegistryTokenCreate` (returns the token in clear text), `ServiceExport` with values, `BackupDestinationSet`/`Test` (carry the
+  S3 secret key), `ServiceBackupRestore`/`Delete` (replace data / delete a backup) and the `ServerRecover*` commands (carry the
+  recovery key and a token).
 - **Editing without corrupting**: if the agent sends back a spec containing `***` (the `ServiceGet` → edit →
   `ServiceUpdate` path), the daemon **restores the real value**. If there is no previous value, it refuses.
 

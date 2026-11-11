@@ -15,6 +15,9 @@ of the same kind, on the same server or another. The service **configuration** g
   **encrypted with `age`**: on by default when a recovery key (`recovery_recipient`) is configured, and it opens on the source server or any server restored with that identity/recovery key. To take it to a server without that identity, untick **Encrypt the package**. In the clear, treat the file like a database backup.
 </Aside>
 
+To do this **automatically and on a schedule**, sending to S3, see [Data backup to S3](/en/guias/backup-no-s3/): it is the
+same package, with scheduling, retention and one-click restore.
+
 ## What goes in the package
 
 | Service | What goes | How |

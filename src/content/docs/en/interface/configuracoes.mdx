@@ -11,7 +11,7 @@ import gitOauth from '../../../../assets/ui/settings-git-oauth.png';
 import manutencao from '../../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../../assets/ui/settings-manutencao-fim.png';
 
-**Settings** (at the foot of the side menu) has five tabs: **Web Server**, **Git**, **Manutenção** (Maintenance), **Sincronização** (Sync) and **Atualizações** (Updates).
+**Settings** (at the foot of the side menu) has seven tabs: **Web Server**, **Git**, **Manutenção** (Maintenance), **Sincronização** (Sync), **Backups**, **Recuperar** (Recover) and **Atualizações** (Updates).
 
 ## Web Server
 
@@ -77,6 +77,17 @@ The **Sincronização** (Sync) tab sets up [git sync](/en/guias/sincronizacao-gi
 At the bottom it has **Baixar a infra** (Download the infra): **Download infra** saves a
 `rustploy-infra.zip` with the same files the sync writes to the repository, with secrets encrypted. It is
 the same on the [web UI](/en/interface/web-ui/). Details in [Download the infra](/en/guias/infra-as-code/).
+
+## Backups
+
+The **Backups** tab holds the **S3 destination** of the [services' data backups](/en/guias/backup-no-s3/): endpoint, bucket,
+region, folder, path-style and the credential. **Test connection** writes, reads and deletes a small object. The secret
+key is stored encrypted and never comes back to the screen. Each service's schedule lives in its own **Data** tab.
+
+## Recover
+
+The **Recover** tab rebuilds this **clean** server from the sync's git repository, the recovery key and the S3 backups.
+See [Recover a server](/en/guias/recuperar-servidor/).
 
 ## Manutenção (Maintenance)
 

@@ -32,6 +32,12 @@ A [sincronização com o git](/guias/sincronizacao-git/) (ou o [zip da infra](/g
 recria projetos e serviços em outro servidor. Ela **não** leva os dados dos volumes, e os secrets
 vão cifrados. Complementa o backup do banco, não o substitui.
 
+### Os dados das aplicações no S3
+
+Os **dados dos serviços** (volumes e bancos) podem ser copiados, **cifrados**, para um S3 de forma automática, e um
+servidor inteiro pode ser recriado a partir do git e desses backups:
+[Backup dos dados no S3](/guias/backup-no-s3/) e [Recuperar um servidor](/guias/recuperar-servidor/).
+
 ### Backup de variáveis
 
 O snapshot automático das variáveis a cada 60 s foi **desligado** (a seção `[env_backup]` do

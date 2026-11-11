@@ -1,0 +1,85 @@
+---
+title: Recover a server
+description: How to rebuild a Rustploy server from scratch from the infra git repository, the recovery key and the S3 backups - infra, secrets and data, starting everything in dependency order.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+If you lost the server, the **Recover this server** screen rebuilds it on a **new** server with two things: the **git
+repository** of the [sync](/en/guias/sincronizacao-git/) and the **private recovery key**. It brings the infrastructure
+back, restores the data from the [S3 backups](/en/guias/backup-no-s3/) and starts each service in dependency order.
+
+## What you need to have before losing the server
+
+1. [Git sync](/en/guias/sincronizacao-git/) in **sync** mode, on a private repository.
+2. The [recovery key](/en/guias/chaves-e-segredos/) configured, with the **private half kept off the server**.
+3. The [S3 destination](/en/guias/backup-no-s3/) configured and backups turned on in the services. The destination travels in the git.
+
+Without step 3 the recovery brings only the infra and the services start **empty**.
+
+## Recover
+
+1. Install Rustploy on a **clean** server (`install.sh`). Recovery only works with **no projects**: it never overwrites a
+   server that already has things.
+2. Open the interface → **Settings → Recover** and fill in:
+   - **Infrastructure repository:** the `https://…` address of the sync repository;
+   - **Repository access token:** the same kind of token as the Git tab (it becomes a Git account on this server);
+   - **Branch** (optional);
+   - **Recovery key (private):** the `AGE-SECRET-KEY-1…` line you kept.
+3. **Restore the infrastructure.** Rustploy brings projects, services, variables and secrets back, and shows the
+   **summary**: each service (`BD` or `VOL`), the most recent backup found in S3 and, if there is none, "no backup: starts
+   empty". **Nothing has started and no data has been touched yet.**
+4. Check it and click **Restore the data and start** (or **Cancel**). Each service shows its step: `waiting`,
+   `restoring data`, `starting`, `ready`, or `failed`/`blocked` with the reason.
+
+## What happens inside
+
+- **Secrets re-encrypted.** The secrets came encrypted for the old server. Rustploy opens them with your recovery key and
+  **re-encrypts** them for the new server's identity (plus the **public** recovery key). The **private** key stays **only in
+  memory** during the recovery and is discarded at the end, on cancel, or after 1 hour idle. **Only the public half** is
+  written to `config.toml`.
+- **Data order.** For each service, in [dependency](/en/guias/dependencias-e-religar/) order: **volumes** come back
+  **before** starting (Rustploy creates the volume, including those of a Compose stack that never ran here); **databases**
+  come back **after** starting, because the dump needs the database up.
+- **Failing to query S3** is a service failure, and whatever depends on it is blocked: starting empty and writing over it
+  would be worse than waiting.
+- A service that does not start is retried (5, 15, 60, 180 and 300 seconds), so the recovery can take about 10 minutes
+  to end as `failed` if something is really wrong.
+
+## After the recovery
+
+- **Old backups:** those encrypted for the old server only open again with the recovery key. The ones the new server makes
+  from now on open normally. If you need an old backup, restore it on another server or redo the recovery with the key.
+- **"Recuperação" Git account:** the token you typed became an account in **Settings → Git**. The repository may also have
+  brought the old account (without a token): delete the one you do not use.
+- The server keeps **syncing** with the same repository, with no need to reconfigure the sync.
+
+## If something goes wrong
+
+| Symptom | What to do |
+|---|---|
+| "this server already has projects" | use a clean server, or delete the projects here |
+| Token rejected | check the token and that it reaches the repository (read scope) |
+| "the repository brought no project" | empty repository, wrong branch or another repository |
+| "the recovery key is not a valid private key" | paste the `AGE-SECRET-KEY-1…` line, not the public key |
+| A secret does not open | the key is not this repository's recovery key; the restore is refused and says which one |
+| The summary says the repository brought no S3 destination | the destination was set after the last push to git; services will start empty |
+
+If the infra came back but you want to give up, **Cancel** forgets the key from memory. The restored infra stays on the server.
+
+## Test before you need it
+
+A recovery that was never tested is not a backup. On a test server, run this guide once with the real key and
+repository, and check the data.
+
+## Through the API
+
+`ServerRecoverStart{remote, token, branch?, recovery_key}` (step 1), `ServerRecoverRun` (step 2, in the background),
+`ServerRecoverStatus` and `ServerRecoverCancel`. All require the **admin** level and are **forbidden to the agent**: they
+carry the recovery key and a token. `remote` also accepts `file://…` or an absolute path (no token).
+
+## See also
+
+- [Data backup to S3](/en/guias/backup-no-s3/)
+- [Git sync](/en/guias/sincronizacao-git/)
+- [Keys and secrets](/en/guias/chaves-e-segredos/)

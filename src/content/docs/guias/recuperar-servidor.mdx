@@ -1,0 +1,88 @@
+---
+title: Recuperar um servidor
+description: Como recriar um servidor Rustploy do zero a partir do repositório git da infra, da chave de recuperação e dos backups no S3 - infra, segredos e dados, subindo tudo na ordem das dependências.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Se você perdeu o servidor, a tela **Recuperar este servidor** o recria num servidor **novo** com duas coisas: o
+**repositório git** da [sincronização](/guias/sincronizacao-git/) e a **chave privada de recuperação**. Ela traz a
+infraestrutura, restaura os dados dos [backups no S3](/guias/backup-no-s3/) e sobe cada serviço na ordem das
+dependências.
+
+## O que você precisa ter antes de perder o servidor
+
+1. A [sincronização com o git](/guias/sincronizacao-git/) em modo **sync**, num repositório privado.
+2. A [chave de recuperação](/guias/chaves-e-segredos/) configurada, com a **privada guardada fora do servidor**.
+3. O [destino S3](/guias/backup-no-s3/) configurado e os backups ligados nos serviços. O destino vai junto no git.
+
+Sem o passo 3 a recuperação traz só a infra e os serviços sobem **vazios**.
+
+## Recuperar
+
+1. Instale o Rustploy num servidor **limpo** (`install.sh`). A recuperação só funciona **sem nenhum projeto**: ela nunca
+   sobrescreve um servidor que já tem coisas.
+2. Entre na interface → **Settings → Recuperar** e preencha:
+   - **Repositório da infra:** o endereço `https://…` do repositório da sincronização;
+   - **Token de acesso ao repositório:** o mesmo tipo de token da aba Git (ele vira uma conta Git deste servidor);
+   - **Branch** (opcional);
+   - **Chave de recuperação (privada):** a linha `AGE-SECRET-KEY-1…` que você guardou.
+3. **Restaurar a infraestrutura.** O Rustploy traz projetos, serviços, variáveis e segredos, e mostra o **resumo**: cada
+   serviço (`BD` ou `VOL`), o backup mais recente achado no S3 e, se não houver, "sem backup: sobe vazio". **Nada foi
+   iniciado e nenhum dado foi tocado ainda.**
+4. Confira e clique em **Restaurar os dados e subir** (ou **Cancelar**). Cada serviço mostra a etapa: `aguardando`,
+   `restaurando dados`, `subindo`, `pronto`, ou `falhou`/`bloqueado` com o motivo.
+
+## O que acontece por dentro
+
+- **Segredos recifrados.** Os segredos vieram cifrados para o servidor antigo. O Rustploy os abre com a sua chave de
+  recuperação e os **recifra** para a identidade do servidor novo (mais a chave **pública** de recuperação). A chave
+  **privada** fica **só na memória**, durante a recuperação, e é descartada ao fim, ao cancelar ou depois de 1 hora
+  parada. **Só a pública** é gravada no `config.toml`.
+- **Ordem dos dados.** Em cada serviço, na ordem das [dependências](/guias/dependencias-e-religar/): os **volumes** voltam
+  **antes** de subir (o Rustploy cria o volume, inclusive os de um Compose que nunca subiu aqui); os **bancos** voltam
+  **depois** de subir, porque o dump precisa do banco no ar.
+- **Falha ao consultar o S3** é falha do serviço, e quem depende dele fica bloqueado: subir vazio e começar a gravar por
+  cima seria pior do que esperar.
+- Um serviço que não sobe é tentado de novo (5, 15, 60, 180 e 300 segundos), então a recuperação pode levar uns 10
+  minutos para terminar como `falhou` se algo estiver errado de verdade.
+
+## Depois da recuperação
+
+- **Backups antigos:** os que foram cifrados para o servidor antigo só abrem de novo com a chave de recuperação. Os
+  que o servidor novo fizer daqui em diante abrem normalmente. Se precisar de um backup antigo, restaure-o em outro
+  servidor ou refaça a recuperação com a chave.
+- **Conta Git "Recuperação":** o token que você digitou virou uma conta em **Settings → Git**. O repositório pode ter
+  trazido também a conta antiga (sem token): apague a que não usar.
+- O servidor segue **sincronizando** com o mesmo repositório, sem você reconfigurar a sincronização.
+
+## Se algo der errado
+
+| Sintoma | O que fazer |
+|---|---|
+| "este servidor já tem projetos" | use um servidor limpo, ou apague os projetos daqui |
+| Token recusado | confira o token e se ele alcança o repositório (escopo de leitura) |
+| "o repositório não trouxe nenhum projeto" | repositório vazio, branch errada ou outro repositório |
+| "a chave de recuperação não é uma chave privada válida" | cole a linha `AGE-SECRET-KEY-1…`, não a chave pública |
+| Um segredo não abre | a chave não é a de recuperação deste repositório; a restauração é recusada e diz qual |
+| O resumo diz que o repositório não trouxe o destino S3 | o destino foi configurado depois do último envio ao git; os serviços subirão vazios |
+
+Se a infra voltou mas você quer desistir, **Cancelar** esquece a chave da memória. A infra restaurada continua no
+servidor.
+
+## Teste antes de precisar
+
+Uma recuperação que nunca foi testada não é um backup. Num servidor de teste, rode este guia uma vez, com a chave e o
+repositório reais, e confira os dados.
+
+## Pela API
+
+`ServerRecoverStart{remote, token, branch?, recovery_key}` (passo 1), `ServerRecoverRun` (passo 2, em segundo plano),
+`ServerRecoverStatus` e `ServerRecoverCancel`. Todos exigem o nível **admin** e são **proibidos ao agente**: levam a
+chave de recuperação e um token. O `remote` também aceita `file://…` ou um caminho absoluto (sem token).
+
+## Veja também
+
+- [Backup dos dados no S3](/guias/backup-no-s3/)
+- [Sincronização com o git](/guias/sincronizacao-git/)
+- [Chaves e segredos](/guias/chaves-e-segredos/)

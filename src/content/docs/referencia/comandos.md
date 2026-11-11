@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 134 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 147 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **134 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **147 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -1030,6 +1030,177 @@ Dados do serviço (volumes): o que um export levaria. Só olha, não muda nada. 
 | Campo | Tipo |
 |---|---|
 | `service_id` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### BackupDestinationGet
+
+O destino S3 dos backups de dados (sem a chave secreta). Resposta: `BackupDestination`.
+
+```json
+"BackupDestinationGet"
+```
+
+**Usado por:** GUI e web UI.
+
+### BackupDestinationSet
+
+Grava o destino S3. `secret_key: None` mantém a chave já gravada. Confere os campos, mas não conecta (use `BackupDestinationTest`). Resposta: `BackupDestination`.
+
+```json
+{"BackupDestinationSet":{"destination":"{…}"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `destination` | `BackupDestination` |
+
+**Usado por:** GUI e web UI.
+
+### BackupDestinationClear
+
+Apaga o destino gravado (os backups já enviados ficam no S3). Resposta: `Ok`.
+
+```json
+"BackupDestinationClear"
+```
+
+**Usado por:** GUI e web UI.
+
+### BackupDestinationTest
+
+Testa a conexão: grava, lê e apaga um objeto pequeno. `destination: None` testa o gravado; com valor, testa o rascunho da tela (e `secret_key: None` usa a chave gravada). Resposta: `Ok`.
+
+```json
+{"BackupDestinationTest":{"destination":null}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `destination` | `Option<BackupDestination>` |
+
+**Usado por:** GUI e web UI.
+
+### ServiceBackupList
+
+Os backups de dados de um serviço no S3 e a última operação. Resposta: `ServiceBackups`.
+
+```json
+{"ServiceBackupList":{"service_id":"svc_…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### ServiceBackupNow
+
+Faz o backup dos dados do serviço para o S3 **em segundo plano** (volumes e bancos, cifrado com a chave de recuperação). Responde `Ok` assim que começa; o andamento e o resultado vêm em `ServiceBackupList(.last_run)`. `stop`: parar o serviço durante a cópia de volume (padrão `true`; banco não para). `keep`: depois de enviar, manter só os `keep` mais novos.
+
+```json
+{"ServiceBackupNow":{"service_id":"svc_…","stop":false,"keep":null}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+| `stop` | `bool` |
+| `keep` | `Option<u32>` |
+
+**Usado por:** GUI e web UI.
+
+### ServiceBackupRestore
+
+Restaura um backup do S3 **substituindo** os dados atuais do serviço, em segundo plano (o mesmo caminho e a mesma rede de segurança da importação). Exige `confirm: true`. Resposta: `Ok`.
+
+```json
+{"ServiceBackupRestore":{"service_id":"svc_…","key":"…","confirm":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+| `key` | `String` |
+| `confirm` | `bool` |
+
+**Usado por:** GUI e web UI.
+
+### ServiceBackupDelete
+
+Apaga um backup do S3. Resposta: `Ok`.
+
+```json
+{"ServiceBackupDelete":{"service_id":"svc_…","key":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+| `key` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### ServiceBackupPolicySet
+
+Grava (ou, com `None`, apaga) a política de backup automático do serviço. Ligar exige o destino S3 configurado e a chave de recuperação. Resposta: `ServiceBackups` (já com a política e o próximo disparo).
+
+```json
+{"ServiceBackupPolicySet":{"service_id":"svc_…","policy":null}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+| `policy` | `Option<BackupPolicy>` |
+
+**Usado por:** GUI e web UI.
+
+### ServerRecoverStart
+
+**Recuperar este servidor** (passo 1): num servidor **limpo**, traz a infra do repositório git e recifra os segredos para este servidor, **sem** mexer nos dados nem subir nada. A chave privada de recuperação fica só na memória (até `ServerRecoverRun`, `ServerRecoverCancel` ou 1 hora). Resposta: `ServerRecover` (`phase: "ready"`, com o que foi achado e os backups por serviço).
+
+```json
+{"ServerRecoverStart":{"remote":"…","token":"…","branch":null,"recovery_key":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `remote` | `String`<br />Endereço do repositório da infra: `https://…`, `file://…` ou um caminho absoluto. |
+| `token` | `String`<br />Token de acesso ao repositório (vira um provider git deste servidor). Dispensável num remoto local (`file://…` ou caminho absoluto). |
+| `branch` | `Option<String>` |
+| `recovery_key` | `String`<br />A chave privada de recuperação (`AGE-SECRET-KEY-1…`). |
+
+**Usado por:** GUI e web UI.
+
+### ServerRecoverStatus
+
+Em que ponto a recuperação está. Resposta: `ServerRecover`.
+
+```json
+"ServerRecoverStatus"
+```
+
+**Usado por:** GUI e web UI.
+
+### ServerRecoverRun
+
+Recuperação (passo 2): restaura os dados e sobe cada serviço na ordem das dependências (volumes antes de subir, bancos depois). Em segundo plano; acompanhe por `ServerRecoverStatus`. Resposta: `Ok`.
+
+```json
+"ServerRecoverRun"
+```
+
+**Usado por:** GUI e web UI.
+
+### ServerRecoverCancel
+
+Desiste: esquece a chave de recuperação da memória. A infra restaurada continua no servidor. Resposta: `ServerRecover`.
+
+```json
+"ServerRecoverCancel"
+```
 
 **Usado por:** GUI e web UI.
 

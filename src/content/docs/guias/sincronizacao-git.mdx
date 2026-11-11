@@ -293,6 +293,13 @@ não estiver disponível.
 
 ## Restaurar num servidor novo
 
+<Aside type="tip" title="O caminho fácil">
+  Em **Settings → Recuperar** (app e web UI) você informa só o repositório, o token e a chave de recuperação: o Rustploy traz
+  a infra, **recifra os segredos** e, se houver [backups no S3](/guias/backup-no-s3/), restaura os dados e sobe tudo na
+  ordem das dependências. Veja [Recuperar um servidor](/guias/recuperar-servidor/). O passo a passo manual abaixo continua
+  valendo, mas **não** restaura dados.
+</Aside>
+
 Se você perdeu o servidor, o repositório traz a configuração de volta:
 
 1. Instale o Rustploy no servidor novo (`install.sh`). Ele já traz o `git`.

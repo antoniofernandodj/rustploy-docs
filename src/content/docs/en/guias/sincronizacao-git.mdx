@@ -297,6 +297,13 @@ is not available.
 
 ## Restoring on a new server
 
+<Aside type="tip" title="The easy way">
+  In **Settings → Recover** (app and web UI) you only provide the repository, the token and the recovery key: Rustploy brings
+  the infra back, **re-encrypts the secrets** and, if there are [S3 backups](/en/guias/backup-no-s3/), restores the data and starts
+  everything in dependency order. See [Recover a server](/en/guias/recuperar-servidor/). The manual walkthrough below is still
+  valid, but it does **not** restore data.
+</Aside>
+
 If you lost the server, the repository brings the configuration back:
 
 1. Install Rustploy on the new server (`install.sh`). It already brings `git`.
