@@ -722,13 +722,14 @@ Full dashboard snapshot as JSON (the same one the SSE `/api/events` pushes every
 ### SecretSet
 
 ```json
-{"SecretSet":{"project_id":"prj_…","service_id":null,"name":"…","value":"…"}}
+{"SecretSet":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…","value":"…"}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String` |
 | `value` | `String` |
 
@@ -737,13 +738,14 @@ Full dashboard snapshot as JSON (the same one the SSE `/api/events` pushes every
 ### SecretDelete
 
 ```json
-{"SecretDelete":{"project_id":"prj_…","service_id":null,"name":"…"}}
+{"SecretDelete":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…"}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String` |
 
 **Used by:** GUI and web UI.
@@ -751,13 +753,14 @@ Full dashboard snapshot as JSON (the same one the SSE `/api/events` pushes every
 ### SecretList
 
 ```json
-{"SecretList":{"project_id":"prj_…","service_id":null}}
+{"SecretList":{"project_id":"prj_…","service_id":null,"job_id":null}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 
 **Used by:** GUI and web UI.
 
@@ -766,13 +769,14 @@ Full dashboard snapshot as JSON (the same one the SSE `/api/events` pushes every
 Devolve o **valor** de um secret (botão "ver valor"). Fica fora do MCP/`rpc` do agente e grava uma linha de auditoria (quem, qual secret, quando — nunca o valor).
 
 ```json
-{"SecretReveal":{"project_id":"prj_…","service_id":null,"name":"…"}}
+{"SecretReveal":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…"}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String` |
 
 **Used by:** GUI and web UI.
@@ -898,13 +902,14 @@ Para um container (`id` completo, vindo de `DockerContainers`). **Recusa** conta
 Moves an item between env and secret, or between scopes. Always atomic: either everything changes or nothing does. Fails if the destination already has an item with the same name. The agent (MCP) cannot use `SecretToEnv`, which would expose the value.
 
 ```json
-{"SecretMove":{"project_id":"prj_…","service_id":null,"name":"…","op":"{…}"}}
+{"SecretMove":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…","op":"{…}"}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>`<br />Depende da operação (ver `SecretMoveOp`). |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String`<br />Nome do secret — ou a chave da env, em `SecretMoveOp::EnvToSecret`. |
 | `op` | `SecretMoveOp` |
 
@@ -915,13 +920,14 @@ Moves an item between env and secret, or between scopes. Always atomic: either e
 Renames the **key** of an env var (project-wide, or a service's if `service_id` is given) keeping its value — `Plain` or `Secret` — without the value passing through the caller, and carrying along the `.env` editor comments anchored to it. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.
 
 ```json
-{"EnvKeyRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+{"EnvKeyRename":{"project_id":"prj_…","service_id":null,"job_id":null,"from":"…","to":"…"}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `from` | `String` |
 | `to` | `String` |
 
@@ -932,13 +938,14 @@ Renames the **key** of an env var (project-wide, or a service's if `service_id` 
 Changes only the **value** of an existing env var (project-wide, or a service's if `service_id` is given), at the same position in the list — an "in place" edit, without resending the whole list like `ProjectEnvSet`/`ServiceUpdate` (which replace everything and lose what the client does not know). `value` is `{"Plain":"…"}` or `{"Secret":"NAME"}`; a `Secret` must exist in the scope (the service's or, falling back, the project's). Fails if the key does not exist, if the value is the `***` mask (a copy from a screen that hid the secret) or if the secret does not exist. Response: `Ok`.
 
 ```json
-{"EnvValueSet":{"project_id":"prj_…","service_id":null,"key":"…","value":"{…}"}}
+{"EnvValueSet":{"project_id":"prj_…","service_id":null,"job_id":null,"key":"…","value":"{…}"}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `key` | `String` |
 | `value` | `EnvVarValue` |
 
@@ -949,13 +956,14 @@ Changes only the **value** of an existing env var (project-wide, or a service's 
 Renames a **secret** (project-wide, or a service's if `service_id` is given) and, in the same transaction, repoints every `Secret(from)` env var that resolved to it. The encrypted value is not read. Fails if `from` does not exist or `to` already exists in the scope. Response: `Ok`.
 
 ```json
-{"SecretRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+{"SecretRename":{"project_id":"prj_…","service_id":null,"job_id":null,"from":"…","to":"…"}}
 ```
 
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `from` | `String` |
 | `to` | `String` |
 

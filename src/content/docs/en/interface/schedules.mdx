@@ -113,8 +113,28 @@ The **⋯** button at the end of the row opens a panel with the job name, the wa
 | **↻ Reconstruir (sem cache)** (Rebuild, no cache) | shown with the job **warm**: rebuilds from scratch and pulls the images again. See [Rebuild from scratch](/en/guias/jobs/#rebuild-from-scratch) |
 | **≡ Ver logs** (View logs) | the output (stdout and stderr) of the runs |
 | **‖ Pausar** (Pause) | suspends the schedule. With the job paused, the button becomes **Ativar** (Enable) |
+| **🔑 Variáveis e secrets** (Variables and secrets) | opens the screen with the job's environment variables and secrets. See [A job's variables and secrets](#a-jobs-variables-and-secrets) |
 | **✎ Editar** (Edit) | opens the job to change it |
 | **✕ Remover** (Remove) | deletes the job, after **asking for confirmation**. It cannot be recovered |
+
+## A job's variables and secrets
+
+The **🔑 Variáveis e secrets** action in the ⋯ menu opens a screen with the job's environment variables
+and the **job's secrets**, with the same buttons as a service's *Environment* tab and the project's variables:
+
+| Button | Effect |
+|---|---|
+| **✕** | removes the variable (or the secret) |
+| **✏️** / **✎** | renames the key (the value stays) / edits the value in place |
+| **🔒** | moves the variable to a **secret**: the value is stored encrypted (`ENC[age:…]`) |
+| **🔓** | turns the secret back into a plain variable |
+| **↑** | moves it up to the project: the project's services and jobs inherit it |
+| **👁 / 🙈 / 📋** | shows, hides and copies a secret's value (the access is logged in the server audit) |
+| **.env** | edits all variables as `KEY=VALUE` text |
+
+At run time a job secret wins over the trigger service's secret, which wins over the project's.
+**Every operation that changes or exposes a variable asks for confirmation**; only reordering doesn't.
+This also applies to project and service variables.
 
 ## After creating
 

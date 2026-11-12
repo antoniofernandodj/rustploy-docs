@@ -722,13 +722,14 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 ### SecretSet
 
 ```json
-{"SecretSet":{"project_id":"prj_…","service_id":null,"name":"…","value":"…"}}
+{"SecretSet":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…","value":"…"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String` |
 | `value` | `String` |
 
@@ -737,13 +738,14 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 ### SecretDelete
 
 ```json
-{"SecretDelete":{"project_id":"prj_…","service_id":null,"name":"…"}}
+{"SecretDelete":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String` |
 
 **Usado por:** GUI e web UI.
@@ -751,13 +753,14 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 ### SecretList
 
 ```json
-{"SecretList":{"project_id":"prj_…","service_id":null}}
+{"SecretList":{"project_id":"prj_…","service_id":null,"job_id":null}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 
 **Usado por:** GUI e web UI.
 
@@ -766,13 +769,14 @@ Snapshot completo do dashboard como JSON (o mesmo que o SSE `/api/events` empurr
 Devolve o **valor** de um secret (botão "ver valor"). Fica fora do MCP/`rpc` do agente e grava uma linha de auditoria (quem, qual secret, quando — nunca o valor).
 
 ```json
-{"SecretReveal":{"project_id":"prj_…","service_id":null,"name":"…"}}
+{"SecretReveal":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String` |
 
 **Usado por:** GUI e web UI.
@@ -898,13 +902,14 @@ Para um container (`id` completo, vindo de `DockerContainers`). **Recusa** conta
 Move um item entre env e secret, ou entre escopos. Sempre atômico: ou tudo muda, ou nada. Falha se o destino já tem um item com o mesmo nome. Ver `SecretMoveOp`.
 
 ```json
-{"SecretMove":{"project_id":"prj_…","service_id":null,"name":"…","op":"{…}"}}
+{"SecretMove":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…","op":"{…}"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>`<br />Depende da operação (ver `SecretMoveOp`). |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `name` | `String`<br />Nome do secret — ou a chave da env, em `SecretMoveOp::EnvToSecret`. |
 | `op` | `SecretMoveOp` |
 
@@ -915,13 +920,14 @@ Move um item entre env e secret, ou entre escopos. Sempre atômico: ou tudo muda
 Renomeia a **chave** de uma env (do projeto, ou do serviço se `service_id` vier), mantendo o valor — `Plain` ou `Secret` — sem que ele passe pelo chamador, e acompanhando os comentários do editor `.env` ancorados nela. Falha se `from` não existe ou `to` já existe no escopo. Resposta: `Ok`.
 
 ```json
-{"EnvKeyRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+{"EnvKeyRename":{"project_id":"prj_…","service_id":null,"job_id":null,"from":"…","to":"…"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `from` | `String` |
 | `to` | `String` |
 
@@ -932,13 +938,14 @@ Renomeia a **chave** de uma env (do projeto, ou do serviço se `service_id` vier
 Troca só o **valor** de uma env existente (do projeto, ou do serviço se `service_id` vier), na mesma posição da lista — edição "no lugar", sem reenviar a lista inteira como o `ProjectEnvSet`/`ServiceUpdate` (que são substituição total e perdem o que o cliente não conhece). `value` é `{"Plain":"…"}` ou `{"Secret":"NOME"}`; um `Secret` precisa existir no escopo (do serviço ou, caindo para ele, do projeto). Falha se a chave não existe, se o valor é a máscara `***` (cópia de uma tela que escondeu o segredo) ou se o secret não existe. Resposta: `Ok`.
 
 ```json
-{"EnvValueSet":{"project_id":"prj_…","service_id":null,"key":"…","value":"{…}"}}
+{"EnvValueSet":{"project_id":"prj_…","service_id":null,"job_id":null,"key":"…","value":"{…}"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `key` | `String` |
 | `value` | `EnvVarValue` |
 
@@ -949,13 +956,14 @@ Troca só o **valor** de uma env existente (do projeto, ou do serviço se `servi
 Renomeia um **secret** (do projeto, ou do serviço se `service_id` vier) e atualiza, na mesma transação, toda env `Secret(from)` que resolvia para ele. O valor cifrado não é lido. Falha se `from` não existe ou `to` já existe no escopo. Resposta: `Ok`.
 
 ```json
-{"SecretRename":{"project_id":"prj_…","service_id":null,"from":"…","to":"…"}}
+{"SecretRename":{"project_id":"prj_…","service_id":null,"job_id":null,"from":"…","to":"…"}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
 | `service_id` | `Option<String>` |
+| `job_id` | `Option<String>`<br />Escopo de **job** (`Some` = secret/env daquele job; exige `service_id: None`). Na resolução de um secret do job vale o do job, depois o do serviço gatilho, depois o do projeto. |
 | `from` | `String` |
 | `to` | `String` |
 
