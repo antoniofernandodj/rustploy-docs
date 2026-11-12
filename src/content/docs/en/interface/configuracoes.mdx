@@ -69,6 +69,13 @@ With OAuth, the screen shows the **REDIRECT URI**: copy it with **Copiar** and p
 With **Token (PAT)**, paste a *Personal Access Token* with read access to the repositories (the `repo` scope). **Atualizar lista**
 (Refresh list) reloads the accounts.
 
+**Removing an account.** Services and jobs with a Git source remember **which account** they clone with. If you
+remove an account that is still in use, they stop cloning on the next deploy. So the app warns first,
+**listing** the affected services and jobs (`project/service`), and only removes after you confirm. The
+daemon also refuses the removal (`InUse`) while anything still uses the account, unless the command carries
+`force`. To switch tokens without breaking anything: connect the new account, point each service to it
+(**General → Git** tab) and only then remove the old one.
+
 Details and the use in services: [Deploy from a Git repository](/en/guias/git/).
 
 ## Sincronização

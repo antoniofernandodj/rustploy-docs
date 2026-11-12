@@ -1757,13 +1757,16 @@ Volta os binários para os do backup da última atualização (o único caminho 
 
 ### GitProviderDelete
 
+Remove uma conta git. **Recusa** (`InUse`, com a lista) enquanto algum serviço ou job ainda aponta para ela — sem a conta eles não conseguem mais clonar —, a menos que `force` seja `true`. Os clientes avisam o usuário antes e só então mandam `force`. Resposta: `Ok`.
+
 ```json
-{"GitProviderDelete":{"id":"…"}}
+{"GitProviderDelete":{"id":"…","force":false}}
 ```
 
 | Field | Type |
 |---|---|
 | `id` | `String` |
+| `force` | `bool` |
 
 **Used by:** GUI and web UI.
 

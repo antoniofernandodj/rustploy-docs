@@ -71,6 +71,13 @@ Ao clicar em **Conectar conta**, o navegador abre para você autorizar.
 Com **Token (PAT)**, cole um *Personal Access Token* com permissão de leitura dos
 repositórios (escopo `repo`). **Atualizar lista** recarrega as contas.
 
+**Remover uma conta.** Serviços e jobs com fonte Git guardam **qual conta** usam para clonar. Se você
+remove uma conta que ainda está em uso, eles deixam de clonar no próximo deploy. Por isso o app avisa
+antes, **listando** os serviços e jobs afetados (`projeto/serviço`), e só remove se você confirmar. O
+daemon também recusa a remoção (`InUse`) quando algo ainda usa a conta, a menos que o comando traga
+`force`. Para trocar de token sem quebrar nada: conecte a conta nova, reaponte cada serviço (aba
+**General → Git**) e só então remova a antiga.
+
 Detalhes e o uso nos serviços: [Fazer deploy a partir de Git](/guias/git/).
 
 ## Sincronização
