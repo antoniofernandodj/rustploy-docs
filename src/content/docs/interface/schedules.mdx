@@ -59,7 +59,7 @@ Clique em **+ Novo job**. A janela tem etapas:
 | **FONTE DO COMPOSE** | **Compose** (cole o YAML) ou **Git** |
 | **DOCKER-COMPOSE.YML** | o YAML. A tela traz um exemplo mínimo com `busybox` |
 | **MAIN SERVICE** | o **nome do serviço dentro do compose acima** cujo código de saída decide se o job deu certo |
-| **VARIÁVEIS DE AMBIENTE (opcional)** | `KEY=VALUE`, uma por linha, com `#` para comentário. *"Sobrescrevem as do projeto/serviço gatilho por cima."* |
+| **VARIÁVEIS E SECRETS** | na **edição**, o botão **🔑 Variáveis e secrets** abre o painel (veja [Variáveis e secrets de um job](#variáveis-e-secrets-de-um-job)); na **criação**, esse painel aparece no passo seguinte, logo depois de **Criar job**, porque os secrets de um job precisam do id dele. As variáveis do job vencem as do projeto e as do serviço gatilho |
 
 ### Fonte do compose: Git
 

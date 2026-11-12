@@ -58,7 +58,7 @@ Click **+ Novo job**. The window has steps:
 | **FONTE DO COMPOSE** | **Compose** (paste the YAML) or **Git** |
 | **DOCKER-COMPOSE.YML** | the YAML. The screen brings a minimal example with `busybox` |
 | **MAIN SERVICE** | the **name of the service inside the compose above** whose exit code decides whether the job succeeded |
-| **VARIÁVEIS DE AMBIENTE (opcional)** | `KEY=VALUE`, one per line, with `#` for comments. *"Sobrescrevem as do projeto/serviço gatilho por cima."* (They override the project's/trigger service's on top.) |
+| **VARIÁVEIS E SECRETS** (Variables and secrets) | when **editing**, the **🔑 Variáveis e secrets** button opens the panel (see [A job's variables and secrets](#a-jobs-variables-and-secrets)); when **creating**, the panel shows up in the next step, right after **Criar job**, because a job's secrets need its id. The job's variables win over the project's and the trigger service's |
 
 ### Compose source: Git
 
