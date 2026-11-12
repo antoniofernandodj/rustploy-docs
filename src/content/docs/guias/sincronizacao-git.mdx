@@ -86,6 +86,14 @@ e volta sozinho quando o estado estiver limpo. O histórico nunca recebe o valor
 Os commits esperam 10 segundos depois da última mudança, então várias edições seguidas viram um
 commit só. Sem diferença, não há commit. O assunto usa nomes legíveis (`Atualiza projeto Flow`).
 
+## Limpar a configuração
+
+Em **Settings → Sincronização**, o botão **Limpar configuração** (só aparece quando há algo gravado)
+desliga o sync e apaga o repositório, o branch e a conta configurados. O servidor deixa de commitar e
+de empurrar; o repositório remoto e o histórico já gravado **não** são apagados, e dá para configurar
+de novo depois. Use quando o servidor foi apontado para o repositório errado (por exemplo, uma
+instalação local apontando para o repositório de produção).
+
 ## Mudanças feitas por fora (GitOps)
 
 No modo **sync**, o servidor consulta o repositório a cada 60 segundos (ajustável com

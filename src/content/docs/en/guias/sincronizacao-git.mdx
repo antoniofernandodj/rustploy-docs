@@ -88,6 +88,14 @@ reaches the history.
 Commits wait 10 seconds after the last change, so several edits in a row become a single commit.
 With no difference there is no commit. The subject uses readable names (`Atualiza projeto Flow`).
 
+## Clearing the configuration
+
+In **Settings → Sync**, the **Clear configuration** button (shown only when something is stored) turns
+the sync off and erases the configured repository, branch and account. The server stops committing and
+pushing; the remote repository and the history already written are **not** deleted, and you can
+configure it again later. Use it when the server was pointed at the wrong repository (for example, a
+local install pointing at the production repository).
+
 ## Changes made from outside (GitOps)
 
 In **sync** mode the server checks the repository every 60 seconds (adjustable with
