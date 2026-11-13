@@ -34,7 +34,7 @@ The recovery key is also what lets you [recover a whole server](/en/guias/recupe
 
 ## Generate the recovery key from the interface
 
-In the desktop app and the web UI: **Settings → Chave de recuperação (Recovery key) → Generate and download the key**.
+In the desktop app and the web UI: **Settings → Chave de recuperação (Recovery key) → Generate and download**.
 
 1. The server generates the key pair, writes **only the public key** to `[secrets] recovery_recipient` (in `config.toml`,
    no restart) and **re-encrypts the secrets that already exist**, so the new key opens the old ones too.

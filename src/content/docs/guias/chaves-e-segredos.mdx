@@ -34,7 +34,7 @@ pelo [backup dos dados no S3](/guias/backup-no-s3/), que é sempre cifrado.
 
 ## Gerar a chave de recuperação pela interface
 
-No app desktop e na web UI: **Settings → Chave de recuperação → Gerar e baixar a chave**.
+No app desktop e na web UI: **Settings → Chave de recuperação → Gerar e baixar**.
 
 1. O servidor gera o par de chaves, grava **só a pública** em `[secrets] recovery_recipient` (no `config.toml`, sem
    reiniciar) e **recifra os secrets que já existem**, para que a chave nova abra também os antigos.
