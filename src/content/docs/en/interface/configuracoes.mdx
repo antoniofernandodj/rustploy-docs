@@ -11,7 +11,7 @@ import gitOauth from '../../../../assets/ui/settings-git-oauth.png';
 import manutencao from '../../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../../assets/ui/settings-manutencao-fim.png';
 
-**Settings** (at the foot of the side menu) has seven tabs: **Web Server**, **Git**, **Manutenção** (Maintenance), **Sincronização** (Sync), **Backups**, **Recuperar** (Recover) and **Atualizações** (Updates).
+**Settings** (at the foot of the side menu) has eight tabs: **Web Server**, **Git**, **Manutenção** (Maintenance), **Sincronização** (Sync), **Backups**, **Chave de recuperação** (Recovery key), **Recuperar** (Recover) and **Atualizações** (Updates).
 
 ## Web Server
 
@@ -90,6 +90,12 @@ the same on the [web UI](/en/interface/web-ui/). Details in [Download the infra]
 The **Backups** tab holds the **S3 destination** of the [services' data backups](/en/guias/backup-no-s3/): endpoint, bucket,
 region, folder, path-style and the credential. **Test connection** writes, reads and deletes a small object. The secret
 key is stored encrypted and never comes back to the screen. Each service's schedule lives in its own **Data** tab.
+
+## Recovery key
+
+The **Chave de recuperação** tab shows whether the server already has one, and its public key. **Generate and download
+the key** creates the pair, writes only the public key to `config.toml` and downloads the private one, which is shown only
+once. Details and cautions in [Keys and secrets](/en/guias/chaves-e-segredos/#generate-the-recovery-key-from-the-interface).
 
 ## Recover
 

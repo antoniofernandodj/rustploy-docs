@@ -1,6 +1,6 @@
 ---
 title: Protocol responses
-description: "The 71 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
+description: "The 73 response variants of POST /api/rpc on Rustploy, the type each one carries, and how to recognize an error."
 ---
 
 Each [command](/en/referencia/comandos/) returns one of these variants. A response **with fields** is a one-key object; **without fields**, the bare string (`"Ok"`).
@@ -79,4 +79,6 @@ An error comes as `{"Err":{"code":"…","message":"…"}}`.
 | `RegistryGcResult` | `blobs_removed: u64`, `bytes_freed: u64` |
 | `RegistryTokenCreated` | `name: String`, `secret: String` |
 | `RegistryTokens` | `Vec<RegistryTokenInfo>` |
+| `RecoveryKey` | `configured: bool`, `public_key: Option<String>` |
+| `RecoveryKeyGenerated` | `public_key: String`, `private_key: String`, `file_contents: String`, `suggested_filename: String` |
 | `Err` | `code: String`, `message: String` |

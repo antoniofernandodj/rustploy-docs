@@ -32,9 +32,26 @@ the rest is something else.
 The recovery key is also what lets you [recover a whole server](/en/guias/recuperar-servidor/) and it is **required** by
 [data backup to S3](/en/guias/backup-no-s3/), which is always encrypted.
 
-## Set up the recovery key
+## Generate the recovery key from the interface
 
-Do this once, **on your own machine** (not on the server):
+In the desktop app and the web UI: **Settings → Chave de recuperação (Recovery key) → Generate and download the key**.
+
+1. The server generates the key pair, writes **only the public key** to `[secrets] recovery_recipient` (in `config.toml`,
+   no restart) and **re-encrypts the secrets that already exist**, so the new key opens the old ones too.
+2. The private key is shown **only once** and the client downloads the file
+   `rustploy-recovery-key-<server>-<YYYYMMDD>.txt` (the desktop app writes it to *Downloads* without overwriting; the web
+   UI uses the browser download).
+3. **Move the file to a vault, off the server.** The server does not keep the private key: that file is the only copy.
+
+Already have a key? The screen asks you to confirm the replacement. Replacing **deletes nothing**: old backups and commits
+keep opening **only with the old key**, so keep both. The AI agent (MCP) cannot generate this key, on purpose.
+
+The "no recovery key" warnings in the **Backups** and **Sync** tabs have a **Generate recovery key** button that takes you
+to the same place.
+
+## Set up the recovery key by hand
+
+If you prefer, do this once, **on your own machine** (not on the server):
 
 ```bash
 rustploy-cli keygen
@@ -57,9 +74,9 @@ sudo python3 -c "import tomllib; tomllib.load(open('/etc/rustploy/config.toml','
 sudo systemctl restart rustployd
 ```
 
-<Aside type="caution" title="Only applies to secrets saved afterwards">
-  `recovery_recipient` does not re-encrypt what already exists. For an old secret to become readable by the recovery
-  key, **save it again** with the same name.
+<Aside type="caution" title="By hand, only applies to secrets saved afterwards">
+  Pasting `recovery_recipient` into `config.toml` does not re-encrypt what already exists (generating from the interface
+  does). For an old secret to become readable by the recovery key, **save it again** with the same name.
 </Aside>
 
 ## What to keep off the server

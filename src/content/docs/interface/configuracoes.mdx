@@ -11,8 +11,8 @@ import gitOauth from '../../../assets/ui/settings-git-oauth.png';
 import manutencao from '../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../assets/ui/settings-manutencao-fim.png';
 
-**Settings** (no rodapé do menu lateral) tem sete abas: **Web Server**, **Git**,
-**Manutenção**, **Sincronização**, **Backups**, **Recuperar** e **Atualizações**.
+**Settings** (no rodapé do menu lateral) tem oito abas: **Web Server**, **Git**,
+**Manutenção**, **Sincronização**, **Backups**, **Chave de recuperação**, **Recuperar** e **Atualizações**.
 
 ## Web Server
 
@@ -92,6 +92,12 @@ Detalhes em [Baixar a infra](/guias/infra-as-code/).
 A aba **Backups** guarda o **destino S3** dos [backups dos dados dos serviços](/guias/backup-no-s3/): endereço, bucket,
 região, pasta, path-style e a credencial. **Testar conexão** grava, lê e apaga um objeto pequeno. A chave secreta fica
 cifrada e nunca volta para a tela. O agendamento de cada serviço fica na aba **Dados** dele.
+
+## Chave de recuperação
+
+A aba **Chave de recuperação** mostra se o servidor já tem uma e a chave pública. **Gerar e baixar a chave** cria o par,
+grava só a pública no `config.toml` e baixa a privada, que aparece uma única vez. Detalhes e cuidados em
+[Chaves e segredos](/guias/chaves-e-segredos/#gerar-a-chave-de-recuperação-pela-interface).
 
 ## Recuperar
 

@@ -32,9 +32,25 @@ secrets**; o resto é outra coisa.
 A chave de recuperação também é o que permite [recuperar um servidor](/guias/recuperar-servidor/) inteiro e é **exigida**
 pelo [backup dos dados no S3](/guias/backup-no-s3/), que é sempre cifrado.
 
-## Configurar a chave de recuperação
+## Gerar a chave de recuperação pela interface
 
-Faça isso uma vez, **na sua máquina** (não no servidor):
+No app desktop e na web UI: **Settings → Chave de recuperação → Gerar e baixar a chave**.
+
+1. O servidor gera o par de chaves, grava **só a pública** em `[secrets] recovery_recipient` (no `config.toml`, sem
+   reiniciar) e **recifra os secrets que já existem**, para que a chave nova abra também os antigos.
+2. A chave privada aparece **uma única vez** e o cliente baixa o arquivo `rustploy-recovery-key-<servidor>-<AAAAMMDD>.txt`
+   (o app desktop grava em *Downloads*, sem sobrescrever; a web UI usa o download do navegador).
+3. **Mova o arquivo para um cofre, fora do servidor.** O servidor não guarda a privada: esse arquivo é a única cópia.
+
+Já existe uma chave? A tela pede para confirmar a troca. Trocar **não apaga nada**: backups e commits antigos continuam
+abrindo **só com a chave antiga**, então guarde as duas. O agente de IA (MCP) não consegue gerar essa chave, de propósito.
+
+Os avisos de "sem chave de recuperação" nas abas **Backups** e **Sincronização** têm um botão **Gerar chave de recuperação**
+que leva ao mesmo lugar.
+
+## Configurar a chave de recuperação à mão
+
+Se preferir, faça isso uma vez, **na sua máquina** (não no servidor):
 
 ```bash
 rustploy-cli keygen
@@ -57,9 +73,9 @@ sudo python3 -c "import tomllib; tomllib.load(open('/etc/rustploy/config.toml','
 sudo systemctl restart rustployd
 ```
 
-<Aside type="caution" title="Só vale para secrets gravados depois">
-  O `recovery_recipient` não recifra o que já existe. Para um secret antigo ficar legível pela chave de recuperação,
-  **salve-o de novo** com o mesmo nome.
+<Aside type="caution" title="À mão, só vale para secrets gravados depois">
+  Colar o `recovery_recipient` no `config.toml` não recifra o que já existe (gerar pela interface recifra). Para um secret
+  antigo ficar legível pela chave de recuperação, **salve-o de novo** com o mesmo nome.
 </Aside>
 
 ## O que guardar fora do servidor

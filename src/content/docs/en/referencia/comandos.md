@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 147 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 149 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **147 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **149 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -1209,6 +1209,30 @@ Desiste: esquece a chave de recuperação da memória. A infra restaurada contin
 ```json
 "ServerRecoverCancel"
 ```
+
+**Used by:** GUI and web UI.
+
+### RecoveryKeyStatus
+
+A chave **pública** de recuperação deste servidor (`[secrets] recovery_recipient`), se houver. Nunca devolve a privada. Resposta: `RecoveryKey`. Plano: `docs/plano-chave-de-recuperacao.md`.
+
+```json
+"RecoveryKeyStatus"
+```
+
+**Used by:** GUI and web UI.
+
+### RecoveryKeyGenerate
+
+**Gera** a chave de recuperação: grava só a pública no `config.toml` e devolve a privada **uma única vez** (o servidor não a guarda; quem chama deve baixá-la na hora). Já havendo chave, recusa — a não ser com `replace: true` (a antiga deixa de cifrar o que for exportado daí em diante). Resposta: `RecoveryKeyGenerated`.
+
+```json
+{"RecoveryKeyGenerate":{"replace":false}}
+```
+
+| Field | Type |
+|---|---|
+| `replace` | `bool` |
 
 **Used by:** GUI and web UI.
 
