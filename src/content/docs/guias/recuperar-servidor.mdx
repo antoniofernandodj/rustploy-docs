@@ -65,6 +65,7 @@ Sem o passo 3 a recuperação traz só a infra e os serviços sobem **vazios**.
 | "o repositório não trouxe nenhum projeto" | repositório vazio, branch errada ou outro repositório |
 | "a chave de recuperação não é uma chave privada válida" | cole a linha `AGE-SECRET-KEY-1…`, não a chave pública |
 | Um segredo não abre | a chave não é a de recuperação deste repositório; a restauração é recusada e diz qual |
+| O resumo diz que a chave "não abre os backups" de um serviço | o backup foi cifrado para **outra** chave: a chave de recuperação foi trocada depois dele. Cancele e informe a que estava configurada quando o backup foi feito (a infra já restaurada fica, e dá para recomeçar com outra chave enquanto nenhum dado foi restaurado). A restauração dos dados só começa quando a chave abre todos os backups |
 | O resumo diz que o repositório não trouxe o destino S3 | o destino foi configurado depois do último envio ao git; os serviços subirão vazios |
 
 Se a infra voltou mas você quer desistir, **Cancelar** esquece a chave da memória. A infra restaurada continua no

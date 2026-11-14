@@ -61,12 +61,29 @@ padrão), sem certificado. Serve para testes e redes internas.
 
 ## Porta TCP do host (bancos e brokers)
 
-Serviços que **não são HTTP** não usam domínio: eles ganham uma **porta TCP no servidor**
-que repassa direto ao container. Na aba **Domains**, o bloco **PORTA TCP DO HOST**
-tem **Salvar porta** (você escolhe o número) e **Automática** (o Rustploy escolhe uma
-da faixa `[external_ports]`, padrão 20000–20999, e a libera no firewall). A porta aparece
-em **Host port** e **External URL** na aba **Connection**. Isso expõe o serviço à internet:
-use senha forte. Veja [Segurança do servidor](/operacao/seguranca-do-servidor/).
+Serviços que **não são HTTP** não usam domínio: eles ganham **portas TCP no servidor**
+que repassam direto ao container. Na aba **Domains**, o bloco **PORTAS TCP DO HOST** é uma
+lista: cada porta do servidor leva a uma porta do container.
+
+- **Porta do host** vazia = **automática**: o Rustploy escolhe uma da faixa `[external_ports]`
+  (padrão 20000–20999) e a libera no firewall. Ou digite o número.
+- **Porta do container** vazia = a porta padrão do serviço.
+- **Rótulo** (opcional) só dá nome à porta na tela: "console", "painel".
+
+Um serviço pode ter até 8 portas. É o que serve para quem tem duas: o RustFS (ou MinIO) tem a
+API S3 na 9000 e o console web na 9001; o RabbitMQ tem o AMQP na 5672 e o painel na 15672.
+
+**Sugerir portas do container** mostra as portas que o serviço provavelmente tem, juntando o
+que o container está escutando agora, o que a imagem e o compose declaram e uma tabela por
+produto (que dá o nome, como "console"). Clicar numa sugestão preenche a porta do container.
+Portas marcadas como **interna** (as de cluster do RabbitMQ, por exemplo) não devem ser expostas.
+
+A porta que leva à porta padrão do serviço aparece em **Host port** e **External URL**, na aba
+**Connection**. Isso expõe o serviço à internet: use senha forte. Veja
+[Segurança do servidor](/operacao/seguranca-do-servidor/).
+
+Se a outra porta é uma **interface web** (um console, um painel), um domínio também serve:
+cada domínio tem a sua porta do container.
 
 ## O servidor responde 502?
 

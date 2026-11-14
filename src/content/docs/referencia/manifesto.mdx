@@ -26,7 +26,8 @@ daemon e do `rustploy-shared`.
 | `name` | texto | sim | — | Obrigatório. **Chave de casamento** dentro do projeto. |
 | `source` | objeto `source` | sim | — | Obrigatório. De onde vem o serviço (veja `source`). |
 | `port` | inteiro | não | `0` | Porta do app **dentro** do container. Omitida, vale `0` (sem erro, mas o serviço não terá porta útil). |
-| `host_port` | inteiro | não | ausente | Porta TCP aberta no servidor. `0` pede alocação automática (reaproveita a porta já alocada ao serviço de mesmo nome). |
+| `host_port` | inteiro | não | ausente | Legado: **uma** porta TCP aberta no servidor, ligada à `port` do serviço. `0` pede alocação automática (reaproveita a porta já alocada ao serviço de mesmo nome). Com `tcp_ports`, é só um espelho da porta que leva à `port`. |
+| `tcp_ports` | lista de portas TCP | não | vazio | Portas TCP abertas no servidor, **cada uma para uma porta do container** (ex.: a API e o console de um storage). No máximo 8. Na importação, cada porta do host volta como automática. |
 | `domain` | texto | não | ausente | Domínio **legado** (um só). Prefira `domains`. |
 | `tls` | verdadeiro/falso | não | `false` | TLS do `domain` legado. |
 | `domains` | lista de rotas de domínio | não | vazio | Rotas de domínio: cada uma com `domain`, `port` e `tls`. |
@@ -92,6 +93,14 @@ daemon e do `rustploy-shared`.
 | `domain` | texto | sim | — | Obrigatório. O nome do domínio. |
 | `port` | inteiro | não | ausente | Porta do container para este domínio. Omitida, vale a `port` do serviço. |
 | `tls` | verdadeiro/falso | não | `false` | HTTPS automático (ACME). |
+
+### Item de `tcp_ports`
+
+| Campo | Tipo | Obrigatório | Padrão | |
+|---|---|---|---|---|
+| `host_port` | inteiro | sim | — | Obrigatório. A porta no servidor; `0` pede alocação automática. |
+| `container_port` | inteiro | não | ausente | Porta do container para onde esta porta leva. Omitida, vale a `port` do serviço. |
+| `label` | texto | não | ausente | Só um nome para a tela ("console", "painel"); não muda o roteamento. |
 
 ### Item de `env_comments`
 

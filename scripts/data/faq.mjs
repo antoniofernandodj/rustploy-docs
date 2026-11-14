@@ -198,8 +198,8 @@ export const sections = [
       {
         q: { pt: 'Como acesso um banco de fora do servidor?', en: 'How do I reach a database from outside the server?' },
         a: {
-          pt: 'Abra uma porta TCP do host: na aba Domains do serviço use **PORTA TCP DO HOST** (Salvar porta ou Automática), ou marque a opção de URL externa no assistente da GUI. O Rustploy aloca uma porta da faixa 20000–20999 e a libera no firewall. Isso expõe o banco à internet, protegido só pela senha: use uma senha forte. Veja [Bancos, brokers e storage](/guias/bancos-e-brokers/).',
-          en: 'Open a host TCP port: on the service\'s Domains tab use **PORTA TCP DO HOST** (Salvar porta or Automática), or tick the external URL option in the desktop wizard. Rustploy allocates a port from the 20000–20999 range and opens it in the firewall. This exposes the database to the internet, protected only by its password: use a strong one. See [Databases, brokers and storage](/guias/bancos-e-brokers/).',
+          pt: 'Abra uma porta TCP do host: na aba Domains do serviço, em **PORTAS TCP DO HOST**, adicione uma porta (deixe a porta do host vazia para automática), ou marque a opção de URL externa no assistente da GUI. O Rustploy aloca uma porta da faixa 20000–20999 e a libera no firewall. Isso expõe o banco à internet, protegido só pela senha: use uma senha forte. Veja [Bancos, brokers e storage](/guias/bancos-e-brokers/).',
+          en: 'Open a host TCP port: on the service\'s Domains tab, under **HOST TCP PORTS**, add a port (leave the host port empty for automatic), or tick the external URL option in the desktop wizard. Rustploy allocates a port from the 20000–20999 range and opens it in the firewall. This exposes the database to the internet, protected only by its password: use a strong one. See [Databases, brokers and storage](/guias/bancos-e-brokers/).',
         },
       },
       {

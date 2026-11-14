@@ -33,17 +33,17 @@ rows. Routes **only exist for services that are up**: a stopped service, or one 
 
 ## Host TCP ports
 
-**PORTAS TCP DE HOST (N)** (host TCP ports) lists the services that have a port open on the server, such as databases and brokers:
+**PORTAS TCP DE HOST (N)** (host TCP ports) lists the ports open on the server, one row per port (a service can have several, such as a storage's API and its console):
 
 | Column | Means |
 |---|---|
 | **SERVIÇO** | the service |
 | **PROJETO** | its project |
 | **PORTA HOST** | the port on the server (in the `[external_ports]` range, default 20000–20999) |
-| **PORTA CONTAINER** | the target port inside the container |
+| **PORTA CONTAINER** | the target port inside the container, with the label in parentheses if there is one (`9001 (console)`) |
 
 With none, the screen says *"Nenhum serviço com porta de host configurada."* (No service with a host port configured.) To open a
-port, use the [service's Domains tab](/en/interface/servico-configuracao/#host-tcp-port).
+port, use the [service's Domains tab](/en/interface/servico-configuracao/#host-tcp-ports).
 
 <Aside type="caution">
   Every port in this list is **reachable from the internet** (opened in the firewall), protected only by the service's password.

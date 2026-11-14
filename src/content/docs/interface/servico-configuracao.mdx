@@ -34,19 +34,23 @@ Para **adicionar**:
 O DNS precisa já apontar para o servidor, e o ACME precisa estar ligado para o HTTPS:
 veja [Domínios e HTTPS automático](/guias/dominios-e-tls/).
 
-### Porta TCP do host
+### Portas TCP do host
 
-O bloco **PORTA TCP DO HOST (passthrough, opcional)** serve para quando o serviço **não é
-HTTP** (um banco, um broker): ele abre uma porta TCP no **servidor** que repassa direto ao
-container, sem passar pelo roteamento por domínio.
+O bloco **PORTAS TCP DO HOST** serve para quando o serviço **não é HTTP** (um banco, um
+broker, a API de um storage): cada porta abre uma porta TCP no **servidor** que repassa direto
+a uma porta do container, sem passar pelo roteamento por domínio. Um serviço pode ter até 8.
 
-| Botão | Efeito |
+| Campo ou botão | Efeito |
 |---|---|
-| **Salvar porta** | usa o número que você digitou. O helper de firewall só abre portas da faixa `[external_ports]` |
-| **Automática** | o Rustploy escolhe uma porta livre da faixa (padrão 20000–20999) e a libera no firewall |
+| **Porta do host** | o número no servidor. Vazio = automática: o Rustploy escolhe uma livre da faixa (padrão 20000–20999) e a libera no firewall. O helper de firewall só abre portas da faixa `[external_ports]` |
+| **Porta do container** | para onde a porta leva. Vazio = a porta padrão do serviço |
+| **Sugerir portas do container** | lista as portas que o serviço provavelmente tem (o que o container escuta, o que a imagem e o compose declaram, e uma tabela por produto); clicar numa preenche a porta do container e o rótulo |
+| **Rótulo** | opcional, só dá nome à porta na tela ("console", "painel") |
+| **Adicionar porta** | grava. Uma porta do host que já existe é editada em vez de repetida |
+| **✕** | remove a porta e a fecha no firewall (se mais nenhum serviço a usa) |
 
-O resultado aparece na aba **Connection**, em **Host port** e **External URL**. Isso deixa o
-serviço acessível pela **internet**: use senha forte. Veja
+A porta que leva à porta padrão do serviço aparece na aba **Connection**, em **Host port** e
+**External URL**. Isso deixa o serviço acessível pela **internet**: use senha forte. Veja
 [Segurança do servidor](/operacao/seguranca-do-servidor/#o-helper-de-firewall).
 
 ## Healthcheck

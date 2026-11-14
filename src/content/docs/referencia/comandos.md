@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 149 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 150 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **149 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **150 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -1033,6 +1033,20 @@ Dados do serviço (volumes): o que um export levaria. Só olha, não muda nada. 
 
 ```json
 {"ServiceDataPlan":{"service_id":"svc_…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+
+**Usado por:** GUI e web UI.
+
+### ServicePortSuggestions
+
+Portas do container que o serviço provavelmente tem (o que o container escuta, o que a imagem e o compose declaram, e uma tabela por produto), para sugerir ao configurar as portas TCP. Só olha. Resposta: `ServicePortSuggestions`.
+
+```json
+{"ServicePortSuggestions":{"service_id":"svc_…"}}
 ```
 
 | Campo | Tipo |

@@ -64,7 +64,7 @@ const friendly = (rust) => {
   const map = {
     String: 'texto', bool: 'verdadeiro/falso', u16: 'inteiro', u32: 'inteiro', u64: 'inteiro',
     'Vec<String>': 'lista de textos', 'BTreeMap<String, String>': 'mapa texto → texto',
-    'Vec<DomainRoute>': 'lista de rotas de domínio', 'Vec<EnvComment>': 'lista de comentários',
+    'Vec<DomainRoute>': 'lista de rotas de domínio', 'Vec<TcpPortRoute>': 'lista de portas TCP', 'Vec<EnvComment>': 'lista de comentários',
     'Vec<ServiceManifest>': 'lista de serviços', 'Vec<ProjectEntry>': 'lista de projetos',
     SourceManifest: 'objeto `source`', GitManifest: 'objeto `git`', HealthcheckManifest: 'objeto `healthcheck`',
     ResourcesManifest: 'objeto `resources`', ProjectMeta: 'objeto `project`',
@@ -79,7 +79,8 @@ const NOTES_PT = {
   'ServiceManifest.name': 'Obrigatório. **Chave de casamento** dentro do projeto.',
   'ServiceManifest.source': 'Obrigatório. De onde vem o serviço (veja `source`).',
   'ServiceManifest.port': 'Porta do app **dentro** do container. Omitida, vale `0` (sem erro, mas o serviço não terá porta útil).',
-  'ServiceManifest.host_port': 'Porta TCP aberta no servidor. `0` pede alocação automática (reaproveita a porta já alocada ao serviço de mesmo nome).',
+  'ServiceManifest.host_port': 'Legado: **uma** porta TCP aberta no servidor, ligada à `port` do serviço. `0` pede alocação automática (reaproveita a porta já alocada ao serviço de mesmo nome). Com `tcp_ports`, é só um espelho da porta que leva à `port`.',
+  'ServiceManifest.tcp_ports': 'Portas TCP abertas no servidor, **cada uma para uma porta do container** (ex.: a API e o console de um storage). No máximo 8. Na importação, cada porta do host volta como automática.',
   'ServiceManifest.domain': 'Domínio **legado** (um só). Prefira `domains`.',
   'ServiceManifest.tls': 'TLS do `domain` legado.',
   'ServiceManifest.domains': 'Rotas de domínio: cada uma com `domain`, `port` e `tls`.',
@@ -120,6 +121,9 @@ const NOTES_PT = {
   'DomainRoute.domain': 'Obrigatório. O nome do domínio.',
   'DomainRoute.port': 'Porta do container para este domínio. Omitida, vale a `port` do serviço.',
   'DomainRoute.tls': 'HTTPS automático (ACME).',
+  'TcpPortRoute.host_port': 'Obrigatório. A porta no servidor; `0` pede alocação automática.',
+  'TcpPortRoute.container_port': 'Porta do container para onde esta porta leva. Omitida, vale a `port` do serviço.',
+  'TcpPortRoute.label': 'Só um nome para a tela ("console", "painel"); não muda o roteamento.',
   'EnvComment.text': 'A linha completa, incluindo o `#`.',
   'EnvComment.before_key': 'A chave que vem logo depois do comentário. Omitida, é um comentário solto, no fim.',
 };
@@ -128,7 +132,8 @@ const NOTES_EN = {
   'ServiceManifest.name': 'Required. **Matching key** within the project.',
   'ServiceManifest.source': 'Required. Where the service comes from (see `source`).',
   'ServiceManifest.port': 'App port **inside** the container. If omitted, it is `0` (no error, but the service will have no useful port).',
-  'ServiceManifest.host_port': 'TCP port opened on the server. `0` asks for automatic allocation (reuses the port already allocated to the service with the same name).',
+  'ServiceManifest.host_port': 'Legacy: **one** TCP port opened on the server, bound to the service `port`. `0` asks for automatic allocation (reuses the port already allocated to the service with the same name). With `tcp_ports`, it is only a mirror of the port that leads to `port`.',
+  'ServiceManifest.tcp_ports': 'TCP ports opened on the server, **each one to a container port** (e.g. a storage\'s API and its console). At most 8. On import, each host port comes back as automatic.',
   'ServiceManifest.domain': '**Legacy** domain (just one). Prefer `domains`.',
   'ServiceManifest.tls': 'TLS for the legacy `domain`.',
   'ServiceManifest.domains': 'Domain routes: each one with `domain`, `port` and `tls`.',
@@ -169,18 +174,21 @@ const NOTES_EN = {
   'DomainRoute.domain': 'Required. The domain name.',
   'DomainRoute.port': 'Container port for this domain. If omitted, the service `port` applies.',
   'DomainRoute.tls': 'Automatic HTTPS (ACME).',
+  'TcpPortRoute.host_port': 'Required. The port on the server; `0` asks for automatic allocation.',
+  'TcpPortRoute.container_port': 'Container port this port leads to. If omitted, the service `port` applies.',
+  'TcpPortRoute.label': 'Just a name for the screen ("console", "dashboard"); it does not change routing.',
   'EnvComment.text': 'The full line, including the `#`.',
   'EnvComment.before_key': 'The key that comes right after the comment. If omitted, it is a loose comment at the end.',
 };
 
 const TITLES_EN = {
   ServiceManifest: '`service`', SourceManifest: '`source` (use **one** of the keys)', GitManifest: '`source.git`', HealthcheckManifest: '`healthcheck`',
-  ResourcesManifest: '`resources`', DomainRoute: 'Item of `domains`', EnvComment: 'Item of `env_comments`',
+  ResourcesManifest: '`resources`', DomainRoute: 'Item of `domains`', TcpPortRoute: 'Item of `tcp_ports`', EnvComment: 'Item of `env_comments`',
 };
 
 const FRIENDLY_EN = {
   texto: 'text', 'verdadeiro/falso': 'true/false', inteiro: 'integer', 'lista de textos': 'list of texts', 'mapa texto → texto': 'map text → text',
-  'lista de rotas de domínio': 'list of domain routes', 'lista de comentários': 'list of comments', 'lista de serviços': 'list of services', 'lista de projetos': 'list of projects',
+  'lista de rotas de domínio': 'list of domain routes', 'lista de portas TCP': 'list of TCP ports', 'lista de comentários': 'list of comments', 'lista de serviços': 'list of services', 'lista de projetos': 'list of projects',
   'objeto `source`': '`source` object', 'objeto `git`': '`git` object', 'objeto `healthcheck`': '`healthcheck` object', 'objeto `resources`': '`resources` object', 'objeto `project`': '`project` object',
   'tabelas por projeto': 'tables per project', 'tabelas por provedor': 'tables per provider', 'tabelas por serviço': 'tables per service',
 };
@@ -192,6 +200,7 @@ const structs = [
   ['HealthcheckManifest', manifestLines, '`healthcheck`'],
   ['ResourcesManifest', manifestLines, '`resources`'],
   ['DomainRoute', modelsLines, 'Item de `domains`'],
+  ['TcpPortRoute', modelsLines, 'Item de `tcp_ports`'],
   ['EnvComment', modelsLines, 'Item de `env_comments`'],
 ];
 

@@ -325,6 +325,29 @@ domain = "rustploy.mysite.com"
 
 Restart the daemon. The full reference is in [The config.toml file](/en/instalacao/config-toml/).
 
+## Uninstall
+
+To remove Rustploy from the machine completely:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/antoniofernandodj/rustploy/main/uninstall.sh | sudo sh
+```
+
+It stops the daemon **first** (with [git sync](/en/guias/sincronizacao-git/) on, deleting services while the
+daemon is up would become a deletion in the repository) and removes:
+
+- the services Rustploy created: `rp_*` containers, volumes, networks and images (in Docker and/or Podman);
+- the packages, the daemon data (`/var/lib/rustploy`) and `/etc/rustploy`, including the `age.key` identity;
+- the systemd units and drop-ins, the Podman settings the installer wrote and the `rustploy` ufw rules;
+- the `rustploy` user.
+
+It does **not** remove Docker or Podman (only what is `rp_*`), the backups in `/var/backups/rustploy-*`, or
+what lives outside the machine: the git repository and the S3 backups. That is where
+[recovery](/en/guias/recuperar-servidor/) brings everything back from, with the recovery key.
+
+Before confirming, it shows what it will delete and asks you to type `DESTRUIR`. Options: `--dry-run` only
+shows, `--keep-data` removes the packages but keeps volumes and data, `--yes` does not ask (for scripts).
+
 ## Next step
 
 [Install a client](/en/instalacao/instalar-clientes/) or go straight to the web UI.

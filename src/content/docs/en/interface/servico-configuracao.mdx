@@ -33,18 +33,24 @@ To **add** one:
 
 DNS must already point at the server, and ACME must be on for HTTPS: see [Domains and automatic HTTPS](/en/guias/dominios-e-tls/).
 
-### Host TCP port
+### Host TCP ports
 
-The **PORTA TCP DO HOST (passthrough, opcional)** block is for when the service is **not HTTP** (a database, a broker): it opens a
-TCP port on the **server** that forwards straight to the container, without going through domain routing.
+The **HOST TCP PORTS** block is for when the service is **not HTTP** (a database, a broker, a storage API): each
+port opens a TCP port on the **server** that forwards straight to a container port, without going through domain
+routing. A service can have up to 8.
 
-| Button | Effect |
+| Field or button | Effect |
 |---|---|
-| **Salvar porta** (Save port) | uses the number you typed. The firewall helper only opens ports in the `[external_ports]` range |
-| **Automática** (Automatic) | Rustploy picks a free port from the range (default 20000–20999) and opens it in the firewall |
+| **Host port** | the number on the server. Empty = automatic: Rustploy picks a free one from the range (default 20000–20999) and opens it in the firewall. The firewall helper only opens ports in the `[external_ports]` range |
+| **Container port** | where the port leads. Empty = the service's default port |
+| **Suggest container ports** | lists the ports the service probably has (what the container listens on, what the image and the compose file declare, and a per-product table); clicking one fills in the container port and the label |
+| **Label** | optional, only names the port on screen ("console", "dashboard") |
+| **Add port** | saves. A host port that already exists is edited instead of repeated |
+| **✕** | removes the port and closes it in the firewall (if no other service uses it) |
 
-The result appears on the **Connection** tab, under **Host port** and **External URL**. This makes the service reachable from the
-**internet**: use a strong password. See [Server security](/en/operacao/seguranca-do-servidor/#the-firewall-helper).
+The port that leads to the service's default port appears on the **Connection** tab, under **Host port** and
+**External URL**. This makes the service reachable from the **internet**: use a strong password. See
+[Server security](/en/operacao/seguranca-do-servidor/#the-firewall-helper).
 
 ## Healthcheck
 

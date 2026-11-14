@@ -35,18 +35,18 @@ O nome do serviço é um **link** para a tela dele; na tabela de portas, o proje
 
 ## Portas TCP de host
 
-**PORTAS TCP DE HOST (N)** lista os serviços que têm uma porta aberta no servidor, como
-bancos e brokers:
+**PORTAS TCP DE HOST (N)** lista as portas abertas no servidor, uma linha por porta (um serviço
+pode ter várias, como a API e o console de um storage):
 
 | Coluna | Significa |
 |---|---|
 | **SERVIÇO** | o serviço |
 | **PROJETO** | o projeto dele |
 | **PORTA HOST** | a porta no servidor (na faixa `[external_ports]`, padrão 20000–20999) |
-| **PORTA CONTAINER** | a porta de destino dentro do container |
+| **PORTA CONTAINER** | a porta de destino dentro do container, com o rótulo entre parênteses se houver (`9001 (console)`) |
 
 Sem nenhuma, a tela diz *"Nenhum serviço com porta de host configurada."* Para abrir uma porta,
-use a [aba Domains do serviço](/interface/servico-configuracao/#porta-tcp-do-host).
+use a [aba Domains do serviço](/interface/servico-configuracao/#portas-tcp-do-host).
 
 <Aside type="caution">
   Cada porta nesta lista está **acessível pela internet** (liberada no firewall),

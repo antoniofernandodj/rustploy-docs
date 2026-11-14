@@ -26,7 +26,8 @@ daemon and `rustploy-shared` code.
 | `name` | text | yes | — | Required. **Matching key** within the project. |
 | `source` | `source` object | yes | — | Required. Where the service comes from (see `source`). |
 | `port` | integer | no | `0` | App port **inside** the container. If omitted, it is `0` (no error, but the service will have no useful port). |
-| `host_port` | integer | no | absent | TCP port opened on the server. `0` asks for automatic allocation (reuses the port already allocated to the service with the same name). |
+| `host_port` | integer | no | absent | Legacy: **one** TCP port opened on the server, bound to the service `port`. `0` asks for automatic allocation (reuses the port already allocated to the service with the same name). With `tcp_ports`, it is only a mirror of the port that leads to `port`. |
+| `tcp_ports` | list of TCP ports | no | empty | TCP ports opened on the server, **each one to a container port** (e.g. a storage's API and its console). At most 8. On import, each host port comes back as automatic. |
 | `domain` | text | no | absent | **Legacy** domain (just one). Prefer `domains`. |
 | `tls` | true/false | no | `false` | TLS for the legacy `domain`. |
 | `domains` | list of domain routes | no | empty | Domain routes: each one with `domain`, `port` and `tls`. |
@@ -92,6 +93,14 @@ daemon and `rustploy-shared` code.
 | `domain` | text | yes | — | Required. The domain name. |
 | `port` | integer | no | absent | Container port for this domain. If omitted, the service `port` applies. |
 | `tls` | true/false | no | `false` | Automatic HTTPS (ACME). |
+
+### Item of `tcp_ports`
+
+| Field | Type | Required | Default | |
+|---|---|---|---|---|
+| `host_port` | integer | yes | — | Required. The port on the server; `0` asks for automatic allocation. |
+| `container_port` | integer | no | absent | Container port this port leads to. If omitted, the service `port` applies. |
+| `label` | text | no | absent | Just a name for the screen ("console", "dashboard"); it does not change routing. |
 
 ### Item of `env_comments`
 

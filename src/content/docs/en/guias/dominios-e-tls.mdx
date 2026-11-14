@@ -58,12 +58,29 @@ certificate. It suits tests and internal networks.
 
 ## Host TCP port (databases and brokers)
 
-Services that are **not HTTP** do not use a domain: they get a **TCP port on the server** that forwards straight
-to the container. On the **Domains** tab, the **PORTA TCP DO HOST** (host TCP port) block has **Salvar porta**
-(Save port, you pick the number) and **Automática** (Automatic, Rustploy picks one from the `[external_ports]`
-range, default 20000–20999, and opens it in the firewall). The port appears under **Host port** and
-**External URL** on the **Connection** tab. This exposes the service to the internet: use a strong password.
+Services that are **not HTTP** do not use a domain: they get **TCP ports on the server** that forward straight
+to the container. On the **Domains** tab, the **HOST TCP PORTS** block is a list: each server port leads to a
+container port.
+
+- An empty **host port** = **automatic**: Rustploy picks one from the `[external_ports]` range (default
+  20000–20999) and opens it in the firewall. Or type the number.
+- An empty **container port** = the service's default port.
+- The **label** (optional) only names the port on screen: "console", "dashboard".
+
+A service can have up to 8 ports. That is what services with two ports need: RustFS (or MinIO) has the S3 API
+on 9000 and the web console on 9001; RabbitMQ has AMQP on 5672 and the management dashboard on 15672.
+
+**Suggest container ports** shows the ports the service probably has, combining what the container is listening
+on right now, what the image and the compose file declare, and a per-product table (which gives the name, such
+as "console"). Clicking a suggestion fills in the container port. Ports marked **internal** (RabbitMQ's cluster
+ports, for example) should not be exposed.
+
+The port that leads to the service's default port appears under **Host port** and **External URL** on the
+**Connection** tab. This exposes the service to the internet: use a strong password.
 See [Server security](/en/operacao/seguranca-do-servidor/).
+
+If the other port is a **web interface** (a console, a dashboard), a domain works too: each domain has its own
+container port.
 
 ## Is the server returning 502?
 

@@ -63,6 +63,7 @@ Without step 3 the recovery brings only the infra and the services start **empty
 | "the repository brought no project" | empty repository, wrong branch or another repository |
 | "the recovery key is not a valid private key" | paste the `AGE-SECRET-KEY-1…` line, not the public key |
 | A secret does not open | the key is not this repository's recovery key; the restore is refused and says which one |
+| The summary says the key "does not open the backups" of a service | the backup was encrypted for **another** key: the recovery key was replaced after it was made. Cancel and enter the key that was configured when the backup was taken (the infra already restored stays, and you can start over with another key as long as no data has been restored). Data restoration only starts when the key opens every backup |
 | The summary says the repository brought no S3 destination | the destination was set after the last push to git; services will start empty |
 
 If the infra came back but you want to give up, **Cancel** forgets the key from memory. The restored infra stays on the server.
