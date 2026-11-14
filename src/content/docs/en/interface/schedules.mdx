@@ -6,6 +6,7 @@ description: The desktop app's Schedules screen in Rustploy and the New job wind
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
 import jobsMenu from '../../../../assets/ui/jobs-menu-acoes.png';
+import removerJob from '../../../../assets/ui/jobs-remover-confirmacao.png';
 import schedules from '../../../../assets/ui/schedules-novo-job.png';
 import compose from '../../../../assets/ui/novo-job-compose.png';
 import git from '../../../../assets/ui/novo-job-git.png';
@@ -116,6 +117,15 @@ The **⋯** button at the end of the row opens a panel with the job name, the wa
 | **🔑 Variáveis e secrets** (Variables and secrets) | opens the screen with the job's environment variables and secrets. See [A job's variables and secrets](#a-jobs-variables-and-secrets) |
 | **✎ Editar** (Edit) | opens the job to change it |
 | **✕ Remover** (Remove) | deletes the job, after **asking for confirmation**. It cannot be recovered |
+
+**Remover** (Remove) and **Reconstruir** (Rebuild) close the panel and open a confirmation dialog. **Cancelar**
+(Cancel) changes nothing (the job stays in the list); **Remover** deletes the job.
+
+<Shot
+  src={removerJob}
+  alt="The Remover job? (Remove job?) confirmation dialog over the job list, saying the bucket job will be removed and cannot be recovered, with the Cancelar and Remover buttons."
+  caption="The confirmation when removing a job (project names and the server address are blurred)."
+/>
 
 ## A job's variables and secrets
 

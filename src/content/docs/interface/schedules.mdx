@@ -6,6 +6,7 @@ description: A tela Schedules do app desktop do Rustploy e a janela Novo job - e
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
 import jobsMenu from '../../../assets/ui/jobs-menu-acoes.png';
+import removerJob from '../../../assets/ui/jobs-remover-confirmacao.png';
 import schedules from '../../../assets/ui/schedules-novo-job.png';
 import compose from '../../../assets/ui/novo-job-compose.png';
 import git from '../../../assets/ui/novo-job-git.png';
@@ -117,6 +118,15 @@ O botão **⋯** no fim da linha abre um painel com o nome do job, o estado de a
 | **🔑 Variáveis e secrets** | abre a tela das variáveis de ambiente e dos secrets do job. Veja [Variáveis e secrets de um job](#variáveis-e-secrets-de-um-job) |
 | **✎ Editar** | abre o job para alterar |
 | **✕ Remover** | apaga o job, depois de **pedir confirmação**. Não há como recuperar |
+
+**Remover** e **Reconstruir** fecham o painel e abrem uma janela de confirmação. **Cancelar** não muda nada
+(o job continua na lista); **Remover** apaga o job.
+
+<Shot
+  src={removerJob}
+  alt="Janela de confirmação Remover job? sobre a lista de jobs, com a mensagem de que o job bucket será removido e não poderá ser recuperado, e os botões Cancelar e Remover."
+  caption="A confirmação ao remover um job (os nomes dos projetos e o endereço do servidor estão borrados)."
+/>
 
 ## Variáveis e secrets de um job
 
