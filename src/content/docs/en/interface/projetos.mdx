@@ -112,10 +112,9 @@ To **add** one:
 
 | Control | What it does |
 |---|---|
-| **use secret** | instead of typing the value, points the variable at a project **secret** |
+| **use secret** | instead of typing the value, picks a project **secret** from a list (in the add form and on every row) |
 | red **×** on the row | removes the variable |
-| **✏️** on the row | **renames** the key **right there**: the name becomes a field on the row itself. **Enter** (or **✓**) saves, **✕** cancels. The value does not change |
-| **✎** on the row | edits the **value** the same way, at its own position in the list. On a variable that points at a secret, the field shows the `secret:NAME` reference (never the encrypted value) |
+| key and value on the row | borderless fields: click and edit **right there**. Nothing saves on its own: once you change something an **OK** appears, which shows what will change, asks for confirmation and saves, and a **✕** that undoes. In the web UI, **Enter** works as OK and **Esc** undoes |
 | **.env** | opens the editor in text, in `.env` format (one `KEY=value` per line, with comments) |
 | **Export** | opens the same editor already filled with the current variables, to copy |
 

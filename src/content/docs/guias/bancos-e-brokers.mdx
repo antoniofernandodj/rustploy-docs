@@ -53,7 +53,7 @@ Compose (`rp_<nome>`), com as credenciais **geradas e guardadas cifradas**.
 - A aplicação usa o endpoint interno `http://rp_<nome>:9000`, que aparece na aba **Conexão**. As chaves ficam como
   [secrets](/guias/variaveis-e-secrets/) do serviço (`RUSTFS_ACCESS_KEY`/`RUSTFS_SECRET_KEY`, ou
   `MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD`). Para dá-las a uma aplicação **sem copiar o valor**, referencie o secret na
-  variável da aplicação (`S3_ACCESS_KEY_ID` = `<secret:RUSTFS_ACCESS_KEY>`) ou use o ✏️ para renomear a chave.
+  variável da aplicação (`S3_ACCESS_KEY_ID` = `<secret:RUSTFS_ACCESS_KEY>`) ou renomeie a chave na própria linha (edite e clique em **OK**).
 - O Compose gerado **não** abre CORS (`*`). Quem precisar de CORS acrescenta no Compose do serviço.
 
 <Aside type="caution" title="Imagem do MinIO">

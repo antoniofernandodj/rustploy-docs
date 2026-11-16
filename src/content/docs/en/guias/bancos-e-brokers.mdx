@@ -52,7 +52,7 @@ stack (`rp_<name>`) with the credentials **generated and stored encrypted**.
 - The application uses the internal endpoint `http://rp_<name>:9000`, shown in the service's **Connection** tab. The keys
   are service [secrets](/en/guias/variaveis-e-secrets/) (`RUSTFS_ACCESS_KEY`/`RUSTFS_SECRET_KEY`, or
   `MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD`). To give them to an application **without copying the value**, reference the
-  secret in the application's variable (`S3_ACCESS_KEY_ID` = `<secret:RUSTFS_ACCESS_KEY>`) or use ✏️ to rename the key.
+  secret in the application's variable (`S3_ACCESS_KEY_ID` = `<secret:RUSTFS_ACCESS_KEY>`) or rename the key on its row (edit it and click **OK**).
 - The generated Compose does **not** open CORS (`*`). If you need CORS, add it to the service's Compose.
 
 <Aside type="caution" title="MinIO image">

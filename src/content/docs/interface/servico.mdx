@@ -148,8 +148,10 @@ Abaixo, **CONTAINERS (N)** lista os containers em execução do serviço. Para b
 As variáveis **do serviço**, no mesmo formato das [variáveis do projeto](/interface/projetos/#variáveis-do-projeto):
 **KEY** e **value**, **Adicionar**, **✕** para remover, o botão **.env** para editar em
 texto e **Exportar**. A contagem aparece como *"N variável(eis)"*. As do serviço
-**têm precedência** sobre as do projeto. O **✏️** (chave) e o **✎** (valor) editam a variável **na própria linha**,
-com **Enter** para gravar. Regras completas em
+**têm precedência** sobre as do projeto. A chave e o valor se editam **na própria linha** (clique no campo); o **OK**
+pede confirmação e grava. O **usar secret** troca o valor por uma lista com os secrets do serviço e os do projeto
+(marcados *(projeto)*); um secret do projeto com o mesmo nome de um do serviço fica de fora, porque vale o do serviço.
+Regras completas em
 [Como as variáveis são resolvidas](/conceitos/variaveis-de-ambiente/).
 
 ### Deployments

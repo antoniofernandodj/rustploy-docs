@@ -117,10 +117,9 @@ Para **adicionar**:
 
 | Controle | O que faz |
 |---|---|
-| **usar secret** | em vez de digitar o valor, aponta a variável para um **secret** do projeto |
+| **usar secret** | em vez de digitar o valor, escolhe um **secret** do projeto numa lista (no formulário de adicionar e em cada linha) |
 | **×** vermelho na linha | remove a variável |
-| **✏️** na linha | **renomeia** a chave **ali mesmo**: o nome vira um campo na própria linha. **Enter** (ou **✓**) grava, **✕** desiste. O valor não muda |
-| **✎** na linha | edita o **valor** do mesmo jeito, na própria posição da lista. Numa variável que aponta para um secret, o campo mostra a referência `secret:NOME` (nunca o valor cifrado) |
+| chave e valor na linha | são campos sem borda: clique e edite **ali mesmo**. Nada grava sozinho: ao mexer aparece um **OK**, que mostra o que vai mudar, pede confirmação e grava, e um **✕**, que desfaz. Na webui, **Enter** equivale ao OK e **Esc** desfaz |
 | **.env** | abre o editor em texto, no formato `.env` (uma `CHAVE=valor` por linha, com comentários) |
 | **Exportar** | abre o mesmo editor já preenchido com as variáveis atuais, para copiar |
 

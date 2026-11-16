@@ -134,7 +134,8 @@ and the **job's secrets**, with the same buttons as a service's *Environment* ta
 | Button | Effect |
 |---|---|
 | **✕** | removes the variable (or the secret) |
-| **✏️** / **✎** | renames the key (the value stays) / edits the value in place |
+| key and value on the row | they are fields: click and edit right there. Nothing saves on its own: an **OK** appears, which asks for confirmation and saves, and a **✕** that undoes |
+| **use secret** | swaps the value for a list of the secrets the job can use: its own, the trigger service's (marked *(service)*) and the project's (marked *(project)*), in that order of preference |
 | **🔒** | moves the variable to a **secret**: the value is stored encrypted (`ENC[age:…]`) |
 | **🔓** | turns the secret back into a plain variable |
 | **↑** | moves it up to the project: the project's services and jobs inherit it |

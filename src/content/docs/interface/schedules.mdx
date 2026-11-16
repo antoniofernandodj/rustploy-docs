@@ -136,7 +136,8 @@ A ação **🔑 Variáveis e secrets** do menu ⋯ abre uma tela com as variáve
 | Botão | Efeito |
 |---|---|
 | **✕** | remove a variável (ou o secret) |
-| **✏️** / **✎** | renomeia a chave (o valor não muda) / edita o valor no lugar |
+| chave e valor na linha | são campos: clique e edite ali mesmo. Nada grava sozinho: aparece um **OK**, que pede confirmação e grava, e um **✕**, que desfaz |
+| **usar secret** | troca o valor por uma lista com os secrets que o job pode usar: os dele, os do serviço gatilho (marcados *(serviço)*) e os do projeto (marcados *(projeto)*), nessa ordem de preferência |
 | **🔒** | move a variável para um **secret**: o valor passa a ser guardado cifrado (`ENC[age:…]`) |
 | **🔓** | volta o secret para uma variável em claro |
 | **↑** | sobe para o projeto: serviços e jobs do projeto passam a herdar |
