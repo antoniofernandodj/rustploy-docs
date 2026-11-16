@@ -12,7 +12,7 @@ não depender de código seu.
 **Antes de começar** você precisa do [daemon instalado](/instalacao/instalar-daemon/)
 e de um [cliente](/instalacao/instalar-clientes/). Os nomes de botões abaixo são os
 da web UI. No [app desktop](/interface/visao-geral/) o assistente de **Application**
-pede só o nome: a origem, a porta e o domínio se configuram depois, na aba **General**
+pede só o nome: a origem, a porta e o domínio se configuram depois, na aba **Geral**
 do serviço.
 
 ## 1. Entre
@@ -44,8 +44,8 @@ Um projeto é o grupo de serviços que se enxergam entre si numa rede própria.
 </Steps>
 
 O serviço foi **criado, mas ainda não está no ar**: criar não faz deploy. Você
-caiu na tela do serviço, com as abas **General, Connection, Environment,
-Domains, Deployments, Healthcheck, Logs e Advanced**.
+caiu na tela do serviço, com as abas **Geral, Conexão, Variáveis,
+Domínios, Deployments, Dados, Healthcheck, Logs e Avançado**.
 
 ## 4. Configure o healthcheck
 
@@ -88,7 +88,7 @@ Veja o que o container escreve na aba **Logs**.
 </Aside>
 
 <Steps>
-1. Abra a aba **Domains**.
+1. Abra a aba **Domínios**.
 2. Digite o domínio em `dominio.com`. Deixe a porta em branco (usa a porta do serviço, `80`).
 3. Marque **TLS** para HTTPS automático e clique em **Adicionar**.
 </Steps>
@@ -103,7 +103,7 @@ público e a porta do container para onde vai o tráfego.
 ## 7. Faça um segundo deploy e veja a troca
 
 Mude algo que faça diferença, por exemplo a imagem para `nginx:alpine` na aba
-**General**, salve e clique em **Deploy** de novo.
+**Geral**, salve e clique em **Deploy** de novo.
 
 Desta vez o container antigo continua atendendo enquanto o novo sobe e passa no
 healthcheck. A rota só muda no passo **SwappingIn**, de uma vez; depois vem o
@@ -114,7 +114,7 @@ falhasse, o estado iria para **RollingBack** e o antigo seguiria no ar.
 ## 8. Volte uma versão
 
 Hoje o jeito confiável de voltar é **redeployar a versão anterior**: na aba
-**General**, ponha de volta a imagem (ou a branch, ou o commit) que funcionava e
+**Geral**, ponha de volta a imagem (ou a branch, ou o commit) que funcionava e
 clique em **Deploy**. Como todo deploy, ele só troca a rota depois de passar no
 healthcheck.
 
@@ -129,7 +129,7 @@ healthcheck.
 - Criar um serviço não faz deploy; **Deploy** faz.
 - O healthcheck decide se a troca acontece.
 - O proxy troca a rota de uma vez, sem janela de indisponibilidade.
-- Domínio e TLS vivem na aba **Domains**.
+- Domínio e TLS vivem na aba **Domínios**.
 
 ## Se algo deu errado
 

@@ -177,7 +177,7 @@ export const sections = [
       {
         q: { pt: 'Meu domínio responde 502. Como diagnostico?', en: 'My domain returns 502. How do I diagnose it?' },
         a: {
-          pt: 'Um 502 significa que o proxy achou a rota, mas o container não respondeu. Veja a tela Ingress: se o domínio não aparece, nenhum deploy registrou a rota; se a porta de destino está errada, corrija a porta do domínio na aba Domains. Confira também se o app escuta em `0.0.0.0` e se o healthcheck passa. Veja [Diagnosticar um erro 502](/guias/diagnosticar-502/).',
+          pt: 'Um 502 significa que o proxy achou a rota, mas o container não respondeu. Veja a tela Ingress: se o domínio não aparece, nenhum deploy registrou a rota; se a porta de destino está errada, corrija a porta do domínio na aba Domínios. Confira também se o app escuta em `0.0.0.0` e se o healthcheck passa. Veja [Diagnosticar um erro 502](/guias/diagnosticar-502/).',
           en: 'A 502 means the proxy found the route but the container did not respond. Check the Ingress screen: if the domain is missing, no deploy registered the route; if the target port is wrong, fix the domain\'s port on the Domains tab. Also check that the app listens on `0.0.0.0` and that the healthcheck passes. See [Diagnose a 502 error](/guias/diagnosticar-502/).',
         },
       },
@@ -191,21 +191,21 @@ export const sections = [
       {
         q: { pt: 'Como minha aplicação encontra o banco de dados?', en: 'How does my application find the database?' },
         a: {
-          pt: 'Dentro do projeto, os serviços se alcançam pelo nome na rede do projeto: um serviço Application responde como `rp_<nome>`, e um serviço Compose pelo nome do serviço **dentro do YAML**. A aba Connection do banco mostra a URL interna pronta para copiar. Veja [Rede e nomes](/conceitos/rede-e-nomes/).',
+          pt: 'Dentro do projeto, os serviços se alcançam pelo nome na rede do projeto: um serviço Application responde como `rp_<nome>`, e um serviço Compose pelo nome do serviço **dentro do YAML**. A aba Conexão do banco mostra a URL interna pronta para copiar. Veja [Rede e nomes](/conceitos/rede-e-nomes/).',
           en: 'Inside a project, services reach each other by name on the project network: an Application service answers as `rp_<name>`, and a Compose service by its service name **inside the YAML**. The database\'s Connection tab shows the internal URL ready to copy. See [Networking and names](/conceitos/rede-e-nomes/).',
         },
       },
       {
         q: { pt: 'Como acesso um banco de fora do servidor?', en: 'How do I reach a database from outside the server?' },
         a: {
-          pt: 'Abra uma porta TCP do host: na aba Domains do serviço, em **PORTAS TCP DO HOST**, adicione uma porta (deixe a porta do host vazia para automática), ou marque a opção de URL externa no assistente da GUI. O Rustploy aloca uma porta da faixa 20000–20999 e a libera no firewall. Isso expõe o banco à internet, protegido só pela senha: use uma senha forte. Veja [Bancos, brokers e storage](/guias/bancos-e-brokers/).',
+          pt: 'Abra uma porta TCP do host: na aba Domínios do serviço, em **PORTAS TCP DO HOST**, adicione uma porta (deixe a porta do host vazia para automática), ou marque a opção de URL externa no assistente da GUI. O Rustploy aloca uma porta da faixa 20000–20999 e a libera no firewall. Isso expõe o banco à internet, protegido só pela senha: use uma senha forte. Veja [Bancos, brokers e storage](/guias/bancos-e-brokers/).',
           en: 'Open a host TCP port: on the service\'s Domains tab, under **HOST TCP PORTS**, add a port (leave the host port empty for automatic), or tick the external URL option in the desktop wizard. Rustploy allocates a port from the 20000–20999 range and opens it in the firewall. This exposes the database to the internet, protected only by its password: use a strong one. See [Databases, brokers and storage](/guias/bancos-e-brokers/).',
         },
       },
       {
         q: { pt: 'Um serviço pode ter vários domínios?', en: 'Can a service have several domains?' },
         a: {
-          pt: 'Sim, cada serviço pode ter vários domínios, cada um com a própria porta de container e com ou sem TLS. Eles ficam na aba Domains. Em uma stack Compose, só um container atende o domínio: defina o alvo de ingress se o escolhido por padrão estiver errado. Veja [Domínios e HTTPS automático](/guias/dominios-e-tls/).',
+          pt: 'Sim, cada serviço pode ter vários domínios, cada um com a própria porta de container e com ou sem TLS. Eles ficam na aba Domínios. Em uma stack Compose, só um container atende o domínio: defina o alvo de ingress se o escolhido por padrão estiver errado. Veja [Domínios e HTTPS automático](/guias/dominios-e-tls/).',
           en: 'Yes, each service can have several domains, each with its own container port and with or without TLS. They live on the Domains tab. In a Compose stack only one container serves the domain: set the ingress target if the default pick is wrong. See [Domains and automatic HTTPS](/guias/dominios-e-tls/).',
         },
       },

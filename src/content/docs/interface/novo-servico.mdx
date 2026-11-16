@@ -87,7 +87,7 @@ pedem também a senha do root, e o MongoDB tem **Use Replica Sets**.
 
 <Aside type="note" title="Onde fica a senha">
   A senha **gerada** é guardada **cifrada**, como [secret](/guias/variaveis-e-secrets/) do serviço, e não aparece
-  na tela de criação. Para vê-la, abra a aba **Environment** do serviço e use o **👁** do secret (o acesso fica
+  na tela de criação. Para vê-la, abra a aba **Variáveis** do serviço e use o **👁** do secret (o acesso fica
   registrado na auditoria). Um agente de IA (MCP) **não** consegue lê-la.
 </Aside>
 
@@ -95,7 +95,7 @@ pedem também a senha do root, e o MongoDB tem **Use Replica Sets**.
 
 Marcando **"Gerar URL de conexão externa (porta e firewall automáticos)"**, o
 Rustploy aloca uma porta livre da faixa `[external_ports]` (padrão 20000–20999),
-libera essa porta no `ufw` e mostra a **External URL** na aba **Connection** do
+libera essa porta no `ufw` e mostra a **URL externa** na aba **Conexão** do
 serviço. Isso deixa o banco acessível pela **internet**, protegido só pela senha.
 Use uma senha forte. Sem marcar, o banco só é alcançável de dentro do projeto.
 Detalhes em [Bancos, brokers e storage](/guias/bancos-e-brokers/).
@@ -117,13 +117,13 @@ aplicações: veja o [catálogo](/templates/).
 
 <Shot
   src={wizApp}
-  alt="Formulário Nova Application com os campos Nome e App name opcional, o aviso para configurar a origem na aba General e o botão Criar Application."
+  alt="Formulário Nova Application com os campos Nome e App name opcional, o aviso para configurar a origem na aba Geral e o botão Criar Application."
   caption="Nova Application: só o nome."
 />
 
 O assistente pede só o **NOME** (e, opcionalmente, o **APP NAME**, usado no lugar do nome) e cria o
 serviço **vazio**. A origem (**Git**, imagem ou zip), a porta e o domínio se configuram depois, na aba
-**General** do serviço. Veja [Git](/guias/git/).
+**Geral** do serviço. Veja [Git](/guias/git/).
 
 ## Broker
 
@@ -200,7 +200,7 @@ O Storage **não cria bucket sozinho**. Veja como em [Bancos, brokers e storage]
 
 Como na Application, o app desktop pede só o **NOME** (e o **APP NAME** opcional) e cria a stack
 **vazia**: *"Configure o compose file dentro do serviço antes de fazer deploy."* O YAML se edita na aba
-**General** do serviço. Veja [Stacks Docker Compose](/guias/compose/).
+**Geral** do serviço. Veja [Stacks Docker Compose](/guias/compose/).
 
 ## Importar
 

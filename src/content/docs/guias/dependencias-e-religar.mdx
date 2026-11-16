@@ -4,7 +4,7 @@ description: Como dizer ao Rustploy que um serviço depende de outro (a API depe
 ---
 
 Num projeto com banco, cache e API, a ordem importa: o banco precisa estar no ar
-antes da API. Duas opções do serviço cuidam disso, na aba **Advanced**.
+antes da API. Duas opções do serviço cuidam disso, na aba **Avançado**.
 
 ## Depende de
 
@@ -40,5 +40,5 @@ fica com o erro explicando qual dependência falhou.
 
 ## Onde configurar
 
-- **App desktop e web UI:** serviço → aba **Advanced** → **Depende de** e o toggle de religar.
+- **App desktop e web UI:** serviço → aba **Avançado** → **Depende de** e o toggle de religar.
 - **YAML (`infra/`):** campos `depends_on` (lista de ids de serviço) e `autostart` no serviço.

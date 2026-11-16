@@ -1,6 +1,6 @@
 ---
 title: Domínios, healthcheck e opções avançadas do serviço
-description: As abas Domains, Healthcheck e Advanced da tela do serviço no app desktop do Rustploy - adicionar domínio com TLS, porta TCP do host, tipos de healthcheck, réplicas, comando de execução e a fila de pré-deploy.
+description: As abas Domínios, Healthcheck e Avançado da tela do serviço no app desktop do Rustploy - adicionar domínio com TLS, porta TCP do host, tipos de healthcheck, réplicas, comando de execução e a fila de pré-deploy.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -13,12 +13,12 @@ import fila from '../../../assets/ui/servico-avancado-fila.png';
 Estas são abas da [tela do serviço](/interface/servico/). Depois de mexer em qualquer
 uma, **faça um novo Deploy** para a mudança valer no container.
 
-## Domains
+## Domínios
 
 <Shot
   src={dominios}
-  alt="Aba Domains sem domínios, com os campos para adicionar um domínio, a porta do container, a chave HTTPS/TLS e a seção de porta TCP do host."
-  caption="Aba Domains de um serviço sem domínio."
+  alt="Aba Domínios sem domínios, com os campos para adicionar um domínio, a porta do container, a chave HTTPS/TLS e a seção de porta TCP do host."
+  caption="Aba Domínios de um serviço sem domínio."
 />
 
 **DOMÍNIOS (N)** lista as rotas do serviço. O texto da tela lembra: *"Cada domínio pode
@@ -49,8 +49,8 @@ a uma porta do container, sem passar pelo roteamento por domínio. Um serviço p
 | **Adicionar porta** | grava. Uma porta do host que já existe é editada em vez de repetida |
 | **✕** | remove a porta e a fecha no firewall (se mais nenhum serviço a usa) |
 
-A porta que leva à porta padrão do serviço aparece na aba **Connection**, em **Host port** e
-**External URL**. Isso deixa o serviço acessível pela **internet**: use senha forte. Veja
+A porta que leva à porta padrão do serviço aparece na aba **Conexão**, em **Porta do host** e
+**URL externa**. Isso deixa o serviço acessível pela **internet**: use senha forte. Veja
 [Segurança do servidor](/operacao/seguranca-do-servidor/#o-helper-de-firewall).
 
 ## Healthcheck
@@ -75,12 +75,12 @@ Clique em **Save**. O significado de cada tipo e como escolher está em
 [Healthcheck](/guias/healthcheck/). Um serviço novo nasce com **None**: configure um antes
 de usar em produção.
 
-## Advanced
+## Avançado
 
 <Shot
   src={avancado}
-  alt="Aba Advanced com os campos de réplicas e run command, e o início da fila de pré-deploy."
-  caption="Aba Advanced: réplicas, comando e fila de pré-deploy."
+  alt="Aba Avançado com os campos de réplicas e run command, e o início da fila de pré-deploy."
+  caption="Aba Avançado: réplicas, comando e fila de pré-deploy."
 />
 
 | Campo | O que faz |
@@ -95,7 +95,7 @@ Clique em **Save**.
 
 <Shot
   src={fila}
-  alt="Final da aba Advanced com a fila de pré-deploy vazia, o seletor de jobs e o botão Adicionar à fila."
+  alt="Final da aba Avançado com a fila de pré-deploy vazia, o seletor de jobs e o botão Adicionar à fila."
   caption="Fila de pré-deploy, vazia."
 />
 

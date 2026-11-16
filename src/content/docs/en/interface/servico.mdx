@@ -135,8 +135,8 @@ string you put in `DATABASE_URL`.
 
 <Shot
   src={envAba}
-  alt="A service's Environment tab with the variable counter, the Exportar and .env buttons, the KEY and value fields, the Adicionar button and the variable list with the values blurred."
-  caption="The Environment tab (the variable values are blurred)."
+  alt="A service's Environment tab with the variable counter, the Exportar and .env buttons, the KEY and value fields, the Adicionar button and the variable list with example values."
+  caption="The Environment tab of a Postgres database (example values)."
 />
 
 The **service's** variables, in the same format as the [project variables](/en/interface/projetos/#project-variables): **KEY** and
@@ -174,12 +174,12 @@ Empty, it shows *"Nenhum deploy ainda."* (No deploys yet.) The cause of a failed
 <Shot
   src={buildAba}
   alt="The Deployments tab with the list of deploys and, over it, the Build logs window of a deploy, with the docker compose up lines."
-  caption="A deploy's ≡ button opens the build log in a window (identifiers blurred)."
+  caption="A deploy's ≡ button opens the build log in a window."
 />
 
 ### Logs
 
-The **Abrir logs em janela** (Open logs in a window) button opens the container's **runtime logs** in a window of their own, isolated
+The **Logs de execução** (Execution logs) button opens the container's **runtime logs** in a window of their own, isolated
 from the rest of the app, so the interface does not freeze under heavy volume. The same shortcut exists in the **LOGS** side panel
 (**Logs de runtime**). The build log opens from the **Deployments** tab. Both windows are in [Log windows](/en/interface/logs/).
 
@@ -187,7 +187,7 @@ The runtime log is read from Docker **live** and **is not stored**: when a deplo
 
 <Shot
   src={logsAba}
-  alt="The service's Logs tab with the Abrir logs em janela button and, over it, the service Logs window with the live log lines."
+  alt="The service's Logs tab with the Logs de execução button and, over it, the service Logs window with the live log lines."
   caption="The Logs tab: the button opens the runtime logs in a window of their own."
 />
 
@@ -223,7 +223,7 @@ how to roll back and how to discard the old database, see [Migrate a database](/
 <Shot
   src={dbLista}
   alt="The Databases tab of a shared database server, with the list of databases, each pointing to its consumer project and environment variable, and the start of the New database form."
-  caption="The Databases tab of a shared server: the list (names blurred) and the New database form."
+  caption="The Databases tab of a shared server: the list and the New database form."
 />
 
 The tab appears on a **shared database server**. In **DATABASES (N)**, each row is a database with its own

@@ -50,7 +50,7 @@ Compose (`rp_<nome>`), com as credenciais **geradas e guardadas cifradas**.
 
 - **Usuário** é a *access key* e **Senha** é a *secret key*. Deixe os dois em branco e o servidor gera: o usuário padrão
   (`rustfsadmin` ou `minioadmin`) e uma senha forte de 24 caracteres.
-- A aplicação usa o endpoint interno `http://rp_<nome>:9000`, que aparece na aba **Connection**. As chaves ficam como
+- A aplicação usa o endpoint interno `http://rp_<nome>:9000`, que aparece na aba **Conexão**. As chaves ficam como
   [secrets](/guias/variaveis-e-secrets/) do serviço (`RUSTFS_ACCESS_KEY`/`RUSTFS_SECRET_KEY`, ou
   `MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD`). Para dá-las a uma aplicação **sem copiar o valor**, referencie o secret na
   variável da aplicação (`S3_ACCESS_KEY_ID` = `<secret:RUSTFS_ACCESS_KEY>`) ou use o ✏️ para renomear a chave.
@@ -106,7 +106,7 @@ disparar o redeploy de todos os serviços.
 
 ## Como a aplicação se conecta
 
-Abra a aba **Connection** do serviço: ela mostra o **host** e a **URL de conexão
+Abra a aba **Conexão** do serviço: ela mostra o **host** e a **URL de conexão
 internos**, prontos para copiar. Use a URL interna nas variáveis de ambiente das
 aplicações do **mesmo projeto**.
 
@@ -124,7 +124,7 @@ automáticos)"**. Ao marcá-la, o Rustploy:
 
 1. aloca uma porta livre da faixa `[external_ports]` (padrão 20000–20999);
 2. a libera no `ufw`, pelo helper `rustployd-fw`;
-3. mostra a **External URL** na aba **Connection**.
+3. mostra a **URL externa** na aba **Conexão**.
 
 <Aside type="caution">
   Isso deixa o banco acessível pela **internet**, protegido só pela senha. Use

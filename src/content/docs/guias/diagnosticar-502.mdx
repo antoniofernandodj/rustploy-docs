@@ -43,7 +43,7 @@ problema não é a tabela: é a configuração do serviço.
 
 ## 3. Confira a configuração
 
-- **Porta do domínio** (aba **Domains**) é a porta em que o app escuta *dentro* do container? É o erro mais comum.
+- **Porta do domínio** (aba **Domínios**) é a porta em que o app escuta *dentro* do container? É o erro mais comum.
 - **O app escuta em `0.0.0.0`?** Um app que escuta só em `127.0.0.1` não é alcançável pela rede do container.
 - **O healthcheck** está passando? Veja o status do serviço e a aba **Logs**.
 - **Stack Compose**: o domínio pode estar indo para o container errado. Defina o **alvo de ingress** (o nome do serviço dentro do YAML que serve o domínio).

@@ -32,7 +32,7 @@ Há dois caminhos. O segundo é o recomendado.
 
 1. Gere um *Personal Access Token* no provedor, com permissão de leitura do repositório.
 2. No projeto, aba **Secrets**, crie um secret (por exemplo `GITHUB_TOKEN`) com o token como valor.
-3. Na aba **General** do serviço, preencha **CREDENTIALS (secret)** com o **nome** do secret, `GITHUB_TOKEN`, e não com o valor.
+3. Na aba **Geral** do serviço, preencha **CREDENTIALS (secret)** com o **nome** do secret, `GITHUB_TOKEN`, e não com o valor.
 4. Use a URL em **HTTPS**.
 
 O Rustploy monta a URL de clone com o token (`https://x-token-auth:<token>@…`) só em
@@ -56,7 +56,7 @@ reutilize em todos os serviços.
 3. Clique em **Conectar conta**. No OAuth, autorize no navegador.
 </Steps>
 
-Depois, na aba **General** do serviço, escolha o provedor **Gitea/GitHub**: a
+Depois, na aba **Geral** do serviço, escolha o provedor **Gitea/GitHub**: a
 tela lista as suas contas, repositórios e branches para você escolher.
 
 <Aside type="caution" title="OAuth e a porta da API">

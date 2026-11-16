@@ -127,22 +127,22 @@ Valores prontos para copiar:
 
 | Linha | Significa |
 |---|---|
-| **Container port** | a porta do app dentro do container |
-| **Host port** | a porta TCP aberta no servidor, se houver (veja [Domínios](/interface/servico-configuracao/#portas-tcp-do-host)) |
-| **Domain** | o domínio configurado |
+| **Porta do container** | a porta do app dentro do container |
+| **Porta do host** | a porta TCP aberta no servidor, se houver (veja [Domínios](/interface/servico-configuracao/#portas-tcp-do-host)) |
+| **Domínio** | o domínio configurado |
 | **TLS** | `disabled` ou ligado |
-| **External URL** | a URL de **fora** do servidor, quando há porta externa |
-| **Internal URL** | a URL **dentro da rede do projeto**, como `http://rp_api:80`. É a que outros serviços do projeto usam |
+| **URL externa** | a URL de **fora** do servidor, quando há porta externa |
+| **URL interna** | a URL **dentro da rede do projeto**, como `http://rp_api:80`. É a que outros serviços do projeto usam |
 
 Abaixo, **CONTAINERS (N)** lista os containers em execução do serviço. Para bancos, a
-**Internal URL** é a connection string que você coloca em `DATABASE_URL`.
+**URL interna** é a connection string que você coloca em `DATABASE_URL`.
 
 ### Variáveis
 
 <Shot
   src={envAba}
-  alt="Aba Variáveis de um serviço com o contador de variáveis, os botões Exportar e .env, os campos KEY e value, o botão Adicionar e a lista de variáveis com os valores borrados."
-  caption="Aba Variáveis (os valores das variáveis estão borrados)."
+  alt="Aba Variáveis de um serviço com o contador de variáveis, os botões Exportar e .env, os campos KEY e value, o botão Adicionar e a lista de variáveis com valores de exemplo."
+  caption="Aba Variáveis de um banco Postgres (valores de exemplo)."
 />
 
 As variáveis **do serviço**, no mesmo formato das [variáveis do projeto](/interface/projetos/#variáveis-do-projeto):
@@ -182,12 +182,12 @@ veja [O ciclo de vida de um deploy](/conceitos/ciclo-de-vida/#onde-está-a-causa
 <Shot
   src={buildAba}
   alt="Aba Deployments com a lista de deploys e, sobre ela, a janela Build logs de um deploy, com as linhas do docker compose up."
-  caption="O botão ≡ de um deploy abre o build log numa janela (identificadores borrados)."
+  caption="O botão ≡ de um deploy abre o build log numa janela."
 />
 
 ### Logs
 
-O botão **Abrir logs em janela** abre os **logs de runtime** do container numa janela
+O botão **Logs de execução** abre os **logs de runtime** do container numa janela
 própria, isolada do resto do app, para não travar a interface com muito volume. O mesmo
 atalho existe no painel **LOGS** da lateral (**Logs de runtime**). O build log abre pela
 aba **Deployments**. As duas janelas estão em [Janelas de logs](/interface/logs/).
@@ -197,7 +197,7 @@ trocado por um deploy, o log antigo vai junto.
 
 <Shot
   src={logsAba}
-  alt="Aba Logs do serviço com o botão Abrir logs em janela e, sobre ela, a janela Logs do serviço com as linhas de log ao vivo."
+  alt="Aba Logs do serviço com o botão Logs de execução e, sobre ela, a janela Logs do serviço com as linhas de log ao vivo."
   caption="Aba Logs: o botão abre os logs de runtime numa janela própria."
 />
 
@@ -233,7 +233,7 @@ como voltar atrás e como descartar o banco antigo: veja [Migrar um banco](/guia
 <Shot
   src={dbLista}
   alt="Aba Databases de um servidor de banco compartilhado, com a lista de databases, cada um apontando para o projeto consumidor e a variável de ambiente, e o início do formulário Novo database."
-  caption="Aba Databases de um servidor compartilhado: a lista (nomes borrados) e o formulário Novo database."
+  caption="Aba Databases de um servidor compartilhado: a lista e o formulário Novo database."
 />
 
 A aba aparece em um **servidor de banco compartilhado**. Em **DATABASES (N)**, cada linha é um database com

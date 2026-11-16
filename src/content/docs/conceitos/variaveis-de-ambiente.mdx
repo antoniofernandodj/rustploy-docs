@@ -16,7 +16,7 @@ Há três camadas. Em cada uma, uma chave igual **sobrescreve** a da camada de b
 | Camada | Onde se edita | Vale para | Precedência |
 |---|---|---|---|
 | **Projeto** | projeto → **Variáveis** | todos os serviços e jobs do projeto | menor |
-| **Serviço** | serviço → **Environment** | só aquele serviço (e jobs que o têm como gatilho) | média |
+| **Serviço** | serviço → **Variáveis** | só aquele serviço (e jobs que o têm como gatilho) | média |
 | **Job** | o formulário do job | só aquele job | maior |
 
 O resultado é **uma lista plana de pares `CHAVE=valor`**: a mesma chave não aparece
