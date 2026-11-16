@@ -23,27 +23,27 @@ appear on its **Jobs** tab. What a job is and how it works is in [Jobs and sched
   caption="Schedules, with no jobs, and the New job window open on the project choice."
 />
 
-At the top, the **JOBS** counter and the **+ Novo job** (New job) button. The table's columns:
+At the top, the **JOBS** counter and the **+ New job** button. The table's columns:
 
 | Column | Shows |
 |---|---|
-| **NOME** (Name) | the job's name |
-| **PROJETO / GATILHO** (Project / trigger) | the project and the trigger service (or *standalone*) |
-| **ÚLTIMA EXECUÇÃO** (Last run) | when it last ran |
-| **RECORRÊNCIA** (Recurrence) | the schedule |
-| **PRÓXIMA EXECUÇÃO** (Next run) | the next firing, **in your time zone** |
-| **AQUECIMENTO** (Warming) | `quente` (warm), `frio` (cold) or `aquecendo…` (warming…) (see [Warm a job](/en/guias/jobs/#warm-a-job)) |
-| **AÇÕES** (Actions) | the **⋯** panel with *Rodar agora* (run now), *Cancelar execução*, *Aquecer*, *Reconstruir (sem cache)*, *Ver logs*, *Editar* and *Remover* |
+| **NAME** | the job's name |
+| **PROJECT / TRIGGER** | the project and the trigger service (or *standalone*) |
+| **LAST RUN** | when it last ran |
+| **RECURRENCE** | the schedule |
+| **NEXT RUN** | the next firing, **in your time zone** |
+| **WARM-UP** (Warming) | `quente` (warm), `frio` (cold) or `aquecendo…` (warming…) (see [Warm a job](/en/guias/jobs/#warm-a-job)) |
+| **ACTIONS** | the **⋯** panel with *Rodar agora* (run now), *Cancel run*, *Aquecer*, *Reconstruir (sem cache)*, *View logs*, *Editar* and *Remover* |
 
-With no jobs: *"Nenhum job cadastrado ainda."* (No job registered yet.)
+With no jobs: *"No jobs registered yet."*
 
 ## Create a job
 
-Click **+ Novo job**. The window has steps:
+Click **+ New job**. The window has steps:
 
-1. **ESCOLHA O PROJETO** (choose the project). *"O job sobe um stack docker-compose próprio; o projeto define a rede."* (The job starts a docker-compose stack of its own; the project defines the network.) Click **Selecionar ›**.
-2. **Trigger service**, or **Nenhum (autônomo)** (None, standalone). The trigger only lends its environment variables.
-3. **The form**, described below. The title shows *"NOVO JOB — project / service"* (or *"nenhum (autônomo)"*).
+1. **CHOOSE THE PROJECT**. *"The job brings up its own docker-compose stack; the project defines the network."* Click **Select ›**.
+2. **Trigger service**, or **None (standalone)**. The trigger only lends its environment variables.
+3. **The form**, described below. The title shows *"NEW JOB — project / service"* (or *"none (standalone)"*).
 
 ### Compose source: Compose
 
@@ -55,11 +55,11 @@ Click **+ Novo job**. The window has steps:
 
 | Field | What it is |
 |---|---|
-| **NOME** | for example `backup-db` |
-| **FONTE DO COMPOSE** | **Compose** (paste the YAML) or **Git** |
+| **NAME** | for example `backup-db` |
+| **COMPOSE SOURCE** | **Compose** (paste the YAML) or **Git** |
 | **DOCKER-COMPOSE.YML** | the YAML. The screen brings a minimal example with `busybox` |
 | **MAIN SERVICE** | the **name of the service inside the compose above** whose exit code decides whether the job succeeded |
-| **VARIÁVEIS E SECRETS** (Variables and secrets) | when **editing**, the **🔑 Variáveis e secrets** button opens the panel (see [A job's variables and secrets](#a-jobs-variables-and-secrets)); when **creating**, the panel shows up in the next step, right after **Criar job**, because a job's secrets need its id. The job's variables win over the project's and the trigger service's |
+| **VARIABLES AND SECRETS** | when **editing**, the **🔑 Variables and secrets** button opens the panel (see [A job's variables and secrets](#a-jobs-variables-and-secrets)); when **creating**, the panel shows up in the next step, right after **Create job**, because a job's secrets need its id. The job's variables win over the project's and the trigger service's |
 
 ### Compose source: Git
 
@@ -69,9 +69,8 @@ Click **+ Novo job**. The window has steps:
   caption="The New job form, with the Git source."
 />
 
-*"Selecione a conta conectada, o repositório e a branch. O repo precisa já ter um docker-compose.yml no caminho informado."* (Select the
-connected account, the repository and the branch. The repo must already have a docker-compose.yml at the given path.) Choose the **CONTA GIT**
-(Git account), the **REPOSITÓRIO** and the **BRANCH**, and check the **CAMINHO DO COMPOSE NO REPO** (compose path in the repo; default
+*"Select the connected account, the repository and the branch. The repo must already have a docker-compose.yml at the given path."* Choose the **GIT ACCOUNT**
+(Git account), the **REPOSITORY** and the **BRANCH**, and check the **COMPOSE PATH IN THE REPO** (compose path in the repo; default
 `docker-compose.yml`). With no accounts, connect one in [Settings → Git](/en/interface/configuracoes/#git). The job **clones the repository on
 every run**.
 
@@ -86,15 +85,15 @@ every run**.
 | Option | Fields |
 |---|---|
 | **Manual** | none: it only runs when you tell it to |
-| **Intervalo** (Interval) | every N hours |
-| **Diária** (Daily) | a time |
-| **Semanal** (Weekly) | a weekday and a time |
+| **Interval** | every N hours |
+| **Daily** | a time |
+| **Weekly** | a weekday and a time |
 
 <Aside type="caution" title="The time is in UTC">
-  The time you enter is **UTC**. The **PRÓXIMA EXECUÇÃO** column shows it in your time zone: use it to check.
+  The time you enter is **UTC**. The **NEXT RUN** column shows it in your time zone: use it to check.
 </Aside>
 
-Click **Criar job** (Create job). **‹ Voltar** goes back to the previous step.
+Click **Create job**. **‹ Back** goes back to the previous step.
 
 ## A job's ⋯ menu
 
@@ -109,17 +108,17 @@ The **⋯** button at the end of the row opens a panel with the job name, the wa
 
 | Action | Effect |
 |---|---|
-| **▶ Rodar agora** (Run now) | runs right away, outside the schedule. With a run in progress, it becomes **■ Cancelar execução** (Cancel run) |
-| **◐ Aquecer** (Warm up) | pulls the images and builds the build cache **without running** the job |
-| **↻ Reconstruir (sem cache)** (Rebuild, no cache) | shown with the job **warm**: rebuilds from scratch and pulls the images again. See [Rebuild from scratch](/en/guias/jobs/#rebuild-from-scratch) |
-| **≡ Ver logs** (View logs) | the output (stdout and stderr) of the runs |
-| **‖ Pausar** (Pause) | suspends the schedule. With the job paused, the button becomes **Ativar** (Enable) |
-| **🔑 Variáveis e secrets** (Variables and secrets) | opens the screen with the job's environment variables and secrets. See [A job's variables and secrets](#a-jobs-variables-and-secrets) |
-| **✎ Editar** (Edit) | opens the job to change it |
-| **✕ Remover** (Remove) | deletes the job, after **asking for confirmation**. It cannot be recovered |
+| **▶ Run now** | runs right away, outside the schedule. With a run in progress, it becomes **■ Cancel run** |
+| **◐ Warm** | pulls the images and builds the build cache **without running** the job |
+| **↻ Rebuild (no cache)** | shown with the job **warm**: rebuilds from scratch and pulls the images again. See [Rebuild from scratch](/en/guias/jobs/#rebuild-from-scratch) |
+| **≡ View logs** | the output (stdout and stderr) of the runs |
+| **‖ Pause** | suspends the schedule. With the job paused, the button becomes **Enable** |
+| **🔑 Variables and secrets** | opens the screen with the job's environment variables and secrets. See [A job's variables and secrets](#a-jobs-variables-and-secrets) |
+| **✎ Edit** | opens the job to change it |
+| **✕ Remove** | deletes the job, after **asking for confirmation**. It cannot be recovered |
 
-**Remover** (Remove) and **Reconstruir** (Rebuild) close the panel and open a confirmation dialog. **Cancelar**
-(Cancel) changes nothing (the job stays in the list); **Remover** deletes the job.
+**Remove** and **Rebuild** close the panel and open a confirmation dialog. **Cancel**
+(Cancel) changes nothing (the job stays in the list); **Remove** deletes the job.
 
 <Shot
   src={removerJob}
@@ -129,7 +128,7 @@ The **⋯** button at the end of the row opens a panel with the job name, the wa
 
 ## A job's variables and secrets
 
-The **🔑 Variáveis e secrets** action in the ⋯ menu opens a screen with the job's environment variables
+The **🔑 Variables and secrets** action in the ⋯ menu opens a screen with the job's environment variables
 and the **job's secrets**, with the same buttons as a service's *Environment* tab and the project's variables:
 
 | Button | Effect |
@@ -148,6 +147,6 @@ This also applies to project and service variables.
 
 ## After creating
 
-- If the job uses large images or a build, use **Aquecer** before the first run.
+- If the job uses large images or a build, use **Warm** before the first run.
 - To run the job **before every deploy**, add it to the service's pre-deploy queue: see
   [Domains, healthcheck and advanced options](/en/interface/servico-configuracao/#the-pre-deploy-queue).

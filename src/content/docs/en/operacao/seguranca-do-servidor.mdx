@@ -135,7 +135,7 @@ package every installation would accept as root: that is why it stays only on th
 ## The desktop app helper
 
 The app runs on **your machine**, not on the server, and its update follows the same idea as the daemon's with one
-difference: there is no resident service. When you click **Atualizar app**, the app downloads the `.deb` and the signature to
+difference: there is no resident service. When you click **Update app**, the app downloads the `.deb` and the signature to
 its own cache (`~/.cache/rustploy-gui/updates`) and runs `pkexec /usr/libexec/rustploy-gui-update install …`; the system shows
 the password dialog, the helper installs and **exits**. Nothing runs as root between one update and the next.
 
@@ -167,7 +167,7 @@ only in CI. The secret appears only once. See [Registry](/en/guias/registry/).
 ## Webhooks
 
 The token has 48 hexadecimal characters, is unique per service and is compared in constant time. The URL works
-like a password: store it as a secret in your CI and use **Regenerar** (Regenerate) if it leaks.
+like a password: store it as a secret in your CI and use **Regenerate** if it leaks.
 
 ## Hardening checklist
 

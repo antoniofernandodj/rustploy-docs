@@ -23,20 +23,20 @@ ones inside the project.
 
 <Steps>
 1. Create a **Database** service (Postgres, MySQL, MariaDB or MongoDB), preferably in a project of its own for infrastructure (for example `infra`). Run the deploy.
-2. Open the service and click **Compartilhar** (Share). The **Databases** tab appears.
-3. Under **NOVO DATABASE** (new database), enter:
+2. Open the service and click **Share**. The **Databases** tab appears.
+3. Under **NEW DATABASE**, enter:
    - the database **name** (and the user's): `a-z`, `0-9` and `_`, up to 32 characters;
    - the **env var** that will receive the URL (optional: it uses `DATABASE_URL` or `MONGODB_URI`);
    - the **connection limit** (optional; does not apply to MongoDB);
    - the **query timeout**, in ms (optional; Postgres only);
    - the **consumer project**, from a selector.
-4. Click **Criar database** (Create database).
+4. Click **Create database**.
 5. In the consumer project, **run a new deploy** so the application reads the variable.
 </Steps>
 
 The list shows, per database, the project and the variable that receives the connection string. To get the
-**URL**, **click the database name**: a **URL** row appears with a **Copiar** (Copy) button. The screen only shows
-`name → VARIABLE`, and **Copiar** puts the full connection string on the clipboard. The whole value, password
+**URL**, **click the database name**: a **URL** row appears with a **Copy** button. The screen only shows
+`name → VARIABLE`, and **Copy** puts the full connection string on the clipboard. The whole value, password
 included, is never displayed.
 
 ## Isolation
@@ -47,8 +47,7 @@ projects receive only their own connection string.
 ## Variable conflict
 
 If the project already has the variable (for example a `DATABASE_URL` pointing at the old database), creation is
-**refused**, unless you authorize overwriting. Tick **"Não mexer em env var (vou migrar os dados antes)"** (Do not
-touch the env var, I will migrate the data first) when you want to create the database without touching the
+**refused**, unless you authorize overwriting. Tick **"Do not touch env vars (I will migrate the data first)"** when you want to create the database without touching the
 application: it is the first step of a [migration](/en/guias/migrar-banco/).
 
 ## Remove a database

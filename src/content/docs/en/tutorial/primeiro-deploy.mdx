@@ -24,21 +24,21 @@ A project is the group of services that see each other on a network of their own
 
 <Steps>
 1. In the side menu, open **Projects**.
-2. Click **+ Novo projeto** (New project), name it `tutorial` and confirm.
+2. Click **+ New project**, name it `tutorial` and confirm.
 3. Click the project's card to open it.
 </Steps>
 
 ## 3. Create a service
 
 <Steps>
-1. On the project's **Serviços** (Services) tab, click **+ Novo serviço** (New service).
-2. Under *Escolha o tipo de serviço* (Choose the service type), select **Application**.
+1. On the project's **Services** tab, click **+ New service**.
+2. Under *Choose the service type* (Choose the service type), select **Application**.
 3. Fill in:
-   - **Nome** (Name): `site`
-   - **Origem** (Source): the **Registry** tab, with the image `nginx:latest`
-   - **Porta** (Port): `80`, the port nginx listens on *inside* the container
-   - **Domínio** (Domain): leave it blank for now
-4. Click **Criar Application** (Create Application).
+   - **Name**: `site`
+   - **Source**: the **Registry** tab, with the image `nginx:latest`
+   - **Port**: `80`, the port nginx listens on *inside* the container
+   - **Domain**: leave it blank for now
+4. Click **Create Application**.
 </Steps>
 
 The service was **created, but it is not online yet**: creating does not deploy. You landed on the
@@ -85,7 +85,7 @@ See what the container writes on the **Logs** tab.
 <Steps>
 1. Open the **Domains** tab.
 2. Type the domain in `dominio.com`. Leave the port blank (it uses the service's port, `80`).
-3. Tick **TLS** for automatic HTTPS and click **Adicionar** (Add).
+3. Tick **TLS** for automatic HTTPS and click **Add**.
 </Steps>
 
 Visit `https://site.mysite.com`. The first visit may take a few seconds while the certificate is

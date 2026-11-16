@@ -65,17 +65,17 @@ the [desktop app](/en/interface/servico/) and the [web UI](/en/interface/web-ui/
 2. **Project variables.** Tick the ones the app needs. The container receives **all** of the
    project's variables, and Rustploy **does not know** which ones your code reads, so the choice is
    yours. The ones the service cites as `${VAR}` or `$VAR` come **pre-ticked** (label *citada pelo
-   serviço*, "cited by the service"). Use **Sugeridas** (suggested), **Todas** (all) and
-   **Nenhuma** (none), and the filter. What you do not tick **does not enter** the file.
+   serviço*, "cited by the service"). Use **Suggested**, **All** and
+   **None**, and the filter. What you do not tick **does not enter** the file.
 
 3. **Include variable values.** On (default), the file carries the values, in plain text, and
    **becomes a secret**: keep it like a password. Off, each value becomes `${NAME}` and whoever
    imports fills in the values. In both cases `secret:NAME` is **never** decrypted: only the
    reference goes.
 
-4. **Save.** In the web UI, **Baixar .yml** (download) or **Copiar texto** (copy text). In the
-   desktop app, **Salvar arquivo…** (save file), **Mostrar como texto** (show as text) or
-   **Copiar texto**.
+4. **Save.** In the web UI, **Download .yml** or **Copy text**. In the
+   desktop app, **Save file…**, **Show as text** or
+   **Copy text**.
 
 </Steps>
 
@@ -128,41 +128,41 @@ and edit the YAML (change domain, image, port) before importing.
 ## Import
 
 On the **target server**, open the **project** where you want the service (it must exist), click
-**+ Novo serviço** (New service) and choose **Importar** (Import).
+**+ New service** and choose **Import**.
 
 <Steps>
 
-1. **Choose the bundle.** Pick the `.yml` file (**Escolher arquivo…**, choose file) **or paste the text**, in both
-   interfaces, and click **Analisar** (Analyze). The daemon produces a **preview** and creates nothing yet.
+1. **Choose the bundle.** Pick the `.yml` file (**Choose file…**, choose file) **or paste the text**, in both
+   interfaces, and click **Analyze**. The daemon produces a **preview** and creates nothing yet.
 
 2. **New service name.** It is pre-filled with the bundle's name. If a service with that name
    already exists in the project, the screen warns you and **blocks** creation until you change it.
 
-3. **Read the warnings** (*ATENÇÃO*). Everything that could not be brought, or needs action,
+3. **Read the warnings** (*WARNING*). Everything that could not be brought, or needs action,
    appears here (table below).
 
 4. **Fill in what is missing.** If the bundle was exported **without values**, the screen asks for
    the value of each service and project variable (required). If the bundle references a
    `secret:NAME` the project does not have, you give a value to **create** the secret, or leave it
    empty (the service keeps a broken reference until you create the secret). If the bundle uses a
-   **Git provider** the server does not have, pick another from the list or **seguir sem provider**
+   **Git provider** the server does not have, pick another from the list or **go on without a provider**
    (go without a provider).
 
-5. **Project variables brought.** Each one shows as **nova** (new), **igual** (same: already
-   exists with the same value, nothing to do) or **em conflito** (conflict: exists with another
+5. **Project variables brought.** Each one shows as **new**, **identical** (same: already
+   exists with the same value, nothing to do) or **in conflict** (conflict: exists with another
    value). For each one, choose what to do:
 
    | Choice | Effect |
    |---|---|
-   | **criar no projeto** (if new) / **manter a do projeto** (if it exists) | the default |
-   | **sobrescrever a do projeto** | replaces the value in the target project (conflicts only). **Affects whatever already runs there** |
-   | **só neste serviço** | writes it to the new service's environment, which wins over the project's, without touching the project |
-   | **não trazer** | ignores the variable |
+   | **create in the project** (if new) / **keep the project's** (if it exists) | the default |
+   | **overwrite the project's** | replaces the value in the target project (conflicts only). **Affects whatever already runs there** |
+   | **only in this service** | writes it to the new service's environment, which wins over the project's, without touching the project |
+   | **do not bring** | ignores the variable |
 
-6. **Options.** **Não trazer os domínios** (don't bring the domains) and **Fazer deploy logo
+6. **Options.** **Do not bring the domains** and **Fazer deploy logo
    depois de criar** (deploy right after creating), off by default.
 
-7. Click **Criar serviço** (Create service). It is **created and not deployed**, unless you ticked
+7. Click **Create service**. It is **created and not deployed**, unless you ticked
    the option. Review it and click **Deploy**.
 
 </Steps>

@@ -15,9 +15,9 @@ With the **Git** source, Rustploy clones the repository, builds the image with y
 ## Public repository
 
 <Steps>
-1. In the project, **+ Novo serviço → Application** (New service).
-2. Under **Origem** (Source), choose **Git**, paste the URL (`https://github.com/user/repo.git`) and the **branch**.
-3. Give the **port** the app listens on inside the container and **Criar Application** (Create Application).
+1. In the project, **+ New service → Application**.
+2. Under **Source**, choose **Git**, paste the URL (`https://github.com/user/repo.git`) and the **branch**.
+3. Give the **port** the app listens on inside the container and **Create Application**.
 4. Run the **Deploy**.
 </Steps>
 
@@ -50,7 +50,7 @@ In **Settings → Git**, connect a **GitHub** or **Gitea** account once and reus
 2. Choose the method:
    - **OAuth2**: create an OAuth application at the provider, paste the **REDIRECT URI** the screen shows, and enter the **CLIENT ID** and **CLIENT SECRET**.
    - **Token (PAT)**: paste a *Personal Access Token* with the `repo` scope.
-3. Click **Conectar conta** (Connect account). With OAuth, authorize in the browser.
+3. Click **Connect account**. With OAuth, authorize in the browser.
 </Steps>
 
 Then, on the service's **General** tab, choose the **Gitea/GitHub** provider: the screen lists your accounts,

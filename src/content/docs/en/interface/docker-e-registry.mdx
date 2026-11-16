@@ -10,7 +10,7 @@ import novoToken from '../../../../assets/ui/novo-token-registry.png';
 import tokenCriado from '../../../../assets/ui/token-registry-criado.png';
 
 The **Runtime** screen (side menu) shows the container engine (Docker or Podman) of the **whole server**, not just what belongs to Rustploy. At the top, four
-counters: **CONTAINERS**, **IMAGENS** (Images), **VOLUMES** and **NETWORKS**. Below, a sub-tab for each, plus the **Registry**.
+counters: **CONTAINERS**, **IMAGES**, **VOLUMES** and **NETWORKS**. Below, a sub-tab for each, plus the **Registry**.
 
 | Sub-tab | Shows |
 |---|---|
@@ -31,17 +31,17 @@ Each list has the remove action. Docker **refuses** to remove what is in use. To
   caption="The Registry sub-tab, with no repositories or tokens."
 />
 
-The top reports the state: *"Registry ativo em 127.0.0.1:5100 · 0 repositório(s)"* (Registry active at 127.0.0.1:5100, 0 repositories). If
+The top reports the state: *"Registry active at 127.0.0.1:5100, 0 repositories"*. If
 the registry is off, the screen warns you; turn it on under `[registry]` in
 [`config.toml`](/en/instalacao/config-toml/#registry-optional).
 
 | Element | What it does |
 |---|---|
-| The **REPOSITÓRIO / TAGS / TAMANHO / CRIADO / AÇÃO** table | the published repositories and their tags. Empty, it shows *"Faça `docker push` para o registry embutido."* (Do a `docker push` to the built-in registry.) |
-| **Executar GC** (Run GC) | the *garbage collector*: removes manifests with no tag and blobs nobody uses |
-| **Manter só as últimas tags de cada repositório** (keep only the latest tags) + **TAGS A MANTER** (tags to keep) | the [tag retention](#tag-retention): before every GC it deletes the oldest tags. Off by default |
-| **TOKENS DE ACESSO (N)** (access tokens) | the `docker login` credentials |
-| **+ Novo token** | creates a token |
+| The **REPOSITORY / TAGS / SIZE / CREATED / ACTION** table | the published repositories and their tags. Empty, it shows *"Do a `docker push` to the built-in registry."* |
+| **Run GC** | the *garbage collector*: removes manifests with no tag and blobs nobody uses |
+| **Keep only the latest tags of each repository** + **TAGS TO KEEP** | the [tag retention](#tag-retention): before every GC it deletes the oldest tags. Off by default |
+| **ACCESS TOKENS (N)** | the `docker login` credentials |
+| **+ New token** | creates a token |
 
 Content is only created by `docker push`: the screen does not upload images.
 
@@ -55,7 +55,7 @@ tag was published or moved. The manifest and layers left without a tag are freed
 right after.
 
 - **Off by default.** Deleting data the owner did not ask to delete would be a surprise. Turn the
-  switch on, pick **TAGS A MANTER** (tags to keep; minimum 1, default 10) and click **Save**.
+  switch on, pick **TAGS TO KEEP** (minimum 1, default 10) and click **Save**.
 - **It never deletes a tag a service uses.** If a Registry-source service points to `app/api:prod`,
   that tag stays even when it is the oldest, with or without push-to-deploy.
 - **Tag only, never by digest.** An identical rebuild gives two tags the same digest; deleting by
@@ -81,7 +81,7 @@ of the service's image (no tag on the image means `latest`); a push by digest tr
 
 ### Create a token
 
-With no token at all, **no push or pull is authenticated**: create one before using the registry. Click **+ Novo token**.
+With no token at all, **no push or pull is authenticated**: create one before using the registry. Click **+ New token**.
 
 <Shot
   src={novoToken}
@@ -91,10 +91,10 @@ With no token at all, **no push or pull is authenticated**: create one before us
 
 | Field | |
 |---|---|
-| **NOME** (Name) | for example `ci-deploy` |
-| **ESCOPO** (Scope) | **Somente leitura (pull)** (read-only) or **Leitura e escrita (push)** (read and write) |
+| **NAME** | for example `ci-deploy` |
+| **SCOPE** | **Read-only (pull)** or **Read and write (push)** |
 
-Click **Criar token** (Create token).
+Click **Create token**.
 
 <Shot
   src={tokenCriado}
@@ -103,12 +103,11 @@ Click **Criar token** (Create token).
 />
 
 <Aside type="danger" title="The secret appears once">
-  The window shows the full **`docker login` command**, with the secret, and warns: *"O segredo não pode ser recuperado depois de fechar
-  esta janela."* (The secret cannot be recovered after you close this window.) Click **Copiar** (Copy) before **Fechar** (Close). If you
+  The window shows the full **`docker login` command**, with the secret, and warns: *"The secret cannot be recovered after you close this window."* Click **Copy** before **Close**. If you
   lose it, delete the token and create another.
 </Aside>
 
-The token appears in the **TOKENS DE ACESSO** table with **NOME**, **ESCOPO**, **CRIADO** (created) and **ÚLTIMO USO** (last used; `nunca`,
+The token appears in the **ACCESS TOKENS** table with **NAME**, **SCOPE**, **CREATED** and **LAST USED** (last used; `nunca`,
 never, until the first time). The red **×** revokes it immediately.
 
 Use a **push** token in CI and **pull** where you only download. The full flow, with a domain and HTTPS, is in

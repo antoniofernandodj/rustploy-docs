@@ -5,18 +5,18 @@ description: A tour of a service's screen in the Rustploy desktop app - the Depl
 
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
-import envAba from '../../../../assets/ui/servico-environment.png';
-import logsAba from '../../../../assets/ui/servico-logs.png';
-import buildAba from '../../../../assets/ui/servico-deployments-build.png';
-import dbLista from '../../../../assets/ui/servico-databases-lista.png';
-import dbNovo from '../../../../assets/ui/servico-databases-novo.png';
-import migrar from '../../../../assets/ui/servico-migrar.png';
-import db from '../../../../assets/ui/servico-db-geral.png';
-import git from '../../../../assets/ui/servico-geral-git.png';
-import connection from '../../../../assets/ui/servico-connection.png';
-import deployments from '../../../../assets/ui/servico-deployments.png';
+import envAba from '../../../../assets/ui/servico-environment-en.png';
+import logsAba from '../../../../assets/ui/servico-logs-en.png';
+import buildAba from '../../../../assets/ui/servico-deployments-build-en.png';
+import dbLista from '../../../../assets/ui/servico-databases-lista-en.png';
+import dbNovo from '../../../../assets/ui/servico-databases-novo-en.png';
+import migrar from '../../../../assets/ui/servico-migrar-en.png';
+import db from '../../../../assets/ui/servico-db-geral-en.png';
+import git from '../../../../assets/ui/servico-geral-git-en.png';
+import connection from '../../../../assets/ui/servico-connection-en.png';
+import deployments from '../../../../assets/ui/servico-deployments-en.png';
 
-In **Projects → (project) → Serviços**, a card's **Abrir ›** (Open) button takes you to the service screen. This is where you
+In **Projects → (project) → Services**, a card's **Open ›** button takes you to the service screen. This is where you
 deploy and configure everything.
 
 ## The header
@@ -30,7 +30,7 @@ At the top: **‹ project-name** (back to the project), the **service name** and
 | **Reload** | **restarts** the container that is running, with no redeploy. It does not apply new variables |
 | **Rebuild** | today does **exactly the same as Deploy** |
 | **Stop** | stops the service. It asks for confirmation: traffic stays interrupted until a new deploy |
-| **Exportar serviço** (Export service) | generates a file to recreate the service on another server |
+| **Export service** | generates a file to recreate the service on another server |
 
 <Aside type="note" title="Rebuild and Deploy">
   In the desktop app, **Rebuild** calls the same function as **Deploy**: deploying a Git or zip service already rebuilds the
@@ -58,10 +58,10 @@ Two panels sit on the right:
 
 The tabs depend on the service type. An **Application** service has **General**, **Connection**, **Environment**, **Domains**,
 **Deployments**, **Healthcheck**, **Logs** and **Advanced**. Every service also has a **Data** tab (take the data to a file and bring it back: see
-[Export and import a service's data](/en/guias/dados-do-servico/); and the **Backup to S3**, manual or scheduled: [Data backup to S3](/en/guias/backup-no-s3/)). A database or **Compose** stack also gets **Migrar** (Migrate: move the
+[Export and import a service's data](/en/guias/dados-do-servico/); and the **Backup to S3**, manual or scheduled: [Data backup to S3](/en/guias/backup-no-s3/)). A database or **Compose** stack also gets **Migrate** (Migrate: move the
 data to a [shared server](/en/guias/migrar-banco/)). A shared database server has the **Databases** tab.
 
-This page covers **General**, **Connection**, **Environment**, **Deployments**, **Logs**, **Migrar** and **Databases**. **Domains**, **Healthcheck** and **Advanced** are in
+This page covers **General**, **Connection**, **Environment**, **Deployments**, **Logs**, **Migrate** and **Databases**. **Domains**, **Healthcheck** and **Advanced** are in
 [Domains, healthcheck and advanced options](/en/interface/servico-configuracao/).
 
 ### General
@@ -70,26 +70,25 @@ The service name is edited right in the header **title**: click, type, and it sa
 after the last keystroke (there is no Rename button). The effect of the new name **varies by type**
 (in the web UI, the warning shows when you hover over the title):
 
-- **Compose:** *"A stack e os volumes do Docker não mudam com o nome: os dados continuam os mesmos."* (The stack and Docker volumes do not change with the name: the data stays the same.)
-- **Application:** *"O hostname interno (`rp_<nome>`) só passa a valer no próximo deploy. Outros serviços que usam o nome antigo em variáveis de ambiente precisam ser atualizados."* (The internal hostname only takes effect on the next deploy. Other services that use the old name in environment variables need to be updated.)
+- **Compose:** *"The Docker stack and volumes do not change with the name: the data stays the same."*
+- **Application:** *"The internal hostname (`rp_<name>`) only applies on the next deploy. Other services that use the old name in environment variables need to be updated."*
 
 #### A Compose service
 
 <Shot
   src={db}
-  alt="The General tab (Geral) of a Compose service, with the name editable in the title, the compose YAML editor and the Salvar compose and Cancelar buttons."
+  alt="The General tab of a Compose service, with the name editable in the title, the compose YAML editor and the Save compose and Cancel buttons."
   caption="General of a Compose service (a Postgres database created by the wizard)."
 />
 
-The **DOCKER COMPOSE (YAML)** editor shows the stack's compose. *"Edite o compose do serviço. Salvar aplica no próximo deploy."*
-(Edit the service's compose. Saving applies on the next deploy.) Use **Salvar compose** (Save compose), or **Cancelar** to discard. The variables
+The **DOCKER COMPOSE (YAML)** editor shows the stack's compose. *"Edit the service's compose. Saving applies on the next deploy."* Use **Save compose**, or **Cancel** to discard. The variables
 appear as `${POSTGRES_PASSWORD}`: the values come from the **Environment** tab. See [Docker Compose stacks](/en/guias/compose/).
 
 #### An Application service
 
 <Shot
   src={git}
-  alt="The General tab (Geral) of an Application service, with the name editable in the title, the choice of Git, Registry or Zip provider, the repository URL or image field, branch, port, username and credentials."
+  alt="The General tab of an Application service, with the name editable in the title, the choice of Git, Registry or Zip provider, the repository URL or image field, branch, port, username and credentials."
   caption="General of an Application service, with no source configured yet."
 />
 
@@ -104,8 +103,7 @@ A service just created by the wizard starts **empty**: this is where you set the
 | **USERNAME** | the clone user, only if the provider requires it |
 | **CREDENTIALS (secret)** | the **name** of a project secret holding the clone token |
 
-The text under the main field gives the rule: *"URL de repositório vira Git; caso contrário é imagem de registry."* (A repository
-URL becomes Git; otherwise it is a registry image.) That is, `github.com/user/repo` is cloned and built, and `nginx:latest` is pulled.
+The text under the main field gives the rule: *"A repository URL becomes Git; otherwise it is a registry image."* That is, `github.com/user/repo` is cloned and built, and `nginx:latest` is pulled.
 Scroll the tab to see the other fields (**Dockerfile**, build context and more). The details and the fields that do not have an effect
 yet are in [Deploy from a Git repository](/en/guias/git/).
 
@@ -113,7 +111,7 @@ yet are in [Deploy from a Git repository](/en/guias/git/).
 
 <Shot
   src={connection}
-  alt="The Connection tab listing container port, host port, domain, TLS, external URL and internal URL, each with a Copiar button."
+  alt="The Connection tab listing container port, host port, domain, TLS, external URL and internal URL, each with a Copy button."
   caption="The Connection tab of a service with no domain or external port yet."
 />
 
@@ -135,13 +133,12 @@ string you put in `DATABASE_URL`.
 
 <Shot
   src={envAba}
-  alt="A service's Environment tab with the variable counter, the Exportar and .env buttons, the KEY and value fields, the Adicionar button and the variable list with example values."
+  alt="A service's Environment tab with the variable counter, the Export and .env buttons, the KEY and value fields, the Add button and the variable list with example values."
   caption="The Environment tab of a Postgres database (example values)."
 />
 
 The **service's** variables, in the same format as the [project variables](/en/interface/projetos/#project-variables): **KEY** and
-**value**, **Adicionar** (Add), **✕** to remove, the **.env** button to edit as text and **Exportar**. The count appears as *"N
-variável(eis)"* (N variable(s)). The service's own **take precedence** over the project's. The **✏️** (key) and **✎** (value) edit the variable **on its own row**,
+**value**, **Add**, **✕** to remove, the **.env** button to edit as text and **Export**. The count appears as *"N variable(s)"*. The service's own **take precedence** over the project's. The **✏️** (key) and **✎** (value) edit the variable **on its own row**,
 with **Enter** to save. Full rules in
 [How environment variables are resolved](/en/conceitos/variaveis-de-ambiente/).
 
@@ -155,11 +152,8 @@ with **Enter** to save. Full rules in
 
 Two blocks:
 
-**WEBHOOK DE DEPLOY** (deploy webhook). *"O token nasce no primeiro deploy deste serviço — rode um deploy para a URL aparecer. Um POST
-nesta URL dispara um deploy. O corpo é ignorado: o token na própria URL é a autenticação. Regenerar invalida a URL anterior."* (The token
-is born on this service's first deploy, so run a deploy for the URL to appear. A POST to this URL triggers a deploy. The body is ignored:
-the token in the URL itself is the authentication. Regenerating invalidates the previous URL.) After the first deploy the URL appears
-here, with **Copiar** and **Regenerar**. See [Deploy webhooks](/en/guias/webhooks/). Compose services have no webhook.
+**DEPLOY WEBHOOK**. *"The token is born on this service's first deploy, so run a deploy for the URL to appear. A POST to this URL triggers a deploy. The body is ignored: the token in the URL itself is the authentication. Regenerating invalidates the previous URL."* After the first deploy the URL appears
+here, with **Copy** and **Regenerate**. See [Deploy webhooks](/en/guias/webhooks/). Compose services have no webhook.
 
 **The deploy list**, with each one's **id**, **duration**, **start** and **image**. On each row:
 
@@ -168,7 +162,7 @@ here, with **Copiar** and **Regenerar**. See [Deploy webhooks](/en/guias/webhook
 | **≡** | opens the deploy's **build log** in a window |
 | **✕** | removes the deploy's record (only those that have already finished) |
 
-Empty, it shows *"Nenhum deploy ainda."* (No deploys yet.) The cause of a failed deploy is in the build log: see
+Empty, it shows *"No deploy yet."* The cause of a failed deploy is in the build log: see
 [The lifecycle of a deploy](/en/conceitos/ciclo-de-vida/#where-the-cause-is).
 
 <Shot
@@ -179,15 +173,15 @@ Empty, it shows *"Nenhum deploy ainda."* (No deploys yet.) The cause of a failed
 
 ### Logs
 
-The **Logs de execução** (Execution logs) button opens the container's **runtime logs** in a window of their own, isolated
+The **Execution logs** button opens the container's **runtime logs** in a window of their own, isolated
 from the rest of the app, so the interface does not freeze under heavy volume. The same shortcut exists in the **LOGS** side panel
-(**Logs de runtime**). The build log opens from the **Deployments** tab. Both windows are in [Log windows](/en/interface/logs/).
+(**Runtime logs**). The build log opens from the **Deployments** tab. Both windows are in [Log windows](/en/interface/logs/).
 
 The runtime log is read from Docker **live** and **is not stored**: when a deploy swaps the container, the old log goes with it.
 
 <Shot
   src={logsAba}
-  alt="The service's Logs tab with the Logs de execução button and, over it, the service Logs window with the live log lines."
+  alt="The service's Logs tab with the Execution logs button and, over it, the service Logs window with the live log lines."
   caption="The Logs tab: the button opens the runtime logs in a window of their own."
 />
 
@@ -195,8 +189,8 @@ The runtime log is read from Docker **live** and **is not stored**: when a deplo
 
 <Shot
   src={migrar}
-  alt="The Migrar tab of a database service, with the source database, destination, env var to swap fields and the Migrar and Atualizar buttons."
-  caption="The Migrar tab of a database running inside a project."
+  alt="The Migrate tab of a database service, with the source database, destination, env var to replace fields and the Migrate and Refresh buttons."
+  caption="The Migrate tab of a database running inside a project."
 />
 
 The tab exists on **databases and Compose stacks**. It moves the data of a database that lives **inside this
@@ -204,17 +198,16 @@ database** to a database on a [shared server](/en/guias/banco-compartilhado/).
 
 <Aside type="caution" title="The migration stops the services">
   The services that use this database are **down** during the copy. First create the destination
-  database on the shared server (in its **Databases** tab), ticking **"Não mexer em env var"** (leave
-  the env var alone). The destination must have the **same engine** and belong to the **same project**.
+  database on the shared server (in its **Databases** tab), ticking **"Do not touch env vars"**. The destination must have the **same engine** and belong to the **same project**.
 </Aside>
 
 | Field | What it is |
 |---|---|
-| **DATABASE DE ORIGEM** (source database) | the name of the database **inside this database server** (for example, the project name) |
-| **DESTINO** (destination) | the database created on the shared server, chosen from a list |
-| **ENV VAR A TROCAR** (env var to swap) | the variable with the connection string. Blank means `DATABASE_URL` or `MONGODB_URI` |
+| **SOURCE DATABASE** | the name of the database **inside this database server** (for example, the project name) |
+| **DESTINATION** | the database created on the shared server, chosen from a list |
+| **ENV VAR TO REPLACE** | the variable with the connection string. Blank means `DATABASE_URL` or `MONGODB_URI` |
 
-**Migrar** starts the process, which runs in the background and shows progress. **Atualizar** (Refresh) re-reads the
+**Migrate** starts the process, which runs in the background and shows progress. **Refresh** re-reads the
 state, and is how you pick it up again after leaving the screen. For the step by step, what the migration does,
 how to roll back and how to discard the old database, see [Migrate a database](/en/guias/migrar-banco/).
 
@@ -231,23 +224,23 @@ user, with **no access to the others**. It shows the database, the project that 
 receives the connection string. The red **×** **deletes the database and the user, with the data**: there is no way
 to recover it.
 
-Clicking a database **name** opens the **URL** row with **Copiar** (Copy): it puts the full connection string on the clipboard without displaying it.
+Clicking a database **name** opens the **URL** row with **Copy**: it puts the full connection string on the clipboard without displaying it.
 
 <Shot
   src={dbNovo}
-  alt="The New database form with the name, consumer project, env var, connection limit and query timeout fields, the two env var options and the Criar database button."
+  alt="The New database form with the name, consumer project, env var, connection limit and query timeout fields, the two env var options and the Create database button."
   caption="The New database form."
 />
 
 | Field | What it does |
 |---|---|
-| **nome** (name) | name of the database and the user: `a-z`, `0-9` and `_` |
-| **projeto consumidor** (consumer project) | the project that will use the database. It receives the connection string in a variable |
+| **name** | name of the database and the user: `a-z`, `0-9` and `_` |
+| **consumer project** | the project that will use the database. It receives the connection string in a variable |
 | **env var** | the variable that receives the URL. Default: `DATABASE_URL` or `MONGODB_URI` |
-| **limite de conexões** (connection limit) | optional. Not valid on MongoDB |
+| **connection limit** | optional. Not valid on MongoDB |
 | **timeout de query** | optional, in ms. Postgres only |
-| **Sobrescrever a env var se o projeto já a tiver** (overwrite the env var if the project already has it) | without it, creation is **refused** if the variable already exists |
-| **Não mexer em env var (vou migrar os dados antes)** (leave the env var alone, I will migrate the data first) | creates the database without touching the application: the first step of a [migration](/en/guias/migrar-banco/) |
+| **Overwrite the env var if the project already has it** | without it, creation is **refused** if the variable already exists |
+| **Do not touch env vars (I will migrate the data first)** | creates the database without touching the application: the first step of a [migration](/en/guias/migrar-banco/) |
 
-After **Criar database** (Create database), redeploy the consumer project so the application reads the variable.
+After **Create database**, redeploy the consumer project so the application reads the variable.
 Everything about isolation, limits and conflicts is in [Shared database](/en/guias/banco-compartilhado/).

@@ -28,10 +28,10 @@ proxy (the ingress) routes by domain name.
 On the service's **Domains** tab:
 
 - **dominio.com**: the name (`app.mysite.com`);
-- **porta (opcional)** (port, optional): the container port that receives the traffic. Blank uses the service's port;
+- **port (optional)**: the container port that receives the traffic. Blank uses the service's port;
 - **TLS**: tick it for HTTPS.
 
-Click **Adicionar** (Add). The list shows each route as `https → :8080` or `http → :80`: the public scheme
+Click **Add**. The list shows each route as `https → :8080` or `http → :80`: the public scheme
 and the container port.
 
 You can point several domains at the same service, even at **different ports** of the same container.

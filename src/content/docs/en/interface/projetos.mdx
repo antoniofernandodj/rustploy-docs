@@ -26,12 +26,12 @@ At the top, two indicators: **SERVICES** (the total number of services across al
 
 - the project's **name**;
 - the count, such as `7 serviço(s) · 0 rodando` (7 services, 0 running);
-- **Abrir ›** (Open) to enter the project;
-- when the project **has services**, the notice *"Não removível: tem serviços"* (Not removable: it has services). To delete a project, first remove all its services.
+- **Open ›** to enter the project;
+- when the project **has services**, the notice *"Cannot be removed: it has services"*. To delete a project, first remove all its services.
 
 ## Create a project
 
-Click **+ Novo projeto** (New project). It opens a separate window:
+Click **+ New project**. It opens a separate window:
 
 <Shot
   src={novoProjeto}
@@ -41,22 +41,22 @@ Click **+ Novo projeto** (New project). It opens a separate window:
 
 | Field | |
 |---|---|
-| **NOME** (Name) | required |
-| **DESCRIÇÃO (OPCIONAL)** (Description, optional) | free text |
+| **NAME** | required |
+| **DESCRIPTION (OPTIONAL)** | free text |
 
-Confirm with **Criar projeto** (Create project). Rustploy creates the project's Docker network the first time it is needed.
+Confirm with **Create project**. Rustploy creates the project's Docker network the first time it is needed.
 
 ## Inside a project
 
-**Abrir ›** takes you to the project screen. At the top, **‹ Projetos** returns to the list, and on the right are **Deploy** (shows the order of every service and dependency and, once accepted, queues them all; see [dependencies](/en/guias/dependencias-e-religar/)), **Reorder services**, **+ Novo serviço**
+**Open ›** takes you to the project screen. At the top, **‹ Projects** returns to the list, and on the right are **Deploy** (shows the order of every service and dependency and, once accepted, queues them all; see [dependencies](/en/guias/dependencias-e-religar/)), **Reorder services**, **+ New service**
 (opens the [wizard](/en/interface/novo-servico/)). The project **name** and **description** sit in the header and are edited in place: click, type, and it saves half a second after the last keystroke (there is no Edit button).
 
 Four tabs:
 
 | Tab | What it has |
 |---|---|
-| **Serviços** | a card per service, with the name, port, status, CPU and memory, and buttons to stop, remove and export |
-| **Variáveis (N)** | the project's environment variables |
+| **Services** | a card per service, with the name, port, status, CPU and memory, and buttons to stop, remove and export |
+| **Variables (N)** | the project's environment variables |
 | **Secrets (N)** | the project's encrypted values |
 | **Jobs (N)** | the project's [jobs](/en/guias/jobs/) |
 
@@ -72,7 +72,7 @@ applies to every client. A service created later goes to the end.
 
 ### The service card
 
-**Abrir ›** opens the [service screen](/en/interface/servico/), where the deploy, domain, healthcheck and logs live. The card's buttons:
+**Open ›** opens the [service screen](/en/interface/servico/), where the deploy, domain, healthcheck and logs live. The card's buttons:
 
 | Button | Effect |
 |---|---|
@@ -86,7 +86,7 @@ applies to every client. A service created later goes to the end.
   caption="The confirmation of the × button. Removing cannot be undone."
 />
 
-The dialog says *"O serviço será parado e removido. Essa ação não pode ser desfeita."* (the service will be stopped and removed; this action cannot be undone). **Cancelar** (Cancel) does nothing; **Remover** (Remove) stops the container and deletes the service and its history.
+The dialog says *"The service will be stopped and removed; this action cannot be undone"*. **Cancel** does nothing; **Remove** stops the container and deletes the service and its history.
 
 ## Project variables
 
@@ -96,14 +96,13 @@ The dialog says *"O serviço será parado e removido. Essa ação não pode ser 
   caption="The Variables tab, with one variable already registered."
 />
 
-The text at the top reminds you of the rule: *"Herdadas por todos os serviços deste projeto no deploy — as do serviço têm
-precedência."* (Inherited by all of this project's services at deploy time; the service's own take precedence.) See the
+The text at the top reminds you of the rule: *"Inherited by all services of this project on deploy — the service's own take precedence."* See the
 details in [How environment variables are resolved](/en/conceitos/variaveis-de-ambiente/).
 
 To **add** one:
 
 1. Type the name in **KEY** and the value in **value**.
-2. Click **Adicionar** (Add).
+2. Click **Add**.
 
 <Shot
   src={variaveisEditando}
@@ -113,12 +112,12 @@ To **add** one:
 
 | Control | What it does |
 |---|---|
-| **usar secret** (use secret) | instead of typing the value, points the variable at a project **secret** |
+| **use secret** | instead of typing the value, points the variable at a project **secret** |
 | red **×** on the row | removes the variable |
 | **✏️** on the row | **renames** the key **right there**: the name becomes a field on the row itself. **Enter** (or **✓**) saves, **✕** cancels. The value does not change |
 | **✎** on the row | edits the **value** the same way, at its own position in the list. On a variable that points at a secret, the field shows the `secret:NAME` reference (never the encrypted value) |
 | **.env** | opens the editor in text, in `.env` format (one `KEY=value` per line, with comments) |
-| **Exportar** (Export) | opens the same editor already filled with the current variables, to copy |
+| **Export** | opens the same editor already filled with the current variables, to copy |
 
 <Aside type="note">
   Variables and secrets only reach the container **on the next deploy**. After changing something, run **Deploy** on the

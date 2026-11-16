@@ -5,7 +5,7 @@ description: The Em execução screen of Rustploy - only the projects and servic
 
 import { Aside } from '@astrojs/starlight/components';
 
-The **Em execução** (Running) screen (side menu, **DEPLOYMENT OPS** group) answers "what is
+The **Running** screen (side menu, **DEPLOYMENT OPS** group) answers "what is
 up right now?" without opening each project. It is the **same in the desktop app and in the
 web UI**.
 
@@ -35,12 +35,12 @@ Every card also shows:
 - **Domains**, **CPU** and **memory**.
 - The **warm / cold** badge when the service has a build (Git or zip). See
   [Docker cleanup](/en/guias/limpeza-docker/).
-- **PRÉ-DEPLOY CHECKS**: the jobs that run before the deploy, **in order**.
-- **WEBHOOK DE DEPLOY**: the URL, with the token **masked**.
+- **PRE-DEPLOY CHECKS**: the jobs that run before the deploy, **in order**.
+- **DEPLOY WEBHOOK**: the URL, with the token **masked**.
 
 <Aside type="caution" title="The webhook token triggers a deploy">
   Anyone with the full URL can trigger a deploy. That is why it is masked
-  (`…/webhook/<id>/••••••••`). **Mostrar** (Show) reveals it on screen; **Copiar** (Copy)
+  (`…/webhook/<id>/••••••••`). **Show** reveals it on screen; **Copy**
   always copies the full URL. Compose services have no webhook.
 </Aside>
 
@@ -50,5 +50,5 @@ Every card also shows:
 |---|---|
 | **▶ Deploy** | triggers the service deploy without opening its screen |
 | **■** | stops the service (asks for confirmation) |
-| **Abrir serviço ›** | goes to the [service screen](/en/interface/servico/) |
-| **Abrir projeto ›** | goes to the [project](/en/interface/projetos/) |
+| **Open service ›** | goes to the [service screen](/en/interface/servico/) |
+| **Open project ›** | goes to the [project](/en/interface/projetos/) |

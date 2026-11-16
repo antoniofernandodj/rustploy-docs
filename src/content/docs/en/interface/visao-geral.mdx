@@ -32,14 +32,14 @@ through the app's screens, one by one.
 | **Central area** | the content of the chosen screen |
 
 Some actions open **separate windows**, with their own title bar, rather than a panel inside the main one: **Novo
-projeto** (New project), **Novo serviço** (New service), **Novo token** (New token) for the registry, **Novo job** (New job)
+projeto** (New project), **New service**, **Novo token** (New token) for the registry, **New job**
 and the **logs** window. You can move and resize them. The app remembers the window size from last time.
 
 ## The side menu
 
 | Group | Screen | What for |
 |---|---|---|
-| **DEPLOYMENT OPS** | **Em execução** (Running) | only the projects and services running right now, with shortcuts ([screen](/en/interface/em-execucao/)) |
+| **DEPLOYMENT OPS** | **Running** | only the projects and services running right now, with shortcuts ([screen](/en/interface/em-execucao/)) |
 | | **Deployments** | the recent deploys of all projects |
 | | **Deploy Engine** | the queue and deploys in progress ([screen](/en/interface/deploy-engine/)) |
 | | **Monitoring** | CPU, memory, disk and load of the server and containers ([screen](/en/interface/monitoring/)) |
@@ -60,8 +60,7 @@ and the **logs** window. You can move and resize them. The app remembers the win
 ### Stop All
 
 <Aside type="danger" title="It stops everything">
-  **Stop All** stops **all of Rustploy's services**, across all projects. The app asks for confirmation (*"Parar todos
-  os serviços?"*, Stop all services?). They only come back with a new **Deploy**. Use it for maintenance, not day to day.
+  **Stop All** stops **all of Rustploy's services**, across all projects. The app asks for confirmation (*"Stop all services?"*, Stop all services?). They only come back with a new **Deploy**. Use it for maintenance, not day to day.
 </Aside>
 
 ## The Deployments screen
@@ -73,13 +72,13 @@ It is the home screen. At the top, two indicators:
 | **STATUS** `0/7` | services **running** out of the **total** number of services |
 | **UPTIME** `18h 53m` | how long the **daemon** has been up |
 
-The table lists deploys with **SERVIÇO** (service), **PROJETO** (project), **ESTADO** (state), **DURAÇÃO** (duration) and
-**INÍCIO** (start). The service and project names are **links**: clicking opens that service's or project's screen.
-Empty, it shows *"Nenhum deployment ainda."* (No deployments yet.)
+The table lists deploys with **SERVICE**, **PROJECT**, **STATE**, **DURATION** and
+**START**. The service and project names are **links**: clicking opens that service's or project's screen.
+Empty, it shows *"No deployment yet."*
 
 ### Limpar parados/falhos
 
-The red **Limpar parados/falhos** (Clear stopped/failed) button deletes from the history every deploy in state
+The red **Clean stopped/failed** button deletes from the history every deploy in state
 **Stopped** or **Failed**, **with the build logs**. Deploys in progress are not affected. The action is **irreversible** and
 asks for confirmation.
 

@@ -19,13 +19,13 @@ At the top, five cards:
 
 | Card | Shows |
 |---|---|
-| **ATIVOS** (Active) | deploys running now |
-| **SUCESSO 24H** (Success 24h) | deploys that reached `Live` in the last 24 hours |
-| **FALHAS 24H** (Failures 24h) | deploys that failed in the last 24 hours |
+| **ACTIVE** | deploys running now |
+| **SUCCESS 24H** | deploys that reached `Live` in the last 24 hours |
+| **FAILURES 24H** | deploys that failed in the last 24 hours |
 | **TOTAL 24H** | all deploys of the last 24 hours |
 | **UPTIME** | how long the daemon has been up |
 
-Below, three tabs, each with its count in parentheses: **Fila** (Queue), **Executando** (Running) and **Histórico 24h** (History).
+Below, three tabs, each with its count in parentheses: **Queue**, **Running** and **History 24h**.
 
 <Aside type="note" title="Jobs and warm-ups show up here too">
   The three tabs also show **job runs** and **warm-ups** (which share the same single slot), with a
@@ -42,21 +42,21 @@ Below, three tabs, each with its count in parentheses: **Fila** (Queue), **Execu
   caption="The Running tab, with a deploy in progress."
 />
 
-**EXECUTANDO AGORA (N)** (running now) lists the active deploy. The columns:
+**RUNNING NOW (N)** lists the active deploy. The columns:
 
 | Column | Means |
 |---|---|
-| **SERVIÇO** (Service) | the service (click to open it) |
-| **PROJETO** (Project) | its project |
-| **ESTADO** (State) | the current state of the [state machine](/en/conceitos/ciclo-de-vida/), such as `BUILDING` |
+| **SERVICE** | the service (click to open it) |
+| **PROJECT** | its project |
+| **STATE** | the current state of the [state machine](/en/conceitos/ciclo-de-vida/), such as `BUILDING` |
 | **TOTAL** | how long the deploy has taken so far |
-| **FASE** (Phase) | how long it has been in the current step |
+| **PHASE** | how long it has been in the current step |
 
 To the right of the row:
 
 | Button | Effect |
 |---|---|
-| **Detalhes** (Details) | opens the deploy panel: the steps and the transition history, with each one's duration and message |
+| **Details** | opens the deploy panel: the steps and the transition history, with each one's duration and message |
 | **■** (red) | **aborts** the running deploy |
 
 Under the row, the **steps strip** shows the deploy's path:
@@ -67,17 +67,17 @@ Fila · Checks · Deps · Obter · Staging · Health · Swap · Live
 
 | Step | States it groups |
 |---|---|
-| **Fila** (Queue) | `Pending` |
+| **Queue** | `Pending` |
 | **Checks** | `PreDeployCheck` ([pre-deploy checks](/en/guias/pre-deploy/)) |
 | **Deps** | `ResolvingDeps` |
-| **Obter** (Fetch) | `PullingImage`, `CloningRepo`, `BuildingImage`, `ComposingUp` |
+| **Fetch** | `PullingImage`, `CloningRepo`, `BuildingImage`, `ComposingUp` |
 | **Staging** | `Staging` |
 | **Health** | `HealthcheckPolling` |
 | **Swap** | `SwappingIn`, `Draining`, `Promoting` |
 | **Live** | `Live` |
 
 Each step shows as completed (**✓**), current (**●**), pending (**○**) or failed (**✕**). With nothing running, the tab says
-*"Nenhum deploy em andamento."* (No deploy in progress.)
+*"No deploy in progress."*
 
 <Aside type="caution" title="Aborting does not undo anything">
   **■** interrupts the deploy's task **immediately**, without running the rollback. The deploy ends as **Failed** (*"aborted by
@@ -93,18 +93,18 @@ Each step shows as completed (**✓**), current (**●**), pending (**○**) or 
   caption="The Queue tab, with two deploys waiting."
 />
 
-**NA FILA (N)** (in the queue) lists the deploys in the order they will run, such as `1. app` and `2. frontend-dev`, with each one's
-project. With nothing: *"Nenhum deploy na fila."* (No deploy in the queue.)
+**QUEUED (N)** lists the deploys in the order they will run, such as `1. app` and `2. frontend-dev`, with each one's
+project. With nothing: *"No deploy in the queue."*
 
 | Control | Effect |
 |---|---|
 | **⋮** (handle on the left) | **drag** to reorder the queue |
-| **↑ topo** (to top) | moves the deploy to the **front** of the queue ("cut the line") |
+| **↑ top** | moves the deploy to the **front** of the queue ("cut the line") |
 | **✕** (red) | **cancels** the queued deploy. The service returns to status `Stopped`; if the old container is still running, the daemon fixes the status within 30 s |
-| **Pausar fila** (Pause queue) | the queue stops starting new deploys. What is already running finishes |
-| **Retomar fila** (Resume queue) | appears in place of *Pausar* when the queue is paused |
+| **Pause queue** | the queue stops starting new deploys. What is already running finishes |
+| **Resume queue** | appears in place of *Pausar* when the queue is paused |
 
-With the queue paused, the tab shows *"Fila pausada — deploys esperam até você retomar."* (Queue paused: deploys wait until you resume.)
+With the queue paused, the tab shows *"Queue paused — deploys wait until you resume."*
 [Jobs](/en/interface/schedules/) join the same queue.
 
 ## Histórico 24h (History)
@@ -115,19 +115,19 @@ With the queue paused, the tab shows *"Fila pausada — deploys esperam até voc
   caption="The 24h History tab."
 />
 
-**HISTÓRICO 24H (N)** lists recently finished deploys:
+**HISTORY 24H (N)** lists recently finished deploys:
 
 | Column | Means |
 |---|---|
 | (icon) | **✓** it worked, **×** it failed |
-| **SERVIÇO** | the service. Click to open it |
-| **PROJETO** | its project |
-| **ESTADO** | `LIVE` (green) or `FAILED` (red) |
-| **DURAÇÃO** (Duration) | how long the deploy took |
-| **INÍCIO** (Start) | the time it began |
+| **SERVICE** | the service. Click to open it |
+| **PROJECT** | its project |
+| **STATE** | `LIVE` (green) or `FAILED` (red) |
+| **DURATION** | how long the deploy took |
+| **START** | the time it began |
 
 When a deploy's service **has already been removed**, the row shows the **service id** (`svc_…`) and has no project. With no deploys:
-*"Nenhum deploy concluído nas últimas 24h."* (No deploy finished in the last 24h.)
+*"No deploy finished in the last 24h."*
 
 To find out **why a deploy failed**, open the service and use **≡** on the **Deployments** tab to see the
 [build log](/en/interface/logs/#build-logs).

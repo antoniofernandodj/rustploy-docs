@@ -23,30 +23,30 @@ and build cache.
 
 ## Automatic cleanup
 
-In **Settings → Manutenção** (Maintenance), **LIMPEZA AUTOMÁTICA** (automatic cleanup):
+In **Settings → Maintenance**, **AUTOMATIC CLEANUP**:
 
 <Steps>
-1. Tick **Ativar limpeza automática** (Enable automatic cleanup).
-2. Choose the **FREQUÊNCIA** (frequency): **A cada N horas** (every N hours), **Todo dia** (every day) or **Toda semana** (every week), with the **HORÁRIO** (time).
-3. Under **O QUE LIMPAR** (what to clean), tick the types.
-4. Click **Salvar** (Save). **Executar agora** (Run now) runs it immediately.
+1. Tick **Enable automatic cleanup**.
+2. Choose the **FREQUENCY**: **Every N hours**, **Every day** or **Every week**, with the **TIME**.
+3. Under **WHAT TO CLEAN**, tick the types.
+4. Click **Save**. **Run now** runs it immediately.
 </Steps>
 
 <Aside type="caution" title="The time is in UTC">
-  As with jobs, the **HORÁRIO** is in UTC. The default is 03:00 UTC. The **Próxima execução agendada** (next
+  As with jobs, the **TIME** is in UTC. The default is 03:00 UTC. The **Next scheduled run** (next
   scheduled run) line shows the time in your time zone (in Brazil, `03:00` appears as `00:00`): use it to check.
 </Aside>
 
 | Option | Effect |
 |---|---|
-| **Containers parados** (stopped containers) | removes the stopped ones |
-| **Imagens sem uso** (unused images) | by default only *dangling* ones (no tag). **incluir todas as não usadas** (include all unused) also removes tagged ones |
-| **SÓ IMAGENS CRIADAS HÁ MAIS DE (HORAS)** (only images created more than N hours ago) | default **168 h** (7 days). `0` does not filter. Docker looks at the **creation** date, not the last use |
-| **Redes sem uso** (unused networks) | removes networks with no containers |
-| **Cache de build** | removes unused cache |
-| **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** (keep cache used in the last N hours) | default **168 h**. `0` deletes all unused cache. With a period, the cache of a recent deploy or job survives and the next build does not start from scratch |
-| **Aquecer os builds depois da limpeza** (warm builds after cleanup) | on by default. Rebuilds the image of every Git or zip service that became **cold**, one at a time, in the deploy queue |
-| **Volumes sem uso** (unused volumes) | **careful**: see below |
+| **Stopped containers** | removes the stopped ones |
+| **Unused images** | by default only *dangling* ones (no tag). **include all unused** also removes tagged ones |
+| **ONLY IMAGES CREATED MORE THAN (HOURS) AGO** | default **168 h** (7 days). `0` does not filter. Docker looks at the **creation** date, not the last use |
+| **Unused networks** | removes networks with no containers |
+| **Build cache** | removes unused cache |
+| **KEEP THE CACHE USED IN THE LAST (HOURS)** | default **168 h**. `0` deletes all unused cache. With a period, the cache of a recent deploy or job survives and the next build does not start from scratch |
+| **Warm the builds after cleanup** | on by default. Rebuilds the image of every Git or zip service that became **cold**, one at a time, in the deploy queue |
+| **Unused volumes** | **careful**: see below |
 
 <Aside type="danger" title="Volumes may hold data">
   Rustploy only uses *bind mounts*, so a Docker named volume is not its own: it may belong to a database you
@@ -58,7 +58,7 @@ Automatic cleanup comes **off** and with no type ticked.
 ## Why the first deploy of the day was slow
 
 Deleting the build cache makes the next deploy rebuild everything: pull the base image and
-reinstall dependencies. With **Aquecer os builds depois da limpeza** (warm builds after
+reinstall dependencies. With **Warm the builds after cleanup** (warm builds after
 cleanup), the daemon redoes that build right after the cleanup, **one service at a time**,
 and each service shows a **warm** or **cold** badge (in the project's service list and in
 the service header). A successful deploy also leaves the service warm. Services using a

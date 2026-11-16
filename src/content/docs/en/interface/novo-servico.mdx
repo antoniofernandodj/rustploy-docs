@@ -19,8 +19,8 @@ import banco from '../../../../assets/ui/novo-servico-banco.png';
 import postgres from '../../../../assets/ui/novo-servico-postgres.png';
 import template from '../../../../assets/ui/novo-servico-template.png';
 
-In an open project, click **+ Novo serviço** (New service). The wizard opens in a window of its own, **Novo serviço — project name**,
-with **‹ Voltar** (Back) and **Cancelar** (Cancel) at the top. Creating a service **does not deploy**: once it exists, open the
+In an open project, click **+ New service**. The wizard opens in a window of its own, **New service — project name**,
+with **‹ Back** and **Cancel** at the top. Creating a service **does not deploy**: once it exists, open the
 service and click **Deploy**.
 
 ## Choose the type
@@ -39,9 +39,9 @@ service and click **Deploy**.
 | **Storage** | S3-compatible object storage: RustFS, MinIO | files and uploads, with an S3 API |
 | **Compose** | "Stack Docker Compose" | several containers together. See [Compose](/en/guias/compose/) |
 | **Template** | "A partir de um preset" (from a preset) | ready-made apps from the [catalog](/en/templates/) |
-| **Importar** | "Recriar um serviço exportado de outro servidor" (recreate a service exported from another server) | bring a service from one Rustploy to another |
+| **Import** | "Recriar um serviço exportado de outro servidor" (recreate a service exported from another server) | bring a service from one Rustploy to another |
 
-Click **Selecionar ›** (Select) on the type's row.
+Click **Select ›** on the type's row.
 
 ## Database
 
@@ -73,14 +73,14 @@ Click **Selecionar ›** (Select) on the type's row.
 
 | Field | What it is |
 |---|---|
-| **NOME** (Name) | the **service** name in Rustploy (e.g. `my-database`) |
+| **NAME** | the **service** name in Rustploy (e.g. `my-database`) |
 | **DATABASE NAME** | the database created inside the server (default `app`) |
 | **USER** | the user (default `postgres`) |
 | **PASSWORD** | leave it **empty** and the server generates a strong password (24 characters); if you type one, it applies |
-| **Gerar URL de conexão externa** (Generate external connection URL) | tick it to reach the database from **outside the server** (see below) |
+| **Generate an external connection URL** | tick it to reach the database from **outside the server** (see below) |
 | **DOCKER IMAGE** | the image, e.g. `postgres:18` |
 
-Click **Criar PostgreSQL** (Create PostgreSQL). The fields change by database: MySQL and MariaDB also ask for the root password, and
+Click **Create PostgreSQL**. The fields change by database: MySQL and MariaDB also ask for the root password, and
 MongoDB has **Use Replica Sets**.
 
 <Aside type="note" title="Where the password lives">
@@ -91,8 +91,7 @@ MongoDB has **Use Replica Sets**.
 
 #### External connection URL
 
-Ticking **"Gerar URL de conexão externa (porta e firewall automáticos)"** (generate external connection URL, automatic port and
-firewall), Rustploy allocates a free port from the `[external_ports]` range (default 20000–20999), opens that port in `ufw` and
+Ticking **"Generate an external connection URL (port and firewall automatic)"**, Rustploy allocates a free port from the `[external_ports]` range (default 20000–20999), opens that port in `ufw` and
 shows the **External URL** on the service's **Connection** tab. This makes the database reachable from the **internet**, protected
 only by its password. Use a strong password. Without it, the database is only reachable from inside the project. Details in
 [Databases, brokers and storage](/en/guias/bancos-e-brokers/).
@@ -105,8 +104,8 @@ only by its password. Use a strong password. Without it, the database is only re
   caption="The template catalog, with search."
 />
 
-Use the **BUSCAR** (Search) field (*"buscar templates…"*) to filter the catalog by name or description. Each row has the logo, the name
-and **Escolher ›** (Choose). Then you name the service and review the variables (passwords already come generated). There are more than
+Use the **SEARCH** field (*"search templates…"*) to filter the catalog by name or description. Each row has the logo, the name
+and **Choose ›**. Then you name the service and review the variables (passwords already come generated). There are more than
 380 applications: see the [catalog](/en/templates/).
 
 ## Application
@@ -117,7 +116,7 @@ and **Escolher ›** (Choose). Then you name the service and review the variable
   caption="New Application: just the name."
 />
 
-The wizard only asks for the **NOME** (name) and, optionally, the **APP NAME**, used in place of the name, and
+The wizard only asks for the **NAME** and, optionally, the **APP NAME**, used in place of the name, and
 creates the service **empty**. The source (**Git**, image or zip), the port and the domain are set later, in the
 service's **General** tab. See [Git](/en/guias/git/).
 
@@ -130,7 +129,7 @@ service's **General** tab. See [Git](/en/guias/git/).
 />
 
 Three options, each with the image that will run: **Apache Kafka** (`apache/kafka:3.9.0`), **RabbitMQ**
-(`rabbitmq:4-management`) and **NATS** (`nats:2`). After **Selecionar ›** (Select), the form changes slightly:
+(`rabbitmq:4-management`) and **NATS** (`nats:2`). After **Select ›**, the form changes slightly:
 
 <Shot
   src={wizRabbit}
@@ -141,21 +140,21 @@ Three options, each with the image that will run: **Apache Kafka** (`apache/kafk
 <Shot
   src={wizKafka}
   alt="The New Apache Kafka form with name, generated password, the external connection URL option, the Docker image and the Criar Apache Kafka button."
-  caption="Kafka: just the **NOME** (no user or password)."
+  caption="Kafka: just the **NAME** (no user or password)."
 />
 
 <Shot
   src={wizNats}
   alt="The New NATS form with name, generated password, the external connection URL option, the Docker image and the Criar NATS button."
-  caption="NATS: also just the **NOME**."
+  caption="NATS: also just the **NAME**."
 />
 
 | Field | What it is |
 |---|---|
-| **NOME** (name) | the service name |
+| **NAME** | the service name |
 | **USER** | RabbitMQ only (default `rabbit`) |
-| **PASSWORD (deixe vazio para gerar)** (leave empty to generate) | RabbitMQ only. Empty, the server generates it and stores it encrypted |
-| **Gerar URL de conexão externa** (generate an external connection URL) | opens a TCP port on the server and in the firewall, and shows the outside URL. Off, the broker is only reachable on the project network |
+| **PASSWORD (leave empty to generate one)** | RabbitMQ only. Empty, the server generates it and stores it encrypted |
+| **Generate an external connection URL** | opens a TCP port on the server and in the firewall, and shows the outside URL. Off, the broker is only reachable on the project network |
 | **DOCKER IMAGE** | the image, just to check |
 
 See [Databases, brokers and storage](/en/guias/bancos-e-brokers/).
@@ -168,7 +167,7 @@ See [Databases, brokers and storage](/en/guias/bancos-e-brokers/).
   caption="Choosing the storage."
 />
 
-Two options of S3-compatible object storage: **RustFS** and **MinIO**. After **Selecionar ›** (Select):
+Two options of S3-compatible object storage: **RustFS** and **MinIO**. After **Select ›**:
 
 <Shot
   src={wizRustfs}
@@ -178,10 +177,10 @@ Two options of S3-compatible object storage: **RustFS** and **MinIO**. After **S
 
 | Field | What it is |
 |---|---|
-| **NOME** (name) | the service name |
+| **NAME** | the service name |
 | **USER** | the *access key* (default `rustfsadmin` or `minioadmin`) |
-| **PASSWORD (deixe vazio para gerar)** (leave empty to generate) | the *secret key*. Empty, the server generates it and stores it encrypted |
-| **Gerar URL de conexão externa** (generate external connection URL) | opens a TCP port on the server and in the firewall |
+| **PASSWORD (leave empty to generate one)** | the *secret key*. Empty, the server generates it and stores it encrypted |
+| **Generate an external connection URL** | opens a TCP port on the server and in the firewall |
 | **DOCKER IMAGE** | the image (MinIO's default is the Chainguard build) |
 
 The Storage **does not create a bucket by itself**. See how in [Databases, brokers and storage](/en/guias/bancos-e-brokers/#create-a-bucket).
@@ -194,9 +193,8 @@ The Storage **does not create a bucket by itself**. See how in [Databases, broke
   caption="New Compose Stack: just the name."
 />
 
-Like Application, the desktop app only asks for the **NOME** (and the optional **APP NAME**) and creates the stack
-**empty**: *"Configure o compose file dentro do serviço antes de fazer deploy."* (set the compose file inside the
-service before deploying). You edit the YAML in the service's **General** tab. See
+Like Application, the desktop app only asks for the **NAME** (and the optional **APP NAME**) and creates the stack
+**empty**: *"Configure the compose file inside the service before deploying."*. You edit the YAML in the service's **General** tab. See
 [Docker Compose stacks](/en/guias/compose/).
 
 ## Importar (Import)
@@ -207,14 +205,13 @@ service before deploying). You edit the YAML in the service's **General** tab. S
   caption="Importing an exported service (the project name in the text is blurred)."
 />
 
-Pick the file exported from another server (**Escolher arquivo…**) **or paste the bundle text**, and click
-**Analisar** (Analyze). The service is created **in the open project**, **without a deploy** (*"revise e clique
-em Deploy depois"*, review and click Deploy afterwards), and nothing is overwritten. Only the configuration comes in
+Pick the file exported from another server (**Choose file…**) **or paste the bundle text**, and click
+**Analyze**. The service is created **in the open project**, **without a deploy** (*"review it and click Deploy afterwards"*, review and click Deploy afterwards), and nothing is overwritten. Only the configuration comes in
 the file: the **data** (volumes, databases) does not. The step by step, the warnings and the choices about
 variables are in [Copy a service to another server](/en/guias/copiar-servico/#import).
 
 ## After creating
 
-1. Open the service (**Abrir ›** on the card).
+1. Open the service (**Open ›** on the card).
 2. Configure the [healthcheck](/en/guias/healthcheck/), the [domain](/en/guias/dominios-e-tls/) and the variables.
 3. Click **Deploy**.

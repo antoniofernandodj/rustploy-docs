@@ -5,13 +5,13 @@ description: How to update the Rustploy daemon and clients without losing data -
 
 ## Finding out whether there is a new version
 
-In **Settings → Atualizações** (in the app and in the web UI) the daemon asks GitHub for the latest stable
+In **Settings → Updates** (in the app and in the web UI) the daemon asks GitHub for the latest stable
 release and compares it with the running version. It is only a check: **nothing is installed**, and the
 update itself follows the steps below. See [Settings](/en/interface/configuracoes/#atualizações-updates).
 
 ## Updating from Settings
 
-If the server was installed from the `.deb`, the **Atualizar daemon** (update daemon) button (in **Settings → Atualizações**, in
+If the server was installed from the `.deb`, the **Update daemon** button (in **Settings → Updates**, in
 the app and in the web UI) does everything: the daemon keeps a database snapshot, downloads the release's package and
 signature, and asks a root helper to install it, which only installs what the project has **signed** (see
 [the update helper](/en/operacao/seguranca-do-servidor/#the-update-helper)). The daemon restarts, but your services'
@@ -19,7 +19,7 @@ containers **keep running**.
 
 - If a **deploy is running or queued**, the daemon refuses and asks whether you want to update anyway.
 - If the service **does not become stable** after the install, the previous binaries come back by themselves.
-- **Reverter para a versão anterior** (roll back) restores the binaries from the last update's backup. The database is **not**
+- **Roll back to the previous version** (roll back) restores the binaries from the last update's backup. The database is **not**
   rolled back: if the new version migrated the schema, the snapshot kept before sits in `<db_path>/update_snapshots/` (the 3 most recent).
 - In the desktop app the window returns to the login when the daemon restarts, and the login screen shows a notice that it is updating; sign in again and the tab shows the result. In
   the web UI the progress shows live.
@@ -67,8 +67,8 @@ inspected in Docker; `Promoting` is completed. The proxy's route table is rebuil
 ## Update the clients
 
 - **Web UI**: it ships with the daemon. If the browser shows the old version, force a reload (`Ctrl+Shift+R`), because the files are served with a long cache.
-- **Desktop app installed from the `.deb` (Linux)**: in **Settings → Atualizações**, the **App desktop** section shows the installed and latest versions; **Atualizar app** downloads the package (with a **progress bar** and **Cancel**; the window stays responsive), asks for the **administrator password** (the system's native dialog, through `pkexec`), installs it and reopens the app. The only program that gets root is `rustploy-gui-update`, which installs the project-**signed** `rustploy-gui` package and never a version that is not newer; it exists only during the authentication, and no root process stays resident on your computer. See [the app helper](/en/operacao/seguranca-do-servidor/#the-desktop-app-helper).
-- **Desktop app installed by `install.ps1` (Windows)**: the same **Atualizar app** button downloads the release zip (with a progress bar and **Cancel**, no `curl` needed) and checks the signature; then the app **closes**, `rustploy-gui-update.exe` replaces the `%LOCALAPPDATA%\Rustploy` folder with the new one and reopens the app. It asks for no password (the folder is yours). If something fails, the old folder stays and the app reopens on the previous version, with the reason in a notice. Works from app 0.1.27 on; from an older version, run `install.ps1` once.
+- **Desktop app installed from the `.deb` (Linux)**: in **Settings → Updates**, the **Desktop app** section shows the installed and latest versions; **Update app** downloads the package (with a **progress bar** and **Cancel**; the window stays responsive), asks for the **administrator password** (the system's native dialog, through `pkexec`), installs it and reopens the app. The only program that gets root is `rustploy-gui-update`, which installs the project-**signed** `rustploy-gui` package and never a version that is not newer; it exists only during the authentication, and no root process stays resident on your computer. See [the app helper](/en/operacao/seguranca-do-servidor/#the-desktop-app-helper).
+- **Desktop app installed by `install.ps1` (Windows)**: the same **Update app** button downloads the release zip (with a progress bar and **Cancel**, no `curl` needed) and checks the signature; then the app **closes**, `rustploy-gui-update.exe` replaces the `%LOCALAPPDATA%\Rustploy` folder with the new one and reopens the app. It asks for no password (the folder is yours). If something fails, the old folder stays and the app reopens on the previous version, with the reason in a notice. Works from app 0.1.27 on; from an older version, run `install.ps1` once.
 - **Desktop app any other way** (zip unpacked in another folder, `cargo install`): the tab shows the new version and the install command. Run the command again (Linux: `… | sudo sh -s -- gui`; Windows: `irm … | iex`) or replace the portable zip's folder.
 
 :::tip

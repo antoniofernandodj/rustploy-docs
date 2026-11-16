@@ -11,7 +11,7 @@ import gitOauth from '../../../../assets/ui/settings-git-oauth.png';
 import manutencao from '../../../../assets/ui/settings-manutencao.png';
 import manutencaoFim from '../../../../assets/ui/settings-manutencao-fim.png';
 
-**Settings** (at the foot of the side menu) has eight tabs: **Web Server**, **Git**, **Manutenção** (Maintenance), **Sincronização** (Sync), **Backups**, **Chave de recuperação** (Recovery key), **Recuperar** (Recover) and **Atualizações** (Updates).
+**Settings** (at the foot of the side menu) has eight tabs: **Web Server**, **Git**, **Maintenance**, **Sync**, **Backups**, **Recovery key**, **Recover** and **Updates**.
 
 ## Web Server
 
@@ -21,21 +21,21 @@ import manutencaoFim from '../../../../assets/ui/settings-manutencao-fim.png';
   caption="The Web Server tab. The values were blurred in this image."
 />
 
-Three blocks, each with **Copiar** (Copy):
+Three blocks, each with **Copy**:
 
 | Block | What it is |
 |---|---|
-| **URL PÚBLICA DA API** (the API's public URL) | the base of the services' **webhooks** and of the OAuth callback. It comes from `[api].domain` and the port. To change it, set `api.domain` and restart the daemon |
-| **TOKEN DE CONEXÃO** (connection token) | the base64 text of `host:port::token`, what you paste on the [login](/en/interface/entrar/) and what an AI agent uses. It is also in `[api].connection_token` in `config.toml` |
-| **CONECTAR UM AGENTE DE IA (MCP)** (connect an AI agent) | three Copy buttons, for Claude Code (`claude mcp add …/mcp`), Codex (a block for `~/.codex/config.toml`) and Gemini CLI (`gemini mcp add …`), all with the token already in. See [Connect Claude Code, Codex and Gemini](/en/agentes/conectar-claude-code/) |
+| **PUBLIC API URL** (the API's public URL) | the base of the services' **webhooks** and of the OAuth callback. It comes from `[api].domain` and the port. To change it, set `api.domain` and restart the daemon |
+| **CONNECTION TOKEN** | the base64 text of `host:port::token`, what you paste on the [login](/en/interface/entrar/) and what an AI agent uses. It is also in `[api].connection_token` in `config.toml` |
+| **CONNECT AN AI AGENT (MCP)** | three Copy buttons, for Claude Code (`claude mcp add …/mcp`), Codex (a block for `~/.codex/config.toml`) and Gemini CLI (`gemini mcp add …`), all with the token already in. See [Connect Claude Code, Codex and Gemini](/en/agentes/conectar-claude-code/) |
 
 <Aside type="danger">
   The connection token is **worth as much as the administrator token**. Do not share it, and do not publish screenshots of this screen
   without blurring.
 </Aside>
 
-Further down, scroll the screen, are the **E-MAIL LET'S ENCRYPT (HTTPS AUTOMÁTICO)** (Let's Encrypt email, automatic HTTPS) and the
-**DOMÍNIO DO REGISTRY (EXPOSIÇÃO PÚBLICA)** (registry domain, public exposure). Both require restarting the daemon.
+Further down, scroll the screen, are the **LET'S ENCRYPT EMAIL (AUTOMATIC HTTPS)** and the
+**REGISTRY DOMAIN (PUBLIC EXPOSURE)**. Both require restarting the daemon.
 
 ## Git
 
@@ -51,10 +51,10 @@ accounts) lists the existing ones.
 To **connect**:
 
 1. Choose **Gitea** or **GitHub**.
-2. Enter a **NOME** (just a label) and, for Gitea or GitHub Enterprise, the **BASE URL**. On GitHub.com leave it blank.
-3. Choose the **MÉTODO** (method): **OAuth2** or **Token (PAT)**.
+2. Enter a **NAME** (just a label) and, for Gitea or GitHub Enterprise, the **BASE URL**. On GitHub.com leave it blank.
+3. Choose the **METHOD**: **OAuth2** or **Token (PAT)**.
 4. With **OAuth2**, enter the **CLIENT ID** and **CLIENT SECRET** of an OAuth application created at the provider.
-5. Click **Conectar conta** (Connect account).
+5. Click **Connect account**.
 
 <Shot
   src={gitOauth}
@@ -62,11 +62,11 @@ To **connect**:
   caption="The end of the form: the Redirect URI. (Blurred in this image.)"
 />
 
-With OAuth, the screen shows the **REDIRECT URI**: copy it with **Copiar** and paste it into the provider's OAuth application (on Gitea:
+With OAuth, the screen shows the **REDIRECT URI**: copy it with **Copy** and paste it into the provider's OAuth application (on Gitea:
 *Settings → Applications*; on GitHub: *Settings → Developer settings → OAuth Apps*, the *Authorization callback URL* field). When you click
-**Conectar conta**, the browser opens for you to authorize.
+**Connect account**, the browser opens for you to authorize.
 
-With **Token (PAT)**, paste a *Personal Access Token* with read access to the repositories (the `repo` scope). **Atualizar lista**
+With **Token (PAT)**, paste a *Personal Access Token* with read access to the repositories (the `repo` scope). **Refresh list**
 (Refresh list) reloads the accounts.
 
 **Removing an account.** Services and jobs with a Git source remember **which account** they clone with. If you
@@ -80,8 +80,8 @@ Details and the use in services: [Deploy from a Git repository](/en/guias/git/).
 
 ## Sincronização
 
-The **Sincronização** (Sync) tab sets up [git sync](/en/guias/sincronizacao-git/) of the infrastructure state.
-At the bottom it has **Baixar a infra** (Download the infra): **Download infra** saves a
+The **Sync** tab sets up [git sync](/en/guias/sincronizacao-git/) of the infrastructure state.
+At the bottom it has **Download the infra**: **Download infra** saves a
 `rustploy-infra.zip` with the same files the sync writes to the repository, with secrets encrypted. It is
 the same on the [web UI](/en/interface/web-ui/). Details in [Download the infra](/en/guias/infra-as-code/).
 
@@ -93,7 +93,7 @@ key is stored encrypted and never comes back to the screen. Each service's sched
 
 ## Recovery key
 
-The **Chave de recuperação** tab shows whether the server already has one, and its public key. **Generate and download**
+The **Recovery key** tab shows whether the server already has one, and its public key. **Generate and download**
 creates the pair, writes only the public key to `config.toml` and downloads the private one, which is shown only
 once. Details and cautions in [Keys and secrets](/en/guias/chaves-e-segredos/#generate-the-recovery-key-from-the-interface).
 
@@ -112,13 +112,13 @@ See [Recover a server](/en/guias/recuperar-servidor/).
 
 This is where the **automatic Docker cleanup** lives. It comes **off** and **removes nothing** until you tick at least one resource and turn it on.
 
-1. Turn on **Ativar limpeza automática** (Enable automatic cleanup).
-2. Under **FREQUÊNCIA** (frequency), choose **A cada N horas** (every N hours), **Todo dia** (every day) or **Toda semana** (every week) and the **HORÁRIO** (time).
-3. Under **O QUE LIMPAR** (what to clean), tick the types.
-4. Click **Salvar** (Save). **Executar agora** (Run now) runs it immediately.
+1. Turn on **Enable automatic cleanup**.
+2. Under **FREQUENCY**, choose **Every N hours**, **Every day** or **Every week** and the **TIME**.
+3. Under **WHAT TO CLEAN**, tick the types.
+4. Click **Save**. **Run now** runs it immediately.
 
 <Aside type="caution" title="The time you type is UTC">
-  The **HORÁRIO** field is in **UTC**. The **Próxima execução agendada** (next scheduled run) line shows the time in **your time zone**: in the image
+  The **TIME** field is in **UTC**. The **Next scheduled run** line shows the time in **your time zone**: in the image
   above, `03:00` appears as `15/10 00:00` (UTC−3). Use that line to check.
 </Aside>
 
@@ -130,21 +130,20 @@ This is where the **automatic Docker cleanup** lives. It comes **off** and **rem
 
 | Option | Effect |
 |---|---|
-| **Containers parados** (stopped containers) | removes stopped containers |
-| **Imagens sem uso** (unused images) | by default only *dangling* ones. **incluir todas as não usadas** (include all unused) also includes tagged ones |
-| **SÓ IMAGENS CRIADAS HÁ MAIS DE (HORAS)** | default **168**. `0` does not filter. Docker looks at the creation date, not the last use |
-| **Redes sem uso** (unused networks) | removes networks with no containers |
-| **Cache de build** | removes unused cache |
-| **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | default **168**. `0` deletes all unused cache |
-| **Aquecer os builds depois da limpeza** (warm builds after cleanup) | on by default. After cleaning, rebuilds the image of every service with a Git repository or zip, **one at a time**, in the deploy queue, so the first deploy of the day does not pay for the whole build. Each service shows a **warm / cold** badge |
-| **Volumes sem uso** (unused volumes) | **careful** |
+| **Stopped containers** | removes stopped containers |
+| **Unused images** | by default only *dangling* ones. **include all unused** also includes tagged ones |
+| **ONLY IMAGES CREATED MORE THAN (HOURS) AGO** | default **168**. `0` does not filter. Docker looks at the creation date, not the last use |
+| **Unused networks** | removes networks with no containers |
+| **Build cache** | removes unused cache |
+| **KEEP THE CACHE USED IN THE LAST (HOURS)** | default **168**. `0` deletes all unused cache |
+| **Warm the builds after cleanup** | on by default. After cleaning, rebuilds the image of every service with a Git repository or zip, **one at a time**, in the deploy queue, so the first deploy of the day does not pay for the whole build. Each service shows a **warm / cold** badge |
+| **Unused volumes** | **careful** |
 
 <Aside type="danger" title="Volumes">
-  *"Volumes sem uso criados por fora do rustploy podem conter dado que ninguém recriaria sozinho."* (Unused volumes created outside rustploy may
-  hold data nobody would recreate by themselves.) Leave it unticked unless you are sure.
+  *"Unused volumes created outside rustploy may hold data nobody would recreate by themselves."* Leave it unticked unless you are sure.
 </Aside>
 
-At the bottom, **ÚLTIMA EXECUÇÃO** (last run) shows when it ran and what it freed (containers, images, networks, build cache). More in
+At the bottom, **LAST RUN** shows when it ran and what it freed (containers, images, networks, build cache). More in
 [Docker cleanup](/en/guias/limpeza-docker/).
 
 ## Atualizações (Updates)
@@ -154,26 +153,26 @@ Shows whether there is a newer **daemon** than the one running on the server and
 
 | Field | What it is |
 |---|---|
-| **Versão instalada** (installed version) | the `rustployd` version the app is using right now |
-| **Última versão** (latest version) | the daemon version the latest **stable** GitHub release (`antoniofernandodj/rustploy`) carries. It is the package's, not the tag's: the release tag (`v0.1.18`) and the daemon version (`0.1.12`) have their own numbering |
-| **Verificado em** (checked at) | when the daemon actually asked GitHub (it can be a few hours old) |
+| **Installed version** | the `rustployd` version the app is using right now |
+| **Latest version** | the daemon version the latest **stable** GitHub release (`antoniofernandodj/rustploy`) carries. It is the package's, not the tag's: the release tag (`v0.1.18`) and the daemon version (`0.1.12`) have their own numbering |
+| **Checked at** | when the daemon actually asked GitHub (it can be a few hours old) |
 
 The **daemon** asks GitHub, not the app: the question is "is the server out of date?". The result is cached for
-**6 hours** (GitHub limits the anonymous API to 60 requests per hour per IP), and the **Verificar atualizações**
+**6 hours** (GitHub limits the anonymous API to 60 requests per hour per IP), and the **Check for updates**
 button skips the cache, but at most once a minute. The app also checks once when it connects, so the tab opens
 already filled in.
 
-When there is a newer version, the tab shows **Atualizar daemon**. It asks for confirmation before acting (and, if a deploy
+When there is a newer version, the tab shows **Update daemon**. It asks for confirmation before acting (and, if a deploy
 is running or queued, asks again). The daemon keeps a database snapshot, downloads the package and signature and hands them to
 a root helper, which only installs what the project has **signed**; after the install the service has to become stable, or the
-previous binaries come back by themselves. **Reverter para a versão anterior** (roll back) restores the binaries from the last
+previous binaries come back by themselves. **Roll back to the previous version** (roll back) restores the binaries from the last
 update's backup. The details are in [Updating Rustploy](/en/instalacao/atualizar/#updating-from-settings) and the security model
 in [the update helper](/en/operacao/seguranca-do-servidor/#the-update-helper).
 
 The daemon restarts in the middle (the services' containers keep running). In the desktop app the window returns to the
 login, with a notice that the daemon is updating: sign in again and the tab shows the result (for example "Atualizado para 0.1.11" or the cause of a failure). In the web
 UI the progress shows live. Without the helper (a non-`.deb` install, or no systemd) the tab shows, instead of the button, the
-install command with **Copiar** and the release notes address.
+install command with **Copy** and the release notes address.
 
 If the VPS cannot reach GitHub, the tab shows the cause (no internet, rate limit, no release published). To
 turn the check off, or change the repository, use the `[update]` section of `config.toml`:
@@ -191,9 +190,9 @@ The web UI has the same tab, with the daemon's same fields.
 
 ### Desktop app
 
-In the desktop app the tab also has the **App desktop** section, with the installed version and the latest release. Unlike the
+In the desktop app the tab also has the **Desktop app** section, with the installed version and the latest release. Unlike the
 daemon, the GitHub check is made by the app itself (it runs on your machine). If the app was installed from the `.deb` and the
-system has `pkexec`, **Atualizar app** downloads the package, asks for the administrator password and reopens the already
+system has `pkexec`, **Update app** downloads the package, asks for the administrator password and reopens the already
 updated app. On Windows, with the app installed by `install.ps1`, the button downloads the zip, checks the signature, closes
 the app to replace the files and reopens it, without asking for a password. Otherwise the tab shows the install command. The security details are in
 [the desktop app helper](/en/operacao/seguranca-do-servidor/#the-desktop-app-helper). The web UI does not have this section: it

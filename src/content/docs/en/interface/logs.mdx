@@ -23,22 +23,22 @@ It is the output (stdout and stderr) of the **current execution** — only that 
 are in the [previous executions](#previous-executions) list (and, with the service stopped, the window shows the most
 recent execution). To open it:
 
-- on the service screen, the **Logs → Logs de execução** (Execution logs) tab; or
-- the **Logs de runtime** button in the side panel.
+- on the service screen, the **Logs → Execution logs** tab; or
+- the **Runtime logs** button in the side panel.
 
-The title is `Logs · service-name`. At the top, the counter (*"15 linhas · ao vivo"*, 15 lines, live) and three buttons:
+The title is `Logs · service-name`. At the top, the counter (*"15 lines · live"*, 15 lines, live) and three buttons:
 
 | Button | Effect |
 |---|---|
 | **↑** | goes to the **top** |
 | **↓** | goes to the **bottom** |
-| **Copiar tudo** (Copy all) | copies all the content |
+| **Copy all** | copies all the content |
 
 When it opens, the window shows the last lines already emitted (the *tail*) and **keeps appending** new ones in real time. The text is
 **selectable**, so you can copy a snippet with the mouse. Each line starts with a time (`HH:MM:SS`) that Rustploy adds, followed by the
 line as the container emitted it (here, already carrying the app's own timestamp).
 
-With no output, the window says *"(sem logs ainda — aguardando o serviço emitir saída)"* (no logs yet, waiting for the service to emit output).
+With no output, the window says *"(no logs yet — waiting for the service to emit output)"*.
 
 ## Build logs
 
@@ -64,11 +64,11 @@ server (see below), and survives the container swap on a deploy.
 <Aside type="note">Available from daemon 0.1.36 and `rustploy-shared` 0.19.0.</Aside>
 
 An **execution** is a container's lifetime: each deploy creates a new one. On the **Logs** tab, below the button,
-the **Execuções anteriores** (Previous executions) list shows, for every execution that has ended:
+the **Previous executions** list shows, for every execution that has ended:
 
 - the interval (`dd/mm/yyyy HH:MM:SS → dd/mm/yyyy HH:MM:SS`);
 - the deploy (`dep_…`), the image, the number of lines and the size;
-- the **deploy outcome**: *Substituída* (Replaced: a newer deploy took its place), *Falhou* (Failed, in red), *Ativa*
+- the **deploy outcome**: *Replaced* (Replaced: a newer deploy took its place), *Falhou* (Failed, in red), *Ativa*
   (Active), or *sem deploy associado* (no associated deploy, for executions recorded before deploys were tracked);
 - *parcial* (partial), when the execution alone went over the size ceiling and its oldest lines were discarded.
 
@@ -76,9 +76,9 @@ Each row has three actions:
 
 | Action | Effect |
 |---|---|
-| **Ver logs** (View logs) | opens a window for that execution only, with the **date and time** on every line. History only (not live); **Carregar anteriores** pages inside it |
-| **Excluir** (Delete) | deletes that execution's stored log (asks for confirmation) |
-| ☐ / **Limpar selecionados** (Clear selected) | tick several (or **Selecionar todas**, Select all) and delete them at once; the confirmation says how many executions and how many MiB |
+| **View logs** | opens a window for that execution only, with the **date and time** on every line. History only (not live); **Load earlier** pages inside it |
+| **Delete** | deletes that execution's stored log (asks for confirmation) |
+| ☐ / **Clear selected** | tick several (or **Select all**, Select all) and delete them at once; the confirmation says how many executions and how many MiB |
 
 Deleting is **irreversible**. The **current** execution is not listed and the daemon refuses to delete it.
 **Compose** services remain live-only and have no list.
@@ -92,7 +92,7 @@ rollback of a failed deploy), saves what had not been recorded yet. So you can s
 deploy" and the cause of a new container that crashed within seconds.
 
 - When the window opens, the lines come from the stored log (the 500 most recent) and new ones keep arriving live.
-- **Carregar anteriores** (Load earlier, the button on top) brings the older page of log, above. Where the container
+- **Load earlier** (the button on top) brings the older page of log, above. Where the container
   changed between two lines, the separator *"— other container: …"* appears.
 - Retention: **14 days** and **50 MiB per service**; retention deletes **whole executions**, oldest first, and never the
   most recent one (the one running). If it alone goes over the ceiling, its oldest lines are dropped and the execution is
@@ -110,4 +110,4 @@ An agent reads the history with `LogsHistory`, lists executions with `LogsExecut
 
 The window keeps at most **6,000 lines** on screen: past that, it discards the oldest and keeps the 4,000 most recent.
 
-The logs of a [job](/en/interface/schedules/) run open in the same window, through the job's **Ver logs** action.
+The logs of a [job](/en/interface/schedules/) run open in the same window, through the job's **View logs** action.
