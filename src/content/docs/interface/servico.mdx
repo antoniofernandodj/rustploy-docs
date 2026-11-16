@@ -1,6 +1,6 @@
 ---
 title: A tela do serviço
-description: Tour da tela de um serviço no app desktop do Rustploy - botões Deploy, Reload, Rebuild, Stop e Exportar, o painel lateral, e as abas General, Connection, Environment, Deployments e Logs, com o webhook de deploy.
+description: Tour da tela de um serviço no app desktop do Rustploy - botões Deploy, Reload, Rebuild, Stop e Exportar, o painel lateral, e as abas Geral, Conexão, Variáveis, Deployments e Logs, com o webhook de deploy.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -58,17 +58,17 @@ anterior (veja o [tutorial](/tutorial/primeiro-deploy/#8-volte-uma-versão)).
 
 ## As abas
 
-As abas dependem do tipo de serviço. Um serviço **Application** tem **General**,
-**Connection**, **Environment**, **Domains**, **Deployments**, **Healthcheck**, **Logs** e
-**Advanced**. Todo serviço tem ainda a aba **Dados** (levar os dados para um arquivo e trazê-los de volta: veja
+As abas dependem do tipo de serviço. Um serviço **Application** tem **Geral**,
+**Conexão**, **Variáveis**, **Domínios**, **Deployments**, **Healthcheck**, **Logs** e
+**Avançado**. Todo serviço tem ainda a aba **Dados** (levar os dados para um arquivo e trazê-los de volta: veja
 [Exportar e importar os dados de um serviço](/guias/dados-do-servico/); e o **Backup no S3**, manual ou agendado: [Backup dos dados no S3](/guias/backup-no-s3/)). Um banco ou stack **Compose** ganha ainda **Migrar** (levar os dados para
 um [servidor compartilhado](/guias/migrar-banco/)). Um servidor de banco compartilhado tem a aba
 **Databases**.
 
-Esta página cobre **General**, **Connection**, **Environment**, **Deployments**, **Logs**, **Migrar** e **Databases**. **Domains**, **Healthcheck** e **Advanced** estão em
+Esta página cobre **Geral**, **Conexão**, **Variáveis**, **Deployments**, **Logs**, **Migrar** e **Databases**. **Domínios**, **Healthcheck** e **Avançado** estão em
 [Configurar domínios, healthcheck e opções avançadas](/interface/servico-configuracao/).
 
-### General
+### Geral
 
 O nome do serviço se edita no próprio **título** do cabeçalho: clique, digite e ele grava
 meio segundo depois da última tecla (não há botão Renomear). O efeito do novo nome
@@ -82,12 +82,12 @@ meio segundo depois da última tecla (não há botão Renomear). O efeito do nov
 <Shot
   src={db}
   alt="Aba Geral de um serviço Compose, com o nome editável no título, o editor do YAML do compose e os botões Salvar compose e Cancelar."
-  caption="General de um serviço Compose (um banco Postgres criado pelo assistente)."
+  caption="Geral de um serviço Compose (um banco Postgres criado pelo assistente)."
 />
 
 O editor **DOCKER COMPOSE (YAML)** mostra o compose da stack. *"Edite o compose do serviço.
 Salvar aplica no próximo deploy."* Use **Salvar compose** (ou **Cancelar** para descartar). As
-variáveis aparecem como `${POSTGRES_PASSWORD}`: os valores vêm da aba **Environment**.
+variáveis aparecem como `${POSTGRES_PASSWORD}`: os valores vêm da aba **Variáveis**.
 Veja [Stacks Docker Compose](/guias/compose/).
 
 #### Serviço Application
@@ -95,7 +95,7 @@ Veja [Stacks Docker Compose](/guias/compose/).
 <Shot
   src={git}
   alt="Aba Geral de um serviço Application, com o nome editável no título, a escolha de provider Git, Registry ou Zip, o campo de URL do repositório ou imagem, branch, porta, username e credentials."
-  caption="General de um serviço Application, ainda sem origem configurada."
+  caption="Geral de um serviço Application, ainda sem origem configurada."
 />
 
 Um serviço recém-criado pelo assistente nasce **vazio**: é aqui que você define a origem.
@@ -115,12 +115,12 @@ e `nginx:latest` é baixado. Role a aba para ver os demais campos (**Dockerfile*
 contexto de build e outros). Os detalhes e os campos que ainda não têm efeito estão em
 [Fazer deploy a partir de Git](/guias/git/).
 
-### Connection
+### Conexão
 
 <Shot
   src={connection}
-  alt="Aba Connection listando porta do container, porta do host, domínio, TLS, URL externa e URL interna, cada uma com botão Copiar."
-  caption="Aba Connection de um serviço ainda sem domínio nem porta externa."
+  alt="Aba Conexão listando porta do container, porta do host, domínio, TLS, URL externa e URL interna, cada uma com botão Copiar."
+  caption="Aba Conexão de um serviço ainda sem domínio nem porta externa."
 />
 
 Valores prontos para copiar:
@@ -128,7 +128,7 @@ Valores prontos para copiar:
 | Linha | Significa |
 |---|---|
 | **Container port** | a porta do app dentro do container |
-| **Host port** | a porta TCP aberta no servidor, se houver (veja [Domains](/interface/servico-configuracao/#portas-tcp-do-host)) |
+| **Host port** | a porta TCP aberta no servidor, se houver (veja [Domínios](/interface/servico-configuracao/#portas-tcp-do-host)) |
 | **Domain** | o domínio configurado |
 | **TLS** | `disabled` ou ligado |
 | **External URL** | a URL de **fora** do servidor, quando há porta externa |
@@ -137,12 +137,12 @@ Valores prontos para copiar:
 Abaixo, **CONTAINERS (N)** lista os containers em execução do serviço. Para bancos, a
 **Internal URL** é a connection string que você coloca em `DATABASE_URL`.
 
-### Environment
+### Variáveis
 
 <Shot
   src={envAba}
-  alt="Aba Environment de um serviço com o contador de variáveis, os botões Exportar e .env, os campos KEY e value, o botão Adicionar e a lista de variáveis com os valores borrados."
-  caption="Aba Environment (os valores das variáveis estão borrados)."
+  alt="Aba Variáveis de um serviço com o contador de variáveis, os botões Exportar e .env, os campos KEY e value, o botão Adicionar e a lista de variáveis com os valores borrados."
+  caption="Aba Variáveis (os valores das variáveis estão borrados)."
 />
 
 As variáveis **do serviço**, no mesmo formato das [variáveis do projeto](/interface/projetos/#variáveis-do-projeto):
