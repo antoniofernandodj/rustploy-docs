@@ -123,8 +123,8 @@ export const sections = [
       {
         q: { pt: 'Como volto para a versão anterior?', en: 'How do I roll back to the previous version?' },
         a: {
-          pt: 'Redeploye a versão anterior: ponha de volta a imagem, a branch ou o commit que funcionava e clique em **Deploy**. O botão Rollback não redeploya: ele só localiza o deploy anterior. Se um deploy falhar no healthcheck, o Rustploy volta sozinho para o container antigo. Veja o [tutorial](/tutorial/primeiro-deploy/).',
-          en: 'Redeploy the previous version: put back the image, branch or commit that worked and click **Deploy**. The Rollback button does not redeploy: it only finds the previous deploy. If a deploy fails its healthcheck, Rustploy automatically keeps the old container. See the [tutorial](/tutorial/primeiro-deploy/).',
+          pt: 'Redeploye a versão anterior: ponha de volta a imagem, a branch ou o commit que funcionava e clique em **Deploy**. As interfaces não têm botão de rollback. Se um deploy falhar no healthcheck, o Rustploy volta sozinho para o container antigo. Veja o [tutorial](/tutorial/primeiro-deploy/).',
+          en: 'Redeploy the previous version: put back the image, branch or commit that worked and click **Deploy**. The interfaces have no rollback button. If a deploy fails its healthcheck, Rustploy automatically keeps the old container. See the [tutorial](/tutorial/primeiro-deploy/).',
         },
       },
       {

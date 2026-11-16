@@ -320,7 +320,7 @@ Dry run of `DeployWithDependencies`: returns the order in which each service wou
 |---|---|
 | `service_id` | `String` |
 
-**Used by:** web UI.
+**Used by:** only by the API and the MCP (no screen).
 
 ### DeployHistory
 

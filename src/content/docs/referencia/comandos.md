@@ -320,7 +320,7 @@ Faz o deploy de um serviço **e da árvore de dependências dele**: enfileira, n
 |---|---|
 | `service_id` | `String` |
 
-**Usado por:** web UI.
+**Usado por:** só pela API e pelo MCP (nenhuma tela).
 
 ### DeployHistory
 

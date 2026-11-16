@@ -66,8 +66,9 @@ This page covers **General**, **Connection**, **Environment**, **Deployments**, 
 
 ### General
 
-The top is always **NOME DO SERVIÇO** (service name), with the **Renomear** (Rename) button. The text under the field warns about the effect,
-and it **varies by type**:
+The service name is edited right in the header **title**: click, type, and it saves half a second
+after the last keystroke (there is no Rename button). The effect of the new name **varies by type**
+(in the web UI, the warning shows when you hover over the title):
 
 - **Compose:** *"A stack e os volumes do Docker não mudam com o nome: os dados continuam os mesmos."* (The stack and Docker volumes do not change with the name: the data stays the same.)
 - **Application:** *"O hostname interno (`rp_<nome>`) só passa a valer no próximo deploy. Outros serviços que usam o nome antigo em variáveis de ambiente precisam ser atualizados."* (The internal hostname only takes effect on the next deploy. Other services that use the old name in environment variables need to be updated.)

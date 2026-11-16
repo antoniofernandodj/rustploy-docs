@@ -5,10 +5,11 @@ description: "Quais comandos do Rustploy existem só pela API e pelo MCP, quais 
 
 A GUI desktop e a web UI falam com a mesma API, mas cobrem conjuntos um pouco diferentes. Esta lista é gerada do código a cada versão.
 
-## Sem chamada direta de nenhuma tela (26)
+## Sem chamada direta de nenhuma tela (27)
 
 Nenhuma tela dispara estes comandos diretamente. Alguns dados (as listas do Docker, os jobs) aparecem nas telas mesmo assim, porque chegam no *snapshot* do painel. Para agir sobre eles, use `curl`, a ferramenta `rpc` do [MCP](/agentes/ferramentas/) ou um agente de IA.
 
+- [`DeployRollback`](/referencia/comandos/#deployrollback)
 - [`RecentDeployments`](/referencia/comandos/#recentdeployments)
 - [`LogsUnsubscribe`](/referencia/comandos/#logsunsubscribe)
 - [`MetricsUnsubscribe`](/referencia/comandos/#metricsunsubscribe)
@@ -41,9 +42,8 @@ Nenhuma tela dispara estes comandos diretamente. Alguns dados (as listas do Dock
 - [`ServiceList`](/referencia/comandos/#servicelist)
 - [`JobList`](/referencia/comandos/#joblist)
 
-## Só na web UI (2)
+## Só na web UI (1)
 
 - [`ServiceCreate`](/referencia/comandos/#servicecreate)
-- [`DeployRollback`](/referencia/comandos/#deployrollback)
 
 Todo o resto existe nas duas interfaces. Os comandos de assinatura de logs e métricas (`LogsSubscribe`, `MetricsSubscribe`) foram trocados pelos streams SSE e não aparecem aqui.
