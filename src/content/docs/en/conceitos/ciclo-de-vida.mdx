@@ -34,6 +34,18 @@ Pending → PreDeployCheck → ResolvingDeps
 
 Final states: `Live`, `Stopped` (stopped on purpose), `Failed` and `Pruning` (replaced by a newer deploy).
 
+In the deployment lists and in the [Deploy Engine](/en/interface/deploy-engine/), each state shows up with a label:
+
+| Label | State |
+|---|---|
+| **LIVE** | `Live` |
+| **STOPPED** | `Stopped` |
+| **REPLACED** | `Pruning`: it stayed online until a newer deploy took over |
+| **FAILED** | `Failed` |
+| **ROLLING BACK** | `RollingBack` |
+| **PRE-DEPLOY CHECK** | `PreDeployCheck` |
+| **BUILDING** | any other step in progress |
+
 ## On failure
 
 Any error triggers **RollingBack**: the new container is discarded, the old one stays online and the deploy
