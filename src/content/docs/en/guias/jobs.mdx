@@ -27,7 +27,7 @@ Jobs appear on the **Schedules** screen (all projects) and on each project's **J
 | **NAME** | for example `daily-backup` |
 | **COMPOSE SOURCE** | **Compose** (you paste the YAML) or **Git** (the job clones a repository and runs its `docker-compose.yml` on every run) |
 | **MAIN SERVICE** | the compose service whose **exit code** decides whether the job succeeded (`docker compose up --exit-code-from`) |
-| **ENVIRONMENT VARIABLES** | the job's own, in `.env` format. They have the **highest precedence**, above the project's and the trigger service's |
+| **VARIABLES AND SECRETS** | the job's own variables, added right here (key and value, or "use secret" with a secret from the trigger service or the project) and editable on their row. They are saved with the job and have the **highest precedence**, above the project's and the trigger service's. The job's **own secrets** are created in the next step, after **Create job** |
 | **When** | **Manual**, **Interval**, **Daily** or **Weekly** |
 
 With the **Git** source, choose the account (connected in **Settings → Git**), the repository, the branch and

@@ -28,7 +28,7 @@ projeto.
 | **NOME** | por exemplo `backup-diario` |
 | **FONTE DO COMPOSE** | **Compose** (você cola o YAML) ou **Git** (o job clona um repositório e roda o `docker-compose.yml` dele a cada execução) |
 | **MAIN SERVICE** | o serviço do compose cujo **código de saída** decide se o job deu certo (`docker compose up --exit-code-from`) |
-| **VARIÁVEIS DE AMBIENTE** | próprias do job, no formato `.env`. Têm a **maior precedência**, acima das do projeto e do serviço gatilho |
+| **VARIÁVEIS E SECRETS** | as variáveis próprias do job, adicionadas já aqui (chave e valor, ou "usar secret" com um secret do serviço gatilho ou do projeto) e editáveis na própria linha. Vão junto com o job e têm a **maior precedência**, acima das do projeto e do serviço gatilho. Os secrets **do próprio job** são criados no passo seguinte, depois de **Criar job** |
 | **Quando** | **Manual**, **Intervalo**, **Diário** ou **Semanal** |
 
 Com a fonte **Git**, escolha a conta (conectada em **Settings → Git**), o
