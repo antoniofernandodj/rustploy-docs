@@ -6,6 +6,8 @@ description: Tour da tela de um serviço no app desktop do Rustploy - botões De
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../components/Shot.astro';
 import envAba from '../../../assets/ui/servico-environment.png';
+import webuiEnv from '../../../assets/ui/webui-servico-environment.png';
+import webuiEnvEditando from '../../../assets/ui/webui-servico-environment-editando.png';
 import logsAba from '../../../assets/ui/servico-logs.png';
 import buildAba from '../../../assets/ui/servico-deployments-build.png';
 import dbLista from '../../../assets/ui/servico-databases-lista.png';
@@ -153,6 +155,20 @@ pede confirmação e grava. O **usar secret** troca o valor por uma lista com os
 (marcados *(projeto)*); um secret do projeto com o mesmo nome de um do serviço fica de fora, porque vale o do serviço.
 Regras completas em
 [Como as variáveis são resolvidas](/conceitos/variaveis-de-ambiente/).
+
+Na **web UI** a aba é a mesma:
+
+<Shot
+  src={webuiEnv}
+  alt="Aba Variáveis de um serviço na web UI: o formulário de adicionar com usar secret, as variáveis com chave e valor em campos, DB_PASSWORD usando um secret do serviço e SMTP_PASS usando SMTP_PASSWORD (projeto), e o bloco Secrets do serviço abaixo."
+  caption="A aba Variáveis na web UI (dados de exemplo)."
+/>
+
+<Shot
+  src={webuiEnvEditando}
+  alt="Aba Variáveis na web UI com o valor de LOG_LEVEL trocado para debug e os botões OK e ✕ na mesma linha."
+  caption="Depois de mexer numa linha aparecem o OK (pede confirmação e grava) e o ✕ (desfaz)."
+/>
 
 ### Deployments
 

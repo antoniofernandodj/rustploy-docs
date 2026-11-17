@@ -6,6 +6,8 @@ description: A tour of a service's screen in the Rustploy desktop app - the Depl
 import { Aside } from '@astrojs/starlight/components';
 import Shot from '../../../../components/Shot.astro';
 import envAba from '../../../../assets/ui/servico-environment-en.png';
+import webuiEnv from '../../../../assets/ui/webui-servico-environment-en.png';
+import webuiEnvEditando from '../../../../assets/ui/webui-servico-environment-editando-en.png';
 import logsAba from '../../../../assets/ui/servico-logs-en.png';
 import buildAba from '../../../../assets/ui/servico-deployments-build-en.png';
 import dbLista from '../../../../assets/ui/servico-databases-lista-en.png';
@@ -133,8 +135,8 @@ string you put in `DATABASE_URL`.
 
 <Shot
   src={envAba}
-  alt="A service's Environment tab with the variable counter, the Export and .env buttons, the KEY and value fields, the Add button and the variable list with example values."
-  caption="The Environment tab of a Postgres database (example values)."
+  alt="The Environment tab of a Redis service in the desktop app: the KEY and value fields with the use secret checkbox and Add, and a REDIS_PASSWORD variable pointing at the project secret REDIS_PASSWORD (project), followed by the Service secrets block. The server address was blurred."
+  caption="The Environment tab of a Redis cache: the variable uses a project secret picked from the list."
 />
 
 The **service's** variables, in the same format as the [project variables](/en/interface/projetos/#project-variables): **KEY** and
@@ -142,6 +144,20 @@ The **service's** variables, in the same format as the [project variables](/en/i
 **OK** asks for confirmation and saves. **use secret** swaps the value for a list of the service's secrets and the project's
 (marked *(project)*); a project secret with the same name as a service one is left out, since the service's wins. Full rules in
 [How environment variables are resolved](/en/conceitos/variaveis-de-ambiente/).
+
+In the **web UI** the tab is the same:
+
+<Shot
+  src={webuiEnv}
+  alt="A service's Environment tab in the web UI: the add form with use secret, the variables with key and value as fields, DB_PASSWORD using a service secret and SMTP_PASS using SMTP_PASSWORD (project), and the Service secrets block below."
+  caption="The Environment tab in the web UI (sample data)."
+/>
+
+<Shot
+  src={webuiEnvEditando}
+  alt="The Environment tab in the web UI with the value of LOG_LEVEL changed to debug and the OK and ✕ buttons on the same row."
+  caption="After you change a row, OK (asks for confirmation and saves) and ✕ (undoes) appear."
+/>
 
 ### Deployments
 
