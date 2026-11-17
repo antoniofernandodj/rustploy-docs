@@ -8,7 +8,10 @@ import Shot from '../../../../components/Shot.astro';
 import projects from '../../../../assets/ui/projects.png';
 import novoProjeto from '../../../../assets/ui/novo-projeto.png';
 import variaveis from '../../../../assets/ui/variaveis.png';
-import variaveisEditando from '../../../../assets/ui/variaveis-editando.png';
+// A captura do formulário de adicionar antigo saiu com o desenho novo (2026-11-16):
+// import variaveisEditando from '../../../../assets/ui/variaveis-editando.png';
+import webuiVariaveis from '../../../../assets/ui/webui-variaveis-en.png';
+import webuiVariaveisEditando from '../../../../assets/ui/webui-variaveis-editando-en.png';
 import confirmarRemover from '../../../../assets/ui/confirmar-remover-servico.png';
 
 A [project](/en/conceitos/projeto/) groups services on a network of their own. The **Projects** screen (side menu, **MANAGEMENT**
@@ -92,8 +95,8 @@ The dialog says *"The service will be stopped and removed; this action cannot be
 
 <Shot
   src={variaveis}
-  alt="A project's Variables tab with one variable listed and the KEY and value fields to add another."
-  caption="The Variables tab, with one variable already registered."
+  alt="A project's Variables tab in the desktop app (in Portuguese): each row has the key and value as fields, the ×, 🔒 and ↓ buttons and the usar secret checkbox; two variables point at secrets picked from a list. The server address was blurred."
+  caption="The Variables tab: key and value are edited on the row itself; with use secret, the value becomes a list of secrets."
 />
 
 The text at the top reminds you of the rule: *"Inherited by all services of this project on deploy — the service's own take precedence."* See the
@@ -104,11 +107,13 @@ To **add** one:
 1. Type the name in **KEY** and the value in **value**.
 2. Click **Add**.
 
+{/*
 <Shot
   src={variaveisEditando}
   alt="The Variables tab with the name env_var and the value valueOfVar typed into the fields, before clicking Adicionar."
   caption="Filling in a variable before adding it."
 />
+*/}
 
 | Control | What it does |
 |---|---|
@@ -117,6 +122,20 @@ To **add** one:
 | key and value on the row | borderless fields: click and edit **right there**. Nothing saves on its own: once you change something an **OK** appears, which shows what will change, asks for confirmation and saves, and a **✕** that undoes. In the web UI, **Enter** works as OK and **Esc** undoes |
 | **.env** | opens the editor in text, in `.env` format (one `KEY=value` per line, with comments) |
 | **Export** | opens the same editor already filled with the current variables, to copy |
+
+In the **web UI** the tab is the same, with the same controls:
+
+<Shot
+  src={webuiVariaveis}
+  alt="A project's Variables tab in the web UI: the KEY, value, use secret and Add form at the top and, below, the variables with key and value as fields; S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY use secrets picked from the list."
+  caption="The Variables tab in the web UI (sample data)."
+/>
+
+<Shot
+  src={webuiVariaveisEditando}
+  alt="The Variables tab in the web UI with the value of S3_BUCKET changed to loja-arquivos and, on the same row, the OK and ✕ buttons."
+  caption="After you change a row, OK (asks for confirmation and saves) and ✕ (undoes) appear."
+/>
 
 <Aside type="note">
   Variables and secrets only reach the container **on the next deploy**. After changing something, run **Deploy** on the

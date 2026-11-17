@@ -8,7 +8,10 @@ import Shot from '../../../components/Shot.astro';
 import projects from '../../../assets/ui/projects.png';
 import novoProjeto from '../../../assets/ui/novo-projeto.png';
 import variaveis from '../../../assets/ui/variaveis.png';
-import variaveisEditando from '../../../assets/ui/variaveis-editando.png';
+// A captura do formulário de adicionar antigo saiu com o desenho novo (2026-11-16):
+// import variaveisEditando from '../../../assets/ui/variaveis-editando.png';
+import webuiVariaveis from '../../../assets/ui/webui-variaveis.png';
+import webuiVariaveisEditando from '../../../assets/ui/webui-variaveis-editando.png';
 import confirmarRemover from '../../../assets/ui/confirmar-remover-servico.png';
 
 Um [projeto](/conceitos/projeto/) agrupa serviços numa rede própria. A tela
@@ -96,8 +99,8 @@ O diálogo diz *"O serviço será parado e removido. Essa ação não pode ser d
 
 <Shot
   src={variaveis}
-  alt="Aba Variáveis de um projeto com uma variável listada e os campos KEY e value para adicionar outra."
-  caption="Aba Variáveis, com uma variável já cadastrada."
+  alt="Aba Variáveis de um projeto no app desktop: cada linha tem a chave e o valor em campos, os botões ×, 🔒 e ↓ e o checkbox usar secret; duas variáveis apontam para secrets escolhidos numa lista. O endereço do servidor foi borrado."
+  caption="Aba Variáveis: chave e valor se editam na própria linha; com usar secret, o valor vira uma lista de secrets."
 />
 
 O texto no topo lembra a regra: *"Herdadas por todos os serviços deste projeto no
@@ -109,11 +112,13 @@ Para **adicionar**:
 1. Digite o nome em **KEY** e o valor em **value**.
 2. Clique em **Adicionar**.
 
+{/*
 <Shot
   src={variaveisEditando}
   alt="Aba Variáveis com o nome env_var e o valor valueOfVar digitados nos campos, antes de clicar em Adicionar."
   caption="Preenchendo uma variável antes de adicionar."
 />
+*/}
 
 | Controle | O que faz |
 |---|---|
@@ -122,6 +127,20 @@ Para **adicionar**:
 | chave e valor na linha | são campos sem borda: clique e edite **ali mesmo**. Nada grava sozinho: ao mexer aparece um **OK**, que mostra o que vai mudar, pede confirmação e grava, e um **✕**, que desfaz. Na webui, **Enter** equivale ao OK e **Esc** desfaz |
 | **.env** | abre o editor em texto, no formato `.env` (uma `CHAVE=valor` por linha, com comentários) |
 | **Exportar** | abre o mesmo editor já preenchido com as variáveis atuais, para copiar |
+
+Na **web UI** a aba é a mesma, com os mesmos controles:
+
+<Shot
+  src={webuiVariaveis}
+  alt="Aba Variáveis de um projeto na web UI: formulário KEY, value, usar secret e Adicionar no topo e, abaixo, as variáveis com chave e valor em campos; S3_ACCESS_KEY_ID e S3_SECRET_ACCESS_KEY usam secrets escolhidos na lista."
+  caption="A aba Variáveis na web UI (dados de exemplo)."
+/>
+
+<Shot
+  src={webuiVariaveisEditando}
+  alt="Aba Variáveis na web UI com o valor de S3_BUCKET trocado para loja-arquivos e, na mesma linha, os botões OK e ✕."
+  caption="Depois de mexer numa linha aparecem o OK (pede confirmação e grava) e o ✕ (desfaz)."
+/>
 
 <Aside type="note">
   Variáveis e secrets só chegam ao container **no próximo deploy**. Depois de mudar
