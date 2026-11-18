@@ -1,6 +1,6 @@
 ---
-title: A skill to build and ship apps with Claude Code
-description: How to install the rustploy-app skill in Claude Code - a plugin that guides the agent to build Rust/Axum/Postgres apps with a Vue frontend and ship them to Rustploy over MCP, with database, migrations, initial user, secrets, subdomain and HTTPS.
+title: A skill to build and ship apps with Claude Code or Codex
+description: How to install the rustploy-app skill in Claude Code or Codex - a plugin that guides the agent to build Rust/Axum/Postgres apps with a Vue frontend and ship them to Rustploy over MCP, with database, migrations, initial user, secrets, subdomain and HTTPS.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -62,15 +62,42 @@ ship or change an app. To call it explicitly: `/rustploy-apps:rustploy-app`.
   file, a committed `.mcp.json` or the chat. See [Security](/en/agentes/seguranca/).
 </Aside>
 
+## Codex
+
+The same plugin works in [Codex](https://developers.openai.com/codex) (tested on Codex CLI 0.154).
+
+<Steps>
+1. Add the marketplace and install the plugin:
+
+   ```bash
+   codex plugin marketplace add antoniofernandodj/rustploy-skills
+   codex plugin add rustploy-apps@rustploy-skills
+   ```
+
+2. Connect the MCP. Codex reads the token from an environment variable: get it from **Settings → Web
+   Server → "Connect an agent (Claude Code)" → Copy** (the text after `Bearer `) and run:
+
+   ```bash
+   echo "export RUSTPLOY_TOKEN='<token>'" >> ~/.bashrc     # or ~/.zshrc
+   source ~/.bashrc
+   codex mcp add rustploy --url https://SERVER:9797/mcp --bearer-token-env-var RUSTPLOY_TOKEN
+   ```
+
+3. Start a new Codex session.
+</Steps>
+
+To call the skill explicitly in Codex, type `$` and pick `rustploy-apps:rustploy-app`.
+
 ## Update
 
 The skill evolves over time. To get the newest version:
 
 ```text
-/plugin marketplace update rustploy-skills
+/plugin marketplace update rustploy-skills        # Claude Code
+codex plugin marketplace upgrade rustploy-skills  # Codex
 ```
 
-Or turn on auto-update in `/plugin` → **Marketplaces** → `rustploy-skills`.
+In Claude Code you can also turn on auto-update in `/plugin` → **Marketplaces** → `rustploy-skills`.
 
 ## Contribute
 

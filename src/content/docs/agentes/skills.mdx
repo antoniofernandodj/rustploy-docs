@@ -1,6 +1,6 @@
 ---
-title: Skill para criar e publicar apps com o Claude Code
-description: Como instalar a skill rustploy-app no Claude Code - um plugin que orienta o agente a criar apps Rust/Axum/Postgres com frontend Vue e publicá-los no Rustploy pelo MCP, com banco, migrations, usuário inicial, secrets, subdomínio e HTTPS.
+title: Skill para criar e publicar apps com o Claude Code ou o Codex
+description: Como instalar a skill rustploy-app no Claude Code ou no Codex - um plugin que orienta o agente a criar apps Rust/Axum/Postgres com frontend Vue e publicá-los no Rustploy pelo MCP, com banco, migrations, usuário inicial, secrets, subdomínio e HTTPS.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -65,15 +65,42 @@ força: `/rustploy-apps:rustploy-app`.
   `.mcp.json` versionado ou no chat. Veja [Segurança](/agentes/seguranca/).
 </Aside>
 
+## Codex
+
+O mesmo plugin funciona no [Codex](https://developers.openai.com/codex) (testado no Codex CLI 0.154).
+
+<Steps>
+1. Adicione o marketplace e instale o plugin:
+
+   ```bash
+   codex plugin marketplace add antoniofernandodj/rustploy-skills
+   codex plugin add rustploy-apps@rustploy-skills
+   ```
+
+2. Conecte o MCP. O Codex lê o token de uma variável de ambiente: pegue-o em **Settings → Web
+   Server → "Conectar um agente (Claude Code)" → Copiar** (é o texto depois de `Bearer `) e rode:
+
+   ```bash
+   echo "export RUSTPLOY_TOKEN='<token>'" >> ~/.bashrc     # ou ~/.zshrc
+   source ~/.bashrc
+   codex mcp add rustploy --url https://SERVIDOR:9797/mcp --bearer-token-env-var RUSTPLOY_TOKEN
+   ```
+
+3. Abra uma sessão nova do Codex.
+</Steps>
+
+Para chamar a skill à força no Codex, digite `$` e escolha `rustploy-apps:rustploy-app`.
+
 ## Atualizar
 
 A skill evolui com o tempo. Para pegar a versão mais nova:
 
 ```text
-/plugin marketplace update rustploy-skills
+/plugin marketplace update rustploy-skills        # Claude Code
+codex plugin marketplace upgrade rustploy-skills  # Codex
 ```
 
-Ou ligue a atualização automática em `/plugin` → **Marketplaces** → `rustploy-skills`.
+No Claude Code também dá para ligar a atualização automática em `/plugin` → **Marketplaces** → `rustploy-skills`.
 
 ## Contribuir
 
