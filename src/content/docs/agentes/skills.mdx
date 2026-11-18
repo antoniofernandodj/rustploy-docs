@@ -1,0 +1,83 @@
+---
+title: Skill para criar e publicar apps com o Claude Code
+description: Como instalar a skill rustploy-app no Claude Code - um plugin que orienta o agente a criar apps Rust/Axum/Postgres com frontend Vue e publicá-los no Rustploy pelo MCP, com banco, migrations, usuário inicial, secrets, subdomínio e HTTPS.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+O [MCP](/agentes/visao-geral/) dá ao agente **acesso** ao servidor. A skill
+`rustploy-app` diz **como usar esse acesso bem**: que pilha usar, onde guardar cada
+senha, como criar o banco e o usuário inicial, quando pedir um subdomínio e como
+conferir que o app está no ar. Ela foi feita para quem pede apps ao agente sem ser
+desenvolvedor.
+
+## O que a skill faz o agente fazer
+
+- **Pilha fixa**: backend Rust + Axum + SQLx (camadas routes → services →
+  repositories), frontend Vue 3 + Vite servido por nginx, Postgres.
+- **Nenhum segredo no repositório**: tudo por variável de ambiente; senhas e chaves em
+  [secrets](/guias/variaveis-e-secrets/), **sorteadas pelo próprio Rustploy**
+  ([`SecretGenerate`](/agentes/receitas/#gerar-uma-senha-sem-o-agente-ver-o-valor)), sem passar
+  pelo agente. A pessoa lê uma senha quando precisa (o primeiro login) pelo 👁 da tela de
+  Secrets. Uma checagem roda antes de cada commit.
+- **Banco da plataforma**: um database próprio no [servidor compartilhado](/guias/banco-compartilhado/).
+- **Migrations e usuário inicial** num [job](/guias/jobs/) de [pré-deploy](/guias/pre-deploy/),
+  com seed idempotente (e-mail e senha vindos do ambiente).
+- **Frontend e backend na mesma origem**: o nginx do frontend repassa `/api/` ao backend
+  pela [rede do projeto](/conceitos/rede-e-nomes/); só o frontend tem domínio.
+- **Subdomínio e HTTPS**: diz à pessoa qual registro DNS criar, espera propagar e liga o
+  [domínio com TLS](/guias/dominios-e-tls/).
+- **Confirma antes de destruir** e só dá o app por pronto depois de testar a URL pública.
+
+Ela traz também templates testados (backend e frontend) e um mapa dos erros comuns.
+
+## Instalar
+
+<Steps>
+1. No Claude Code, adicione o marketplace e instale o plugin:
+
+   ```text
+   /plugin marketplace add antoniofernandodj/rustploy-skills
+   /plugin install rustploy-apps@rustploy-skills
+   ```
+
+   Pelo terminal, o equivalente é:
+
+   ```bash
+   claude plugin marketplace add antoniofernandodj/rustploy-skills
+   claude plugin install rustploy-apps@rustploy-skills
+   ```
+
+2. Conecte o Claude Code ao MCP do seu servidor, se ainda não conectou: veja
+   [Conectar o Claude Code](/agentes/conectar-claude-code/).
+3. Reinicie o Claude Code.
+</Steps>
+
+Depois é só pedir em linguagem natural, por exemplo:
+
+> Cria um sistema de cadastro de clientes com login e coloca no ar em clientes.itemize.com.br.
+
+A skill entra sozinha quando o pedido é criar, publicar ou mudar um app. Para chamá-la à
+força: `/rustploy-apps:rustploy-app`.
+
+<Aside type="caution" title="O token do MCP é de administrador">
+  Ele vai só no comando `claude mcp add`, no terminal. Nunca em arquivo de repositório,
+  `.mcp.json` versionado ou no chat. Veja [Segurança](/agentes/seguranca/).
+</Aside>
+
+## Atualizar
+
+A skill evolui com o tempo. Para pegar a versão mais nova:
+
+```text
+/plugin marketplace update rustploy-skills
+```
+
+Ou ligue a atualização automática em `/plugin` → **Marketplaces** → `rustploy-skills`.
+
+## Contribuir
+
+O código-fonte fica em
+[github.com/antoniofernandodj/rustploy-skills](https://github.com/antoniofernandodj/rustploy-skills).
+Achou um erro que a skill não evitou? Registre-o em `references/erros-comuns.md`, suba a
+versão do plugin e anote no `CHANGELOG.md`; o `README.md` do repositório explica o processo.

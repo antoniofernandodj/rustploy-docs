@@ -63,12 +63,23 @@ O agente cria um **job** com o Storage como serviço gatilho (o job herda o ambi
 na memória) rodando `aws s3 mb`, e o executa com `JobRunNow`. A receita completa está em
 [Bancos, brokers e storage](/guias/bancos-e-brokers/#criar-um-bucket).
 
-## Gerar ou rotacionar uma senha sem o agente ver o valor
+## Gerar uma senha sem o agente ver o valor
 
-**Ainda não há um comando para isso**, e a receita não deve ser improvisada: nem criando um serviço descartável só para ganhar uma
-senha gerada, nem pedindo que o agente escolha o valor com `SecretSet`. Hoje o agente só consegue criar um banco, broker ou
-storage **novo** pelo assistente (o daemon gera a senha e a guarda como secret), e uma **pessoa** gera ou troca um secret
-existente na GUI ou na web UI. O comando de verdade (`SecretGenerate` e `SecretRotate`) está planejado.
+> Crie no projeto `meuapp` um secret `ADMIN_PASSWORD` com uma senha forte e um `JWT_SECRET`.
+
+O agente chama `SecretGenerate`: o **daemon** sorteia o valor e grava o secret cifrado. A resposta traz só o
+tamanho e uma impressão digital (8 caracteres do SHA-256), **nunca** o valor. Para ler a senha (por exemplo,
+para o primeiro login), abra o projeto, aba **Secrets**, e clique no **👁** da linha; a leitura fica na auditoria.
+
+| Campo | O que faz |
+|---|---|
+| `kind` | `Password` (padrão: letras e números, 32 caracteres), `Hex` (64; segredo de JWT) ou `Base64Url` (43; tokens) |
+| `length` | tamanho em caracteres, de 16 a 512 |
+| `on_exists` | `Fail` (padrão: recusa se já existe), `Keep` (mantém o atual: seguro de repetir) ou `Replace` (troca) |
+
+Trocar o secret (`Replace`) **não** troca a senha dentro do banco ou do broker, e os serviços só recebem o
+valor novo no próximo **deploy**. A rotação completa (`SecretRotate`, com o `ALTER USER` e o redeploy) ainda está
+planejada; por enquanto, combine com quem cuida do servidor antes de rotacionar a senha de um banco.
 
 ## Boas práticas ao pedir
 

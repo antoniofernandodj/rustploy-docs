@@ -115,6 +115,7 @@ export default defineConfig({
           { slug: 'agentes/conectar-claude-code' },
           { slug: 'agentes/ferramentas' },
           { slug: 'agentes/receitas' },
+          { slug: 'agentes/skills' },
           { slug: 'agentes/seguranca' },
           { slug: 'agentes/manual' },
         ]},

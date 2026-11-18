@@ -62,13 +62,23 @@ The agent creates a **job** with the Storage as its trigger service (the job inh
 decrypted only in memory) running `aws s3 mb`, and runs it with `JobRunNow`. The full recipe is in
 [Databases, brokers and storage](/en/guias/bancos-e-brokers/#create-a-bucket).
 
-## Generate or rotate a password without the agent seeing the value
+## Generate a password without the agent seeing it
 
-**There is no command for this yet**, and the recipe must not be improvised: neither by creating a throwaway service just to
-get a generated password, nor by asking the agent to choose the value with `SecretSet`. Today the agent can only create a
-**new** database, broker or storage through the wizard (the daemon generates the password and stores it as a secret), and a
-**person** generates or changes an existing secret in the GUI or the web UI. The real command (`SecretGenerate` and
-`SecretRotate`) is planned.
+> Create a secret `ADMIN_PASSWORD` with a strong password and a `JWT_SECRET` in the `myapp` project.
+
+The agent calls `SecretGenerate`: the **daemon** picks the value at random and stores the secret encrypted. The
+response only carries the length and a fingerprint (8 characters of the SHA-256), **never** the value. To read the
+password (for the first login, say), open the project, **Secrets** tab, and click the row's **👁**; the read is audited.
+
+| Field | What it does |
+|---|---|
+| `kind` | `Password` (default: letters and digits, 32 characters), `Hex` (64; JWT secret) or `Base64Url` (43; tokens) |
+| `length` | length in characters, 16 to 512 |
+| `on_exists` | `Fail` (default: refuses if it exists), `Keep` (keeps the current one: safe to repeat) or `Replace` (swaps it) |
+
+Replacing the secret does **not** change the password inside the database or broker, and services only get the new
+value on the next **deploy**. Full rotation (`SecretRotate`, with the `ALTER USER` and the redeploy) is still planned;
+for now, agree with whoever runs the server before rotating a database password.
 
 ## Good practices when asking
 
