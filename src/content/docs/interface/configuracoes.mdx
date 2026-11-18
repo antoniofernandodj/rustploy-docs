@@ -96,14 +96,16 @@ cifrada e nunca volta para a tela. O agendamento de cada serviço fica na aba **
 
 ## Chave de recuperação
 
-A aba **Chave de recuperação** mostra se o servidor já tem uma e a chave pública. **Gerar e baixar** cria o par,
-grava só a pública no `config.toml` e baixa a privada, que aparece uma única vez. Detalhes e cuidados em
+A aba **Chave de recuperação** mostra se o servidor já tem uma e a chave pública. **Gerar e baixar** pede o
+repositório da infra, a branch e a conta Git, cria o par, grava só a pública no `config.toml` e baixa o **arquivo de
+recuperação** (`.rpkit`): a privada, que aparece uma única vez, junto com o que a aba Recuperar pede. Detalhes e cuidados em
 [Chaves e segredos](/guias/chaves-e-segredos/#gerar-a-chave-de-recuperação-pela-interface).
 
 ## Recuperar
 
 A aba **Recuperar** recria este servidor, **limpo**, a partir do repositório git da sincronização, da chave de
-recuperação e dos backups no S3. Veja [Recuperar um servidor](/guias/recuperar-servidor/).
+recuperação e dos backups no S3. **Carregar arquivo de recuperação…** preenche os campos com o `.rpkit`. Veja
+[Recuperar um servidor](/guias/recuperar-servidor/).
 
 ## Manutenção
 

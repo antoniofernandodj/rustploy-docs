@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 150 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 151 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **150 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **151 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -548,7 +548,7 @@ Creates a database + user, authorizes the project and writes the env var into it
 {"ManagedDatabaseCreate":{…}}
 ```
 
-The value is a `crate::ManagedDatabaseCreateReq`.
+The value is a `crate::domain::ManagedDatabaseCreateReq`.
 
 **Used by:** GUI and web UI.
 
@@ -586,7 +586,7 @@ Starts the migration (runs in the background; follow it with `MigrationGet`).
 {"MigrationStart":{…}}
 ```
 
-The value is a `crate::MigrationStartReq`.
+The value is a `crate::domain::MigrationStartReq`.
 
 **Used by:** GUI and web UI.
 
@@ -734,6 +734,26 @@ Full dashboard snapshot as JSON (the same one the SSE `/api/events` pushes every
 | `value` | `String` |
 
 **Used by:** GUI and web UI.
+
+### SecretGenerate
+
+Sorteia um valor **dentro do daemon** e o grava como secret cifrado (do projeto, de um serviço ou de um job). O valor nunca sai na resposta, só `SecretGenerated` com o tamanho e uma impressão digital; uma pessoa o lê pelo "ver valor" (auditado). É o jeito de o agente criar senhas sem vê-las. Grava uma linha `generate` na auditoria de secrets.
+
+```json
+{"SecretGenerate":{"project_id":"prj_…","service_id":null,"job_id":null,"name":"…","kind":"{…}","length":null,"on_exists":"{…}"}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+| `service_id` | `Option<String>` |
+| `job_id` | `Option<String>` |
+| `name` | `String` |
+| `kind` | `SecretKind` |
+| `length` | `Option<u32>`<br />Em caracteres; vazio = o padrão do `kind`. Mínimo 16, máximo 512. |
+| `on_exists` | `SecretOnExists` |
+
+**Used by:** only by the API and the MCP (no screen).
 
 ### SecretDelete
 
@@ -1238,15 +1258,18 @@ A chave **pública** de recuperação deste servidor (`[secrets] recovery_recipi
 
 ### RecoveryKeyGenerate
 
-**Gera** a chave de recuperação: grava só a pública no `config.toml` e devolve a privada **uma única vez** (o servidor não a guarda; quem chama deve baixá-la na hora). Já havendo chave, recusa — a não ser com `replace: true` (a antiga deixa de cifrar o que for exportado daí em diante). Resposta: `RecoveryKeyGenerated`.
+**Gera** a chave de recuperação: grava só a pública no `config.toml` e devolve a privada **uma única vez** (o servidor não a guarda; quem chama deve baixá-la na hora). Já havendo chave, recusa — a não ser com `replace: true` (a antiga deixa de cifrar o que for exportado daí em diante). Resposta: `RecoveryKeyGenerated`. A privada sai num **arquivo de recuperação** (`.rpkit`, `features::data_backup::recovery_kit`) junto com o que a tela Recuperar pede: `infra_remote` (obrigatório), `infra_branch` (opcional) e o token da conta Git `provider_id` (obrigatório para `https://`; o token só entra se a URL for do host da conta). Tudo é conferido **antes** de gerar: um erro aqui não troca a chave. Plano: `docs/plano-arquivo-de-recuperacao.md`.
 
 ```json
-{"RecoveryKeyGenerate":{"replace":false}}
+{"RecoveryKeyGenerate":{"replace":false,"infra_remote":"…","infra_branch":null,"provider_id":null}}
 ```
 
 | Field | Type |
 |---|---|
 | `replace` | `bool` |
+| `infra_remote` | `String` |
+| `infra_branch` | `Option<String>` |
+| `provider_id` | `Option<String>` |
 
 **Used by:** GUI and web UI.
 
@@ -1948,7 +1971,7 @@ Grava a política de retenção de tags (ligar/desligar e quantas manter). A lei
 
 | Field | Type |
 |---|---|
-| `config` | `crate::RegistryRetentionConfig` |
+| `config` | `crate::domain::RegistryRetentionConfig` |
 
 **Used by:** GUI and web UI.
 

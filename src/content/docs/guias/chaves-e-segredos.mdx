@@ -36,11 +36,23 @@ pelo [backup dos dados no S3](/guias/backup-no-s3/), que é sempre cifrado.
 
 No app desktop e na web UI: **Settings → Chave de recuperação → Gerar e baixar**.
 
-1. O servidor gera o par de chaves, grava **só a pública** em `[secrets] recovery_recipient` (no `config.toml`, sem
+1. Antes de gerar, a tela pede o que vai **junto** com a chave no **arquivo de recuperação**: o **repositório da
+   infra** (o da [sincronização](/guias/sincronizacao-git/), `https://…`), a **branch** (opcional) e a **conta Git**
+   cujo token vai no arquivo. O formulário já vem com o que a sincronização usa. O token só entra se o repositório
+   for do host da conta; uma conta OAuth gera com aviso, porque o token dela pode expirar antes de um desastre
+   (prefira um token pessoal só de leitura do repositório da infra). Se algo estiver errado, a chave **não** é trocada.
+2. O servidor gera o par de chaves, grava **só a pública** em `[secrets] recovery_recipient` (no `config.toml`, sem
    reiniciar) e **recifra os secrets que já existem**, para que a chave nova abra também os antigos.
-2. A chave privada aparece **uma única vez** e o cliente baixa o arquivo `rustploy-recovery-key-<servidor>-<AAAAMMDD>.txt`
-   (o app desktop grava em *Downloads*, sem sobrescrever; a web UI usa o download do navegador).
-3. **Mova o arquivo para um cofre, fora do servidor.** O servidor não guarda a privada: esse arquivo é a única cópia.
+3. A chave privada aparece **uma única vez** e o cliente baixa o arquivo `rustploy-recuperacao-<servidor>-<AAAAMMDD>.rpkit`
+   (o app desktop grava em *Downloads*, sem sobrescrever; a web UI usa o download do navegador). É um arquivo
+   **binário** com a chave, o repositório, a branch e o token: num desastre, a tela
+   [Recuperar](/guias/recuperar-servidor/) o carrega e preenche tudo. Uma soma de verificação recusa um arquivo
+   alterado ou corrompido, em vez de usar uma chave errada.
+4. **Mova o arquivo para um cofre, fora do servidor.** O servidor não guarda a privada: esse arquivo é a única cópia.
+   Ele **não é cifrado**: quem o tem abre a infra e os segredos.
+
+Para decifrar à mão, o `rustploy-cli secret decrypt -i` aceita o `.rpkit` direto (e também o arquivo de texto do
+`rustploy-cli keygen` ou das versões anteriores à 0.1.67).
 
 Já existe uma chave? A tela pede para confirmar a troca. Trocar **não apaga nada**: backups e commits antigos continuam
 abrindo **só com a chave antiga**, então guarde as duas. O agente de IA (MCP) não consegue gerar essa chave, de propósito.

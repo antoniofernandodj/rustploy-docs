@@ -1,6 +1,6 @@
 ---
 title: Respostas do protocolo
-description: "As 74 variantes de resposta de POST /api/rpc no Rustploy, com o tipo que cada uma carrega, e como reconhecer um erro."
+description: "As 75 variantes de resposta de POST /api/rpc no Rustploy, com o tipo que cada uma carrega, e como reconhecer um erro."
 ---
 
 Cada [comando](/referencia/comandos/) devolve uma destas variantes. Uma resposta **com campos** é um objeto de uma chave; **sem campos**, a string nua (`"Ok"`).
@@ -36,6 +36,7 @@ Um erro vem como `{"Err":{"code":"…","message":"…"}}`.
 | `ConnectionInfo` | `host: String`, `internal_url: String` |
 | `DaemonSettings` | `public_base_url: String`, `acme_email: Option<String>`, `registry_domain: Option<String>` |
 | `SecretNames` | `Vec<String>` |
+| `SecretGenerated` | `name: String`, `created: bool`, `length: u32`, `fingerprint: String` |
 | `StateGit` | `StateGitStatus` |
 | `InfraAudit` | `Vec<PlaintextFinding>` |
 | `InfraFiles` | `Vec<InfraFile>` |
@@ -81,5 +82,5 @@ Um erro vem como `{"Err":{"code":"…","message":"…"}}`.
 | `RegistryTokenCreated` | `name: String`, `secret: String` |
 | `RegistryTokens` | `Vec<RegistryTokenInfo>` |
 | `RecoveryKey` | `configured: bool`, `public_key: Option<String>` |
-| `RecoveryKeyGenerated` | `public_key: String`, `private_key: String`, `file_contents: String`, `suggested_filename: String` |
+| `RecoveryKeyGenerated` | `public_key: String`, `private_key: String`, `file_base64: String`, `suggested_filename: String`, `warning: Option<String>` |
 | `Err` | `code: String`, `message: String` |

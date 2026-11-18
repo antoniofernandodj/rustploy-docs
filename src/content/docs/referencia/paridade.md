@@ -5,7 +5,7 @@ description: "Quais comandos do Rustploy existem só pela API e pelo MCP, quais 
 
 A GUI desktop e a web UI falam com a mesma API, mas cobrem conjuntos um pouco diferentes. Esta lista é gerada do código a cada versão.
 
-## Sem chamada direta de nenhuma tela (27)
+## Sem chamada direta de nenhuma tela (28)
 
 Nenhuma tela dispara estes comandos diretamente. Alguns dados (as listas do Docker, os jobs) aparecem nas telas mesmo assim, porque chegam no *snapshot* do painel. Para agir sobre eles, use `curl`, a ferramenta `rpc` do [MCP](/agentes/ferramentas/) ou um agente de IA.
 
@@ -17,6 +17,7 @@ Nenhuma tela dispara estes comandos diretamente. Alguns dados (as listas do Dock
 - [`SharedAccessGrant`](/referencia/comandos/#sharedaccessgrant)
 - [`SharedAccessRevoke`](/referencia/comandos/#sharedaccessrevoke)
 - [`MigrationGet`](/referencia/comandos/#migrationget)
+- [`SecretGenerate`](/referencia/comandos/#secretgenerate)
 - [`InfraAudit`](/referencia/comandos/#infraaudit)
 - [`StateGitStatus`](/referencia/comandos/#stategitstatus)
 - [`JobListAll`](/referencia/comandos/#joblistall)

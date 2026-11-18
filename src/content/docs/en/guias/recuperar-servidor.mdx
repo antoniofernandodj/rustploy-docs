@@ -12,7 +12,9 @@ back, restores the data from the [S3 backups](/en/guias/backup-no-s3/) and start
 ## What you need to have before losing the server
 
 1. [Git sync](/en/guias/sincronizacao-git/) in **sync** mode, on a private repository.
-2. The [recovery key](/en/guias/chaves-e-segredos/) configured, with the **private half kept off the server**.
+2. The [recovery key](/en/guias/chaves-e-segredos/) configured, with the **recovery file** (`.rpkit`) kept off the
+   server. Since 0.1.67 it carries, together with the key, the repository, the branch and the token: in a disaster it
+   is the only thing you need.
 3. The [S3 destination](/en/guias/backup-no-s3/) configured and backups turned on in the services. The destination travels in the git.
 
 Without step 3 the recovery brings only the infra and the services start **empty**.
@@ -21,7 +23,9 @@ Without step 3 the recovery brings only the infra and the services start **empty
 
 1. Install Rustploy on a **clean** server (`install.sh`). Recovery only works with **no projects**: it never overwrites a
    server that already has things.
-2. Open the interface → **Settings → Recover** and fill in:
+2. Open the interface → **Settings → Recover** and click **Load recovery file…**: the `.rpkit` fills in the four fields
+   below (check the token, which may have expired, and replace it by hand if so). Without the file (a key generated
+   before 0.1.67), fill in:
    - **Infrastructure repository:** the `https://…` address of the sync repository;
    - **Repository access token:** the same kind of token as the Git tab (it becomes a Git account on this server);
    - **Branch** (optional);
@@ -62,6 +66,7 @@ Without step 3 the recovery brings only the infra and the services start **empty
 | Token rejected | check the token and that it reaches the repository (read scope) |
 | "the repository brought no project" | empty repository, wrong branch or another repository |
 | "the recovery key is not a valid private key" | paste the `AGE-SECRET-KEY-1…` line, not the public key |
+| "the recovery file is corrupted" or "was altered when copied" | the `.rpkit` changed after it was generated (edited, copied in text mode, line endings converted): use the original copy from the vault |
 | A secret does not open | the key is not this repository's recovery key; the restore is refused and says which one |
 | The summary says the key "does not open the backups" of a service | the backup was encrypted for **another** key: the recovery key was replaced after it was made. Cancel and enter the key that was configured when the backup was taken (the infra already restored stays, and you can start over with another key as long as no data has been restored). Data restoration only starts when the key opens every backup |
 | The summary says the repository brought no S3 destination | the destination was set after the last push to git; services will start empty |

@@ -36,12 +36,24 @@ The recovery key is also what lets you [recover a whole server](/en/guias/recupe
 
 In the desktop app and the web UI: **Settings → Recovery key → Generate and download**.
 
-1. The server generates the key pair, writes **only the public key** to `[secrets] recovery_recipient` (in `config.toml`,
+1. Before generating, the screen asks for what goes **with** the key in the **recovery file**: the **infra repository**
+   (the [sync](/en/guias/sincronizacao-git/) one, `https://…`), the **branch** (optional) and the **Git account** whose
+   token goes in the file. The form comes filled in with what the sync uses. The token only goes in if the repository
+   is on the account's host; an OAuth account generates with a warning, because its token may expire before a
+   disaster (prefer a personal token that can only read the infra repository). If anything is wrong, the key is
+   **not** replaced.
+2. The server generates the key pair, writes **only the public key** to `[secrets] recovery_recipient` (in `config.toml`,
    no restart) and **re-encrypts the secrets that already exist**, so the new key opens the old ones too.
-2. The private key is shown **only once** and the client downloads the file
-   `rustploy-recovery-key-<server>-<YYYYMMDD>.txt` (the desktop app writes it to *Downloads* without overwriting; the web
-   UI uses the browser download).
-3. **Move the file to a vault, off the server.** The server does not keep the private key: that file is the only copy.
+3. The private key is shown **only once** and the client downloads the file
+   `rustploy-recuperacao-<server>-<YYYYMMDD>.rpkit` (the desktop app writes it to *Downloads* without overwriting; the
+   web UI uses the browser download). It is a **binary** file with the key, the repository, the branch and the token:
+   in a disaster, the [Recover](/en/guias/recuperar-servidor/) screen loads it and fills everything in. A checksum
+   rejects an altered or corrupted file instead of using a wrong key.
+4. **Move the file to a vault, off the server.** The server does not keep the private key: that file is the only copy.
+   It is **not encrypted**: whoever has it opens the infra and the secrets.
+
+To decrypt by hand, `rustploy-cli secret decrypt -i` takes the `.rpkit` directly (and also the text file from
+`rustploy-cli keygen` or from versions before 0.1.67).
 
 Already have a key? The screen asks you to confirm the replacement. Replacing **deletes nothing**: old backups and commits
 keep opening **only with the old key**, so keep both. The AI agent (MCP) cannot generate this key, on purpose.

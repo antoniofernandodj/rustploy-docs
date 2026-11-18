@@ -1,11 +1,13 @@
 // Gera a referência do protocolo (Command, Response, Event) lendo o
-// rustploy-shared/src/protocol/*.rs e o comandos.md do agregador.
+// rustploy-daemon/crates/daemon/src/protocol/*.rs e o comandos.md do agregador.
+// (Lia o rustploy-shared, que deixou de ter o protocolo: a referência ficou
+// parada nele até a v0.1.80.)
 // Sem o agregador ao lado, mantém as páginas já commitadas.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { DOCS as DOCS_EN, FIELD_DOCS as FIELD_DOCS_EN, GROUPS as GROUPS_EN } from './data/protocol-en.mjs';
 
 const root = new URL('../../', import.meta.url);
-const protocolDir = new URL('rustploy-shared/src/protocol/', root);
+const protocolDir = new URL('rustploy-daemon/crates/daemon/src/protocol/', root);
 const protocolFile = new URL('command.rs', protocolDir);
 const parityFile = new URL('docs/indice/comandos.md', root);
 const outDirs = { pt: new URL('../src/content/docs/referencia/', import.meta.url), en: new URL('../src/content/docs/en/referencia/', import.meta.url) };
