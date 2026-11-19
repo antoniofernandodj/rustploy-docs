@@ -162,6 +162,9 @@ Escolha [1/2] (padrão 1):
 - **Sem terminal** (script, CI) ele não pergunta e mantém o motor atual. Para decidir sem perguntar:
   `--engine podman --yes` no instalador, ou `make install-rustploy ENGINE=podman YES=1`.
 - **`--dry-run`** mostra o que seria feito (containers, volumes e tamanhos) sem alterar nada.
+- **Sistema com Podman antigo** (Debian 12 traz o 4.3, Ubuntu 22.04 o 3.4; o `podman compose` só existe a partir
+  da 4.7): o instalador **não oferece** o Podman, avisa o motivo e segue com o Docker. Com `--engine podman`
+  ele **recusa antes de instalar qualquer pacote** ("Nada foi alterado").
 
 Escolhendo **Podman**, o instalador mostra o plano e pede confirmação (`s`). A ideia é **reaproveitar tudo que
 está no Docker**, sem deixar nada quebrado. Nesta ordem:
