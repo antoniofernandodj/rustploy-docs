@@ -143,10 +143,14 @@ A lista completa de comandos, com o JSON de cada um, está em
 ## `GET /api/events`
 
 Stream **SSE** do painel inteiro. Ao conectar, o daemon manda um **snapshot** na hora, depois
-outro **a cada 2 segundos**, e cada **evento** assim que acontece.
+outro **sempre que algo muda** (ele confere a cada 2 segundos), e cada **evento** assim que acontece.
+O snapshot é calculado uma vez para todos os clientes conectados, e não é calculado quando não há
+nenhum.
 
 ```bash
 curl -N -H "Authorization: Bearer $TOKEN" $RP/api/events
+# só o que mudou, depois do primeiro snapshot completo:
+curl -N -H "Authorization: Bearer $TOKEN" "$RP/api/events?patch=1"
 ```
 
 Cada registro é um bloco `event: …` e `data: …` separados por uma linha em branco. O `data` é
@@ -155,13 +159,17 @@ JSON e traz um campo **`kind`**, porque alguns clientes só enxergam o `data`:
 | `kind` | O que é |
 |---|---|
 | `snapshot` | o estado completo do painel (abaixo) |
+| `snapshot_patch` | com `?patch=1`: só as **seções** que mudaram desde o registro anterior, cada uma inteira, e `removed` com as que sumiram. Junte no último snapshot trocando a seção toda |
 | `bus` | um evento: `{"kind":"bus","event":{…}}`. Os eventos estão em [Eventos](/referencia/eventos/) |
 
 O **snapshot** traz estas chaves: `status` (o `DaemonStatus`), `deployments` (os 40 mais
 recentes), `projects` (cada um com a lista dos nomes de `secrets`, nunca os valores),
 `services` (cada um com os `containers` em execução), `docker_images`, `docker_volumes`,
-`docker_networks`, `docker_containers`, `jobs`, `engine` (a fila de deploys), `registry_status` e
-`registry_repos`.
+`docker_networks`, `docker_containers`, `jobs`, `engine` (a fila de deploys), `registry_status`,
+`registry_repos`, `update` (a última versão nova encontrada), `dashboard` (o painel Em execução),
+`service_warm` (o selo aquecido/frio), `infra_audit` e `state_git` (a sincronização com o git).
+`status` e `engine` mudam a todo tick (trazem o uptime); com `?patch=1`, o tick comum manda só
+essas duas, em poucas centenas de bytes, no lugar do snapshot inteiro.
 
 <Aside type="note">
   Os **logs** (de container, de build e de job) **não** passam por `/api/events`: um serviço que

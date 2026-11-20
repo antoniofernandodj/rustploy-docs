@@ -144,10 +144,14 @@ responses are in [Responses](/en/referencia/respostas/).
 ## `GET /api/events`
 
 An **SSE** stream of the whole dashboard. On connect, the daemon immediately sends a **snapshot**,
-then another **every 2 seconds**, and each **event** as soon as it happens.
+then another **whenever something changes** (it checks every 2 seconds), and each **event** as soon
+as it happens. The snapshot is computed once for all connected clients, and not at all when there
+is none.
 
 ```bash
 curl -N -H "Authorization: Bearer $TOKEN" $RP/api/events
+# only what changed, after the first full snapshot:
+curl -N -H "Authorization: Bearer $TOKEN" "$RP/api/events?patch=1"
 ```
 
 Each record is an `event: …` and `data: …` block separated by a blank line. The `data` is JSON and
@@ -156,12 +160,17 @@ carries a **`kind`** field, because some clients only see the `data`:
 | `kind` | What it is |
 |---|---|
 | `snapshot` | the full dashboard state (below) |
+| `snapshot_patch` | with `?patch=1`: only the **sections** that changed since the previous record, each one whole, plus `removed` with the ones that are gone. Merge into the last snapshot by replacing the whole section |
 | `bus` | an event: `{"kind":"bus","event":{…}}`. The events are in [Events](/en/referencia/eventos/) |
 
 The **snapshot** has these keys: `status` (the `DaemonStatus`), `deployments` (the 40 most
 recent), `projects` (each with the list of `secrets` names, never the values), `services` (each
 with its running `containers`), `docker_images`, `docker_volumes`, `docker_networks`,
-`docker_containers`, `jobs`, `engine` (the deploy queue), `registry_status` and `registry_repos`.
+`docker_containers`, `jobs`, `engine` (the deploy queue), `registry_status`, `registry_repos`,
+`update` (the latest new version found), `dashboard` (the Running panel), `service_warm` (the
+warm/cold badge), `infra_audit` and `state_git` (git sync). `status` and `engine` change on every
+tick (they carry the uptime); with `?patch=1`, a regular tick sends only those two, a few hundred
+bytes, instead of the whole snapshot.
 
 <Aside type="note">
   **Logs** (container, build and job) do **not** go through `/api/events`: a chatty service would

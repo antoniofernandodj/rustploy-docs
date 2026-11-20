@@ -3,7 +3,7 @@ title: Real-time events (SSE)
 description: "The 16 events the Rustploy daemon publishes on GET /api/events (Server-Sent Events): deploy state changes, build logs, metrics and service status."
 ---
 
-`GET /api/events` is an **SSE** stream. It delivers a full dashboard **snapshot** every 2 seconds and the **events** below as soon as they happen. Each record carries a `kind` field in the JSON `data`: `"snapshot"` or `"bus"`.
+`GET /api/events` is an **SSE** stream. It delivers a full dashboard **snapshot** on connect and whenever something changes (checked every 2 seconds), and the **events** below as soon as they happen. Each record carries a `kind` field in the JSON `data`: `"snapshot"` or `"bus"` (and `"snapshot_patch"`, only the changed sections, for clients that ask for `?patch=1`; see [HTTP API](/en/referencia/api-http/)).
 
 ```bash
 curl -N -H "Authorization: Bearer $TOKEN" https://SERVIDOR:9797/api/events
