@@ -27,5 +27,11 @@ The classic case is the **database migration**: run it as a job before swapping 
 ## Cautions
 
 - A job that **never finishes** blocks the deploy. Give it an end.
+- The check runs **before** the service goes up. So **do not attach to a service a job that needs that
+  same service online** (creating the bucket in the S3 being deployed, migrating the database that is
+  starting): the job cannot reach the service and the deploy never passes. Put the job on **whoever
+  uses** the service, which already depends on it. The bucket goes in the API's pre-deploy, not the S3's.
+- A failed check **does not touch** what is online: the previous version keeps running (for a Compose
+  service, from daemon 0.1.70 on; before that, the stack was taken down).
 - A pre-deploy job is the same object as in **Schedules**: you can also schedule it or run it by hand.
 - [Warm](/en/guias/jobs/#warm-a-job) the job so the first deploy does not wait for its build.

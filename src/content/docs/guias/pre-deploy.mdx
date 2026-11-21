@@ -29,5 +29,11 @@ versão da aplicação.
 ## Cuidados
 
 - Um job que **nunca termina** trava o deploy. Dê um fim a ele.
+- O check roda **antes** de o serviço subir. Por isso, **não pendure num serviço um job que precisa
+  dele próprio no ar** (criar o bucket no S3 que está sendo implantado, migrar o banco que está
+  subindo): o job não alcança o serviço e o deploy nunca passa. Ponha o job em **quem usa** o
+  serviço, que já depende dele. O bucket vai no pré-deploy da API, não no do S3.
+- Uma falha no check **não mexe** no que está no ar: a versão anterior continua rodando (num
+  serviço Compose, a partir do daemon 0.1.70; antes, o stack era derrubado).
 - O job de pré-deploy é o mesmo objeto de **Schedules**: dá para também agendá-lo ou rodá-lo à mão.
 - [Aqueça](/guias/jobs/#aquecer-um-job) o job para que o primeiro deploy não espere o build dele.

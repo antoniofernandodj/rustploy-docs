@@ -51,6 +51,11 @@ In the deployment lists and in the [Deploy Engine](/en/interface/deploy-engine/)
 Any error triggers **RollingBack**: the new container is discarded, the old one stays online and the deploy
 ends as **Failed**. A deploy that fails **does not take down what was already running**.
 
+A **Compose** service is a single stack, with no "new container next to the old one": if the failure is in
+the `compose up` itself (**ComposingUp**), the roll back takes the stack down. Before that (pre-deploy check,
+dependencies) it is not touched, from daemon 0.1.70 on. Up to 0.1.69, any failure took the stack down,
+including a pre-deploy check failure.
+
 ### Where the cause is
 
 The error's cause goes to four places:

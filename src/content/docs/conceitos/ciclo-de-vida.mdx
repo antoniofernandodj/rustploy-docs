@@ -55,6 +55,11 @@ Qualquer erro dispara **RollingBack**: o container novo é descartado, o antigo
 segue no ar e o deploy termina em **Failed**. Um deploy que falha **não derruba
 o que já estava rodando**.
 
+Num serviço **Compose** o stack é um só, sem "container novo ao lado do antigo": se a falha for
+no próprio `compose up` (**ComposingUp**), o rollback derruba o stack. Antes disso (pré-deploy
+check, dependências) ele não é tocado, a partir do daemon 0.1.70. Até o 0.1.69, qualquer falha
+derrubava o stack, inclusive a de um pré-deploy check.
+
 ### Onde está a causa
 
 A causa do erro vai para quatro lugares:
