@@ -22,8 +22,8 @@ export const sections = [
       {
         q: { pt: 'Quanta memória o Rustploy usa?', en: 'How much memory does Rustploy use?' },
         a: {
-          pt: 'O alvo do projeto é ficar abaixo de 50 MB de RAM em repouso, mas esse número é uma meta e não uma medição publicada. O daemon, o proxy, o banco SQLite e o registry rodam num processo só. O que pesa de verdade são as suas aplicações e os builds, então planeje pelo menos 1 GB de RAM na VPS.',
-          en: 'The project targets under 50 MB of RAM at idle, but that number is a goal, not a published measurement. The daemon, proxy, SQLite database and registry run in a single process. What really weighs on the server is your applications and builds, so plan for at least 1 GB of RAM on the VPS.',
+          pt: 'Medido em produção em 21/11/2026: o daemon 0.1.70 ocupa cerca de 17 MB de memória própria (36 MB de RSS), com a GUI conectada e oito serviços. O daemon, o proxy, o banco SQLite e o registry rodam num processo só. O app desktop 0.1.78 ocupa cerca de 76 MB (PSS). O que pesa de verdade no servidor são as suas aplicações e os builds, então planeje pelo menos 1 GB de RAM na VPS. Veja [Quanto o Rustploy consome](/instalacao/requisitos/#quanto-o-rustploy-consome).',
+          en: 'Measured in production on 2026-11-21: daemon 0.1.70 uses about 17 MB of its own memory (36 MB RSS), with the GUI connected and eight services. The daemon, proxy, SQLite database and registry run in a single process. Desktop app 0.1.78 uses about 76 MB (PSS). What really weighs on the server is your applications and builds, so plan for at least 1 GB of RAM on the VPS. See [How much Rustploy uses](/en/instalacao/requisitos/#how-much-rustploy-uses).',
         },
       },
       {

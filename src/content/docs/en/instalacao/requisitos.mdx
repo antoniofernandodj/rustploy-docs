@@ -12,6 +12,36 @@ description: What the VPS needs to run Rustploy - Linux with systemd, Docker Eng
 - **git**, if any service uses the Git source (cloning uses the server's `git`).
 - (Optional) **ufw**, if you want Rustploy to open database and broker ports by itself.
 
+## How much Rustploy uses
+
+Measured on 2026-11-21, with the versions from release `v0.1.85`.
+
+| Process | Own memory | RSS | Peak | Where |
+|---|---|---|---|---|
+| **Daemon** (`rustployd` 0.1.70) | **~17 MB** (`anon`) | ~36 MB | 49 MB (cgroup) | 1 vCPU production VPS, 8 services, GUI connected |
+| **Desktop app** (`rustploy-gui` 0.1.78) | **~76 MB** (PSS), 31 MB anonymous | ~131 MB | 141 MB | Linux desktop, Intel HD 2500, open for 9 min |
+
+- **Own memory** is what the process really takes. For the daemon it is the service's `anon`
+  memory (without the file cache, which the kernel frees by itself). For the app it is the **PSS**,
+  which splits shared libraries (GTK, the graphics driver) among the processes that use them. RSS
+  counts those libraries in full, so it looks larger.
+- **The daemon went from ~41 to ~17 MB** from 0.1.68 to 0.1.70, by using a single SQLite connection
+  instead of up to ten.
+- On the server, the total systemd shows (`systemctl status rustployd`) includes the file cache of the
+  database and logs and grows over time; that cache does not weigh, because the kernel gives it back
+  when memory runs short.
+- The numbers vary with the number of services, connected clients and logs.
+
+To measure on your server and your desktop:
+
+```bash
+# daemon: own memory (anon) and file cache (file), in bytes
+grep -E '^(anon|file) ' /sys/fs/cgroup/system.slice/rustployd.service/memory.stat
+
+# desktop app: RSS, PSS and anonymous memory, in kB
+grep -E '^(Rss|Pss|Anonymous)' /proc/$(pgrep -x rustploy-gui)/smaps_rollup
+```
+
 ## Compatible systems (glibc)
 
 The daemon `.deb` requires **glibc 2.34 or newer** (`libc6 (>= 2.34)`) and the desktop app's, **2.35** (`libc6 (>= 2.35)`).

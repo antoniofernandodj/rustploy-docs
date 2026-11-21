@@ -12,6 +12,36 @@ description: O que a VPS precisa ter para rodar o Rustploy - Linux com systemd, 
 - **git**, se algum serviço usar a fonte Git (o clone usa o `git` do servidor).
 - (Opcional) **ufw**, se quiser que o Rustploy abra portas de banco e broker sozinho.
 
+## Quanto o Rustploy consome
+
+Medido em 21/11/2026, com as versões da release `v0.1.85`.
+
+| Processo | Memória própria | RSS | Pico | Onde |
+|---|---|---|---|---|
+| **Daemon** (`rustployd` 0.1.70) | **~17 MB** (`anon`) | ~36 MB | 49 MB (cgroup) | VPS de 1 vCPU em produção, 8 serviços, GUI conectada |
+| **App desktop** (`rustploy-gui` 0.1.78) | **~76 MB** (PSS), 31 MB anônima | ~131 MB | 141 MB | desktop Linux, Intel HD 2500, aberto há 9 min |
+
+- **Memória própria** é o que o processo realmente ocupa. No daemon é a memória `anon` do serviço
+  (sem o cache de arquivos, que o kernel libera sozinho). No app é o **PSS**, que divide as
+  bibliotecas compartilhadas (GTK, o driver gráfico) entre os processos que as usam. O RSS conta
+  essas bibliotecas inteiras e por isso parece maior.
+- **O daemon caiu de ~41 para ~17 MB** do 0.1.68 para o 0.1.70, ao usar uma conexão só com o SQLite
+  em vez de até dez.
+- No servidor, o total que o systemd mostra (`systemctl status rustployd`) inclui o cache de
+  arquivos do banco e dos logs e cresce com o tempo; esse cache não pesa, porque o kernel o devolve
+  quando falta memória.
+- Os números variam com a quantidade de serviços, de clientes conectados e de logs.
+
+Para medir no seu servidor e no seu desktop:
+
+```bash
+# daemon: memória própria (anon) e cache de arquivos (file), em bytes
+grep -E '^(anon|file) ' /sys/fs/cgroup/system.slice/rustployd.service/memory.stat
+
+# app desktop: RSS, PSS e memória anônima, em kB
+grep -E '^(Rss|Pss|Anonymous)' /proc/$(pgrep -x rustploy-gui)/smaps_rollup
+```
+
 ## Sistemas compatíveis (glibc)
 
 O `.deb` do daemon exige **glibc 2.34 ou mais nova** (`libc6 (>= 2.34)`) e o do app desktop, **2.35** (`libc6 (>= 2.35)`).
