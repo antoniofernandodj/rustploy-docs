@@ -5,7 +5,7 @@ description: "Quais comandos do Rustploy existem só pela API e pelo MCP, quais 
 
 A GUI desktop e a web UI falam com a mesma API, mas cobrem conjuntos um pouco diferentes. Esta lista é gerada do código a cada versão.
 
-## Sem chamada direta de nenhuma tela (28)
+## Sem chamada direta de nenhuma tela (29)
 
 Nenhuma tela dispara estes comandos diretamente. Alguns dados (as listas do Docker, os jobs) aparecem nas telas mesmo assim, porque chegam no *snapshot* do painel. Para agir sobre eles, use `curl`, a ferramenta `rpc` do [MCP](/agentes/ferramentas/) ou um agente de IA.
 
@@ -35,6 +35,7 @@ Nenhuma tela dispara estes comandos diretamente. Alguns dados (as listas do Dock
 - [`EnvBackupRestore`](/referencia/comandos/#envbackuprestore)
 - [`Ping`](/referencia/comandos/#ping)
 - [`DeployEngineStatus`](/referencia/comandos/#deployenginestatus)
+- [`ApplyAppUpdate`](/referencia/comandos/#applyappupdate)
 - [`RegistryStatus`](/referencia/comandos/#registrystatus)
 - [`RegistryRepoList`](/referencia/comandos/#registryrepolist)
 

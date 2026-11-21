@@ -1,6 +1,6 @@
 ---
 title: Respostas do protocolo
-description: "As 75 variantes de resposta de POST /api/rpc no Rustploy, com o tipo que cada uma carrega, e como reconhecer um erro."
+description: "As 76 variantes de resposta de POST /api/rpc no Rustploy, com o tipo que cada uma carrega, e como reconhecer um erro."
 ---
 
 Cada [comando](/referencia/comandos/) devolve uma destas variantes. Uma resposta **com campos** é um objeto de uma chave; **sem campos**, a string nua (`"Ok"`).
@@ -26,6 +26,7 @@ Um erro vem como `{"Err":{"code":"…","message":"…"}}`.
 | `DaemonStatus` | `DaemonStatus` |
 | `UpdateInfo` | `UpdateInfo` |
 | `UpdateProgress` | `UpdateProgress` |
+| `AppUpdated` | `from: String`, `to: String` |
 | `DeployEngineStatus` | `DeployEngineSummary` |
 | `Pong` | `uptime_secs: u64` |
 | `WebhookUrl` | `Option<String>` |

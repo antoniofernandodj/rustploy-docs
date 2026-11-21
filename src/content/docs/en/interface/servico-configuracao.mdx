@@ -87,6 +87,35 @@ configure one before using it in production.
 
 Click **Save**.
 
+### Links: the services this one uses
+
+**USES (N)** lists the services this one **uses**: the database, the S3, the queue, the cache. Each
+link does two things:
+
+- **Order:** this service waits for the other to come up, on a deploy with dependencies and on daemon
+  boot, without repeating the other under **Depends on**.
+- **Variables:** on the next deploy, this service receives `<PREFIX>_HOST`, `<PREFIX>_PORT` and
+  `<PREFIX>_URL` from the other. The default prefix is the other's name in uppercase (`db` →
+  `DB_HOST`); you can pick another one in **Variable prefix**. The `_URL` is the same as in the
+  Connection tab: for a database, with user and password; for an S3 or an app, `http://host:port`.
+
+Variables you typed in the project or the service **always win** over the ones the link hands over.
+So you can adopt links without touching what already works, and delete the manual variables over time.
+
+From **another project**, you can only link to a [shared database](/en/guias/banco-compartilhado/), and
+Rustploy grants the project access to it by itself. The shared database screen shows **Accepts links
+from other projects**: off, it refuses new links (the existing ones keep working).
+
+**USED BY (N)** is the same information seen from the other side: on the `db` screen, `api` shows up.
+Adding or removing there writes to the service that uses it. Removing a link, on either side, asks
+for confirmation.
+
+<Aside type="note">
+In a **Compose** service, the variables go to the stack's `.env`, like any variable: they only reach
+the container if the YAML uses them (`environment: [DATABASE_URL=${DB_URL}]`). Jobs do not receive the
+links' variables yet.
+</Aside>
+
 ### The pre-deploy queue
 
 <Shot

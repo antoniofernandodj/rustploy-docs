@@ -34,6 +34,27 @@ The button only appears if the helper exists (a `.deb` install, with systemd). F
 **first** update to a version that has this feature has to be done with the command below, because the previous version
 does not have the helper yet.
 
+## Updating by command, without a password
+
+To update without clicking (in a script, or by asking an agent), use the daemon API. The root helper
+that already installs the daemon also installs the **desktop app on this machine**, without the
+password the app asks for when it updates itself. The same rules apply: only packages signed by the
+project, never a lower version.
+
+```bash
+# the token is the [api].token in config.toml (or the one in Settings → Web Server)
+TOKEN=...
+# the daemon on this machine (it restarts midway; follow it with "UpdateStatus")
+curl -s -H "Authorization: Bearer $TOKEN" http://127.0.0.1:9797/api/rpc -d '{"ApplyUpdate":{}}'
+# the desktop app on this machine (from daemon 0.1.71 on; waits for the install to finish)
+curl -s -H "Authorization: Bearer $TOKEN" http://127.0.0.1:9797/api/rpc -d '"ApplyAppUpdate"'
+```
+
+`ApplyAppUpdate` answers `{"AppUpdated":{"from":"0.1.78-1","to":"0.1.79-1"}}`, or refuses if the app
+is not installed on this machine or is already on the newest version. The open app stays on the old
+version until it is closed and opened again. Through the MCP agent, both commands only work with
+`[update] allow_agent_apply = true`.
+
 ## Update the daemon
 
 The shortest way is to run the [install command](/en/instalacao/instalacao-rapida/) again, which downloads the latest

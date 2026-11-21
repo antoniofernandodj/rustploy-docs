@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 151 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 152 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **151 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **152 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -1787,6 +1787,16 @@ Volta os binários para os do backup da última atualização (o único caminho 
 ```
 
 **Used by:** GUI and web UI.
+
+### ApplyAppUpdate
+
+Atualiza o **app desktop** (`rustploy-gui`) desta máquina para o da última release, pelo helper root do daemon (sem a senha do `pkexec`). Recusa se o app não está instalado aqui ou já está na versão mais nova. Espera a instalação terminar. Mesma trava do agente MCP que `ApplyUpdate`. O app aberto segue na versão antiga até ser reaberto. Resposta: `AppUpdated`.
+
+```json
+"ApplyAppUpdate"
+```
+
+**Used by:** only by the API and the MCP (no screen).
 
 ## Git providers
 

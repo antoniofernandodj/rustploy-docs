@@ -33,6 +33,27 @@ O botão só aparece se o helper existe (instalação pelo `.deb`, com systemd).
 A **primeira** atualização para uma versão que traz esse recurso precisa ser feita pelo comando abaixo, porque a versão anterior
 ainda não tem o helper.
 
+## Atualizar por comando, sem senha
+
+Para atualizar sem clicar (num script, ou pedindo a um agente), use a API do daemon. O helper root
+que já instala o daemon instala também o **app desktop desta máquina**, sem a senha que o app pede
+quando se atualiza sozinho. Valem as mesmas regras: só pacote assinado pelo projeto, nunca uma versão
+menor.
+
+```bash
+# o token é o [api].token do config.toml (ou o da tela Settings → Web Server)
+TOKEN=...
+# o daemon desta máquina (ele reinicia no meio; acompanhe com "UpdateStatus")
+curl -s -H "Authorization: Bearer $TOKEN" http://127.0.0.1:9797/api/rpc -d '{"ApplyUpdate":{}}'
+# o app desktop desta máquina (a partir do daemon 0.1.71; espera a instalação terminar)
+curl -s -H "Authorization: Bearer $TOKEN" http://127.0.0.1:9797/api/rpc -d '"ApplyAppUpdate"'
+```
+
+O `ApplyAppUpdate` responde `{"AppUpdated":{"from":"0.1.78-1","to":"0.1.79-1"}}`, ou recusa se o app
+não está instalado nesta máquina ou já está na versão mais nova. O app aberto continua na versão
+antiga até ser fechado e aberto de novo. Pelo agente MCP, os dois comandos só valem com
+`[update] allow_agent_apply = true`.
+
 ## Atualizar o daemon
 
 O jeito mais curto é rodar de novo o [comando de instalação](/instalacao/instalacao-rapida/), que baixa a última

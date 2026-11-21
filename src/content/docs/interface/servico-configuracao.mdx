@@ -9,6 +9,7 @@ import dominios from '../../../assets/ui/servico-dominios.png';
 import healthcheck from '../../../assets/ui/servico-healthcheck.png';
 import avancado from '../../../assets/ui/servico-avancado.png';
 import fila from '../../../assets/ui/servico-avancado-fila.png';
+import vinculos from '../../../assets/ui/servico-vinculos.png';
 
 Estas são abas da [tela do serviço](/interface/servico/). Depois de mexer em qualquer
 uma, **faça um novo Deploy** para a mudança valer no container.
@@ -90,6 +91,41 @@ de usar em produção.
 | **Redeployar a cada push no registry embutido** | só aparece num serviço cuja origem é uma **imagem** (Registry). Ligado, cada `docker push` da mesma imagem e tag para o [registry embutido](/interface/docker-e-registry/#push-to-deploy) redeploya o serviço sozinho. Desligado por padrão |
 
 Clique em **Save**.
+
+### Vínculos: os serviços que este usa
+
+<Shot
+  src={vinculos}
+  alt="Seção Usa da aba Avançado com um vínculo para o serviço db e as variáveis DB_HOST, DB_PORT e DB_URL."
+  caption="O api usa o db: ele espera o db subir e recebe DB_HOST, DB_PORT e DB_URL no deploy."
+/>
+
+**USA (N)** lista os serviços que este **usa**: o banco, o S3, a fila, o cache. Cada vínculo faz
+duas coisas:
+
+- **Ordem:** este serviço passa a esperar o outro subir, no deploy com dependências e no boot do
+  daemon, sem precisar repetir o outro em **Depende de**.
+- **Variáveis:** no próximo deploy, este serviço recebe `<PREFIXO>_HOST`, `<PREFIXO>_PORT` e
+  `<PREFIXO>_URL` do outro. O prefixo padrão é o nome do outro em maiúsculas (`db` → `DB_HOST`);
+  dá para escolher outro em **Prefixo das variáveis**. A `_URL` é a mesma da aba Conexão: num
+  banco, com usuário e senha; num S3 ou app, `http://host:porta`.
+
+As variáveis que você digitou no projeto ou no serviço **sempre ganham** das que o vínculo entrega.
+Assim dá para adotar vínculos sem mexer no que já funciona, e apagar as variáveis manuais aos poucos.
+
+De **outro projeto**, só dá para vincular a um [banco compartilhado](/guias/banco-compartilhado/), e o
+Rustploy concede sozinho o acesso do projeto a ele. Na tela do banco compartilhado aparece a opção
+**Aceita vínculos de outros projetos**: desligada, ele recusa vínculos novos (os que existem continuam).
+
+**QUEM USA ESTE SERVIÇO (N)** é a mesma informação vista do outro lado: na tela do `db`, aparece o
+`api`. Adicionar ou tirar dali grava no serviço que usa. Desfazer um vínculo, dos dois lados, pede
+confirmação.
+
+<Aside type="note">
+Num serviço **Compose**, as variáveis vão para o `.env` da stack, como qualquer variável: só chegam ao
+container se o YAML as usar (`environment: [DATABASE_URL=${DB_URL}]`). Os jobs ainda não recebem as
+variáveis dos vínculos.
+</Aside>
 
 ### Fila de pré-deploy
 
