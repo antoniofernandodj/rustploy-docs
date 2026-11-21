@@ -21,6 +21,12 @@ containers **keep running**.
 - If the service **does not become stable** after the install, the previous binaries come back by themselves.
 - **Roll back to the previous version** (roll back) restores the binaries from the last update's backup. The database is **not**
   rolled back: if the new version migrated the schema, the snapshot kept before sits in `<db_path>/update_snapshots/` (the 3 most recent).
+- After a roll back, the button offers the version you undid again, and reinstalling it works. Up to daemon 0.1.68 this was
+  refused ("a versão … não é mais nova que a instalada; downgrade é recusado"), because the roll back only swaps the binaries
+  and `dpkg` keeps recording the new version; `apt install` of the same `.deb` also said "already the newest version". On a
+  server in that state, reinstall by hand with `sudo dpkg -i --force-confold rustployd_<version>_amd64.deb` (`dpkg -i`
+  reinstalls the same version; the `.deb` is on the [releases page](https://github.com/antoniofernandodj/rustploy/releases))
+  and restart with `sudo systemctl restart rustployd`.
 - In the desktop app the window returns to the login when the daemon restarts, and the login screen shows a notice that it is updating; sign in again and the tab shows the result. In
   the web UI the progress shows live.
 

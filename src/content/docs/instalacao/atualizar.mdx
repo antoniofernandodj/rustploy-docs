@@ -20,6 +20,12 @@ O daemon reinicia, mas os containers dos seus serviços **continuam rodando**.
 - Se o serviço **não ficar estável** depois da instalação, os binários anteriores voltam sozinhos.
 - **Reverter para a versão anterior** restaura os binários do backup da última atualização. O banco **não** é revertido: se a
   versão nova migrou o esquema, o snapshot guardado antes fica em `<db_path>/update_snapshots/` (os 3 mais recentes).
+- Depois de reverter, o botão volta a oferecer a versão que você desfez, e reinstalá-la funciona. Até o daemon 0.1.68 isso
+  era recusado ("a versão … não é mais nova que a instalada; downgrade é recusado"), porque o reverter só troca os binários e
+  o `dpkg` continua registrando a versão nova; o `apt install` do mesmo `.deb` também dizia "already the newest version".
+  Num servidor nesse estado, reinstale à mão com `sudo dpkg -i --force-confold rustployd_<versão>_amd64.deb` (o `dpkg -i`
+  reinstala a mesma versão; o `.deb` está na [página de releases](https://github.com/antoniofernandodj/rustploy/releases))
+  e reinicie com `sudo systemctl restart rustployd`.
 - No app desktop a janela volta ao login quando o daemon reinicia, e a tela de login mostra um aviso de que ele está atualizando; entre de novo e a aba mostra o resultado. Na web UI o
   progresso aparece ao vivo.
 
