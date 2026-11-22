@@ -10,6 +10,7 @@ import healthcheck from '../../../assets/ui/servico-healthcheck.png';
 import avancado from '../../../assets/ui/servico-avancado.png';
 import fila from '../../../assets/ui/servico-avancado-fila.png';
 import vinculos from '../../../assets/ui/servico-vinculos.png';
+import recursos from '../../../assets/ui/servico-vinculos-recursos.png';
 
 Estas são abas da [tela do serviço](/interface/servico/). Depois de mexer em qualquer
 uma, **faça um novo Deploy** para a mudança valer no container.
@@ -123,9 +124,32 @@ confirmação.
 
 <Aside type="note">
 Num serviço **Compose**, as variáveis vão para o `.env` da stack, como qualquer variável: só chegam ao
-container se o YAML as usar (`environment: [DATABASE_URL=${DB_URL}]`). Os jobs ainda não recebem as
-variáveis dos vínculos.
+container se o YAML as usar (`environment: [DATABASE_URL=${DB_URL}]`). Jobs com este serviço como gatilho
+(inclusive os da fila de pré-deploy) também recebem as variáveis dos vínculos.
 </Aside>
+
+#### Recurso: o bucket ou o database que o vínculo cria
+
+<Shot
+  src={recursos}
+  alt="Seção Usa com dois vínculos: s3 com o bucket uploads de leitura pública e db com o database pedidos."
+  caption="O api usa o bucket uploads (leitura pública) do s3 e o database pedidos do db."
+/>
+
+Ao vincular, o campo **Recurso (opcional)** diz o que o outro serviço guarda para este:
+
+- num **S3** (RustFS, MinIO), um **bucket**: este serviço recebe também `<PREFIXO>_BUCKET`. Com **Bucket com
+  leitura pública** ligado, qualquer um pode ler os objetos (para servir imagens, por exemplo);
+- num **Postgres, MySQL ou MariaDB**, um **database**: este serviço recebe `<PREFIXO>_DATABASE`, e a
+  `<PREFIXO>_URL` passa a apontar para ele.
+
+O Rustploy cria o recurso no **próximo deploy deste serviço**, antes da fila de pré-deploy (uma migração já
+encontra o database), e só se ele ainda não existir: o log do deploy diz "criado" ou "já existia". O outro
+serviço precisa estar no ar; o deploy com dependências cuida disso. Se não der para criar em 60 segundos, o
+deploy para com a causa no log, sem tocar no que está no ar.
+
+Desfazer o vínculo **não apaga** o bucket nem o database. Recurso só vale para serviços do mesmo projeto; num
+banco compartilhado de outro projeto, use um [database gerenciado](/guias/banco-compartilhado/).
 
 ### Fila de pré-deploy
 

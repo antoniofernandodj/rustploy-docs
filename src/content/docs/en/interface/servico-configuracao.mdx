@@ -112,9 +112,26 @@ for confirmation.
 
 <Aside type="note">
 In a **Compose** service, the variables go to the stack's `.env`, like any variable: they only reach
-the container if the YAML uses them (`environment: [DATABASE_URL=${DB_URL}]`). Jobs do not receive the
-links' variables yet.
+the container if the YAML uses them (`environment: [DATABASE_URL=${DB_URL}]`). Jobs that have this service
+as their trigger (including the ones in the pre-deploy queue) also receive the links' variables.
 </Aside>
+
+#### Resource: the bucket or database the link creates
+
+When linking, the **Resource (optional)** field says what the other service keeps for this one:
+
+- on an **S3** (RustFS, MinIO), a **bucket**: this service also receives `<PREFIX>_BUCKET`. With **Bucket
+  with public read** on, anyone can read the objects (to serve images, for example);
+- on a **Postgres, MySQL or MariaDB**, a **database**: this service receives `<PREFIX>_DATABASE`, and
+  `<PREFIX>_URL` points to it.
+
+Rustploy creates the resource on **this service's next deploy**, before the pre-deploy queue (a migration
+already finds the database), and only if it does not exist yet: the deploy log says "created" or "already
+existed". The other service must be online; a deploy with dependencies takes care of that. If it cannot be
+created within 60 seconds, the deploy stops with the cause in the log, without touching what is online.
+
+Removing the link **does not delete** the bucket or the database. Resources only work for services in the same
+project; for a shared database in another project, use a [managed database](/en/guias/banco-compartilhado/).
 
 ### The pre-deploy queue
 
