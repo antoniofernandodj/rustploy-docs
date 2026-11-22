@@ -136,12 +136,13 @@ container se o YAML as usar (`environment: [DATABASE_URL=${DB_URL}]`). Jobs com 
   caption="O api usa o bucket uploads (leitura pública) do s3 e o database pedidos do db."
 />
 
-Ao vincular, o campo **Recurso (opcional)** diz o que o outro serviço guarda para este:
+Ao escolher o serviço em **Vincular a**, aparece o campo que faz sentido para ele:
 
-- num **S3** (RustFS, MinIO), um **bucket**: este serviço recebe também `<PREFIXO>_BUCKET`. Com **Bucket com
-  leitura pública** ligado, qualquer um pode ler os objetos (para servir imagens, por exemplo);
-- num **Postgres, MySQL ou MariaDB**, um **database**: este serviço recebe `<PREFIXO>_DATABASE`, e a
-  `<PREFIXO>_URL` passa a apontar para ele.
+- num **S3** (RustFS, MinIO), o campo **Bucket (opcional)**: este serviço recebe também `<PREFIXO>_BUCKET`.
+  Com **Leitura pública** ligada, qualquer um pode ler os arquivos (para servir imagens, por exemplo);
+- num **Postgres, MySQL ou MariaDB**, o campo **Database (opcional)**: este serviço recebe
+  `<PREFIXO>_DATABASE`, e a `<PREFIXO>_URL` passa a apontar para ele;
+- nos outros (cache, fila, aplicação), nenhum: o vínculo só entrega o endereço.
 
 O Rustploy cria o recurso no **próximo deploy deste serviço**, antes da fila de pré-deploy (uma migração já
 encontra o database), e só se ele ainda não existir: o log do deploy diz "criado" ou "já existia". O outro

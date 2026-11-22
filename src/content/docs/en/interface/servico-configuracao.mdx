@@ -118,12 +118,13 @@ as their trigger (including the ones in the pre-deploy queue) also receive the l
 
 #### Resource: the bucket or database the link creates
 
-When linking, the **Resource (optional)** field says what the other service keeps for this one:
+When you pick the service in **Link to**, the field that fits it appears:
 
-- on an **S3** (RustFS, MinIO), a **bucket**: this service also receives `<PREFIX>_BUCKET`. With **Bucket
-  with public read** on, anyone can read the objects (to serve images, for example);
-- on a **Postgres, MySQL or MariaDB**, a **database**: this service receives `<PREFIX>_DATABASE`, and
-  `<PREFIX>_URL` points to it.
+- on an **S3** (RustFS, MinIO), the **Bucket (optional)** field: this service also receives `<PREFIX>_BUCKET`.
+  With **Public read** on, anyone can read the files (to serve images, for example);
+- on a **Postgres, MySQL or MariaDB**, the **Database (optional)** field: this service receives
+  `<PREFIX>_DATABASE`, and `<PREFIX>_URL` points to it;
+- on the others (cache, queue, application), none: the link only hands over the address.
 
 Rustploy creates the resource on **this service's next deploy**, before the pre-deploy queue (a migration
 already finds the database), and only if it does not exist yet: the deploy log says "created" or "already
