@@ -11,6 +11,7 @@ import avancado from '../../../assets/ui/servico-avancado.png';
 import fila from '../../../assets/ui/servico-avancado-fila.png';
 import vinculos from '../../../assets/ui/servico-vinculos.png';
 import recursos from '../../../assets/ui/servico-vinculos-recursos.png';
+import nomes from '../../../assets/ui/servico-vinculos-nomes.png';
 
 Estas são abas da [tela do serviço](/interface/servico/). Depois de mexer em qualquer
 uma, **faça um novo Deploy** para a mudança valer no container.
@@ -151,6 +152,33 @@ deploy para com a causa no log, sem tocar no que está no ar.
 
 Desfazer o vínculo **não apaga** o bucket nem o database. Recurso só vale para serviços do mesmo projeto; num
 banco compartilhado de outro projeto, use um [database gerenciado](/guias/banco-compartilhado/).
+
+#### Nomes das variáveis: o nome que o seu código lê
+
+<Shot
+  src={nomes}
+  alt="Bloco Nomes das variáveis de um vínculo com o s3: HOST no padrão, PORT desligada, URL trocada para S3_ENDPOINT com o aviso de que ela já está digitada no projeto, e BUCKET trocado para S3_BUCKET_NAME_1."
+  caption="O api lê S3_ENDPOINT e S3_BUCKET_NAME_1: o vínculo entrega com esses nomes, e não entrega a porta."
+/>
+
+O prefixo troca o começo de todos os nomes de uma vez. Quando o código lê nomes que não seguem esse formato
+(`S3_ENDPOINT` em vez de `S3_URL`), troque o nome de cada variável em **Nomes das variáveis**, que aparece ao
+escolher o serviço:
+
+- **em branco**, vale o nome padrão (o prefixo + `_HOST`, `_PORT`, `_URL`, `_BUCKET` ou `_DATABASE`), mostrado
+  como dica dentro do campo;
+- **um nome** (`S3_ENDPOINT`): a variável entra no container com ele;
+- **Entregar desligado**: a variável não é entregue.
+
+O nome segue as regras de variável (`A-Z`, `0-9` e `_`, sem começar por dígito; o que você digitar em minúsculas
+vira maiúsculas), e não pode repetir outro nome entregue pelos vínculos deste serviço.
+
+As variáveis digitadas continuam ganhando: se o projeto ou o serviço já tem uma variável com o mesmo nome, ela
+vale e a do vínculo não chega ao container. A tela avisa embaixo do vínculo e do campo: *"Já digitada, a digitada
+ganha: S3_ENDPOINT (projeto)"*. Para passar a usar a do vínculo, apague a digitada.
+
+Para mudar um vínculo que já existe, clique em **Editar** na linha dele: o formulário se enche com o que está
+gravado, e **Salvar vínculo** o substitui no mesmo lugar.
 
 ### Fila de pré-deploy
 

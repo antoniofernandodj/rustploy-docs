@@ -134,6 +134,27 @@ created within 60 seconds, the deploy stops with the cause in the log, without t
 Removing the link **does not delete** the bucket or the database. Resources only work for services in the same
 project; for a shared database in another project, use a [managed database](/en/guias/banco-compartilhado/).
 
+#### Variable names: the name your code reads
+
+The prefix changes the start of every name at once. When the code reads names that do not follow that format
+(`S3_ENDPOINT` instead of `S3_URL`), change each variable's name under **Variable names**, which appears when
+you pick the service:
+
+- **blank** means the default name (the prefix + `_HOST`, `_PORT`, `_URL`, `_BUCKET` or `_DATABASE`), shown as
+  a hint inside the field;
+- **a name** (`S3_ENDPOINT`): the variable enters the container with it;
+- **Hand over off**: the variable is not handed over.
+
+The name follows the variable rules (`A-Z`, `0-9` and `_`, not starting with a digit; lowercase you type becomes
+uppercase), and cannot repeat another name handed over by this service's links.
+
+Typed variables still win: if the project or the service already has a variable with the same name, that one
+applies and the link's does not reach the container. The screen warns below the link and the field: *"Already
+typed, the typed one wins: S3_ENDPOINT (project)"*. To start using the link's, delete the typed one.
+
+To change an existing link, click **Edit** on its row: the form fills with what is stored, and **Save link**
+replaces it in the same place.
+
 ### The pre-deploy queue
 
 <Shot
