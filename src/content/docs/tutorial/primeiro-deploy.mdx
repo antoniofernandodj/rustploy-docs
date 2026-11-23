@@ -113,14 +113,15 @@ falhasse, o estado iria para **RollingBack** e o antigo seguiria no ar.
 
 ## 8. Volte uma versão
 
-Hoje o jeito confiável de voltar é **redeployar a versão anterior**: na aba
-**Geral**, ponha de volta a imagem (ou a branch, ou o commit) que funcionava e
-clique em **Deploy**. Como todo deploy, ele só troca a rota depois de passar no
-healthcheck.
+Cada deploy que chega ao ar vira uma **release**: **v1**, **v2**… Na aba
+**Deployments**, clique em **Comparar** na release que funcionava para ver o que
+mudou desde então, e em **Voltar para esta** para voltar. O Rustploy troca a
+configuração do serviço pela daquela release e faz o deploy com a imagem dela, sem
+build. Como todo deploy, ele só troca a rota depois de passar no healthcheck.
 
-<Aside type="caution" title="O botão Rollback">
-  O botão **Rollback** do serviço apenas localiza o deploy anterior; ele não
-  redeploya. Não conte com ele para voltar uma versão.
+<Aside type="caution" title="O que não volta">
+  As variáveis do **projeto** e o valor dos **secrets** continuam os de agora.
+  Detalhes em [Releases: comparar e voltar](/interface/servico/#releases-comparar-e-voltar).
 </Aside>
 
 ## O que você aprendeu

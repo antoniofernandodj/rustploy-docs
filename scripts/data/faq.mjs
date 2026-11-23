@@ -123,8 +123,8 @@ export const sections = [
       {
         q: { pt: 'Como volto para a versão anterior?', en: 'How do I roll back to the previous version?' },
         a: {
-          pt: 'Redeploye a versão anterior: ponha de volta a imagem, a branch ou o commit que funcionava e clique em **Deploy**. As interfaces não têm botão de rollback. Se um deploy falhar no healthcheck, o Rustploy volta sozinho para o container antigo. Veja o [tutorial](/tutorial/primeiro-deploy/).',
-          en: 'Redeploy the previous version: put back the image, branch or commit that worked and click **Deploy**. The interfaces have no rollback button. If a deploy fails its healthcheck, Rustploy automatically keeps the old container. See the [tutorial](/tutorial/primeiro-deploy/).',
+          pt: 'Na aba **Deployments** do serviço, clique em **Voltar para esta** na release que funcionava (cada deploy que chegou ao ar é uma release: v1, v2…). O Rustploy volta a configuração do serviço e faz o deploy com a imagem daquela release, sem build; as variáveis do projeto e o valor dos secrets continuam os de agora. Se um deploy falhar no healthcheck, o Rustploy mantém sozinho o container antigo. Veja [Releases: comparar e voltar](/interface/servico/#releases-comparar-e-voltar).',
+          en: 'On the service\'s **Deployments** tab, click **Roll back to this** on the release that worked (every deploy that went live is a release: v1, v2…). Rustploy restores the service configuration and deploys that release\'s image, without a build; the project variables and the secret values stay as they are now. If a deploy fails its healthcheck, Rustploy automatically keeps the old container. See [Releases: compare and roll back](/en/interface/servico/#releases-compare-and-roll-back).',
         },
       },
       {

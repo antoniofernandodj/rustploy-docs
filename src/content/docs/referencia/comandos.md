@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 152 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 155 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **152 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **155 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -312,6 +312,8 @@ Faz o deploy de um serviço **e da árvore de dependências dele**: enfileira, n
 
 ### DeployRollback
 
+Legado: só **consulta** o deploy Live anterior (não redeploya). O rollback de verdade é o `ReleaseRollback`.
+
 ```json
 {"DeployRollback":{"service_id":"svc_…"}}
 ```
@@ -321,6 +323,43 @@ Faz o deploy de um serviço **e da árvore de dependências dele**: enfileira, n
 | `service_id` | `String` |
 
 **Usado por:** só pela API e pelo MCP (nenhuma tela).
+
+### ReleaseList
+
+As releases do serviço (o que rodou em cada deploy que chegou a Live), da mais nova para a mais velha, com `is_current` e `image_status`. Resposta: `Releases`.
+
+```json
+{"ReleaseList":{"service_id":"svc_…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `service_id` | `String` |
+
+### ReleaseDiff
+
+O que muda indo de `against_release_id` para `release_id`; sem `against_release_id`, indo do que está **declarado agora** para a release (o que um `ReleaseRollback` mudaria). Secrets aparecem como `secret:NOME`, nunca o valor. Resposta: `ReleaseDiff`.
+
+```json
+{"ReleaseDiff":{"release_id":"…","against_release_id":null}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `release_id` | `String` |
+| `against_release_id` | `Option<String>` |
+
+### ReleaseRollback
+
+**Voltar para uma release**: grava o spec dela como o spec atual do serviço (sobrescreve; o anterior fica no histórico do git de infra) e dispara um deploy que usa a imagem dela, sem build. As variáveis do projeto **não** voltam; os secrets valem com o valor atual. Compose: refaz o `compose up` com o conteúdo da release. Resposta: `Deployment`.
+
+```json
+{"ReleaseRollback":{"release_id":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `release_id` | `String` |
 
 ### DeployHistory
 

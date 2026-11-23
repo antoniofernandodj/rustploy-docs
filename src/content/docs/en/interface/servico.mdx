@@ -42,8 +42,8 @@ disabled in the menu.
   image. Use **Deploy**.
 </Aside>
 
-There is no rollback button on the service screen. To go back a version, redeploy the previous one (see the
-[tutorial](/en/tutorial/primeiro-deploy/#8-go-back-a-version)).
+To go back a version, use **Roll back to this** on the [Deployments](#deployments) tab: every deploy that went
+live became a **release** (v1, v2, v3…), and rolling back to it brings back that moment's image and configuration.
 
 ## The side panel
 
@@ -175,12 +175,44 @@ Two blocks:
 **DEPLOY WEBHOOK**. *"The token is born on this service's first deploy, so run a deploy for the URL to appear. A POST to this URL triggers a deploy. The body is ignored: the token in the URL itself is the authentication. Regenerating invalidates the previous URL."* After the first deploy the URL appears
 here, with **Copy** and **Regenerate**. See [Deploy webhooks](/en/guias/webhooks/). Compose services have no webhook.
 
-**The deploy list**, with each one's **id**, **duration**, **start** and **image**. On each row:
+**The deploy list**, with each one's **id**, **duration**, **start** and **image**. Every deploy that went live
+(**Live**) gets the badge of its **release** (**v1**, **v2**…), and the one live right now also shows **current**.
+On each row:
 
 | Button | Effect |
 |---|---|
 | **≡** | opens the deploy's **build log** in a window |
+| **Compare** | shows what would change if you rolled back to this release (releases only) |
+| **Roll back to this** | rolls the service back to this release, after confirming (releases that are not the current one) |
 | **✕** | removes the deploy's record (only those that have already finished) |
+
+#### Releases: compare and roll back
+
+A **release** keeps what ran in that deploy: the image, pinned by its id or digest (not by the tag, which can
+change later), and a copy of the service configuration (variables, ports, command, replicas, healthcheck,
+domains, links) and of the project variables.
+
+**Compare** opens the list of what changes going from the **current** configuration to the release's, split
+into image, service configuration, service variables and project variables. A secret shows as `secret:NAME`,
+never its value.
+
+**Roll back to this** asks for confirmation and then:
+
+1. replaces the service configuration with the release's (the name and the project stay as they are now);
+2. deploys the release's image, **without a build**: the log says *"Voltando para a v9"*;
+3. once live, the deploy becomes a new release (for example **v13**), marked *"restores v9"*.
+
+What is **not** rolled back:
+
+- **the project variables**, which apply to every service in the project. Compare shows which ones changed,
+  so you can decide;
+- **secret values**: the rollback uses each secret's current value;
+- **the images inside a Compose stack**: rolling back reruns `compose up` with that release's content, but the
+  tags in the file point to whatever exists now.
+
+The Docker cleanup spares the images of each service's **3 newest releases**. An older release whose image was
+deleted shows *"This release's image was deleted"*: you can compare it, but not roll back to it. A registry
+image pinned by digest rolls back even if it was deleted here, because it is pulled again.
 
 Empty, it shows *"No deploy yet."* The cause of a failed deploy is in the build log: see
 [The lifecycle of a deploy](/en/conceitos/ciclo-de-vida/#where-the-cause-is).

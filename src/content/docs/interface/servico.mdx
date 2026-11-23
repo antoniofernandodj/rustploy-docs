@@ -43,8 +43,9 @@ andamento, o item dela fica desligado no menu.
   serviço de Git ou zip já refaz o build da imagem. Use **Deploy**.
 </Aside>
 
-Não há botão de rollback na tela do serviço. Para voltar uma versão, redeploye a
-anterior (veja o [tutorial](/tutorial/primeiro-deploy/#8-volte-uma-versão)).
+Para voltar uma versão, use **Voltar para esta** na aba [Deployments](#deployments): cada
+deploy que chegou ao ar virou uma **release** (v1, v2, v3…), e voltar para ela traz de volta a
+imagem e a configuração daquele momento.
 
 ## O painel lateral
 
@@ -190,12 +191,44 @@ aparece aqui, com **Copiar** e **Regenerar**. Veja [Webhooks de deploy](/guias/w
 Serviços Compose não têm webhook.
 
 **A lista de deploys**, com o **id**, a **duração**, o **início** e a **imagem** de cada um.
-Em cada linha:
+Cada deploy que chegou ao ar (**Live**) ganha o selo da sua **release** (**v1**, **v2**…), e o
+que está no ar agora traz também **atual**. Em cada linha:
 
 | Botão | Efeito |
 |---|---|
 | **≡** | abre o **build log** do deploy numa janela |
+| **Comparar** | mostra o que mudaria se você voltasse para esta release (só em releases) |
+| **Voltar para esta** | volta o serviço para esta release, depois de confirmar (só em releases que não são a atual) |
 | **✕** | remove o registro do deploy (só os que já terminaram) |
+
+#### Releases: comparar e voltar
+
+Uma **release** guarda o que rodou naquele deploy: a imagem, fixada pelo id ou pelo digest
+(não pela tag, que pode mudar depois), e uma cópia da configuração do serviço (variáveis,
+portas, comando, réplicas, healthcheck, domínios, vínculos) e das variáveis do projeto.
+
+**Comparar** abre a lista do que muda indo da configuração **atual** para a da release,
+separada em imagem, configuração do serviço, variáveis do serviço e variáveis do projeto. Um
+secret aparece como `secret:NOME`, nunca o valor.
+
+**Voltar para esta** pede confirmação e então:
+
+1. troca a configuração do serviço pela da release (o nome e o projeto continuam os de agora);
+2. faz um deploy com a imagem da release, **sem build**: o log diz *"Voltando para a v9"*;
+3. ao ficar no ar, o deploy vira uma release nova (por exemplo **v13**), marcada *"volta da v9"*.
+
+O que **não** volta:
+
+- **as variáveis do projeto**, que valem para todos os serviços do projeto. A comparação mostra
+  quais mudaram, para você decidir;
+- **o valor dos secrets**: o rollback usa o valor atual de cada um;
+- **as imagens de dentro de uma stack Compose**: voltar refaz o `compose up` com o conteúdo
+  daquela release, mas as tags do arquivo apontam para o que existir agora.
+
+A limpeza do Docker poupa as imagens das **3 releases mais novas** de cada serviço. Uma release
+mais antiga cuja imagem foi apagada mostra *"A imagem desta release foi apagada"*: dá para
+comparar, mas não para voltar. Uma imagem de registry fixada por digest volta mesmo se tiver
+sido apagada daqui, porque é baixada de novo.
 
 Vazia, mostra *"Nenhum deploy ainda."* A causa de um deploy que falhou está no build log:
 veja [O ciclo de vida de um deploy](/conceitos/ciclo-de-vida/#onde-está-a-causa).

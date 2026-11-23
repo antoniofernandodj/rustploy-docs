@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 152 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 155 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **152 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **155 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -312,6 +312,8 @@ Dry run of `DeployWithDependencies`: returns the order in which each service wou
 
 ### DeployRollback
 
+Legacy: only **looks up** the previous Live deploy (does not redeploy). The real rollback is `ReleaseRollback`.
+
 ```json
 {"DeployRollback":{"service_id":"svc_…"}}
 ```
@@ -321,6 +323,43 @@ Dry run of `DeployWithDependencies`: returns the order in which each service wou
 | `service_id` | `String` |
 
 **Used by:** only by the API and the MCP (no screen).
+
+### ReleaseList
+
+The service's releases (what ran in each deploy that went Live), newest first, with `is_current` and `image_status`. Response: `Releases`.
+
+```json
+{"ReleaseList":{"service_id":"svc_…"}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+
+### ReleaseDiff
+
+What changes going from `against_release_id` to `release_id`; without `against_release_id`, going from what is **declared now** to the release (what a `ReleaseRollback` would change). Secrets show as `secret:NAME`, never the value. Response: `ReleaseDiff`.
+
+```json
+{"ReleaseDiff":{"release_id":"…","against_release_id":null}}
+```
+
+| Field | Type |
+|---|---|
+| `release_id` | `String` |
+| `against_release_id` | `Option<String>` |
+
+### ReleaseRollback
+
+**Rolls back to a release**: writes its spec as the service's current spec (overwrites it; the previous one stays in the infra git history) and starts a deploy that uses its image, without a build. Project variables are **not** rolled back; secrets use their current value. Compose: reruns `compose up` with the release's content. Response: `Deployment`.
+
+```json
+{"ReleaseRollback":{"release_id":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `release_id` | `String` |
 
 ### DeployHistory
 
