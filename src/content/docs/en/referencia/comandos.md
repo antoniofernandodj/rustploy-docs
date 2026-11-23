@@ -336,6 +336,8 @@ The service's releases (what ran in each deploy that went Live), newest first, w
 |---|---|
 | `service_id` | `String` |
 
+**Used by:** GUI and web UI.
+
 ### ReleaseDiff
 
 What changes going from `against_release_id` to `release_id`; without `against_release_id`, going from what is **declared now** to the release (what a `ReleaseRollback` would change). Secrets show as `secret:NAME`, never the value. Response: `ReleaseDiff`.
@@ -349,6 +351,8 @@ What changes going from `against_release_id` to `release_id`; without `against_r
 | `release_id` | `String` |
 | `against_release_id` | `Option<String>` |
 
+**Used by:** GUI and web UI.
+
 ### ReleaseRollback
 
 **Rolls back to a release**: writes its spec as the service's current spec (overwrites it; the previous one stays in the infra git history) and starts a deploy that uses its image, without a build. Project variables are **not** rolled back; secrets use their current value. Compose: reruns `compose up` with the release's content. Response: `Deployment`.
@@ -360,6 +364,8 @@ What changes going from `against_release_id` to `release_id`; without `against_r
 | Field | Type |
 |---|---|
 | `release_id` | `String` |
+
+**Used by:** GUI and web UI.
 
 ### DeployHistory
 

@@ -336,6 +336,8 @@ As releases do serviço (o que rodou em cada deploy que chegou a Live), da mais 
 |---|---|
 | `service_id` | `String` |
 
+**Usado por:** GUI e web UI.
+
 ### ReleaseDiff
 
 O que muda indo de `against_release_id` para `release_id`; sem `against_release_id`, indo do que está **declarado agora** para a release (o que um `ReleaseRollback` mudaria). Secrets aparecem como `secret:NOME`, nunca o valor. Resposta: `ReleaseDiff`.
@@ -349,6 +351,8 @@ O que muda indo de `against_release_id` para `release_id`; sem `against_release_
 | `release_id` | `String` |
 | `against_release_id` | `Option<String>` |
 
+**Usado por:** GUI e web UI.
+
 ### ReleaseRollback
 
 **Voltar para uma release**: grava o spec dela como o spec atual do serviço (sobrescreve; o anterior fica no histórico do git de infra) e dispara um deploy que usa a imagem dela, sem build. As variáveis do projeto **não** voltam; os secrets valem com o valor atual. Compose: refaz o `compose up` com o conteúdo da release. Resposta: `Deployment`.
@@ -360,6 +364,8 @@ O que muda indo de `against_release_id` para `release_id`; sem `against_release_
 | Campo | Tipo |
 |---|---|
 | `release_id` | `String` |
+
+**Usado por:** GUI e web UI.
 
 ### DeployHistory
 
