@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 166 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 167 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **166 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **167 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -170,6 +170,20 @@ Compara o ambiente `project_id` com a origem: serviço a serviço, a release no 
 | `to_service_id` | `String` |
 
 **Usado por:** GUI e web UI.
+
+### EnvironmentDestroy
+
+**Destrói** o ambiente `project_id` (só um projeto que é ambiente; a origem é recusada): para e apaga todos os serviços, os jobs e as rotas dele, e o projeto. `confirm_name` tem de ser o nome do ambiente (`staging`). `delete_volumes` (padrão `false`) apaga também os volumes próprios dos serviços; sem ele os dados ficam no servidor como órfãos. Volumes emprestados (`external`) nunca saem por aqui. Não toca na origem. Resposta: `Ok`.
+
+```json
+{"EnvironmentDestroy":{"project_id":"prj_…","confirm_name":"…","delete_volumes":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `confirm_name` | `String` |
+| `delete_volumes` | `bool` |
 
 ### ProjectEnvSet
 

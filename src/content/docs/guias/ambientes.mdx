@@ -41,6 +41,13 @@ No projeto do ambiente, a aba **Ambientes** compara cada serviço com o irmão n
   que são diferentes por definição;
 - as **variáveis do projeto** que diferem e os serviços que só existem num dos lados.
 
+Dependências, vínculos e pré-deploy são comparados **pelo nome** (`db`, `migra`): a cópia aponta para
+os serviços dela, então os ids são outros, mas uma cópia fiel não aparece como diferente.
+
+Quando um serviço não tem botão, uma frase embaixo do nome diz por quê: é uma stack Compose, nenhum
+lado tem release no ar, ou só um lado tem. *"origem v5 · aqui —"* quer dizer que a origem roda a release
+5 e o ambiente ainda não teve deploy.
+
 ## Promover e trazer
 
 Quando as imagens são diferentes, cada serviço oferece:
@@ -58,6 +65,22 @@ diz de onde veio (*"promovida de loja (homologação) v14"*), e dá para voltar 
   ambiente.
 </Aside>
 
-## Apagar um ambiente
+### Serviço no ar desde antes das releases
 
-Um ambiente é um projeto comum: remova os serviços e depois o projeto. A origem não é afetada.
+As releases começaram na v0.1.91. Um serviço que está no ar desde antes e não teve deploy depois não
+tem release, e antes não dava para levá-lo. Agora a nota diz *"No ar desde antes das releases"* e o
+botão aparece: ao levar, o Rustploy registra a imagem do container que está rodando como a release
+dele e segue. A configuração gravada nessa release é a de agora.
+
+## Destruir um ambiente
+
+**Destruir ambiente** fica no topo da aba Ambientes de um ambiente, e **Destruir** em cada linha da
+lista de ambientes, na aba Ambientes da origem. Os dois abrem o mesmo painel:
+
+- digite o **nome do ambiente** (`staging`) para confirmar;
+- **Apagar também os dados**, desmarcado por padrão: desmarcado, os volumes dos serviços ficam no
+  servidor e aparecem como órfãos em [Volumes](/guias/dados-do-servico/#a-tela-volumes); marcado,
+  saem junto, sem volta. Volumes emprestados (`external`) nunca saem por aqui.
+
+Os serviços são parados e apagados (quem depende primeiro), depois os jobs, as rotas e o projeto. A
+origem não é tocada, e uma origem nunca pode ser destruída por esse botão.

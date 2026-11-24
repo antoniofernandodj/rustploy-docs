@@ -40,6 +40,13 @@ In the environment project, the **Environments** tab compares each service with 
   which differ by definition;
 - the **project variables** that differ and the services that exist on only one side.
 
+Dependencies, links and pre-deploy are compared **by name** (`db`, `migrate`): the copy points to its own
+services, so the ids differ, but a faithful copy does not show up as different.
+
+When a service has no button, a line under its name says why: it is a Compose stack, neither side has a
+live release, or only one side has. *"origin v5 · here —"* means the origin runs release 5 and the
+environment has not been deployed yet.
+
 ## Promote and bring
 
 When the images differ, each service offers:
@@ -56,6 +63,22 @@ release says where it came from (*"promovida de shop (staging) v14"*), and you c
   Compose services are not promoted: there is no single image to move. Deploy in each environment.
 </Aside>
 
-## Delete an environment
+### A service live since before releases
 
-An environment is an ordinary project: remove its services, then the project. The origin is not affected.
+Releases started in v0.1.91. A service live since before that, with no deploy afterwards, has no
+release, and could not be carried. Now the note says *"Live since before releases existed"* and the
+button shows: when you carry it, Rustploy records the image of the running container as its release and
+goes on. The configuration stored in that release is the current one.
+
+## Destroy an environment
+
+**Destroy environment** sits at the top of an environment's Environments tab, and **Destroy** on each row
+of the environment list, in the origin's Environments tab. Both open the same panel:
+
+- type the **environment's name** (`staging`) to confirm;
+- **Also delete the data**, unchecked by default: unchecked, the services' volumes stay on the server and
+  show up as orphans in [Volumes](/en/guias/dados-do-servico/#the-volumes-screen); checked, they go too,
+  for good. Borrowed (`external`) volumes never go this way.
+
+Services are stopped and deleted (dependents first), then the jobs, the routes and the project. The origin
+is not touched, and an origin can never be destroyed with this button.
