@@ -26,6 +26,10 @@ container subiu, não que o app responde. Configure um antes de usar em produç�
 
 O teste **Http** usa o IP do container na rede do projeto e a porta do serviço.
 
+No protocolo (um agente pelo `rpc`, ou o YAML de infra), o campo `healthcheck.kind` é
+`"None"`, `"Tcp"`, `"DockerNative"` ou `{"Http":{"path":"/health","expected_status":200}}`,
+com os dois campos do `Http` obrigatórios.
+
 ## Os tempos
 
 | Campo | Significado |
@@ -37,7 +41,8 @@ O teste **Http** usa o IP do container na rede do projeto e a porta do serviço.
 
 O deploy espera o **START PERIOD**, tenta até **RETRIES** vezes e, se nenhuma
 passar, falha com `healthcheck failed after N retries`. Se o container parar no
-meio do teste, o deploy aborta na hora.
+meio do teste (ou antes dele começar), o deploy aborta na hora e as últimas linhas
+do container entram no log do deploy.
 
 Um app que leva 40 s para subir precisa que `START PERIOD + INTERVAL × RETRIES`
 cubra esses 40 s com folga.

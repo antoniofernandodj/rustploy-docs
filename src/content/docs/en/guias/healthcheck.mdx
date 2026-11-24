@@ -24,6 +24,9 @@ not that the app responds. Configure one before using it in production.
 
 The **Http** test uses the container's IP on the project network and the service's port.
 
+In the protocol (an agent through `rpc`, or the infra YAML), the `healthcheck.kind` field is `"None"`, `"Tcp"`,
+`"DockerNative"` or `{"Http":{"path":"/health","expected_status":200}}`, with both `Http` fields required.
+
 ## The timings
 
 | Field | Meaning |
@@ -34,8 +37,8 @@ The **Http** test uses the container's IP on the project network and the service
 | **RETRIES** | maximum number of attempts |
 
 The deploy waits the **START PERIOD**, tries up to **RETRIES** times and, if none passes, fails with
-`healthcheck failed after N retries`. If the container stops in the middle of the test, the deploy aborts
-immediately.
+`healthcheck failed after N retries`. If the container stops in the middle of the test (or before it starts), the deploy
+aborts immediately and the container's last lines go into the deploy log.
 
 An app that takes 40 s to start needs `START PERIOD + INTERVAL × RETRIES` to cover those 40 s with room to spare.
 

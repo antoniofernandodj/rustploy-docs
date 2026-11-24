@@ -1329,7 +1329,7 @@ A chave **pública** de recuperação deste servidor (`[secrets] recovery_recipi
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
-| `trigger_service_id` | `String` |
+| `trigger_service_id` | `String`<br />`""` = sem serviço gatilho. `null` e chave ausente valem o mesmo (o job guarda `None` de qualquer jeito, e o `JobList` devolve `null`: o agente reenviava o que leu). |
 | `name` | `String` |
 | `compose` | `String` |
 | `git_source` | `Option<JobGitSource>`<br />`Some` = clones this repo on every run instead of using `compose` (the client sends `compose: ""` in that case). `#[serde(default)]`: clients only include this key in Git mode (a Luau/JS table constructor with a Lua/JS `nil`/`undefined` value does not produce the key). |

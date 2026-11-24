@@ -74,6 +74,9 @@ variant without fields is the bare string.
 { "name": "rpc", "arguments": { "command": "ProjectList" } }
 ```
 
+The `command` may also be sent as **JSON text** (`"\"ProjectList\""` or `"{\"ServiceGet\":{…}}"`): some MCP
+clients deliver the argument that way, and the server decodes the text before interpreting it.
+
 :::caution
 `ServiceUpdate` **replaces** the whole service, it is not a patch. Do a `ServiceGet`, change the field and send
 back the complete spec; an omitted field is a deleted field.

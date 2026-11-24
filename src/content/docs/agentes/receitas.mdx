@@ -49,6 +49,37 @@ O agente usa `rpc` com `WizardCreate` (`kind` = `broker` / `storage`, `password`
 guarda cifrada**; a resposta traz só a referência a um secret, nunca o valor. Para conectar uma aplicação, o agente
 referencia o secret numa variável (`<secret:NOME>`) em vez de copiar a senha.
 
+Só `kind`, `id`, `project_id` e `name` precisam ir; o resto recebe os padrões da tela (usuário do motor, banco
+`app`, imagem do catálogo):
+
+```json
+{ "WizardCreate": { "kind": "database", "id": "postgres", "project_id": "prj_…", "name": "db" } }
+```
+
+## Ligar a aplicação ao banco e ao cache por vínculo
+
+> A API usa o `db` e o `cache` do projeto; entregue `DATABASE_URL` e `REDIS_URL` a ela.
+
+O agente edita os `links` da API (`ServiceGet`, muda o campo, `ServiceUpdate` com o spec inteiro). Cada vínculo entrega a
+URL do outro serviço, com a senha certa, sem ninguém digitá-la; `env_names` escolhe o nome da variável:
+
+```json
+"links": [
+  { "service_id": "svc_db…",    "env_names": { "HOST": "", "PORT": "", "URL": "DATABASE_URL" } },
+  { "service_id": "svc_cache…", "env_names": { "HOST": "", "PORT": "", "URL": "REDIS_URL" } }
+]
+```
+
+## Rodar as migrações antes de cada deploy
+
+> Crie um job de pré-deploy que rode as migrações da API, a partir do próprio repositório.
+
+O agente cria um job `git_source` (`JobCreate` com `compose_path` apontando para um Compose com `build:` no repositório
+da aplicação) com `trigger_service_id` = a API, para o job herdar os vínculos dela (o `DATABASE_URL`), e põe o id do job
+em `pre_deploy_job_ids` da API. Se a migração falhar, o deploy para antes de trocar o container. Se o `docker compose`
+não sair sozinho depois que o container da migração terminou (já visto com Podman), o daemon o encerra 30 s depois e usa
+o código de saída do container.
+
 ## Alinhar os nomes das variáveis entre serviços
 
 > O broker usa `RABBITMQ_DEFAULT_PASS` e o meu código lê `RABBITMQ_PASS`. Ajuste sem eu precisar colar a senha.

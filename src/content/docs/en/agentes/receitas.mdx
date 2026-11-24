@@ -48,6 +48,37 @@ The agent uses `rpc` with `WizardCreate` (`kind` = `broker` / `storage`, empty `
 password and stores it encrypted**; the response carries only a reference to a secret, never the value. To connect an
 application, the agent references the secret in a variable (`<secret:NAME>`) instead of copying the password.
 
+Only `kind`, `id`, `project_id` and `name` are required; the rest gets the screen's defaults (the engine's user, an
+`app` database, the catalog image):
+
+```json
+{ "WizardCreate": { "kind": "database", "id": "postgres", "project_id": "prj_…", "name": "db" } }
+```
+
+## Connect the application to the database and the cache with links
+
+> The API uses the project's `db` and `cache`; give it `DATABASE_URL` and `REDIS_URL`.
+
+The agent edits the API's `links` (`ServiceGet`, change the field, `ServiceUpdate` with the whole spec). Each link
+delivers the other service's URL, with the right password, without anyone typing it; `env_names` picks the variable name:
+
+```json
+"links": [
+  { "service_id": "svc_db…",    "env_names": { "HOST": "", "PORT": "", "URL": "DATABASE_URL" } },
+  { "service_id": "svc_cache…", "env_names": { "HOST": "", "PORT": "", "URL": "REDIS_URL" } }
+]
+```
+
+## Run the migrations before every deploy
+
+> Create a pre-deploy job that runs the API's migrations, from the API's own repository.
+
+The agent creates a `git_source` job (`JobCreate` with `compose_path` pointing to a Compose file with `build:` in the
+application's repository) with `trigger_service_id` = the API, so the job inherits its links (the `DATABASE_URL`), and
+puts the job's id in the API's `pre_deploy_job_ids`. If the migration fails, the deploy stops before swapping the
+container. If `docker compose` does not exit on its own after the migration container finished (seen with Podman), the
+daemon stops it 30 s later and uses the container's exit code.
+
 ## Align variable names across services
 
 > The broker uses `RABBITMQ_DEFAULT_PASS` and my code reads `RABBITMQ_PASS`. Fix it without me pasting the password.

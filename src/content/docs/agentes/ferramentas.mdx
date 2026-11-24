@@ -75,6 +75,10 @@ variante com campos é um objeto de uma chave, variante sem campos é a string n
 { "name": "rpc", "arguments": { "command": "ProjectList" } }
 ```
 
+O `command` também pode ir como **texto JSON** (`"\"ProjectList\""` ou
+`"{\"ServiceGet\":{…}}"`): alguns clientes MCP entregam o argumento assim, e o
+servidor decodifica o texto antes de interpretar.
+
 
 :::caution
 `ServiceUpdate` **substitui** o serviço inteiro, não é um patch. Faça `ServiceGet`,
