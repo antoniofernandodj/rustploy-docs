@@ -267,6 +267,8 @@ Monta um volume num serviço Application: `host_path` é o nome de um volume (um
 | `service_id` | `String` |
 | `volume` | `VolumeMount` |
 
+**Usado por:** GUI e web UI.
+
 ### ServiceVolumeDetach
 
 Tira a montagem em `container_path` (os dados ficam no servidor). Vale no próximo deploy. Resposta: `Service`.
@@ -279,6 +281,8 @@ Tira a montagem em `container_path` (os dados ficam no servidor). Vale no próxi
 |---|---|
 | `service_id` | `String` |
 | `container_path` | `String` |
+
+**Usado por:** GUI e web UI.
 
 ### ServiceList
 

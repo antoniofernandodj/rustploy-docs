@@ -267,6 +267,8 @@ Mounts a volume in an Application service: `host_path` is a volume name (an orph
 | `service_id` | `String` |
 | `volume` | `VolumeMount` |
 
+**Used by:** GUI and web UI.
+
 ### ServiceVolumeDetach
 
 Removes the mount at `container_path` (the data stays on the server). Applies on the next deploy. Response: `Service`.
@@ -279,6 +281,8 @@ Removes the mount at `container_path` (the data stays on the server). Applies on
 |---|---|
 | `service_id` | `String` |
 | `container_path` | `String` |
+
+**Used by:** GUI and web UI.
 
 ### ServiceList
 
