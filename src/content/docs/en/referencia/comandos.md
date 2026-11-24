@@ -185,6 +185,8 @@ Compares environment `project_id` with its origin: service by service, the relea
 | `confirm_name` | `String` |
 | `delete_volumes` | `bool` |
 
+**Used by:** GUI and web UI.
+
 ### ProjectEnvSet
 
 ```json

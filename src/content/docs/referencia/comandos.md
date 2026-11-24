@@ -185,6 +185,8 @@ Compara o ambiente `project_id` com a origem: serviço a serviço, a release no 
 | `confirm_name` | `String` |
 | `delete_volumes` | `bool` |
 
+**Usado por:** GUI e web UI.
+
 ### ProjectEnvSet
 
 ```json
