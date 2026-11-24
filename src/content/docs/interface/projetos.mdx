@@ -95,6 +95,11 @@ healthcheck e os logs. Os botões do cartão:
 
 O diálogo diz *"O serviço será parado e removido. Essa ação não pode ser desfeita."* **Cancelar** não faz nada; **Remover** para o container e apaga o serviço e o histórico dele.
 
+Em seguida vem uma segunda pergunta: *"Apagar também os volumes deste serviço (os dados)?"*.
+**Apagar os dados** apaga os volumes nomeados dele, sem volta. **Manter os volumes** deixa os
+dados no servidor: eles aparecem em **Runtime → Volumes** como **órfãos**, com o nome do serviço e
+do projeto de onde vieram (veja [Volumes](/interface/docker-e-registry/#volumes)).
+
 ## Variáveis do projeto
 
 <Shot

@@ -128,6 +128,13 @@ export const sections = [
         },
       },
       {
+        q: { pt: 'Dá para ter homologação no mesmo servidor?', en: 'Can I have staging on the same server?' },
+        a: {
+          pt: 'Sim, com um **ambiente**: na aba **Ambientes** do projeto, **Criar ambiente** faz uma cópia com rede, variáveis e nomes de container próprios, sem domínios, portas nem acesso aos bancos da produção. Depois, **Promover para a origem** leva para a produção a mesma imagem testada, sem refazer o build. Veja [Ambientes](/guias/ambientes/).',
+          en: 'Yes, with an **environment**: on the project\'s **Environments** tab, **Create environment** makes a copy with its own network, variables and container names, without domains, ports or access to production databases. Then **Promote to the origin** takes the same tested image to production, without rebuilding. See [Environments](/en/guias/ambientes/).',
+        },
+      },
+      {
         q: { pt: 'O deploy é realmente sem downtime?', en: 'Is the deploy really zero-downtime?' },
         a: {
           pt: 'Sim, desde que o healthcheck esteja configurado. O container novo sobe ao lado do antigo, passa no healthcheck, e só então o proxy troca a rota de uma vez. Um serviço novo nasce com healthcheck **None**, e nesse caso o Rustploy só confere que o container subiu, não que o app responde. Configure um healthcheck HTTP. Veja [Healthcheck](/guias/healthcheck/).',

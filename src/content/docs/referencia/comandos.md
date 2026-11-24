@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 155 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 162 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **155 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **162 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -40,6 +40,7 @@ Uma falha vem como `{"Err":{"code":"…","message":"…"}}`. Os exemplos abaixo 
 - [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
 - [Docker](#docker)
 - [Ingress](#ingress)
+- [Ingress proxy](#ingress-proxy)
 - [Backup de variáveis](#backup-de-variaveis)
 - [Fila de deploys](#fila-de-deploys)
 - [Infraestrutura](#infraestrutura)
@@ -110,6 +111,56 @@ Define a ordem de exibição dos serviços do projeto: `service_ids` na ordem de
 | `service_ids` | `Vec<String>` |
 
 **Usado por:** GUI e web UI.
+
+### EnvironmentCreate
+
+Cria um **ambiente** (homologação, preview…) a partir do projeto `project_id`: um projeto novo, `<projeto> (<name>)`, com cópias dos serviços, jobs, variáveis e secrets, sem domínios, portas do host, push-to-deploy, backup nem acesso aos bancos da origem. Jobs agendados nascem desligados. Nada é implantado. Resposta: `Project`.
+
+```json
+{"EnvironmentCreate":{"project_id":"prj_…","name":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+| `name` | `String` |
+
+### EnvironmentList
+
+Os ambientes do projeto de origem `project_id`. Resposta: `Environments`.
+
+```json
+{"EnvironmentList":{"project_id":"prj_…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+
+### EnvironmentCompare
+
+Compara o ambiente `project_id` com a origem: serviço a serviço, a release no ar de cada lado e o que difere na configuração (sem domínios nem portas). Resposta: `EnvironmentComparison`.
+
+```json
+{"EnvironmentCompare":{"project_id":"prj_…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `project_id` | `String` |
+
+### EnvironmentPromote
+
+**Promove** a release no ar de `from_service_id` para o serviço irmão `to_service_id` (num ambiente e na origem, nos dois sentidos): deploy da mesma imagem, sem build. A configuração do destino **não muda**. Resposta: `Deployment`.
+
+```json
+{"EnvironmentPromote":{"from_service_id":"…","to_service_id":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `from_service_id` | `String` |
+| `to_service_id` | `String` |
 
 ### ProjectEnvSet
 
@@ -182,13 +233,16 @@ O valor é um `ServiceSpec`.
 
 ### ServiceDelete
 
+Apaga o serviço. `delete_volumes`: apaga também os volumes nomeados dele (os **dados**); sem isso eles ficam no servidor e aparecem como **órfãos** na lista de volumes (`DockerVolumes`), com o nome do serviço de onde vieram.
+
 ```json
-{"ServiceDelete":{"id":"svc_…"}}
+{"ServiceDelete":{"id":"svc_…","delete_volumes":false}}
 ```
 
 | Campo | Tipo |
 |---|---|
 | `id` | `String` |
+| `delete_volumes` | `bool` |
 
 **Usado por:** GUI e web UI.
 
@@ -1704,6 +1758,40 @@ Recalcula as rotas a partir dos containers que realmente existem no Docker, sem 
 | `service_id` | `Option<String>` |
 
 **Usado por:** só pela API e pelo MCP (nenhuma tela).
+
+## Ingress proxy
+
+### RouteList
+
+As rotas próprias (domínio → caminhos de serviços, redirect, senha), de todos os projetos. A senha nunca volta (`basic_auth.password` vem `None`). Resposta: `Routes`.
+
+```json
+"RouteList"
+```
+
+### RouteSave
+
+Cria (`id` vazio) ou atualiza uma rota. `basic_auth.password`: a senha em claro, ou `None` para manter a gravada. Um domínio não pode estar numa rota e num serviço ao mesmo tempo. Resposta: `Route`.
+
+```json
+{"RouteSave":{"route":"{…}"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `route` | `Route` |
+
+### RouteDelete
+
+Apaga uma rota (o domínio passa a responder 404). Resposta: `Ok`.
+
+```json
+{"RouteDelete":{"route_id":"…"}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `route_id` | `String` |
 
 ## Backup de variáveis
 

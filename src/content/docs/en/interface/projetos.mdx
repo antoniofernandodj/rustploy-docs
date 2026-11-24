@@ -91,6 +91,11 @@ applies to every client. A service created later goes to the end.
 
 The dialog says *"The service will be stopped and removed; this action cannot be undone"*. **Cancel** does nothing; **Remove** stops the container and deletes the service and its history.
 
+A second question follows: *"Also delete this service's volumes (the data)?"*. **Delete the data** deletes
+its named volumes, for good. **Keep the volumes** leaves the data on the server: they show up under **Runtime →
+Volumes** as **orphans**, with the name of the service and project they came from (see
+[Volumes](/en/interface/docker-e-registry/#volumes)).
+
 ## Project variables
 
 <Shot

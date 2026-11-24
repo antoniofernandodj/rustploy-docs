@@ -1,6 +1,14 @@
 // Traduções para o inglês das docs vindas dos comentários em pt-BR de protocol.rs.
 // Chave ausente = o texto original (que já pode estar em inglês) é mantido.
 export const DOCS = {
+  RouteList: 'The custom routes (domain → service paths, redirect, password), of every project. The password never comes back (`basic_auth.password` is `None`). Response: `Routes`.',
+  RouteSave: 'Creates (empty `id`) or updates a route. `basic_auth.password`: the plain password, or `None` to keep the stored one. A domain cannot be in a route and in a service at the same time. Response: `Route`.',
+  RouteDelete: 'Deletes a route (the domain answers 404). Response: `Ok`.',
+  ServiceDelete: 'Deletes the service. `delete_volumes`: also deletes its named volumes (the **data**); without it they stay on the server and show up as **orphans** in the volume list (`DockerVolumes`), with the name of the service they came from.',
+  EnvironmentCreate: 'Creates an **environment** (staging, preview…) from project `project_id`: a new project, `<project> (<name>)`, with copies of the services, jobs, variables and secrets, without domains, host ports, push-to-deploy, backups or access to the origin\'s databases. Scheduled jobs start disabled. Nothing is deployed. Response: `Project`.',
+  EnvironmentList: 'The environments of origin project `project_id`. Response: `Environments`.',
+  EnvironmentCompare: 'Compares environment `project_id` with its origin: service by service, the release live on each side and what differs in the configuration (without domains or ports). Response: `EnvironmentComparison`.',
+  EnvironmentPromote: '**Promotes** the live release of `from_service_id` to its sibling `to_service_id` (in an environment and in the origin, both ways): deploys the same image, without a build. The target\'s configuration **does not change**. Response: `Deployment`.',
   DeployRollback: 'Legacy: only **looks up** the previous Live deploy (does not redeploy). The real rollback is `ReleaseRollback`.',
   ReleaseList: 'The service\'s releases (what ran in each deploy that went Live), newest first, with `is_current` and `image_status`. Response: `Releases`.',
   ReleaseDiff: 'What changes going from `against_release_id` to `release_id`; without `against_release_id`, going from what is **declared now** to the release (what a `ReleaseRollback` would change). Secrets show as `secret:NAME`, never the value. Response: `ReleaseDiff`.',

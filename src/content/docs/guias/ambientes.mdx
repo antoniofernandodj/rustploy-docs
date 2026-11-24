@@ -1,0 +1,63 @@
+---
+title: Ambientes (homologação, preview)
+description: Como criar uma cópia de um projeto do Rustploy para homologação, comparar com a origem e levar a imagem testada para produção sem refazer o build.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Um **ambiente** é uma cópia de um projeto: os mesmos serviços, jobs, variáveis e secrets, com
+**rede, nomes de container e variáveis próprios**. Serve para ter uma homologação (ou um preview)
+ao lado da produção, no mesmo servidor, e levar de um para o outro **exatamente a imagem que foi
+testada**, sem refazer o build.
+
+## Criar um ambiente
+
+Abra o projeto de origem, aba **Ambientes**, digite o nome (por exemplo `homologação`) e clique em
+**Criar ambiente**. Nasce o projeto `<projeto> (homologação)`, que aparece na lista de projetos logo
+depois da origem, com o selo do ambiente.
+
+O que vem junto: serviços (com dependências, vínculos e pré-deploy reapontados para as cópias), jobs,
+variáveis e secrets do projeto e de cada serviço, e o zip de serviços de fonte zip.
+
+O que **não** vem, de propósito:
+
+| Fica de fora | Por quê |
+|---|---|
+| Domínios e portas do host | são únicos no servidor; configure os do ambiente na aba **Domínios** |
+| Push-to-deploy do registry | cada push redeployaria os dois |
+| Política de backup | o backup é decisão de cada ambiente |
+| Bancos gerenciados e acesso a bancos compartilhados (e os vínculos para eles) | o ambiente não deve alcançar os dados da produção |
+| Jobs agendados ligados | eles nascem **desligados**, para não rodar duas vezes o que roda na origem |
+
+Nada é implantado: os serviços nascem parados, como num projeto novo. Ajuste as variáveis do
+ambiente (outro banco, outra chave de API) e faça o deploy.
+
+## Comparar com a origem
+
+No projeto do ambiente, a aba **Ambientes** compara cada serviço com o irmão na origem:
+
+- a **release** no ar de cada lado (`origem v12 · aqui v14`) e se é a **mesma imagem**;
+- o que difere na **configuração** do serviço (variáveis, réplicas, comando…), sem domínios nem portas,
+  que são diferentes por definição;
+- as **variáveis do projeto** que diferem e os serviços que só existem num dos lados.
+
+## Promover e trazer
+
+Quando as imagens são diferentes, cada serviço oferece:
+
+- **Promover para a origem**: a produção faz o deploy da imagem que está no ar na homologação;
+- **Trazer da origem**: a homologação volta a rodar o que está em produção.
+
+As duas pedem confirmação e fazem um deploy **sem build**, com a imagem já testada. A **configuração
+do destino não muda**: a produção continua com as variáveis, réplicas e domínios dela. A release nova
+diz de onde veio (*"promovida de loja (homologação) v14"*), e dá para voltar com
+[Voltar para esta](/interface/servico/#releases-comparar-e-voltar).
+
+<Aside type="note" title="Compose">
+  Serviços Compose não são promovidos: não há uma imagem só para levar. Faça o deploy em cada
+  ambiente.
+</Aside>
+
+## Apagar um ambiente
+
+Um ambiente é um projeto comum: remova os serviços e depois o projeto. A origem não é afetada.

@@ -1,0 +1,61 @@
+---
+title: Environments (staging, preview)
+description: How to create a copy of a Rustploy project for staging, compare it with the origin and take the tested image to production without rebuilding.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+An **environment** is a copy of a project: the same services, jobs, variables and secrets, with **its own
+network, container names and variables**. Use it to run staging (or a preview) next to production on the
+same server, and to move **exactly the image that was tested** from one to the other, without rebuilding.
+
+## Create an environment
+
+Open the origin project, **Environments** tab, type the name (for example `staging`) and click **Create
+environment**. The project `<project> (staging)` is created; it shows up in the project list right after
+the origin, with the environment badge.
+
+What comes along: services (with dependencies, links and pre-deploy checks pointed at the copies), jobs,
+project and service variables and secrets, and the zip of zip-sourced services.
+
+What does **not** come along, on purpose:
+
+| Left out | Why |
+|---|---|
+| Domains and host ports | they are unique on the server; set the environment's on the **Domains** tab |
+| Registry push-to-deploy | every push would redeploy both |
+| Backup policy | backups are each environment's decision |
+| Managed databases and shared database access (and the links to them) | the environment must not reach production data |
+| Enabled scheduled jobs | they start **disabled**, so what runs in the origin does not run twice |
+
+Nothing is deployed: the services start stopped, as in a new project. Adjust the environment's variables
+(another database, another API key) and deploy.
+
+## Compare with the origin
+
+In the environment project, the **Environments** tab compares each service with its sibling in the origin:
+
+- the **release** live on each side (`origin v12 · here v14`) and whether it is the **same image**;
+- what differs in the service **configuration** (variables, replicas, command…), without domains or ports,
+  which differ by definition;
+- the **project variables** that differ and the services that exist on only one side.
+
+## Promote and bring
+
+When the images differ, each service offers:
+
+- **Promote to the origin**: production deploys the image live in staging;
+- **Bring from the origin**: staging goes back to running what is in production.
+
+Both ask for confirmation and deploy **without a build**, with the image that was already tested. The
+**target's configuration does not change**: production keeps its variables, replicas and domains. The new
+release says where it came from (*"promovida de shop (staging) v14"*), and you can go back with
+[Roll back to this](/en/interface/servico/#releases-compare-and-roll-back).
+
+<Aside type="note" title="Compose">
+  Compose services are not promoted: there is no single image to move. Deploy in each environment.
+</Aside>
+
+## Delete an environment
+
+An environment is an ordinary project: remove its services, then the project. The origin is not affected.

@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 155 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 162 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **155 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **162 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -40,6 +40,7 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 - [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
 - [Docker](#docker)
 - [Ingress](#ingress)
+- [Ingress proxy](#ingress-proxy)
 - [Variables backup](#variables-backup)
 - [Deploy queue](#deploy-queue)
 - [Infrastructure](#infrastructure)
@@ -110,6 +111,56 @@ Sets the display order of a project's services: `service_ids` in the desired ord
 | `service_ids` | `Vec<String>` |
 
 **Used by:** GUI and web UI.
+
+### EnvironmentCreate
+
+Creates an **environment** (staging, preview…) from project `project_id`: a new project, `<project> (<name>)`, with copies of the services, jobs, variables and secrets, without domains, host ports, push-to-deploy, backups or access to the origin's databases. Scheduled jobs start disabled. Nothing is deployed. Response: `Project`.
+
+```json
+{"EnvironmentCreate":{"project_id":"prj_…","name":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+| `name` | `String` |
+
+### EnvironmentList
+
+The environments of origin project `project_id`. Response: `Environments`.
+
+```json
+{"EnvironmentList":{"project_id":"prj_…"}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+
+### EnvironmentCompare
+
+Compares environment `project_id` with its origin: service by service, the release live on each side and what differs in the configuration (without domains or ports). Response: `EnvironmentComparison`.
+
+```json
+{"EnvironmentCompare":{"project_id":"prj_…"}}
+```
+
+| Field | Type |
+|---|---|
+| `project_id` | `String` |
+
+### EnvironmentPromote
+
+**Promotes** the live release of `from_service_id` to its sibling `to_service_id` (in an environment and in the origin, both ways): deploys the same image, without a build. The target's configuration **does not change**. Response: `Deployment`.
+
+```json
+{"EnvironmentPromote":{"from_service_id":"…","to_service_id":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `from_service_id` | `String` |
+| `to_service_id` | `String` |
 
 ### ProjectEnvSet
 
@@ -182,13 +233,16 @@ The value is a `ServiceSpec`.
 
 ### ServiceDelete
 
+Deletes the service. `delete_volumes`: also deletes its named volumes (the **data**); without it they stay on the server and show up as **orphans** in the volume list (`DockerVolumes`), with the name of the service they came from.
+
 ```json
-{"ServiceDelete":{"id":"svc_…"}}
+{"ServiceDelete":{"id":"svc_…","delete_volumes":false}}
 ```
 
 | Field | Type |
 |---|---|
 | `id` | `String` |
+| `delete_volumes` | `bool` |
 
 **Used by:** GUI and web UI.
 
@@ -1704,6 +1758,40 @@ Recomputes the routes from the containers that actually exist in Docker, without
 | `service_id` | `Option<String>` |
 
 **Used by:** only by the API and the MCP (no screen).
+
+## Ingress proxy
+
+### RouteList
+
+The custom routes (domain → service paths, redirect, password), of every project. The password never comes back (`basic_auth.password` is `None`). Response: `Routes`.
+
+```json
+"RouteList"
+```
+
+### RouteSave
+
+Creates (empty `id`) or updates a route. `basic_auth.password`: the plain password, or `None` to keep the stored one. A domain cannot be in a route and in a service at the same time. Response: `Route`.
+
+```json
+{"RouteSave":{"route":"{…}"}}
+```
+
+| Field | Type |
+|---|---|
+| `route` | `Route` |
+
+### RouteDelete
+
+Deletes a route (the domain answers 404). Response: `Ok`.
+
+```json
+{"RouteDelete":{"route_id":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `route_id` | `String` |
 
 ## Variables backup
 

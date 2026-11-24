@@ -1,0 +1,54 @@
+---
+title: Routes (paths, redirects and passwords)
+description: How to serve one domain from several Rustploy services split by path, redirect a domain to another, and ask for a user and password, without redeploying.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A domain normally lives **inside the service** ([Domains](/en/guias/dominios-e-tls/) tab). A **route** is the
+domain **outside** the service, on the **Ingress** screen, and covers three cases a service domain cannot:
+
+| Case | Example |
+|---|---|
+| One domain served by **several services**, by path | `app.com/` → front, `app.com/api` → api |
+| A domain that only **redirects** | `www.app.com` → `https://app.com` |
+| **User and password** in front of a service | `admin.app.com` asks for a login before reaching the panel |
+
+A route takes effect **immediately**, without a redeploy, and survives a server restart (it lives in the infra
+state, with everything else).
+
+## Create a route
+
+On the **Ingress** screen, **+ New route**:
+
+1. **Project** and **Domain** (`app.com`, without `https://`). Check **TLS** to request the certificate.
+2. **Forwards to services**: one line per path, with the service, the port (empty = the service's default
+   port) and **strip prefix** (the service receives `/users` instead of `/api/users`). The **longest matching
+   path** wins: with `/` and `/api`, `/api/x` goes to the second and the rest to the first. A path no line
+   serves answers 404.
+3. Or **Redirects**: the target URL. The requested path goes along (`www.app.com/x` → `https://app.com/x`).
+   **Permanent** answers 301; unchecked, 302.
+4. **Ask for user and password** (optional). The password is stored encrypted on the server and never comes
+   back to the screen: when editing, leave the field empty to keep the stored one.
+
+A route's services belong to the same project, and the route takes its target from the live containers: a
+stopped service answers 502, like a service domain.
+
+<Aside type="caution" title="One domain, one place">
+  A domain cannot be in a route and in a service at the same time. To move a service's domain to a route,
+  remove it from the service's **Domains** tab first; the opposite is refused too.
+</Aside>
+
+## HTTP and HTTPS
+
+With **TLS**, an HTTP request goes to HTTPS, as with service domains. A route **without TLS** is served over
+plain HTTP.
+
+## See and diagnose
+
+The Ingress table and the [MCP](/en/agentes/ferramentas/) `ingress_routes` tool show one line per path
+(`app.com/api`) with the resolved target. An empty target = the service of that path is not live.
+
+## From an agent
+
+`RouteList`, `RouteSave` and `RouteDelete` in the [command reference](/en/referencia/comandos/).

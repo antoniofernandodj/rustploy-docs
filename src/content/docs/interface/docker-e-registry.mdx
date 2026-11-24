@@ -17,12 +17,25 @@ que é do Rustploy. No topo, quatro contadores: **CONTAINERS**, **IMAGENS**,
 |---|---|
 | **Containers** | todos, rodando e parados |
 | **Images** | as imagens e se estão em uso |
-| **Volumes** | os volumes do Docker (o Rustploy só usa *bind mounts*, então são de fora dele) |
+| **Volumes** | os volumes do Docker, com o **dono** de cada um (veja abaixo) |
 | **Networks** | as redes, com as dos projetos identificadas |
 | **Registry** | o registry Docker embutido |
 
 Cada lista tem a ação de remover. O Docker **recusa** remover o que está em uso. Para
 limpar de uma vez, veja [Limpeza do Docker](/guias/limpeza-docker/).
+
+## Volumes
+
+A coluna **DONO** diz de quem é cada volume:
+
+- **o serviço e o projeto**: o volume é de um serviço que existe (pela etiqueta que o Rustploy põe ou pela
+  stack Compose do serviço). *"· backup"* = o serviço tem backup automático para o S3 ligado;
+- **órfão: db (loja), 24/11/2026**: o serviço foi apagado mantendo os volumes, e este ficou. Os dados
+  continuam aqui até você remover o volume;
+- **—**: não é de nenhum serviço que o Rustploy conheça (criado à mão, por um job ou por outra ferramenta).
+
+**Só órfãos** filtra a lista. **Remover** só aparece em volume sem uso e pede confirmação: os dados
+saem, sem volta.
 
 ## Registry
 

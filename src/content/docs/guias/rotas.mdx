@@ -1,0 +1,56 @@
+---
+title: Rotas (caminhos, redirect e senha)
+description: Como servir um domínio por vários serviços do Rustploy separados por caminho, redirecionar um domínio para outro e pedir usuário e senha, sem redeploy.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Um domínio normalmente fica **dentro do serviço** (aba [Domínios](/guias/dominios-e-tls/)). Uma
+**rota** é o domínio **fora** do serviço, na tela **Ingress**, e resolve três casos que o domínio do
+serviço não resolve:
+
+| Caso | Exemplo |
+|---|---|
+| Um domínio servido por **vários serviços**, por caminho | `app.com/` → front, `app.com/api` → api |
+| Um domínio que só **redireciona** | `www.app.com` → `https://app.com` |
+| **Usuário e senha** na frente de um serviço | `admin.app.com` pede login antes de chegar ao painel |
+
+Uma rota vale **na hora**, sem redeploy, e sobrevive a reiniciar o servidor (fica no estado da infra,
+com o resto).
+
+## Criar uma rota
+
+Na tela **Ingress**, **+ Nova rota**:
+
+1. **Projeto** e **Domínio** (`app.com`, sem `https://`). Marque **TLS** para pedir o certificado.
+2. **Encaminha para serviços**: uma linha por caminho, com o serviço, a porta (vazia = a porta padrão
+   do serviço) e **tirar prefixo** (o serviço recebe `/users` em vez de `/api/users`). Vence o
+   **caminho mais longo** que casa: com `/` e `/api`, `/api/x` vai para o segundo e o resto para o
+   primeiro. Um caminho que nenhuma linha atende responde 404.
+3. Ou **Redireciona**: a URL de destino. O caminho pedido vai junto (`www.app.com/x` →
+   `https://app.com/x`). **Permanente** responde 301; desmarcado, 302.
+4. **Pedir usuário e senha** (opcional). A senha fica cifrada no servidor e nunca volta para a tela:
+   ao editar, deixe o campo vazio para manter a que está gravada.
+
+Os serviços de uma rota são do mesmo projeto, e a rota tira o destino dos containers no ar: um serviço
+parado responde 502, como um domínio de serviço.
+
+<Aside type="caution" title="Um domínio, um lugar">
+  Um domínio não pode estar numa rota e num serviço ao mesmo tempo. Para passar o domínio de um
+  serviço para uma rota, tire-o da aba **Domínios** do serviço antes; o contrário também é recusado.
+</Aside>
+
+## HTTP e HTTPS
+
+Com **TLS**, uma requisição em HTTP vai para HTTPS, como nos domínios de serviço. Uma rota **sem
+TLS** é servida em HTTP mesmo.
+
+## Ver e diagnosticar
+
+A tabela do Ingress e a ferramenta `ingress_routes` do [MCP](/agentes/ferramentas/) mostram uma linha
+por caminho (`app.com/api`) com o destino resolvido. Destino vazio = o serviço daquele caminho não
+está no ar.
+
+## Pelo agente
+
+`RouteList`, `RouteSave` e `RouteDelete` na [referência de comandos](/referencia/comandos/).
