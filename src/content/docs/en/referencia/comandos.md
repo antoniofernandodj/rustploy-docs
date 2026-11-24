@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 164 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 166 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **164 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **166 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -39,6 +39,7 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 - [Jobs](#jobs)
 - [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
 - [Docker](#docker)
+- [Remoção INDIVIDUAL de um recurso Docker (o par por-item dos `Prune*`)](#remocao-individual-de-um-recurso-docker-o-par-por-item-dos-prune)
 - [Ingress](#ingress)
 - [Ingress proxy](#ingress-proxy)
 - [Variables backup](#variables-backup)
@@ -244,13 +245,14 @@ The value is a `ServiceSpec`.
 Deletes the service. `delete_volumes`: also deletes its named volumes (the **data**); without it they stay on the server and show up as **orphans** in the volume list (`DockerVolumes`), with the name of the service they came from.
 
 ```json
-{"ServiceDelete":{"id":"svc_…","delete_volumes":false}}
+{"ServiceDelete":{"id":"svc_…","delete_volumes":false,"delete_external_volumes":false}}
 ```
 
 | Field | Type |
 |---|---|
 | `id` | `String` |
 | `delete_volumes` | `bool` |
+| `delete_external_volumes` | `bool`<br />Apaga também os volumes **emprestados** (os `external: true` do Compose, que já existiam antes da stack). Sem isso eles ficam, mesmo com `delete_volumes`. |
 
 **Used by:** GUI and web UI.
 
@@ -1768,6 +1770,33 @@ Stops every container labeled `rustploy.managed=true`, regardless of what the DB
 ```json
 "StopAllManaged"
 ```
+
+**Used by:** GUI and web UI.
+
+## Remoção INDIVIDUAL de um recurso Docker (o par por-item dos `Prune*`)
+
+### VolumeList
+
+A tela **Volumes**: cada volume com o dono, o órfão, o backup e **quem monta** (serviço e caminho; `borrowed` = externo num Compose). Resposta: `Volumes`.
+
+```json
+"VolumeList"
+```
+
+**Used by:** GUI and web UI.
+
+### ComposeInsertExternalVolume
+
+Insere no texto de um Compose a declaração `external: true` de um volume que já existe, sem reformatar o resto, e devolve a chave a usar na montagem (`- chave:/caminho`). Não grava nada: quem chama põe o texto no editor. Resposta: `ComposeWithVolume`.
+
+```json
+{"ComposeInsertExternalVolume":{"content":"…","volume_name":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `content` | `String` |
+| `volume_name` | `String` |
 
 **Used by:** GUI and web UI.
 

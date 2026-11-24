@@ -96,6 +96,11 @@ its named volumes, for good. **Keep the volumes** leaves the data on the server:
 Volumes** as **orphans**, with the name of the service and project they came from (see
 [Volumes](/en/interface/docker-e-registry/#volumes)).
 
+If the service is a Compose stack that uses **borrowed volumes** (declared with `external: true`, which
+existed before it), a **third** question follows, naming them: **Delete the borrowed ones** or **Keep the
+borrowed ones**. "Delete the data" alone never takes them along (see
+[borrowed volumes](/en/guias/dados-do-servico/#borrowed-volumes)).
+
 ## Project variables
 
 <Shot

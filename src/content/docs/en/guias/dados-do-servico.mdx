@@ -4,6 +4,9 @@ description: How to take a service's volumes (or its database dump) into an .rpd
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../../components/Shot.astro'
+import telaVolumes from '../../../../assets/ui/tela-volumes.png';
+import composeVolume from '../../../../assets/ui/compose-volume-existente.png';
 
 The service's **Data** tab takes its **data** to an `.rpdata` file and brings it back into another service
 of the same kind, on the same server or another. The service **configuration** goes separately
@@ -70,6 +73,56 @@ unmounts (it asks for confirmation); the data stays on the server. Mounting and 
 
 A volume that already belongs to another service is refused: two services on the same volume corrupt the
 data. Compose services declare their volumes in their own file, so the list does not show for them.
+
+## The Volumes screen
+
+<Shot
+  src={telaVolumes}
+  alt="Volumes screen with one card per volume: name, size, state (in use, unused, orphan with its origin) and who mounts it, with the Adopt in a service and Delete buttons."
+  caption="One card per volume. banco_antigo is borrowed: the db stack mounts it at /importar."
+/>
+
+**Volumes**, in the sidebar, shows only the volumes (the data), one card per volume: name, size, state
+(**in use**, **unused** or **orphan** with the service and date it came from), a **backup on** badge when
+there is a [backup to S3](/en/guias/backup-no-s3/) and **who mounts it**: *"db (shop) →
+/var/lib/postgresql"*, with *"· borrowed"* when the stack only uses a volume that already existed.
+
+**Orphans only** filters; **Show anonymous** includes the unnamed volumes the engine creates on its own
+(hidden by default). On a volume nobody uses:
+
+- **Adopt in a service**: pick an Application service and the path in the container and click **Mount**.
+  It applies on that service's next deploy (the same as mounting from the Data tab);
+- **Delete**: asks for confirmation. The data is gone, for good.
+
+## In a Compose stack: use an existing volume
+
+<Shot
+  src={composeVolume}
+  alt="Compose editor with the Use existing volume panel open: a list of volumes and the Cancel and Insert buttons."
+  caption="Insert only changes the editor's text; nothing is saved until Save compose."
+/>
+
+A Compose stack declares its volumes in its own file. To have it use a volume that already exists (the
+database of a deleted service, for example), on the **General** tab click **Use existing volume**, pick
+the volume (orphans first) and **Insert**. Rustploy adds to the file, without touching the rest:
+
+```yaml
+volumes:
+  # volume existente (adicionado pelo Rustploy): monte com `- banco_antigo:/caminho` num serviço
+  banco_antigo:
+    external: true
+    name: banco_antigo
+```
+
+All that is left is mounting it in the stack service that will use it
+(`- banco_antigo:/var/lib/postgresql/data`) and clicking **Save compose**. It applies on the next deploy.
+
+## Borrowed volumes
+
+A volume declared with `external: true` is **borrowed**: it already existed and the stack only uses it.
+It shows the stack as its owner (it is not "loose"), but deleting the service with **Delete the data**
+only deletes the stack's **own** volumes. Borrowed ones only go if you answer **Delete the borrowed
+ones** to the third question; kept, they become orphans, with their origin, and another stack can use them.
 
 ## Through the API
 

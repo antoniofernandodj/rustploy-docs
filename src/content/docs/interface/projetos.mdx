@@ -100,6 +100,11 @@ Em seguida vem uma segunda pergunta: *"Apagar também os volumes deste serviço 
 dados no servidor: eles aparecem em **Runtime → Volumes** como **órfãos**, com o nome do serviço e
 do projeto de onde vieram (veja [Volumes](/interface/docker-e-registry/#volumes)).
 
+Se o serviço é uma stack Compose que usa **volumes emprestados** (declarados com `external: true`, que
+já existiam antes dela), vem uma **terceira** pergunta, com os nomes deles: **Apagar os emprestados** ou
+**Manter os emprestados**. "Apagar os dados" sozinho nunca os leva junto (veja
+[volumes emprestados](/guias/dados-do-servico/#volumes-emprestados)).
+
 ## Variáveis do projeto
 
 <Shot

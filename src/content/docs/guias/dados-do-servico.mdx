@@ -4,6 +4,9 @@ description: Como levar os volumes (ou o dump do banco) de um serviço para um a
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro'
+import telaVolumes from '../../../assets/ui/tela-volumes.png';
+import composeVolume from '../../../assets/ui/compose-volume-existente.png';
 
 A aba **Dados** do serviço leva os **dados** dele para um arquivo `.rpdata` e os traz de volta em outro
 serviço do mesmo tipo, no mesmo servidor ou em outro. A **configuração** do serviço vai à parte
@@ -71,6 +74,57 @@ deploy**.
 
 Um volume que já é de outro serviço é recusado: dois serviços no mesmo volume corrompem os dados.
 Serviços Compose declaram os volumes no próprio arquivo, então a lista não aparece para eles.
+
+## A tela Volumes
+
+<Shot
+  src={telaVolumes}
+  alt="Tela Volumes com um cartão por volume: nome, tamanho, estado (em uso, sem uso, órfão com a origem) e quem monta, com os botões Adotar num serviço e Apagar."
+  caption="Um cartão por volume. O banco_antigo é emprestado: a stack db o monta em /importar."
+/>
+
+**Volumes**, na barra lateral, mostra só os volumes (os dados), um cartão por volume: nome, tamanho,
+estado (**em uso**, **sem uso** ou **órfão** com o serviço e a data de onde veio), o selo **backup
+ligado** quando há [backup no S3](/guias/backup-no-s3/) e **quem monta**: *"db (loja) →
+/var/lib/postgresql"*, com *"· emprestado"* quando a stack só usa um volume que já existia.
+
+**Só órfãos** filtra; **Mostrar anônimos** inclui os volumes sem nome que o motor cria sozinho
+(escondidos por padrão). Num volume que ninguém usa:
+
+- **Adotar num serviço**: escolha um serviço Application e o caminho no container e clique em
+  **Montar**. Vale no próximo deploy dele (é o mesmo que montar pela aba Dados);
+- **Apagar**: pede confirmação. Os dados somem, sem volta.
+
+## Num Compose: usar um volume existente
+
+<Shot
+  src={composeVolume}
+  alt="Editor do Compose com o painel Usar volume existente aberto: uma lista de volumes e os botões Cancelar e Inserir."
+  caption="Inserir só muda o texto do editor; nada é gravado até Salvar compose."
+/>
+
+Uma stack Compose declara os volumes no próprio arquivo. Para ela usar um volume que já existe (o
+banco de um serviço apagado, por exemplo), na aba **Geral** clique em **Usar volume existente**,
+escolha o volume (os órfãos vêm primeiro) e **Inserir**. O Rustploy acrescenta ao arquivo, sem mexer
+no resto:
+
+```yaml
+volumes:
+  # volume existente (adicionado pelo Rustploy): monte com `- banco_antigo:/caminho` num serviço
+  banco_antigo:
+    external: true
+    name: banco_antigo
+```
+
+Falta só montar no serviço da stack que vai usar (`- banco_antigo:/var/lib/postgresql/data`) e clicar
+em **Salvar compose**. Vale no próximo deploy.
+
+## Volumes emprestados
+
+Um volume declarado com `external: true` é **emprestado**: já existia e a stack só o usa. Ele aparece
+com a stack como dona (não fica "solto"), mas apagar o serviço com **Apagar os dados** apaga só os
+volumes **próprios** da stack. Os emprestados só saem se você responder **Apagar os emprestados** na
+terceira pergunta; mantidos, viram órfãos, com a origem, e podem ser usados por outra stack.
 
 ## Pela API
 
