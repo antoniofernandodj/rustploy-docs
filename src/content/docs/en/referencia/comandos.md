@@ -125,6 +125,8 @@ Creates an **environment** (staging, preview…) from project `project_id`: a ne
 | `project_id` | `String` |
 | `name` | `String` |
 
+**Used by:** GUI and web UI.
+
 ### EnvironmentList
 
 The environments of origin project `project_id`. Response: `Environments`.
@@ -136,6 +138,8 @@ The environments of origin project `project_id`. Response: `Environments`.
 | Field | Type |
 |---|---|
 | `project_id` | `String` |
+
+**Used by:** GUI and web UI.
 
 ### EnvironmentCompare
 
@@ -149,6 +153,8 @@ Compares environment `project_id` with its origin: service by service, the relea
 |---|---|
 | `project_id` | `String` |
 
+**Used by:** GUI and web UI.
+
 ### EnvironmentPromote
 
 **Promotes** the live release of `from_service_id` to its sibling `to_service_id` (in an environment and in the origin, both ways): deploys the same image, without a build. The target's configuration **does not change**. Response: `Deployment`.
@@ -161,6 +167,8 @@ Compares environment `project_id` with its origin: service by service, the relea
 |---|---|
 | `from_service_id` | `String` |
 | `to_service_id` | `String` |
+
+**Used by:** GUI and web UI.
 
 ### ProjectEnvSet
 
@@ -1769,6 +1777,8 @@ The custom routes (domain → service paths, redirect, password), of every proje
 "RouteList"
 ```
 
+**Used by:** GUI and web UI.
+
 ### RouteSave
 
 Creates (empty `id`) or updates a route. `basic_auth.password`: the plain password, or `None` to keep the stored one. A domain cannot be in a route and in a service at the same time. Response: `Route`.
@@ -1781,6 +1791,8 @@ Creates (empty `id`) or updates a route. `basic_auth.password`: the plain passwo
 |---|---|
 | `route` | `Route` |
 
+**Used by:** GUI and web UI.
+
 ### RouteDelete
 
 Deletes a route (the domain answers 404). Response: `Ok`.
@@ -1792,6 +1804,8 @@ Deletes a route (the domain answers 404). Response: `Ok`.
 | Field | Type |
 |---|---|
 | `route_id` | `String` |
+
+**Used by:** GUI and web UI.
 
 ## Variables backup
 

@@ -125,6 +125,8 @@ Cria um **ambiente** (homologação, preview…) a partir do projeto `project_id
 | `project_id` | `String` |
 | `name` | `String` |
 
+**Usado por:** GUI e web UI.
+
 ### EnvironmentList
 
 Os ambientes do projeto de origem `project_id`. Resposta: `Environments`.
@@ -136,6 +138,8 @@ Os ambientes do projeto de origem `project_id`. Resposta: `Environments`.
 | Campo | Tipo |
 |---|---|
 | `project_id` | `String` |
+
+**Usado por:** GUI e web UI.
 
 ### EnvironmentCompare
 
@@ -149,6 +153,8 @@ Compara o ambiente `project_id` com a origem: serviço a serviço, a release no 
 |---|---|
 | `project_id` | `String` |
 
+**Usado por:** GUI e web UI.
+
 ### EnvironmentPromote
 
 **Promove** a release no ar de `from_service_id` para o serviço irmão `to_service_id` (num ambiente e na origem, nos dois sentidos): deploy da mesma imagem, sem build. A configuração do destino **não muda**. Resposta: `Deployment`.
@@ -161,6 +167,8 @@ Compara o ambiente `project_id` com a origem: serviço a serviço, a release no 
 |---|---|
 | `from_service_id` | `String` |
 | `to_service_id` | `String` |
+
+**Usado por:** GUI e web UI.
 
 ### ProjectEnvSet
 
@@ -1769,6 +1777,8 @@ As rotas próprias (domínio → caminhos de serviços, redirect, senha), de tod
 "RouteList"
 ```
 
+**Usado por:** GUI e web UI.
+
 ### RouteSave
 
 Cria (`id` vazio) ou atualiza uma rota. `basic_auth.password`: a senha em claro, ou `None` para manter a gravada. Um domínio não pode estar numa rota e num serviço ao mesmo tempo. Resposta: `Route`.
@@ -1781,6 +1791,8 @@ Cria (`id` vazio) ou atualiza uma rota. `basic_auth.password`: a senha em claro,
 |---|---|
 | `route` | `Route` |
 
+**Usado por:** GUI e web UI.
+
 ### RouteDelete
 
 Apaga uma rota (o domínio passa a responder 404). Resposta: `Ok`.
@@ -1792,6 +1804,8 @@ Apaga uma rota (o domínio passa a responder 404). Resposta: `Ok`.
 | Campo | Tipo |
 |---|---|
 | `route_id` | `String` |
+
+**Usado por:** GUI e web UI.
 
 ## Backup de variáveis
 
