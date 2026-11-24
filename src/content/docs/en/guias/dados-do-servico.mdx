@@ -53,6 +53,24 @@ Safety rules:
 - for a database, import does **not** stop the service (the restore needs it up): stop whatever uses it first. At the end Rustploy compares per-table counts with the export — differences are normal if the source database was receiving writes during the dump;
 - for a plain volume, the service is stopped during the swap and restarted afterwards.
 
+## Mount volumes and adopt an orphan
+
+At the top of an Application service's **Data** tab is the **VOLUMES** list: what the service mounts and
+where. To mount a new one:
+
+- **existing volume**: the list shows the volumes without an owner, **orphans** first (*"orphan: db (shop),
+  11/24/2026"*). Picking an orphan **adopts** the data of a deleted service: the new service sees the files
+  that were there;
+- **or a new name**: a named volume is created on the next deploy, already owned by the service;
+- **or an absolute folder** on the server (`/srv/uploads`). System folders and Rustploy's own are refused.
+
+Give the **path in the container** (`/data`) and, if needed, **read-only**, and click **Mount**. **✕**
+unmounts (it asks for confirmation); the data stays on the server. Mounting and unmounting apply on the
+**next deploy**.
+
+A volume that already belongs to another service is refused: two services on the same volume corrupt the
+data. Compose services declare their volumes in their own file, so the list does not show for them.
+
 ## Through the API
 
 `ServiceDataPlan{service_id}` returns the plan (allowed for the observer level). The bytes go through

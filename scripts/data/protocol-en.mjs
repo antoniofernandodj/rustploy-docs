@@ -1,6 +1,8 @@
 // Traduções para o inglês das docs vindas dos comentários em pt-BR de protocol.rs.
 // Chave ausente = o texto original (que já pode estar em inglês) é mantido.
 export const DOCS = {
+  ServiceVolumeAttach: 'Mounts a volume in an Application service: `host_path` is a volume name (an orphan, to adopt the data of a deleted service, or a new name) or an absolute server folder. Refuses a volume that belongs to another service. Applies on the next deploy. Response: `Service`.',
+  ServiceVolumeDetach: 'Removes the mount at `container_path` (the data stays on the server). Applies on the next deploy. Response: `Service`.',
   RouteList: 'The custom routes (domain → service paths, redirect, password), of every project. The password never comes back (`basic_auth.password` is `None`). Response: `Routes`.',
   RouteSave: 'Creates (empty `id`) or updates a route. `basic_auth.password`: the plain password, or `None` to keep the stored one. A domain cannot be in a route and in a service at the same time. Response: `Route`.',
   RouteDelete: 'Deletes a route (the domain answers 404). Response: `Ok`.',

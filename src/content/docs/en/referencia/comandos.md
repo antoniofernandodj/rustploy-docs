@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 162 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 164 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **162 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **164 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -253,6 +253,32 @@ Deletes the service. `delete_volumes`: also deletes its named volumes (the **dat
 | `delete_volumes` | `bool` |
 
 **Used by:** GUI and web UI.
+
+### ServiceVolumeAttach
+
+Mounts a volume in an Application service: `host_path` is a volume name (an orphan, to adopt the data of a deleted service, or a new name) or an absolute server folder. Refuses a volume that belongs to another service. Applies on the next deploy. Response: `Service`.
+
+```json
+{"ServiceVolumeAttach":{"service_id":"svc_…","volume":"{…}"}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `volume` | `VolumeMount` |
+
+### ServiceVolumeDetach
+
+Removes the mount at `container_path` (the data stays on the server). Applies on the next deploy. Response: `Service`.
+
+```json
+{"ServiceVolumeDetach":{"service_id":"svc_…","container_path":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `container_path` | `String` |
 
 ### ServiceList
 

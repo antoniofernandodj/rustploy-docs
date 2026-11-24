@@ -53,6 +53,25 @@ Regras de segurança:
 - num banco, a importação **não para** o serviço (o restore precisa dele no ar): pare antes quem o usa. No fim, o Rustploy compara as contagens por tabela com as do export — diferenças são normais se o banco de origem recebia escritas durante o dump;
 - num volume comum, o serviço é parado durante a troca e religado depois.
 
+## Montar volumes e adotar um órfão
+
+No topo da aba **Dados** de um serviço Application fica a lista **VOLUMES**: o que o serviço monta e
+onde. Para montar um novo:
+
+- **volume existente**: a lista traz os volumes sem dono, com os **órfãos** primeiro (*"órfão: db
+  (loja), 24/11/2026"*). Escolher um órfão é **adotar** os dados de um serviço apagado: o serviço
+  novo passa a ver os arquivos que estavam lá;
+- **ou um nome novo**: um volume nomeado é criado no próximo deploy, já com o serviço como dono;
+- **ou uma pasta absoluta** do servidor (`/srv/uploads`). Pastas do sistema e do próprio Rustploy são
+  recusadas.
+
+Diga o **caminho no container** (`/data`) e, se for o caso, **só leitura**, e clique em **Montar**.
+**✕** desmonta (pede confirmação); os dados ficam no servidor. Montar e desmontar valem no **próximo
+deploy**.
+
+Um volume que já é de outro serviço é recusado: dois serviços no mesmo volume corrompem os dados.
+Serviços Compose declaram os volumes no próprio arquivo, então a lista não aparece para eles.
+
 ## Pela API
 
 `ServiceDataPlan{service_id}` devolve o plano (permitido ao observador). Os bytes vão por
