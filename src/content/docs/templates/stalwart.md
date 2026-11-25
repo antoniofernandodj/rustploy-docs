@@ -1,11 +1,11 @@
 ---
 title: Hospedar Stalwart com Rustploy
-description: "Aplicação Stalwart. Crie Stalwart em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor de e-mail moderno completo escrito em Rust com suporte a JMAP, IMAP e criptografia nativa. Crie Stalwart em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Stalwart**: Aplicação Stalwart. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Stalwart**: Servidor de e-mail moderno completo escrito em Rust com suporte a JMAP, IMAP e criptografia nativa. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

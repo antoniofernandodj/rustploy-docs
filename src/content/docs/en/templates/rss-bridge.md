@@ -1,11 +1,11 @@
 ---
-title: Host Rss Bridge with Rustploy
-description: "PHP utility that generates structured RSS feeds for platforms that lack them. Create Rss Bridge in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host RSS-Bridge with Rustploy
+description: "PHP utility that generates structured RSS feeds for platforms that lack them. Create RSS-Bridge in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Rss Bridge**: PHP utility that generates structured RSS feeds for platforms that lack them. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**RSS-Bridge**: PHP utility that generates structured RSS feeds for platforms that lack them. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Rss Bridge** and select it.
+2. Search for **RSS-Bridge** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Emby com Rustploy
-description: "Aplicação Emby. Crie Emby em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor de mídia privado para streaming de filmes, séries e músicas. Crie Emby em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Emby**: Aplicação Emby. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Emby**: Servidor de mídia privado para streaming de filmes, séries e músicas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

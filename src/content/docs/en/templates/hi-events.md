@@ -1,11 +1,11 @@
 ---
-title: Host Hi Events with Rustploy
-description: "Integrated ticket sales and local event management platform. Create Hi Events in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host Hi.events with Rustploy
+description: "Integrated ticket sales and local event management platform. Create Hi.events in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Hi Events**: Integrated ticket sales and local event management platform. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Hi.events**: Integrated ticket sales and local event management platform. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Hi Events** and select it.
+2. Search for **Hi.events** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

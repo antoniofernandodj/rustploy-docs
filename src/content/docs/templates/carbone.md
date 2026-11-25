@@ -1,11 +1,11 @@
 ---
 title: Hospedar Carbone com Rustploy
-description: "Aplicação Carbone. Crie Carbone em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Motor de alta performance para geração de documentos com dados em JSON. Crie Carbone em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Carbone**: Aplicação Carbone. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Carbone**: Motor de alta performance para geração de documentos com dados em JSON. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

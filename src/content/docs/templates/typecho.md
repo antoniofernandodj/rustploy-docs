@@ -1,11 +1,11 @@
 ---
 title: Hospedar Typecho com Rustploy
-description: "Aplicação Typecho. Crie Typecho em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Um CMS leve, minimalista e rápido baseado em PHP focado na publicação de blogs simples. Crie Typecho em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Typecho**: Aplicação Typecho. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Typecho**: Um CMS leve, minimalista e rápido baseado em PHP focado na publicação de blogs simples. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

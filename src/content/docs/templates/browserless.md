@@ -1,11 +1,11 @@
 ---
 title: Hospedar Browserless com Rustploy
-description: "Aplicação Browserless. Crie Browserless em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Execução remota e headless do Chrome/Puppeteer em containers Docker. Crie Browserless em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Browserless**: Aplicação Browserless. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Browserless**: Execução remota e headless do Chrome/Puppeteer em containers Docker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

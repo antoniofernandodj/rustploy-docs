@@ -1,11 +1,11 @@
 ---
 title: Hospedar Barrage com Rustploy
-description: "Aplicação Barrage. Crie Barrage em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Interface web minimalista e mobile-first para o cliente de torrent Deluge. Crie Barrage em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Barrage**: Aplicação Barrage. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Barrage**: Interface web minimalista e mobile-first para o cliente de torrent Deluge. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

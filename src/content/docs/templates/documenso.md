@@ -1,11 +1,11 @@
 ---
 title: Hospedar Documenso com Rustploy
-description: "Aplicação Documenso. Crie Documenso em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma para assinaturas digitais de documentos (Alternativa ao DocuSign). Crie Documenso em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Documenso**: Aplicação Documenso. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Documenso**: Plataforma para assinaturas digitais de documentos (Alternativa ao DocuSign). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

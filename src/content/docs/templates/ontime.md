@@ -1,11 +1,11 @@
 ---
 title: Hospedar Ontime com Rustploy
-description: "Aplicação Ontime. Crie Ontime em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de roteiros, contagem regressiva e cronogramas para eventos de transmissão ao vivo. Crie Ontime em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Ontime**: Aplicação Ontime. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Ontime**: Gerenciador de roteiros, contagem regressiva e cronogramas para eventos de transmissão ao vivo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Checkcle com Rustploy
-description: "Aplicação Checkcle. Crie Checkcle em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Ferramenta de segurança corporativa para auditoria de runtime e conformidade. Crie Checkcle em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Checkcle**: Aplicação Checkcle. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Checkcle**: Ferramenta de segurança corporativa para auditoria de runtime e conformidade. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

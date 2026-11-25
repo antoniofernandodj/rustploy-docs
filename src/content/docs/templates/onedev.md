@@ -1,11 +1,11 @@
 ---
-title: Hospedar Onedev com Rustploy
-description: "Aplicação Onedev. Crie Onedev em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar OneDev com Rustploy
+description: "Servidor Git integrado com quadros Kanban e esteiras nativas de CI/CD. Crie OneDev em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Onedev**: Aplicação Onedev. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**OneDev**: Servidor Git integrado com quadros Kanban e esteiras nativas de CI/CD. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Onedev** e selecione.
+2. Busque por **OneDev** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

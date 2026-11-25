@@ -1,11 +1,11 @@
 ---
 title: Hospedar Anubis com Rustploy
-description: "Aplicação Anubis. Crie Anubis em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Protetor e bloqueador de bots maliciosos para sites. Crie Anubis em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Anubis**: Aplicação Anubis. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Anubis**: Protetor e bloqueador de bots maliciosos para sites. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

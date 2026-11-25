@@ -1,11 +1,11 @@
 ---
-title: Hospedar Erpnext com Rustploy
-description: "Aplicação Erpnext. Crie Erpnext em um clique no Rustploy: 14 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar ERPNext com Rustploy
+description: "Sistema integrado completo de gestão empresarial open-source. Crie ERPNext em um clique no Rustploy: 14 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Erpnext**: Aplicação Erpnext. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**ERPNext**: Sistema integrado completo de gestão empresarial open-source. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Erpnext** e selecione.
+2. Busque por **ERPNext** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

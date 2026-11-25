@@ -1,11 +1,11 @@
 ---
 title: Hospedar Storyden com Rustploy
-description: "Aplicação Storyden. Crie Storyden em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma moderna de fóruns e quadros de discussão estruturada para comunidades engajadas. Crie Storyden em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Storyden**: Aplicação Storyden. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Storyden**: Plataforma moderna de fóruns e quadros de discussão estruturada para comunidades engajadas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

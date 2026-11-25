@@ -1,11 +1,11 @@
 ---
-title: Hospedar Appflowy com Rustploy
-description: "Aplicação Appflowy. Crie Appflowy em um clique no Rustploy: 10 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar App Flowy com Rustploy
+description: "Alternativa open-source ao Notion focada em privacidade. Crie App Flowy em um clique no Rustploy: 10 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Appflowy**: Aplicação Appflowy. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**App Flowy**: Alternativa open-source ao Notion focada em privacidade. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Appflowy** e selecione.
+2. Busque por **App Flowy** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

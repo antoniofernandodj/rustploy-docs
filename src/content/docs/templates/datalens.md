@@ -1,11 +1,11 @@
 ---
-title: Hospedar Datalens com Rustploy
-description: "Aplicação Datalens. Crie Datalens em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar DataLens com Rustploy
+description: "Ferramenta escalável de Business Intelligence (BI) e visualização de dados. Crie DataLens em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Datalens**: Aplicação Datalens. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**DataLens**: Ferramenta escalável de Business Intelligence (BI) e visualização de dados. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Datalens** e selecione.
+2. Busque por **DataLens** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

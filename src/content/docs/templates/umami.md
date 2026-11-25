@@ -1,11 +1,11 @@
 ---
 title: Hospedar Umami com Rustploy
-description: "Aplicação Umami. Crie Umami em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "O clássico e popular analytics web focado em privacidade e em ser uma alternativa limpa ao Google Analytics. Crie Umami em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Umami**: Aplicação Umami. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Umami**: O clássico e popular analytics web focado em privacidade e em ser uma alternativa limpa ao Google Analytics. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

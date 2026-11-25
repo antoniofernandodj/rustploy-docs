@@ -1,11 +1,11 @@
 ---
 title: Hospedar Linkding com Rustploy
-description: "Aplicação Linkding. Crie Linkding em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de favoritos veloz com uma interface minimalista livre de distrações. Crie Linkding em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Linkding**: Aplicação Linkding. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Linkding**: Gerenciador de favoritos veloz com uma interface minimalista livre de distrações. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

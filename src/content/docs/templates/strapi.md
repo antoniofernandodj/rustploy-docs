@@ -1,11 +1,11 @@
 ---
 title: Hospedar Strapi com Rustploy
-description: "Aplicação Strapi. Crie Strapi em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "CMS Headless baseado em JavaScript líder de mercado para construção rápida de APIs de conteúdo. Crie Strapi em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Strapi**: Aplicação Strapi. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Strapi**: CMS Headless baseado em JavaScript líder de mercado para construção rápida de APIs de conteúdo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

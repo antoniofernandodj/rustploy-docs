@@ -1,11 +1,11 @@
 ---
 title: Hospedar Trilium com Rustploy
-description: "Aplicação Trilium. Crie Trilium em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Editor de notas estruturado hierarquicamente focado na construção de grandes bases de conhecimento. Crie Trilium em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Trilium**: Aplicação Trilium. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Trilium**: Editor de notas estruturado hierarquicamente focado na construção de grandes bases de conhecimento. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Minio com Rustploy
-description: "Aplicação Minio. Crie Minio em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor de armazenamento de objetos distribuído 100% compatível com a API AWS S3. Crie Minio em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Minio**: Aplicação Minio. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Minio**: Servidor de armazenamento de objetos distribuído 100% compatível com a API AWS S3. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

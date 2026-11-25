@@ -1,11 +1,11 @@
 ---
 title: Hospedar Filestash com Rustploy
-description: "Aplicação Filestash. Crie Filestash em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Cliente web para conectar múltiplos armazenamentos a provedores de identidade. Crie Filestash em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Filestash**: Aplicação Filestash. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Filestash**: Cliente web para conectar múltiplos armazenamentos a provedores de identidade. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

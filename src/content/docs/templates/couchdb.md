@@ -1,11 +1,11 @@
 ---
-title: Hospedar Couchdb com Rustploy
-description: "Aplicação Couchdb. Crie Couchdb em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar CouchDB com Rustploy
+description: "Banco de dados NoSQL baseado em documentos com excelente sincronização. Crie CouchDB em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Couchdb**: Aplicação Couchdb. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**CouchDB**: Banco de dados NoSQL baseado em documentos com excelente sincronização. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Couchdb** e selecione.
+2. Busque por **CouchDB** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

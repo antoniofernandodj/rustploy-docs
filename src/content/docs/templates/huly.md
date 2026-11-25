@@ -1,11 +1,11 @@
 ---
 title: Hospedar Huly com Rustploy
-description: "Aplicação Huly. Crie Huly em um clique no Rustploy: 12 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de projetos e times tudo-em-um (Alternativa ao Jira, Linear e Slack). Crie Huly em um clique no Rustploy: 12 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Huly**: Aplicação Huly. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Huly**: Gerenciador de projetos e times tudo-em-um (Alternativa ao Jira, Linear e Slack). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

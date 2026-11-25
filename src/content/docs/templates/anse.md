@@ -1,11 +1,11 @@
 ---
 title: Hospedar Anse com Rustploy
-description: "Aplicação Anse. Crie Anse em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Interface web para chat com IA compatível com a API da OpenAI. Crie Anse em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Anse**: Aplicação Anse. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Anse**: Interface web para chat com IA compatível com a API da OpenAI. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

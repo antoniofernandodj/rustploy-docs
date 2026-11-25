@@ -1,11 +1,11 @@
 ---
 title: Hospedar Plausible com Rustploy
-description: "Aplicação Plausible. Crie Plausible em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Analisador leve de tráfego web sem cookies focado na privacidade do usuário. Crie Plausible em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Plausible**: Aplicação Plausible. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Plausible**: Analisador leve de tráfego web sem cookies focado na privacidade do usuário. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

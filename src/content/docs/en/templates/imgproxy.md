@@ -1,11 +1,11 @@
 ---
-title: Host Imgproxy with Rustploy
-description: "Fast image processing server optimized with Nginx. Create Imgproxy in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host imgproxy with Rustploy
+description: "Fast image processing server optimized with Nginx. Create imgproxy in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Imgproxy**: Fast image processing server optimized with Nginx. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**imgproxy**: Fast image processing server optimized with Nginx. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Imgproxy** and select it.
+2. Search for **imgproxy** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Mailpit com Rustploy
-description: "Aplicação Mailpit. Crie Mailpit em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor SMTP falso local focado em testes e inspeção de e-mails de desenvolvimento. Crie Mailpit em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Mailpit**: Aplicação Mailpit. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Mailpit**: Servidor SMTP falso local focado em testes e inspeção de e-mails de desenvolvimento. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

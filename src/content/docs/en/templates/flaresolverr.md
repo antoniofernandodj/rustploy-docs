@@ -1,11 +1,11 @@
 ---
-title: Host Flaresolverr with Rustploy
-description: "Proxy to bypass Cloudflare and DDoS-GUARD protections. Create Flaresolverr in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host FlareSolverr with Rustploy
+description: "Proxy to bypass Cloudflare and DDoS-GUARD protections. Create FlareSolverr in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Flaresolverr**: Proxy to bypass Cloudflare and DDoS-GUARD protections. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**FlareSolverr**: Proxy to bypass Cloudflare and DDoS-GUARD protections. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Flaresolverr** and select it.
+2. Search for **FlareSolverr** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

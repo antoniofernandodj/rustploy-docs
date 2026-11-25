@@ -1,11 +1,11 @@
 ---
 title: Hospedar Collabora Office com Rustploy
-description: "Aplicação Collabora Office. Crie Collabora Office em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Suíte de escritório online poderosa baseada no LibreOffice. Crie Collabora Office em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Collabora Office**: Aplicação Collabora Office. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Collabora Office**: Suíte de escritório online poderosa baseada no LibreOffice. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

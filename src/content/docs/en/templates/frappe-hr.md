@@ -1,11 +1,11 @@
 ---
-title: Host Frappe Hr with Rustploy
-description: "Complete open-source module for Human Resources and Payroll. Create Frappe Hr in one click on Rustploy: 14 containers, generated variables, domain and automatic HTTPS."
+title: Host Frappe HR with Rustploy
+description: "Complete open-source module for Human Resources and Payroll. Create Frappe HR in one click on Rustploy: 14 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Frappe Hr**: Complete open-source module for Human Resources and Payroll. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Frappe HR**: Complete open-source module for Human Resources and Payroll. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Frappe Hr** and select it.
+2. Search for **Frappe HR** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

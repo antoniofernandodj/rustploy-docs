@@ -1,11 +1,11 @@
 ---
-title: Host Karakeep with Rustploy
-description: "Rebrand of the AI-powered bookmark and note app (formerly Hoarder). Create Karakeep in one click on Rustploy: 3 containers, generated variables, domain and automatic HTTPS."
+title: Host KaraKeep with Rustploy
+description: "Rebrand of the AI-powered bookmark and note app (formerly Hoarder). Create KaraKeep in one click on Rustploy: 3 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Karakeep**: Rebrand of the AI-powered bookmark and note app (formerly Hoarder). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**KaraKeep**: Rebrand of the AI-powered bookmark and note app (formerly Hoarder). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Karakeep** and select it.
+2. Search for **KaraKeep** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

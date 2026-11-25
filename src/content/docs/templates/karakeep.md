@@ -1,11 +1,11 @@
 ---
-title: Hospedar Karakeep com Rustploy
-description: "Aplicação Karakeep. Crie Karakeep em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar KaraKeep com Rustploy
+description: "Rebrand do aplicativo de favoritos e anotações baseadas em IA (antigo Hoarder). Crie KaraKeep em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Karakeep**: Aplicação Karakeep. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**KaraKeep**: Rebrand do aplicativo de favoritos e anotações baseadas em IA (antigo Hoarder). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Karakeep** e selecione.
+2. Busque por **KaraKeep** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

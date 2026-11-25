@@ -1,11 +1,11 @@
 ---
-title: Host Instantdb with Rustploy
-description: "Real-time database with instant state sync across clients. Create Instantdb in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host InstantDB with Rustploy
+description: "Real-time database with instant state sync across clients. Create InstantDB in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Instantdb**: Real-time database with instant state sync across clients. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**InstantDB**: Real-time database with instant state sync across clients. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Instantdb** and select it.
+2. Search for **InstantDB** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

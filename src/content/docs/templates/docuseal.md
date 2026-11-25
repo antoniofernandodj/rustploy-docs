@@ -1,11 +1,11 @@
 ---
 title: Hospedar Docuseal com Rustploy
-description: "Aplicação Docuseal. Crie Docuseal em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Sistema de gestão de documentos com foco em assinatura eletrônica. Crie Docuseal em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Docuseal**: Aplicação Docuseal. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Docuseal**: Sistema de gestão de documentos com foco em assinatura eletrônica. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

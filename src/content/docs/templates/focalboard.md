@@ -1,11 +1,11 @@
 ---
 title: Hospedar Focalboard com Rustploy
-description: "Aplicação Focalboard. Crie Focalboard em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de tarefas em estilo Kanban (Alternativa ao Trello/Asana). Crie Focalboard em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Focalboard**: Aplicação Focalboard. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Focalboard**: Gerenciador de tarefas em estilo Kanban (Alternativa ao Trello/Asana). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

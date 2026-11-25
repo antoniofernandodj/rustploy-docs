@@ -1,11 +1,11 @@
 ---
 title: Hospedar Wordpress com Rustploy
-description: "Aplicação Wordpress. Crie Wordpress em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "O CMS mais utilizado no mundo para criação e gerenciamento de sites e blogs. Crie Wordpress em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Wordpress**: Aplicação Wordpress. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Wordpress**: O CMS mais utilizado no mundo para criação e gerenciamento de sites e blogs. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

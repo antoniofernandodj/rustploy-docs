@@ -1,11 +1,11 @@
 ---
 title: Hospedar Lodestone com Rustploy
-description: "Aplicação Lodestone. Crie Lodestone em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Painel intuitivo de gerenciamento de servidores de Minecraft e jogos multiplayer. Crie Lodestone em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Lodestone**: Aplicação Lodestone. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Lodestone**: Painel intuitivo de gerenciamento de servidores de Minecraft e jogos multiplayer. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

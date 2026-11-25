@@ -1,11 +1,11 @@
 ---
 title: Hospedar Memos com Rustploy
-description: "Aplicação Memos. Crie Memos em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Central de notas rápidas inspirada no Twitter, com foco em privacidade. Crie Memos em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Memos**: Aplicação Memos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Memos**: Central de notas rápidas inspirada no Twitter, com foco em privacidade. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

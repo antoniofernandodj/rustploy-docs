@@ -1,11 +1,11 @@
 ---
 title: Hospedar Valkey com Rustploy
-description: "Aplicação Valkey. Crie Valkey em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "O fork oficial do Redis mantido pela Linux Foundation e grandes provedores de nuvem. Crie Valkey em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Valkey**: Aplicação Valkey. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Valkey**: O fork oficial do Redis mantido pela Linux Foundation e grandes provedores de nuvem. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

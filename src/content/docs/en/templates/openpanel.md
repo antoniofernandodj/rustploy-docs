@@ -1,11 +1,11 @@
 ---
-title: Host Openpanel with Rustploy
-description: "Privacy-focused web analytics, a clean replacement for Google Analytics or Mixpanel. Create Openpanel in one click on Rustploy: 6 containers, generated variables, domain and automatic HTTPS."
+title: Host OpenPanel with Rustploy
+description: "Privacy-focused web analytics, a clean replacement for Google Analytics or Mixpanel. Create OpenPanel in one click on Rustploy: 6 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Openpanel**: Privacy-focused web analytics, a clean replacement for Google Analytics or Mixpanel. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**OpenPanel**: Privacy-focused web analytics, a clean replacement for Google Analytics or Mixpanel. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Openpanel** and select it.
+2. Search for **OpenPanel** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
-title: Host Ezbookkeeping with Rustploy
-description: "Accounting manager for personal finances and micro-businesses. Create Ezbookkeeping in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host EZBookkeeping with Rustploy
+description: "Accounting manager for personal finances and micro-businesses. Create EZBookkeeping in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Ezbookkeeping**: Accounting manager for personal finances and micro-businesses. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**EZBookkeeping**: Accounting manager for personal finances and micro-businesses. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Ezbookkeeping** and select it.
+2. Search for **EZBookkeeping** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

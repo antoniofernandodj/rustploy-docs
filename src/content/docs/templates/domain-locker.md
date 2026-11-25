@@ -1,11 +1,11 @@
 ---
 title: Hospedar Domain Locker com Rustploy
-description: "Aplicação Domain Locker. Crie Domain Locker em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Monitor e rastreador automático de expiração de domínios web. Crie Domain Locker em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Domain Locker**: Aplicação Domain Locker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Domain Locker**: Monitor e rastreador automático de expiração de domínios web. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

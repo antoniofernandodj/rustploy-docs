@@ -1,11 +1,11 @@
 ---
 title: Hospedar Authelia com Rustploy
-description: "Aplicação Authelia. Crie Authelia em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Provedor de Single Sign-On (SSO) com autenticação multifator (2FA). Crie Authelia em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Authelia**: Aplicação Authelia. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Authelia**: Provedor de Single Sign-On (SSO) com autenticação multifator (2FA). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

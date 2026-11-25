@@ -1,11 +1,11 @@
 ---
-title: Host Libretranslate with Rustploy
-description: "Self-hosted machine translation API with no external dependencies. Create Libretranslate in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host LibreTranslate with Rustploy
+description: "Self-hosted machine translation API with no external dependencies. Create LibreTranslate in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Libretranslate**: Self-hosted machine translation API with no external dependencies. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**LibreTranslate**: Self-hosted machine translation API with no external dependencies. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Libretranslate** and select it.
+2. Search for **LibreTranslate** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

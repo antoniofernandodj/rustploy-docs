@@ -1,11 +1,11 @@
 ---
 title: Hospedar Wallos com Rustploy
-description: "Aplicação Wallos. Crie Wallos em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Rastreador pessoal focado no monitoramento financeiro de assinaturas mensais e gastos recorrentes. Crie Wallos em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Wallos**: Aplicação Wallos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Wallos**: Rastreador pessoal focado no monitoramento financeiro de assinaturas mensais e gastos recorrentes. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

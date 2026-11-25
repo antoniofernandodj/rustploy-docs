@@ -1,11 +1,11 @@
 ---
 title: Hospedar Cloud9 com Rustploy
-description: "Aplicação Cloud9. Crie Cloud9 em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "IDE completa na nuvem para codificação colaborativa em tempo real. Crie Cloud9 em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Cloud9**: Aplicação Cloud9. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Cloud9**: IDE completa na nuvem para codificação colaborativa em tempo real. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

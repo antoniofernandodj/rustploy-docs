@@ -1,11 +1,11 @@
 ---
 title: Hospedar Wanderer com Rustploy
-description: "Aplicação Wanderer. Crie Wanderer em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma de mapas e geolocalização estruturada em PocketBase e Meilisearch. Crie Wanderer em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Wanderer**: Aplicação Wanderer. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Wanderer**: Plataforma de mapas e geolocalização estruturada em PocketBase e Meilisearch. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

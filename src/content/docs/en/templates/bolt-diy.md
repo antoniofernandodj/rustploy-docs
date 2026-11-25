@@ -1,11 +1,11 @@
 ---
-title: Host Bolt.diy with Rustploy
-description: "Tool to run, edit and deploy full-stack apps using any LLM. Create Bolt.diy in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host bolt.diy with Rustploy
+description: "Tool to run, edit and deploy full-stack apps using any LLM. Create bolt.diy in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Bolt.diy**: Tool to run, edit and deploy full-stack apps using any LLM. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**bolt.diy**: Tool to run, edit and deploy full-stack apps using any LLM. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Bolt.diy** and select it.
+2. Search for **bolt.diy** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

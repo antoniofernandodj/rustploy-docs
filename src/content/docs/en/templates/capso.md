@@ -1,11 +1,11 @@
 ---
-title: Host Capso with Rustploy
-description: "Complete environment for web applications with MySQL and S3 support. Create Capso in one click on Rustploy: 3 containers, generated variables, domain and automatic HTTPS."
+title: Host Cap.so with Rustploy
+description: "Complete environment for web applications with MySQL and S3 support. Create Cap.so in one click on Rustploy: 3 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Capso**: Complete environment for web applications with MySQL and S3 support. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Cap.so**: Complete environment for web applications with MySQL and S3 support. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Capso** and select it.
+2. Search for **Cap.so** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

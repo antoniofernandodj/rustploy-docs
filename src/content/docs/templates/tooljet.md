@@ -1,11 +1,11 @@
 ---
 title: Hospedar Tooljet com Rustploy
-description: "Aplicação Tooljet. Crie Tooljet em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Construtor low-code de ferramentas internas conectável a múltiplos bancos de dados de forma nativa. Crie Tooljet em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Tooljet**: Aplicação Tooljet. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Tooljet**: Construtor low-code de ferramentas internas conectável a múltiplos bancos de dados de forma nativa. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

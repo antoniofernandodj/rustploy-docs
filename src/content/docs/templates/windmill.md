@@ -1,11 +1,11 @@
 ---
 title: Hospedar Windmill com Rustploy
-description: "Aplicação Windmill. Crie Windmill em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma para desenvolvedores criarem fluxos de trabalho internos robustos baseados em scripts (Alternativa ao Retool). Crie Windmill em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Windmill**: Aplicação Windmill. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Windmill**: Plataforma para desenvolvedores criarem fluxos de trabalho internos robustos baseados em scripts (Alternativa ao Retool). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

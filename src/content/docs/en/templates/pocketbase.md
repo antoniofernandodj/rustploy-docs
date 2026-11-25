@@ -1,11 +1,11 @@
 ---
-title: Host Pocketbase with Rustploy
-description: "Single-file embedded backend with SQLite, authentication, realtime and a dashboard. Create Pocketbase in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host PocketBase with Rustploy
+description: "Single-file embedded backend with SQLite, authentication, realtime and a dashboard. Create PocketBase in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Pocketbase**: Single-file embedded backend with SQLite, authentication, realtime and a dashboard. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**PocketBase**: Single-file embedded backend with SQLite, authentication, realtime and a dashboard. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Pocketbase** and select it.
+2. Search for **PocketBase** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Shlink com Rustploy
-description: "Aplicação Shlink. Crie Shlink em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Encurtador de links corporativo auto-hospedado feito para rodar sob seus próprios domínios. Crie Shlink em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Shlink**: Aplicação Shlink. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Shlink**: Encurtador de links corporativo auto-hospedado feito para rodar sob seus próprios domínios. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

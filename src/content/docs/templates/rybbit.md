@@ -1,11 +1,11 @@
 ---
 title: Hospedar Rybbit com Rustploy
-description: "Aplicação Rybbit. Crie Rybbit em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Analytics web alternativo focado em ser mais legível e limpo que o Google Analytics clássico. Crie Rybbit em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Rybbit**: Aplicação Rybbit. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Rybbit**: Analytics web alternativo focado em ser mais legível e limpo que o Google Analytics clássico. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

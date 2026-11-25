@@ -1,11 +1,11 @@
 ---
-title: Hospedar Onetimesecret com Rustploy
-description: "Aplicação Onetimesecret. Crie Onetimesecret em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar One Time Secret com Rustploy
+description: "Compartilhamento seguro de segredos e senhas por meio de links que se destroem após visualizados. Crie One Time Secret em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Onetimesecret**: Aplicação Onetimesecret. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**One Time Secret**: Compartilhamento seguro de segredos e senhas por meio de links que se destroem após visualizados. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Onetimesecret** e selecione.
+2. Busque por **One Time Secret** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

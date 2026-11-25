@@ -1,11 +1,11 @@
 ---
 title: Hospedar Typesense com Rustploy
-description: "Aplicação Typesense. Crie Typesense em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Motor de busca rápida e tolerante a falhas feito para buscas em tempo real em aplicações. Crie Typesense em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Typesense**: Aplicação Typesense. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Typesense**: Motor de busca rápida e tolerante a falhas feito para buscas em tempo real em aplicações. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

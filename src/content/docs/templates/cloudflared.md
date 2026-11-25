@@ -1,11 +1,11 @@
 ---
 title: Hospedar Cloudflared com Rustploy
-description: "Aplicação Cloudflared. Crie Cloudflared em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Daemon para conectar serviços locais à internet de forma segura via Cloudflare Tunnel. Crie Cloudflared em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Cloudflared**: Aplicação Cloudflared. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Cloudflared**: Daemon para conectar serviços locais à internet de forma segura via Cloudflare Tunnel. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

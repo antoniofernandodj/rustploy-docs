@@ -1,11 +1,11 @@
 ---
 title: Hospedar Baikal com Rustploy
-description: "Aplicação Baikal. Crie Baikal em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor leve para sincronização de Calendários (CalDAV) e Contatos (CardDAV). Crie Baikal em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Baikal**: Aplicação Baikal. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Baikal**: Servidor leve para sincronização de Calendários (CalDAV) e Contatos (CardDAV). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

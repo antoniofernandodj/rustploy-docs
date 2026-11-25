@@ -1,11 +1,11 @@
 ---
 title: Hospedar Cockpit com Rustploy
-description: "Aplicação Cockpit. Crie Cockpit em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "CMS Headless com arquitetura orientada a API para entrega de conteúdo. Crie Cockpit em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Cockpit**: Aplicação Cockpit. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Cockpit**: CMS Headless com arquitetura orientada a API para entrega de conteúdo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

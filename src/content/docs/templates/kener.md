@@ -1,11 +1,11 @@
 ---
 title: Hospedar Kener com Rustploy
-description: "Aplicação Kener. Crie Kener em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Página de status open-source moderna para monitoramento de infraestrutura. Crie Kener em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Kener**: Aplicação Kener. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Kener**: Página de status open-source moderna para monitoramento de infraestrutura. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

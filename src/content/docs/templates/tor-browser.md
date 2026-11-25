@@ -1,11 +1,11 @@
 ---
 title: Hospedar Tor Browser com Rustploy
-description: "Aplicação Tor Browser. Crie Tor Browser em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Instância do navegador Tor acessível diretamente via interface web baseada em VNC (noVNC). Crie Tor Browser em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Tor Browser**: Aplicação Tor Browser. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Tor Browser**: Instância do navegador Tor acessível diretamente via interface web baseada em VNC (noVNC). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

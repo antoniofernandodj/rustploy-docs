@@ -1,11 +1,11 @@
 ---
 title: Hospedar Budibase com Rustploy
-description: "Aplicação Budibase. Crie Budibase em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma low-code para criação ágil de formulários e portais internos. Crie Budibase em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Budibase**: Aplicação Budibase. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Budibase**: Plataforma low-code para criação ágil de formulários e portais internos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
-title: Host Librechat with Rustploy
-description: "Advanced, unified interface for chatting with multiple AI providers (Ollama, OpenAI, Anthropic). Create Librechat in one click on Rustploy: 5 containers, generated variables, domain and automatic HTTPS."
+title: Host LibreChat with Rustploy
+description: "Advanced, unified interface for chatting with multiple AI providers (Ollama, OpenAI, Anthropic). Create LibreChat in one click on Rustploy: 5 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Librechat**: Advanced, unified interface for chatting with multiple AI providers (Ollama, OpenAI, Anthropic). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**LibreChat**: Advanced, unified interface for chatting with multiple AI providers (Ollama, OpenAI, Anthropic). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Librechat** and select it.
+2. Search for **LibreChat** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

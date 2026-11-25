@@ -1,11 +1,11 @@
 ---
 title: Hospedar Vaultwarden com Rustploy
-description: "Aplicação Vaultwarden. Crie Vaultwarden em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Implementação leve em Rust compatível com toda a suíte de aplicativos do Bitwarden. Crie Vaultwarden em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Vaultwarden**: Aplicação Vaultwarden. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Vaultwarden**: Implementação leve em Rust compatível com toda a suíte de aplicativos do Bitwarden. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

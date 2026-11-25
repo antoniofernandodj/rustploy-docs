@@ -1,11 +1,11 @@
 ---
 title: Hospedar Listmonk com Rustploy
-description: "Aplicação Listmonk. Crie Listmonk em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de campanhas de e-mail marketing e newsletters de alta performance. Crie Listmonk em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Listmonk**: Aplicação Listmonk. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Listmonk**: Gerenciador de campanhas de e-mail marketing e newsletters de alta performance. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

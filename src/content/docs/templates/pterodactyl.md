@@ -1,11 +1,11 @@
 ---
 title: Hospedar Pterodactyl com Rustploy
-description: "Aplicação Pterodactyl. Crie Pterodactyl em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Painel avançado e robusto focado no gerenciamento massivo de servidores de jogos em Docker. Crie Pterodactyl em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Pterodactyl**: Aplicação Pterodactyl. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Pterodactyl**: Painel avançado e robusto focado no gerenciamento massivo de servidores de jogos em Docker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

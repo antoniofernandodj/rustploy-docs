@@ -1,11 +1,11 @@
 ---
 title: Hospedar Roundcube com Rustploy
-description: "Aplicação Roundcube. Crie Roundcube em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Cliente tradicional de webmail baseado em PHP para caixas de e-mail IMAP. Crie Roundcube em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Roundcube**: Aplicação Roundcube. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Roundcube**: Cliente tradicional de webmail baseado em PHP para caixas de e-mail IMAP. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

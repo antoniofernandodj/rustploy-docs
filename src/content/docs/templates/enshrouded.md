@@ -1,11 +1,11 @@
 ---
 title: Hospedar Enshrouded com Rustploy
-description: "Aplicação Enshrouded. Crie Enshrouded em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor dedicado para o jogo multiplayer Enshrouded via Steam. Crie Enshrouded em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Enshrouded**: Aplicação Enshrouded. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Enshrouded**: Servidor dedicado para o jogo multiplayer Enshrouded via Steam. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

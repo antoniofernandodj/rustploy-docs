@@ -1,11 +1,11 @@
 ---
-title: Hospedar Otterwiki com Rustploy
-description: "Aplicação Otterwiki. Crie Otterwiki em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Otter Wiki com Rustploy
+description: "Motor wiki baseado em Python e Flask focado em simplicidade com escrita em Markdown. Crie Otter Wiki em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Otterwiki**: Aplicação Otterwiki. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Otter Wiki**: Motor wiki baseado em Python e Flask focado em simplicidade com escrita em Markdown. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Otterwiki** e selecione.
+2. Busque por **Otter Wiki** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

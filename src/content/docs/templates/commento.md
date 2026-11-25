@@ -1,11 +1,11 @@
 ---
-title: Hospedar Commento com Rustploy
-description: "Aplicação Commento. Crie Commento em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Commento++ com Rustploy
+description: "Caixa de comentários leve para sites estáticos com moderação de spam. Crie Commento++ em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Commento**: Aplicação Commento. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Commento++**: Caixa de comentários leve para sites estáticos com moderação de spam. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Commento** e selecione.
+2. Busque por **Commento++** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

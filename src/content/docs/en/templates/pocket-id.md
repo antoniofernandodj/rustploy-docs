@@ -1,11 +1,11 @@
 ---
-title: Host Pocket Id with Rustploy
-description: "Simple OIDC authenticator that protects services using native passkeys. Create Pocket Id in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host Pocket ID with Rustploy
+description: "Simple OIDC authenticator that protects services using native passkeys. Create Pocket ID in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Pocket Id**: Simple OIDC authenticator that protects services using native passkeys. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Pocket ID**: Simple OIDC authenticator that protects services using native passkeys. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Pocket Id** and select it.
+2. Search for **Pocket ID** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Tuwunel com Rustploy
-description: "Aplicação Tuwunel. Crie Tuwunel em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor Matrix de alta performance em Rust (Sucessor oficial do Conduwuit para ambientes corporativos). Crie Tuwunel em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Tuwunel**: Aplicação Tuwunel. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Tuwunel**: Servidor Matrix de alta performance em Rust (Sucessor oficial do Conduwuit para ambientes corporativos). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

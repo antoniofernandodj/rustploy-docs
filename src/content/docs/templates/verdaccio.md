@@ -1,11 +1,11 @@
 ---
 title: Hospedar Verdaccio com Rustploy
-description: "Aplicação Verdaccio. Crie Verdaccio em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor proxy local e privado para repositórios e pacotes Node.js (npm). Crie Verdaccio em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Verdaccio**: Aplicação Verdaccio. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Verdaccio**: Servidor proxy local e privado para repositórios e pacotes Node.js (npm). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

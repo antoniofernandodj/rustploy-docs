@@ -1,11 +1,11 @@
 ---
-title: Hospedar Surrealdb com Rustploy
-description: "Aplicação Surrealdb. Crie Surrealdb em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar SurrealDB com Rustploy
+description: "Banco de dados multimodel moderno (relacional, grafos, documentos, vetorial) unificado. Crie SurrealDB em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Surrealdb**: Aplicação Surrealdb. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**SurrealDB**: Banco de dados multimodel moderno (relacional, grafos, documentos, vetorial) unificado. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Surrealdb** e selecione.
+2. Busque por **SurrealDB** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

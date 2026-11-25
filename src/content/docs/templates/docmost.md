@@ -1,11 +1,11 @@
 ---
 title: Hospedar Docmost com Rustploy
-description: "Aplicação Docmost. Crie Docmost em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Wiki colaborativa de código aberto para documentações de equipes. Crie Docmost em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Docmost**: Aplicação Docmost. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Docmost**: Wiki colaborativa de código aberto para documentações de equipes. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

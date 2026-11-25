@@ -1,11 +1,11 @@
 ---
-title: Host Rutorrent with Rustploy
-description: "Robust classic web interface for the stable rTorrent client. Create Rutorrent in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host ruTorrent with Rustploy
+description: "Robust classic web interface for the stable rTorrent client. Create ruTorrent in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Rutorrent**: Robust classic web interface for the stable rTorrent client. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**ruTorrent**: Robust classic web interface for the stable rTorrent client. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Rutorrent** and select it.
+2. Search for **ruTorrent** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

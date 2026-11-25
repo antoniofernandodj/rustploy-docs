@@ -1,11 +1,11 @@
 ---
 title: Hospedar Rote com Rustploy
-description: "Aplicação Rote. Crie Rote em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Sistema de anotações pessoais estruturado em chamadas de API nativas. Crie Rote em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Rote**: Aplicação Rote. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Rote**: Sistema de anotações pessoais estruturado em chamadas de API nativas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

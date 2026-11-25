@@ -1,11 +1,11 @@
 ---
-title: Host Elastic Search with Rustploy
-description: "Distributed full-text search and real-time analytics engine. Create Elastic Search in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host Elasticsearch with Rustploy
+description: "Distributed full-text search and real-time analytics engine. Create Elasticsearch in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Elastic Search**: Distributed full-text search and real-time analytics engine. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Elasticsearch**: Distributed full-text search and real-time analytics engine. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Elastic Search** and select it.
+2. Search for **Elasticsearch** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

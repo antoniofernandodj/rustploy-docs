@@ -269,6 +269,8 @@ Grava só a **descrição** do serviço (texto livre: para que serve, o que faz,
 | `service_id` | `String` |
 | `description` | `String` |
 
+**Usado por:** GUI e web UI.
+
 ### ServiceDelete
 
 Apaga o serviço. `delete_volumes`: apaga também os volumes nomeados dele (os **dados**); sem isso eles ficam no servidor e aparecem como **órfãos** na lista de volumes (`DockerVolumes`), com o nome do serviço de onde vieram.

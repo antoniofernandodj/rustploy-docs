@@ -1,11 +1,11 @@
 ---
 title: Hospedar Slash com Rustploy
-description: "Aplicação Slash. Crie Slash em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Encurtador interno rápido feito para organizar caminhos de links favoritos. Crie Slash em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Slash**: Aplicação Slash. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Slash**: Encurtador interno rápido feito para organizar caminhos de links favoritos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

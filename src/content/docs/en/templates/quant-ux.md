@@ -1,11 +1,11 @@
 ---
-title: Host Quant Ux with Rustploy
-description: "Advanced tool for prototyping and analyzing user behavior and UX tests. Create Quant Ux in one click on Rustploy: 4 containers, generated variables, domain and automatic HTTPS."
+title: Host Quant-UX with Rustploy
+description: "Advanced tool for prototyping and analyzing user behavior and UX tests. Create Quant-UX in one click on Rustploy: 4 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Quant Ux**: Advanced tool for prototyping and analyzing user behavior and UX tests. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Quant-UX**: Advanced tool for prototyping and analyzing user behavior and UX tests. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Quant Ux** and select it.
+2. Search for **Quant-UX** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

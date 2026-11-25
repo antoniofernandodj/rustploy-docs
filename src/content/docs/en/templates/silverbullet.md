@@ -1,11 +1,11 @@
 ---
-title: Host Silverbullet with Rustploy
-description: "Extensible notepad that works as a dynamic personal knowledge base. Create Silverbullet in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host SilverBullet with Rustploy
+description: "Extensible notepad that works as a dynamic personal knowledge base. Create SilverBullet in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Silverbullet**: Extensible notepad that works as a dynamic personal knowledge base. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**SilverBullet**: Extensible notepad that works as a dynamic personal knowledge base. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Silverbullet** and select it.
+2. Search for **SilverBullet** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

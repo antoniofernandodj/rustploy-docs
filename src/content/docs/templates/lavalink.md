@@ -1,11 +1,11 @@
 ---
 title: Hospedar Lavalink com Rustploy
-description: "Aplicação Lavalink. Crie Lavalink em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor autônomo de streaming de áudio e música baseado em Java. Crie Lavalink em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Lavalink**: Aplicação Lavalink. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Lavalink**: Servidor autônomo de streaming de áudio e música baseado em Java. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

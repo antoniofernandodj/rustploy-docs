@@ -1,11 +1,11 @@
 ---
-title: Host Babybuddy with Rustploy
-description: "Routine tracker for baby care and development. Create Babybuddy in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host BabyBuddy with Rustploy
+description: "Routine tracker for baby care and development. Create BabyBuddy in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Babybuddy**: Routine tracker for baby care and development. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**BabyBuddy**: Routine tracker for baby care and development. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Babybuddy** and select it.
+2. Search for **BabyBuddy** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

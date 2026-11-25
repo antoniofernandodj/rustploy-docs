@@ -1,11 +1,11 @@
 ---
 title: Hospedar Palmr com Rustploy
-description: "Aplicação Palmr. Crie Palmr em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma minimalista para compartilhamento de arquivos pesados (Alternativa ao WeTransfer). Crie Palmr em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Palmr**: Aplicação Palmr. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Palmr**: Plataforma minimalista para compartilhamento de arquivos pesados (Alternativa ao WeTransfer). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Cloudflare Ddns com Rustploy
-description: "Aplicação Cloudflare Ddns. Crie Cloudflare Ddns em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Cloudflare DDNS com Rustploy
+description: "Script robusto para atualização automática de DNS Dinâmico na Cloudflare. Crie Cloudflare DDNS em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Cloudflare Ddns**: Aplicação Cloudflare Ddns. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Cloudflare DDNS**: Script robusto para atualização automática de DNS Dinâmico na Cloudflare. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -19,7 +19,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Cloudflare Ddns** e selecione.
+2. Busque por **Cloudflare DDNS** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

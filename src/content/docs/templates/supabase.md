@@ -1,11 +1,11 @@
 ---
 title: Hospedar Supabase com Rustploy
-description: "Aplicação Supabase. Crie Supabase em um clique no Rustploy: 13 containers, variáveis geradas, domínio e HTTPS automático."
+description: "A alternativa open-source mais robusta ao Firebase (Stack completa baseada em PostgreSQL). Crie Supabase em um clique no Rustploy: 13 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Supabase**: Aplicação Supabase. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Supabase**: A alternativa open-source mais robusta ao Firebase (Stack completa baseada em PostgreSQL). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

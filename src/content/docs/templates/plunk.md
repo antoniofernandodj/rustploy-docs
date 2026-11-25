@@ -1,11 +1,11 @@
 ---
 title: Hospedar Plunk com Rustploy
-description: "Aplicação Plunk. Crie Plunk em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma integrada para gerenciamento de disparos de e-mails transacionais e marketing. Crie Plunk em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Plunk**: Aplicação Plunk. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Plunk**: Plataforma integrada para gerenciamento de disparos de e-mails transacionais e marketing. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

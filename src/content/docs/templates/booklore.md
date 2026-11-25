@@ -1,11 +1,11 @@
 ---
 title: Hospedar Booklore com Rustploy
-description: "Aplicação Booklore. Crie Booklore em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação em MariaDB para gerenciar dados relacionados a livros. Crie Booklore em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Booklore**: Aplicação Booklore. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Booklore**: Aplicação em MariaDB para gerenciar dados relacionados a livros. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

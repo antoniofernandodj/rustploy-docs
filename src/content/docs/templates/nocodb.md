@@ -1,11 +1,11 @@
 ---
-title: Hospedar Nocodb com Rustploy
-description: "Aplicação Nocodb. Crie Nocodb em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar NocoDB com Rustploy
+description: "Transforma qualquer banco de dados relacional (Postgres/MySQL) em uma interface inteligente estilo Airtable. Crie NocoDB em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Nocodb**: Aplicação Nocodb. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**NocoDB**: Transforma qualquer banco de dados relacional (Postgres/MySQL) em uma interface inteligente estilo Airtable. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Nocodb** e selecione.
+2. Busque por **NocoDB** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

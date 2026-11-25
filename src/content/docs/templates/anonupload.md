@@ -1,11 +1,11 @@
 ---
-title: Hospedar Anonupload com Rustploy
-description: "Aplicação Anonupload. Crie Anonupload em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar AnonUpload com Rustploy
+description: "Compartilhamento anônimo e seguro de arquivos (sem banco de dados). Crie AnonUpload em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Anonupload**: Aplicação Anonupload. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**AnonUpload**: Compartilhamento anônimo e seguro de arquivos (sem banco de dados). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Anonupload** e selecione.
+2. Busque por **AnonUpload** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Apprise Api com Rustploy
-description: "Aplicação Apprise Api. Crie Apprise Api em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Apprise API com Rustploy
+description: "API universal para envio de notificações para dezenas de serviços. Crie Apprise API em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Apprise Api**: Aplicação Apprise Api. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Apprise API**: API universal para envio de notificações para dezenas de serviços. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Apprise Api** e selecione.
+2. Busque por **Apprise API** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

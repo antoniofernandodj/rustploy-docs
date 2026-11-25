@@ -1,11 +1,11 @@
 ---
-title: Host It Tools with Rustploy
-description: "Huge collection of small online utilities essential for developers. Create It Tools in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host IT Tools with Rustploy
+description: "Huge collection of small online utilities essential for developers. Create IT Tools in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**It Tools**: Huge collection of small online utilities essential for developers. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**IT Tools**: Huge collection of small online utilities essential for developers. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **It Tools** and select it.
+2. Search for **IT Tools** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

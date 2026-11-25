@@ -1,11 +1,11 @@
 ---
 title: Hospedar Metabase com Rustploy
-description: "Aplicação Metabase. Crie Metabase em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma fácil de Business Intelligence para geração rápida de relatórios e dashboards. Crie Metabase em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Metabase**: Aplicação Metabase. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Metabase**: Plataforma fácil de Business Intelligence para geração rápida de relatórios e dashboards. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

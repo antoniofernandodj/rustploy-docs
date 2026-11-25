@@ -1,11 +1,11 @@
 ---
 title: Hospedar Ampache com Rustploy
-description: "Aplicação Ampache. Crie Ampache em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Central de streaming e gerenciamento de músicas/vídeos. Crie Ampache em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Ampache**: Aplicação Ampache. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Ampache**: Central de streaming e gerenciamento de músicas/vídeos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

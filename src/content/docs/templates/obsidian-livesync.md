@@ -1,11 +1,11 @@
 ---
-title: Hospedar Obsidian Livesync com Rustploy
-description: "Aplicação Obsidian Livesync. Crie Obsidian Livesync em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Obsidian LiveSync com Rustploy
+description: "Servidor CouchDB pré-configurado para sincronização em tempo real das notas do Obsidian. Crie Obsidian LiveSync em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Obsidian Livesync**: Aplicação Obsidian Livesync. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Obsidian LiveSync**: Servidor CouchDB pré-configurado para sincronização em tempo real das notas do Obsidian. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Obsidian Livesync** e selecione.
+2. Busque por **Obsidian LiveSync** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

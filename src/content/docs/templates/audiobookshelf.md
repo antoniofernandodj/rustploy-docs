@@ -1,11 +1,11 @@
 ---
 title: Hospedar Audiobookshelf com Rustploy
-description: "Aplicação Audiobookshelf. Crie Audiobookshelf em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor de mídia exclusivo para audiolivros e podcasts. Crie Audiobookshelf em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Audiobookshelf**: Aplicação Audiobookshelf. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Audiobookshelf**: Servidor de mídia exclusivo para audiolivros e podcasts. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

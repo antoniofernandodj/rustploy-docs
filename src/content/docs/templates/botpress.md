@@ -1,11 +1,11 @@
 ---
 title: Hospedar Botpress com Rustploy
-description: "Aplicação Botpress. Crie Botpress em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma para criação e orquestração de agentes de IA conversacionais. Crie Botpress em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Botpress**: Aplicação Botpress. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Botpress**: Plataforma para criação e orquestração de agentes de IA conversacionais. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

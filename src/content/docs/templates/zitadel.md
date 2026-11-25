@@ -1,11 +1,11 @@
 ---
 title: Hospedar Zitadel com Rustploy
-description: "Aplicação Zitadel. Crie Zitadel em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Provedor de identidade e gestão de acessos de última geração com suporte nativo a multi-inquilinato (multi-tenancy). Crie Zitadel em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Zitadel**: Aplicação Zitadel. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Zitadel**: Provedor de identidade e gestão de acessos de última geração com suporte nativo a multi-inquilinato (multi-tenancy). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

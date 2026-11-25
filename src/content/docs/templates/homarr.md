@@ -1,11 +1,11 @@
 ---
 title: Hospedar Homarr com Rustploy
-description: "Aplicação Homarr. Crie Homarr em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Dashboard moderno de aplicativos residenciais integrado ao Docker. Crie Homarr em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Homarr**: Aplicação Homarr. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Homarr**: Dashboard moderno de aplicativos residenciais integrado ao Docker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Adguardhome com Rustploy
-description: "Aplicação Adguardhome. Crie Adguardhome em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar AdGuard Home com Rustploy
+description: "Bloqueador de anúncios e rastreadores em nível de rede DNS. Crie AdGuard Home em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Adguardhome**: Aplicação Adguardhome. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**AdGuard Home**: Bloqueador de anúncios e rastreadores em nível de rede DNS. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Adguardhome** e selecione.
+2. Busque por **AdGuard Home** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

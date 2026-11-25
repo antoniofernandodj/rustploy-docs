@@ -1,11 +1,11 @@
 ---
 title: Hospedar Portainer com Rustploy
-description: "Aplicação Portainer. Crie Portainer em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Painel visual clássico e indispensável para gerenciamento geral de instâncias Docker e Swarm. Crie Portainer em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Portainer**: Aplicação Portainer. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Portainer**: Painel visual clássico e indispensável para gerenciamento geral de instâncias Docker e Swarm. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

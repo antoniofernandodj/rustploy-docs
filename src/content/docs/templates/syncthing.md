@@ -1,11 +1,11 @@
 ---
 title: Hospedar Syncthing com Rustploy
-description: "Aplicação Syncthing. Crie Syncthing em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Sincronizador contínuo e descentralizado de diretórios entre múltiplos computadores em tempo real. Crie Syncthing em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Syncthing**: Aplicação Syncthing. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Syncthing**: Sincronizador contínuo e descentralizado de diretórios entre múltiplos computadores em tempo real. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

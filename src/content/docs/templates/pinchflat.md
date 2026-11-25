@@ -1,11 +1,11 @@
 ---
 title: Hospedar Pinchflat com Rustploy
-description: "Aplicação Pinchflat. Crie Pinchflat em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Interface para baixar e automatizar o download de canais inteiros do YouTube via yt-dlp. Crie Pinchflat em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Pinchflat**: Aplicação Pinchflat. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Pinchflat**: Interface para baixar e automatizar o download de canais inteiros do YouTube via yt-dlp. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

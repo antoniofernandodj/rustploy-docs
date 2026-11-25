@@ -1,11 +1,11 @@
 ---
 title: Hospedar Yamtrack com Rustploy
-description: "Aplicação Yamtrack. Crie Yamtrack em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador pessoal de animes e mangás assistidos estruturado sob banco de dados Redis. Crie Yamtrack em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Yamtrack**: Aplicação Yamtrack. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Yamtrack**: Gerenciador pessoal de animes e mangás assistidos estruturado sob banco de dados Redis. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Vault com Rustploy
-description: "Aplicação Vault. Crie Vault em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Cofre de segurança desenvolvido pela HashiCorp para gerenciamento estrito de segredos e acessos dinâmicos. Crie Vault em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Vault**: Aplicação Vault. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Vault**: Cofre de segurança desenvolvido pela HashiCorp para gerenciamento estrito de segredos e acessos dinâmicos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

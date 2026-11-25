@@ -1,11 +1,11 @@
 ---
 title: Hospedar Ryot com Rustploy
-description: "Aplicação Ryot. Crie Ryot em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Sistema unificado para registrar e catalogar mídias consumidas (Livros, Filmes, Jogos). Crie Ryot em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Ryot**: Aplicação Ryot. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Ryot**: Sistema unificado para registrar e catalogar mídias consumidas (Livros, Filmes, Jogos). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

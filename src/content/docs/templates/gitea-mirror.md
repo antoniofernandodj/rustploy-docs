@@ -1,11 +1,11 @@
 ---
 title: Hospedar Gitea Mirror com Rustploy
-description: "Aplicação Gitea Mirror. Crie Gitea Mirror em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Sincronizador automático de repositórios do GitHub para instâncias Gitea. Crie Gitea Mirror em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Gitea Mirror**: Aplicação Gitea Mirror. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Gitea Mirror**: Sincronizador automático de repositórios do GitHub para instâncias Gitea. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

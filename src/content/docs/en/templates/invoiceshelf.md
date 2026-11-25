@@ -1,11 +1,11 @@
 ---
-title: Host Invoiceshelf with Rustploy
-description: "Invoice issuer and finance manager for freelancers. Create Invoiceshelf in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host InvoiceShelf with Rustploy
+description: "Invoice issuer and finance manager for freelancers. Create InvoiceShelf in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Invoiceshelf**: Invoice issuer and finance manager for freelancers. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**InvoiceShelf**: Invoice issuer and finance manager for freelancers. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Invoiceshelf** and select it.
+2. Search for **InvoiceShelf** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

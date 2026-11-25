@@ -1,11 +1,11 @@
 ---
 title: Hospedar Fonoster com Rustploy
-description: "Aplicação Fonoster. Crie Fonoster em um clique no Rustploy: 10 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Alternativa ao Twilio para telefonia na nuvem, SIP e WebRTC. Crie Fonoster em um clique no Rustploy: 10 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Fonoster**: Aplicação Fonoster. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Fonoster**: Alternativa ao Twilio para telefonia na nuvem, SIP e WebRTC. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

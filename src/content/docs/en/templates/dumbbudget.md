@@ -1,11 +1,11 @@
 ---
-title: Host Dumbbudget with Rustploy
-description: "Minimalist PIN-protected finance tracker (no database). Create Dumbbudget in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host DumbBudget with Rustploy
+description: "Minimalist PIN-protected finance tracker (no database). Create DumbBudget in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Dumbbudget**: Minimalist PIN-protected finance tracker (no database). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**DumbBudget**: Minimalist PIN-protected finance tracker (no database). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Dumbbudget** and select it.
+2. Search for **DumbBudget** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

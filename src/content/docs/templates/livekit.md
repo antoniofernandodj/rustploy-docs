@@ -1,11 +1,11 @@
 ---
 title: Hospedar Livekit com Rustploy
-description: "Aplicação Livekit. Crie Livekit em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Infraestrutura em tempo real focada em transmissão de vídeo e áudio via WebRTC. Crie Livekit em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Livekit**: Aplicação Livekit. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Livekit**: Infraestrutura em tempo real focada em transmissão de vídeo e áudio via WebRTC. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

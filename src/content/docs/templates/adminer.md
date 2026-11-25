@@ -1,11 +1,11 @@
 ---
 title: Hospedar Adminer com Rustploy
-description: "Aplicação Adminer. Crie Adminer em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de banco de dados leve (MySQL, Postgres, SQLite, etc). Crie Adminer em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Adminer**: Aplicação Adminer. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Adminer**: Gerenciador de banco de dados leve (MySQL, Postgres, SQLite, etc). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Cloudreve com Rustploy
-description: "Aplicação Cloudreve. Crie Cloudreve em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Sistema de gerenciamento e compartilhamento de arquivos multi-nuvem. Crie Cloudreve em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Cloudreve**: Aplicação Cloudreve. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Cloudreve**: Sistema de gerenciamento e compartilhamento de arquivos multi-nuvem. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

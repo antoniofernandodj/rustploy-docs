@@ -1,11 +1,11 @@
 ---
-title: Host Litellm with Rustploy
-description: "Lightweight proxy that unifies calls to multiple LLMs under the OpenAI API standard. Create Litellm in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host LiteLLM with Rustploy
+description: "Lightweight proxy that unifies calls to multiple LLMs under the OpenAI API standard. Create LiteLLM in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Litellm**: Lightweight proxy that unifies calls to multiple LLMs under the OpenAI API standard. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**LiteLLM**: Lightweight proxy that unifies calls to multiple LLMs under the OpenAI API standard. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Litellm** and select it.
+2. Search for **LiteLLM** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Kokoro Web com Rustploy
-description: "Aplicação Kokoro Web. Crie Kokoro Web em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Interface de usuário amigável para geração de áudios via IA do Kokoro. Crie Kokoro Web em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Kokoro Web**: Aplicação Kokoro Web. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Kokoro Web**: Interface de usuário amigável para geração de áudios via IA do Kokoro. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

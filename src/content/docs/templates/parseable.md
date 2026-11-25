@@ -1,11 +1,11 @@
 ---
 title: Hospedar Parseable com Rustploy
-description: "Aplicação Parseable. Crie Parseable em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Sistema de análise de logs e observabilidade nativo para armazenamento de objetos. Crie Parseable em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Parseable**: Aplicação Parseable. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Parseable**: Sistema de análise de logs e observabilidade nativo para armazenamento de objetos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

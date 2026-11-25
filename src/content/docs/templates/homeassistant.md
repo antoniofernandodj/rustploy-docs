@@ -1,11 +1,11 @@
 ---
-title: Hospedar Homeassistant com Rustploy
-description: "Aplicação Homeassistant. Crie Homeassistant em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Home Assistant com Rustploy
+description: "Ecossistema open-source definitivo para automação residencial privada. Crie Home Assistant em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Homeassistant**: Aplicação Homeassistant. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Home Assistant**: Ecossistema open-source definitivo para automação residencial privada. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Homeassistant** e selecione.
+2. Busque por **Home Assistant** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

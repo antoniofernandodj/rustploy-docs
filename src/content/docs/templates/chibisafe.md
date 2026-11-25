@@ -1,11 +1,11 @@
 ---
 title: Hospedar Chibisafe com Rustploy
-description: "Aplicação Chibisafe. Crie Chibisafe em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Cofre de arquivos pessoal de alta performance baseado em nuvem. Crie Chibisafe em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Chibisafe**: Aplicação Chibisafe. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Chibisafe**: Cofre de arquivos pessoal de alta performance baseado em nuvem. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

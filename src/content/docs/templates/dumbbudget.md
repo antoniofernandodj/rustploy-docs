@@ -1,11 +1,11 @@
 ---
-title: Hospedar Dumbbudget com Rustploy
-description: "Aplicação Dumbbudget. Crie Dumbbudget em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar DumbBudget com Rustploy
+description: "Controle financeiro minimalista protegido por PIN (sem banco de dados). Crie DumbBudget em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Dumbbudget**: Aplicação Dumbbudget. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**DumbBudget**: Controle financeiro minimalista protegido por PIN (sem banco de dados). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Dumbbudget** e selecione.
+2. Busque por **DumbBudget** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

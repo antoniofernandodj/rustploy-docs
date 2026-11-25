@@ -1,11 +1,11 @@
 ---
 title: Hospedar Jenkins com Rustploy
-description: "Aplicação Jenkins. Crie Jenkins em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Clássico servidor de automação open-source voltado para pipelines de CI/CD. Crie Jenkins em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Jenkins**: Aplicação Jenkins. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Jenkins**: Clássico servidor de automação open-source voltado para pipelines de CI/CD. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Calcom com Rustploy
-description: "Aplicação Calcom. Crie Calcom em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Agendador de reuniões e marcação de horários (Alternativa ao Calendly). Crie Calcom em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Calcom**: Aplicação Calcom. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Calcom**: Agendador de reuniões e marcação de horários (Alternativa ao Calendly). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

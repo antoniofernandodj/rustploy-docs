@@ -1,11 +1,11 @@
 ---
 title: Hospedar Scrypted com Rustploy
-description: "Aplicação Scrypted. Crie Scrypted em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Central de processamento de vídeo de segurança com altíssima taxa de quadros e integração NVR. Crie Scrypted em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Scrypted**: Aplicação Scrypted. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Scrypted**: Central de processamento de vídeo de segurança com altíssima taxa de quadros e integração NVR. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

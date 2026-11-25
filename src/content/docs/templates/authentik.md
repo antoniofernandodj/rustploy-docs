@@ -1,11 +1,11 @@
 ---
 title: Hospedar Authentik com Rustploy
-description: "Aplicação Authentik. Crie Authentik em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de identidade e acesso integrado (SAML, OAuth2, OIDC). Crie Authentik em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Authentik**: Aplicação Authentik. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Authentik**: Gerenciador de identidade e acesso integrado (SAML, OAuth2, OIDC). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

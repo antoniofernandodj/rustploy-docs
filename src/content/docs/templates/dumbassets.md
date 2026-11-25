@@ -1,11 +1,11 @@
 ---
-title: Hospedar Dumbassets com Rustploy
-description: "Aplicação Dumbassets. Crie Dumbassets em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar DumbAssets com Rustploy
+description: "Rastreador de ativos estáticos sem necessidade de banco de dados. Crie DumbAssets em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Dumbassets**: Aplicação Dumbassets. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**DumbAssets**: Rastreador de ativos estáticos sem necessidade de banco de dados. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Dumbassets** e selecione.
+2. Busque por **DumbAssets** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

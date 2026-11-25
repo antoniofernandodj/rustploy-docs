@@ -1,11 +1,11 @@
 ---
 title: Hospedar Cup com Rustploy
-description: "Aplicação Cup. Crie Cup em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Interface gráfica leve para administração de containers Docker locais. Crie Cup em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Cup**: Aplicação Cup. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Cup**: Interface gráfica leve para administração de containers Docker locais. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Pgadmin com Rustploy
-description: "Aplicação Pgadmin. Crie Pgadmin em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar pgAdmin com Rustploy
+description: "A interface gráfica oficial e mais popular para gerenciamento de bancos PostgreSQL. Crie pgAdmin em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Pgadmin**: Aplicação Pgadmin. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**pgAdmin**: A interface gráfica oficial e mais popular para gerenciamento de bancos PostgreSQL. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Pgadmin** e selecione.
+2. Busque por **pgAdmin** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

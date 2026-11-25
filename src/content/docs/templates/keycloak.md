@@ -1,11 +1,11 @@
 ---
 title: Hospedar Keycloak com Rustploy
-description: "Aplicação Keycloak. Crie Keycloak em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Provedor robusto de gerenciamento de identidade e autenticação corporativa. Crie Keycloak em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Keycloak**: Aplicação Keycloak. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Keycloak**: Provedor robusto de gerenciamento de identidade e autenticação corporativa. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

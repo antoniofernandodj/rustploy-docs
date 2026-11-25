@@ -1,11 +1,11 @@
 ---
-title: Host Kitchenowl with Rustploy
-description: "Smart organizer for recipes and grocery lists. Create Kitchenowl in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host KitchenOwl with Rustploy
+description: "Smart organizer for recipes and grocery lists. Create KitchenOwl in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Kitchenowl**: Smart organizer for recipes and grocery lists. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**KitchenOwl**: Smart organizer for recipes and grocery lists. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Kitchenowl** and select it.
+2. Search for **KitchenOwl** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

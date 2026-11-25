@@ -1,11 +1,11 @@
 ---
 title: Hospedar Conduit com Rustploy
-description: "Aplicação Conduit. Crie Conduit em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor de chat Matrix ultrarrápido escrito em Rust. Crie Conduit em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Conduit**: Aplicação Conduit. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Conduit**: Servidor de chat Matrix ultrarrápido escrito em Rust. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

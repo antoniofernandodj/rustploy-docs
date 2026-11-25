@@ -1,11 +1,11 @@
 ---
 title: Hospedar Phpmyadmin com Rustploy
-description: "Aplicação Phpmyadmin. Crie Phpmyadmin em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "O clássico e amigável gerenciador web para bancos de dados MySQL e MariaDB. Crie Phpmyadmin em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Phpmyadmin**: Aplicação Phpmyadmin. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Phpmyadmin**: O clássico e amigável gerenciador web para bancos de dados MySQL e MariaDB. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

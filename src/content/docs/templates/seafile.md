@@ -1,11 +1,11 @@
 ---
 title: Hospedar Seafile com Rustploy
-description: "Aplicação Seafile. Crie Seafile em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Nuvem privada para armazenamento, sincronização e compartilhamento de arquivos com foco corporativo. Crie Seafile em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Seafile**: Aplicação Seafile. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Seafile**: Nuvem privada para armazenamento, sincronização e compartilhamento de arquivos com foco corporativo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Chevereto com Rustploy
-description: "Aplicação Chevereto. Crie Chevereto em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma robusta de hospedagem e compartilhamento de imagens/vídeos. Crie Chevereto em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Chevereto**: Aplicação Chevereto. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Chevereto**: Plataforma robusta de hospedagem e compartilhamento de imagens/vídeos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

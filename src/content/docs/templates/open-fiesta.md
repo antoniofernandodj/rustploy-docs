@@ -1,11 +1,11 @@
 ---
 title: Hospedar Open Fiesta com Rustploy
-description: "Aplicação Open Fiesta. Crie Open Fiesta em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Interface de inferência para chat de IA com suporte a múltiplos backends (Ollama/Gemini). Crie Open Fiesta em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Open Fiesta**: Aplicação Open Fiesta. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Open Fiesta**: Interface de inferência para chat de IA com suporte a múltiplos backends (Ollama/Gemini). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

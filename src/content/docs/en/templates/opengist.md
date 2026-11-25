@@ -1,11 +1,11 @@
 ---
-title: Host Opengist with Rustploy
-description: "Self-hosted alternative to GitHub Gist for public or private code snippet sharing. Create Opengist in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host OpenGist with Rustploy
+description: "Self-hosted alternative to GitHub Gist for public or private code snippet sharing. Create OpenGist in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Opengist**: Self-hosted alternative to GitHub Gist for public or private code snippet sharing. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**OpenGist**: Self-hosted alternative to GitHub Gist for public or private code snippet sharing. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Opengist** and select it.
+2. Search for **OpenGist** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

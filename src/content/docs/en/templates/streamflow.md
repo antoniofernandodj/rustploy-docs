@@ -1,11 +1,11 @@
 ---
-title: Host Streamflow with Rustploy
-description: "Platform for relaying real-time video streams (restreaming) to multiple channels (YouTube/Facebook). Create Streamflow in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host StreamFlow with Rustploy
+description: "Platform for relaying real-time video streams (restreaming) to multiple channels (YouTube/Facebook). Create StreamFlow in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Streamflow**: Platform for relaying real-time video streams (restreaming) to multiple channels (YouTube/Facebook). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**StreamFlow**: Platform for relaying real-time video streams (restreaming) to multiple channels (YouTube/Facebook). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -19,7 +19,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Streamflow** and select it.
+2. Search for **StreamFlow** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

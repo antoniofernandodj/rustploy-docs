@@ -1,11 +1,11 @@
 ---
 title: Hospedar Docling Serve com Rustploy
-description: "Aplicação Docling Serve. Crie Docling Serve em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Serviço em API para conversão de documentos baseado em IA. Crie Docling Serve em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Docling Serve**: Aplicação Docling Serve. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Docling Serve**: Serviço em API para conversão de documentos baseado em IA. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

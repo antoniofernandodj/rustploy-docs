@@ -1,11 +1,11 @@
 ---
 title: Hospedar Owncast com Rustploy
-description: "Aplicação Owncast. Crie Owncast em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor independente de live streaming de vídeo com chat interativo embutido. Crie Owncast em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Owncast**: Aplicação Owncast. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Owncast**: Servidor independente de live streaming de vídeo com chat interativo embutido. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

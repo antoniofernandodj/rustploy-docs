@@ -1,11 +1,11 @@
 ---
 title: Hospedar Mixpost com Rustploy
-description: "Aplicação Mixpost. Crie Mixpost em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma centralizada para agendamento e postagem automática em redes sociais. Crie Mixpost em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Mixpost**: Aplicação Mixpost. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Mixpost**: Plataforma centralizada para agendamento e postagem automática em redes sociais. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

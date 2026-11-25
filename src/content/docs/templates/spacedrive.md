@@ -1,11 +1,11 @@
 ---
 title: Hospedar Spacedrive com Rustploy
-description: "Aplicação Spacedrive. Crie Spacedrive em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador de arquivos cross-platform estruturado sob um sistema virtual distribuído (VDFS) em Rust. Crie Spacedrive em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Spacedrive**: Aplicação Spacedrive. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Spacedrive**: Gerenciador de arquivos cross-platform estruturado sob um sistema virtual distribuído (VDFS) em Rust. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

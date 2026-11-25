@@ -1,11 +1,11 @@
 ---
 title: Hospedar Chatwoot com Rustploy
-description: "Aplicação Chatwoot. Crie Chatwoot em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma de atendimento omnichannel (Live Chat, WhatsApp, Redes Sociais). Crie Chatwoot em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Chatwoot**: Aplicação Chatwoot. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Chatwoot**: Plataforma de atendimento omnichannel (Live Chat, WhatsApp, Redes Sociais). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

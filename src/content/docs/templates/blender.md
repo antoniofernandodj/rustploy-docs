@@ -1,11 +1,11 @@
 ---
 title: Hospedar Blender com Rustploy
-description: "Aplicação Blender. Crie Blender em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Suíte completa de criação, modelagem e renderização 3D. Crie Blender em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Blender**: Aplicação Blender. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Blender**: Suíte completa de criação, modelagem e renderização 3D. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Kaneo com Rustploy
-description: "Aplicação Kaneo. Crie Kaneo em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma limpa e simplificada de gerenciamento de projetos. Crie Kaneo em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Kaneo**: Aplicação Kaneo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Kaneo**: Plataforma limpa e simplificada de gerenciamento de projetos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Calibre com Rustploy
-description: "Aplicação Calibre. Crie Calibre em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador e organizador completo de bibliotecas de e-books. Crie Calibre em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Calibre**: Aplicação Calibre. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Calibre**: Gerenciador e organizador completo de bibliotecas de e-books. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

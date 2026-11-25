@@ -1,11 +1,11 @@
 ---
 title: Hospedar Poke com Rustploy
-description: "Aplicação Poke. Crie Poke em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Plataforma privada focada em compartilhamento de vídeos mantendo anonimato. Crie Poke em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Poke**: Aplicação Poke. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Poke**: Plataforma privada focada em compartilhamento de vídeos mantendo anonimato. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

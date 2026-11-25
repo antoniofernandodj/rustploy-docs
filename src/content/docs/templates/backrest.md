@@ -1,11 +1,11 @@
 ---
 title: Hospedar Backrest com Rustploy
-description: "Aplicação Backrest. Crie Backrest em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Interface web para gerenciamento e automação de backups via restic. Crie Backrest em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Backrest**: Aplicação Backrest. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Backrest**: Interface web para gerenciamento e automação de backups via restic. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

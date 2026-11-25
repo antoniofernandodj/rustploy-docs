@@ -1,11 +1,11 @@
 ---
-title: Host Drizzle Gateway with Rustploy
-description: "Native database gateway of the Drizzle ORM ecosystem. Create Drizzle Gateway in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host drizzle gateway with Rustploy
+description: "Native database gateway of the Drizzle ORM ecosystem. Create drizzle gateway in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Drizzle Gateway**: Native database gateway of the Drizzle ORM ecosystem. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**drizzle gateway**: Native database gateway of the Drizzle ORM ecosystem. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Drizzle Gateway** and select it.
+2. Search for **drizzle gateway** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

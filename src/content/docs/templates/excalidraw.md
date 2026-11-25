@@ -1,11 +1,11 @@
 ---
 title: Hospedar Excalidraw com Rustploy
-description: "Aplicação Excalidraw. Crie Excalidraw em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Quadro branco virtual para esboços e diagramas desenhados à mão. Crie Excalidraw em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Excalidraw**: Aplicação Excalidraw. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Excalidraw**: Quadro branco virtual para esboços e diagramas desenhados à mão. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

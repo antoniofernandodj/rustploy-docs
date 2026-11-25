@@ -1,11 +1,11 @@
 ---
 title: Hospedar Flowise com Rustploy
-description: "Aplicação Flowise. Crie Flowise em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Interface visual no-code para construir e orquestrar cadeias de LLM. Crie Flowise em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Flowise**: Aplicação Flowise. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Flowise**: Interface visual no-code para construir e orquestrar cadeias de LLM. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

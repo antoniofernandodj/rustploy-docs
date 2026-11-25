@@ -1,11 +1,11 @@
 ---
 title: Hospedar Mautic com Rustploy
-description: "Aplicação Mautic. Crie Mautic em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Sistema completo de automação de marketing digital e gerenciamento de leads. Crie Mautic em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Mautic**: Aplicação Mautic. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Mautic**: Sistema completo de automação de marketing digital e gerenciamento de leads. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Zabbix com Rustploy
-description: "Aplicação Zabbix. Crie Zabbix em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Monitor corporativo robusto para redes, servidores e serviços com suporte a banco de dados PostgreSQL. Crie Zabbix em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Zabbix**: Aplicação Zabbix. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Zabbix**: Monitor corporativo robusto para redes, servidores e serviços com suporte a banco de dados PostgreSQL. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

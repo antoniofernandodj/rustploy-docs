@@ -1,11 +1,11 @@
 ---
 title: Hospedar Bazarr com Rustploy
-description: "Aplicação Bazarr. Crie Bazarr em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Gerenciador automático de legendas integrado ao Sonarr/Radarr. Crie Bazarr em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Bazarr**: Aplicação Bazarr. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Bazarr**: Gerenciador automático de legendas integrado ao Sonarr/Radarr. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

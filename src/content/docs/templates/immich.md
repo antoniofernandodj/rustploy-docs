@@ -1,11 +1,11 @@
 ---
 title: Hospedar Immich com Rustploy
-description: "Aplicação Immich. Crie Immich em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Servidor de backup de alta performance para fotos e vídeos de celulares. Crie Immich em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Immich**: Aplicação Immich. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Immich**: Servidor de backup de alta performance para fotos e vídeos de celulares. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

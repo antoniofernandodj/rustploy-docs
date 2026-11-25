@@ -1,11 +1,11 @@
 ---
 title: Hospedar Checkmate com Rustploy
-description: "Aplicação Checkmate. Crie Checkmate em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Monitor em tempo real de hardware, uptime de servidores e incidentes. Crie Checkmate em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Checkmate**: Aplicação Checkmate. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Checkmate**: Monitor em tempo real de hardware, uptime de servidores e incidentes. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

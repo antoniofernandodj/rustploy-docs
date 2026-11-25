@@ -1,11 +1,11 @@
 ---
 title: Hospedar Directory Lister com Rustploy
-description: "Aplicação Directory Lister. Crie Directory Lister em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Script simples em PHP para listagem e navegação de diretórios web. Crie Directory Lister em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Directory Lister**: Aplicação Directory Lister. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Directory Lister**: Script simples em PHP para listagem e navegação de diretórios web. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
