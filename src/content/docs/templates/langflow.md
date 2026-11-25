@@ -1,11 +1,11 @@
 ---
 title: Hospedar Langflow com Rustploy
-description: "Interface low-code focada na criação de pipelines de RAG e agentes de IA. Crie Langflow em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Langflow. Crie Langflow em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Langflow**: Interface low-code focada na criação de pipelines de RAG e agentes de IA. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Langflow**: Aplicação Langflow. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

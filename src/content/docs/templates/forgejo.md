@@ -1,11 +1,11 @@
 ---
 title: Hospedar Forgejo com Rustploy
-description: "Plataforma leve e independente para hospedagem de código Git. Crie Forgejo em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Forgejo. Crie Forgejo em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Forgejo**: Plataforma leve e independente para hospedagem de código Git. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Forgejo**: Aplicação Forgejo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Gitea (MySQL) com Rustploy
-description: "Servidor Git Gitea configurado com banco de dados MySQL. Crie Gitea (MySQL) em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Gitea Mysql com Rustploy
+description: "Aplicação Gitea Mysql. Crie Gitea Mysql em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Gitea (MySQL)**: Servidor Git Gitea configurado com banco de dados MySQL. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Gitea Mysql**: Aplicação Gitea Mysql. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Gitea (MySQL)** e selecione.
+2. Busque por **Gitea Mysql** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

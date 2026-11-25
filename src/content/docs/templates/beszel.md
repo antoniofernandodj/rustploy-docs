@@ -1,11 +1,11 @@
 ---
 title: Hospedar Beszel com Rustploy
-description: "Monitor leve de servidores com estatísticas de containers e alertas. Crie Beszel em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Beszel. Crie Beszel em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Beszel**: Monitor leve de servidores com estatísticas de containers e alertas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Beszel**: Aplicação Beszel. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

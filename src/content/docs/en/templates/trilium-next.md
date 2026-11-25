@@ -1,11 +1,11 @@
 ---
-title: Host TriliumNext with Rustploy
-description: "Maintained, updated fork of the Trilium Notes hierarchical organizer, with improvements. Create TriliumNext in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host Trilium Next with Rustploy
+description: "Maintained, updated fork of the Trilium Notes hierarchical organizer, with improvements. Create Trilium Next in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**TriliumNext**: Maintained, updated fork of the Trilium Notes hierarchical organizer, with improvements. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Trilium Next**: Maintained, updated fork of the Trilium Notes hierarchical organizer, with improvements. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **TriliumNext** and select it.
+2. Search for **Trilium Next** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

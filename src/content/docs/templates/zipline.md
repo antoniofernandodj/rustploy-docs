@@ -1,11 +1,11 @@
 ---
 title: Hospedar Zipline com Rustploy
-description: "Servidor de upload rápido de arquivos otimizado para integração com ferramentas como ShareX. Crie Zipline em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Zipline. Crie Zipline em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Zipline**: Servidor de upload rápido de arquivos otimizado para integração com ferramentas como ShareX. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Zipline**: Aplicação Zipline. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

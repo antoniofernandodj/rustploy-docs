@@ -1,11 +1,11 @@
 ---
 title: Hospedar Nginx com Rustploy
-description: "O clássico servidor web de altíssima performance e proxy reverso. Crie Nginx em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Nginx. Crie Nginx em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Nginx**: O clássico servidor web de altíssima performance e proxy reverso. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Nginx**: Aplicação Nginx. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

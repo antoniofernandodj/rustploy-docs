@@ -1,11 +1,11 @@
 ---
 title: Hospedar Activepieces com Rustploy
-description: "Automação no-code (Alternativa ao Zapier e Make). Crie Activepieces em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Activepieces. Crie Activepieces em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Activepieces**: Automação no-code (Alternativa ao Zapier e Make). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Activepieces**: Aplicação Activepieces. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

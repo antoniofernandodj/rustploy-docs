@@ -1,11 +1,11 @@
 ---
-title: Host YOURLS with Rustploy
-description: "Classic PHP system for creating private link shorteners under the user's full control. Create YOURLS in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
+title: Host Yourls with Rustploy
+description: "Classic PHP system for creating private link shorteners under the user's full control. Create Yourls in one click on Rustploy: 2 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**YOURLS**: Classic PHP system for creating private link shorteners under the user's full control. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Yourls**: Classic PHP system for creating private link shorteners under the user's full control. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **YOURLS** and select it.
+2. Search for **Yourls** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

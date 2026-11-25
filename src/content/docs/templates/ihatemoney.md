@@ -1,11 +1,11 @@
 ---
-title: Hospedar I Hate Money com Rustploy
-description: "Utilitário web focado na divisão de contas compartilhadas e despesas em grupo. Crie I Hate Money em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Ihatemoney com Rustploy
+description: "Aplicação Ihatemoney. Crie Ihatemoney em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**I Hate Money**: Utilitário web focado na divisão de contas compartilhadas e despesas em grupo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Ihatemoney**: Aplicação Ihatemoney. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **I Hate Money** e selecione.
+2. Busque por **Ihatemoney** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

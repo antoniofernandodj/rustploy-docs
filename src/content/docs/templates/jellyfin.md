@@ -1,11 +1,11 @@
 ---
 title: Hospedar Jellyfin com Rustploy
-description: "Central de mídia e streaming de vídeo totalmente gratuita e open-source. Crie Jellyfin em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Jellyfin. Crie Jellyfin em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Jellyfin**: Central de mídia e streaming de vídeo totalmente gratuita e open-source. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Jellyfin**: Aplicação Jellyfin. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

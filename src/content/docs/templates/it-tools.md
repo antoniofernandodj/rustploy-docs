@@ -1,11 +1,11 @@
 ---
-title: Hospedar IT Tools com Rustploy
-description: "Coleção massiva de pequenos utilitários online essenciais para desenvolvedores. Crie IT Tools em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar It Tools com Rustploy
+description: "Aplicação It Tools. Crie It Tools em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**IT Tools**: Coleção massiva de pequenos utilitários online essenciais para desenvolvedores. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**It Tools**: Aplicação It Tools. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **IT Tools** e selecione.
+2. Busque por **It Tools** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

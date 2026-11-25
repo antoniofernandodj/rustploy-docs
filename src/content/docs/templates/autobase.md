@@ -1,11 +1,11 @@
 ---
 title: Hospedar Autobase com Rustploy
-description: "Alternativa de código aberto a bancos de dados gerenciados em nuvem. Crie Autobase em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Autobase. Crie Autobase em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Autobase**: Alternativa de código aberto a bancos de dados gerenciados em nuvem. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Autobase**: Aplicação Autobase. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

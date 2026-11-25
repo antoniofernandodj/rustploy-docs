@@ -1,11 +1,11 @@
 ---
 title: Hospedar Lowcoder com Rustploy
-description: "Construtor visual rápido de aplicações e painéis de dados corporativos. Crie Lowcoder em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Lowcoder. Crie Lowcoder em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Lowcoder**: Construtor visual rápido de aplicações e painéis de dados corporativos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Lowcoder**: Aplicação Lowcoder. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

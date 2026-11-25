@@ -1,11 +1,11 @@
 ---
-title: Hospedar InstantDB com Rustploy
-description: "Banco de dados em tempo real com sincronização instantânea de estado em clients. Crie InstantDB em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Instantdb com Rustploy
+description: "Aplicação Instantdb. Crie Instantdb em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**InstantDB**: Banco de dados em tempo real com sincronização instantânea de estado em clients. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Instantdb**: Aplicação Instantdb. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **InstantDB** e selecione.
+2. Busque por **Instantdb** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

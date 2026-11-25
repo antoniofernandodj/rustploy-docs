@@ -1,11 +1,11 @@
 ---
 title: Hospedar Stack Auth com Rustploy
-description: "Provedor de autenticação de usuários simplificado (Alternativa aberta ao Clerk/Auth0). Crie Stack Auth em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Stack Auth. Crie Stack Auth em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Stack Auth**: Provedor de autenticação de usuários simplificado (Alternativa aberta ao Clerk/Auth0). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Stack Auth**: Aplicação Stack Auth. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Dolibarr com Rustploy
-description: "Pacote unificado de software ERP e CRM para gestão empresarial. Crie Dolibarr em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Dolibarr. Crie Dolibarr em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Dolibarr**: Pacote unificado de software ERP e CRM para gestão empresarial. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Dolibarr**: Aplicação Dolibarr. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

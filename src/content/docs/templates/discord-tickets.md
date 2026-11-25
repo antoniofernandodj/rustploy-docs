@@ -1,11 +1,11 @@
 ---
 title: Hospedar Discord Tickets com Rustploy
-description: "Bot corporativo para controle e abertura de chamados via Discord. Crie Discord Tickets em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Discord Tickets. Crie Discord Tickets em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Discord Tickets**: Bot corporativo para controle e abertura de chamados via Discord. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Discord Tickets**: Aplicação Discord Tickets. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

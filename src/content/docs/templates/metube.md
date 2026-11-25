@@ -1,11 +1,11 @@
 ---
-title: Hospedar MeTube com Rustploy
-description: "Downloader web de vídeos do YouTube utilizando o motor do yt-dlp. Crie MeTube em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Metube com Rustploy
+description: "Aplicação Metube. Crie Metube em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**MeTube**: Downloader web de vídeos do YouTube utilizando o motor do yt-dlp. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Metube**: Aplicação Metube. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **MeTube** e selecione.
+2. Busque por **Metube** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

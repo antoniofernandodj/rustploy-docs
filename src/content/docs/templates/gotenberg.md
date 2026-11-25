@@ -1,11 +1,11 @@
 ---
 title: Hospedar Gotenberg com Rustploy
-description: "API apátrida escalável em Docker dedicada a conversões de arquivos para PDF. Crie Gotenberg em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Gotenberg. Crie Gotenberg em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Gotenberg**: API apátrida escalável em Docker dedicada a conversões de arquivos para PDF. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Gotenberg**: Aplicação Gotenberg. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

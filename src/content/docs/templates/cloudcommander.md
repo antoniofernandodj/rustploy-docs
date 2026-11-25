@@ -1,11 +1,11 @@
 ---
-title: Hospedar Cloud Commander com Rustploy
-description: "Gerenciador de arquivos para web com terminal e editor embutidos. Crie Cloud Commander em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Cloudcommander com Rustploy
+description: "Aplicação Cloudcommander. Crie Cloudcommander em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Cloud Commander**: Gerenciador de arquivos para web com terminal e editor embutidos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Cloudcommander**: Aplicação Cloudcommander. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Cloud Commander** e selecione.
+2. Busque por **Cloudcommander** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Typebot com Rustploy
-description: "Construtor visual de fluxos de conversação e chatbots interativos via blocos arrastáveis. Crie Typebot em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Typebot. Crie Typebot em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Typebot**: Construtor visual de fluxos de conversação e chatbots interativos via blocos arrastáveis. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Typebot**: Aplicação Typebot. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

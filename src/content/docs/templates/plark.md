@@ -1,11 +1,11 @@
 ---
 title: Hospedar Plark com Rustploy
-description: "Construtor visual de sites institucionais rápido e auto-hospedado. Crie Plark em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Plark. Crie Plark em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Plark**: Construtor visual de sites institucionais rápido e auto-hospedado. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Plark**: Aplicação Plark. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

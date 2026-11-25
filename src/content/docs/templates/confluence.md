@@ -1,11 +1,11 @@
 ---
 title: Hospedar Confluence com Rustploy
-description: "Espaço corporativo para compartilhamento de conhecimento e documentações de projetos. Crie Confluence em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Confluence. Crie Confluence em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Confluence**: Espaço corporativo para compartilhamento de conhecimento e documentações de projetos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Confluence**: Aplicação Confluence. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

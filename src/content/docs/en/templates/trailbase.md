@@ -1,11 +1,11 @@
 ---
-title: Host TrailBase with Rustploy
-description: "Fast application server in Rust and SQLite with a native WebAssembly runtime. Create TrailBase in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host Trailbase with Rustploy
+description: "Fast application server in Rust and SQLite with a native WebAssembly runtime. Create Trailbase in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**TrailBase**: Fast application server in Rust and SQLite with a native WebAssembly runtime. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Trailbase**: Fast application server in Rust and SQLite with a native WebAssembly runtime. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **TrailBase** and select it.
+2. Search for **Trailbase** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

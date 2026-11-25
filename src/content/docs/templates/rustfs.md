@@ -1,11 +1,11 @@
 ---
-title: Hospedar RustFS com Rustploy
-description: "Sistema de arquivos distribuído S3-compatible escrito em Rust de altíssima performance. Crie RustFS em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Rustfs com Rustploy
+description: "Aplicação Rustfs. Crie Rustfs em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**RustFS**: Sistema de arquivos distribuído S3-compatible escrito em Rust de altíssima performance. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Rustfs**: Aplicação Rustfs. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **RustFS** e selecione.
+2. Busque por **Rustfs** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

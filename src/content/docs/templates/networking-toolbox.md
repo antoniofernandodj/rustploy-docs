@@ -1,11 +1,11 @@
 ---
 title: Hospedar Networking Toolbox com Rustploy
-description: "Painel web contendo dezenas de utilitários rápidos para testes de rede. Crie Networking Toolbox em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Networking Toolbox. Crie Networking Toolbox em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Networking Toolbox**: Painel web contendo dezenas de utilitários rápidos para testes de rede. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Networking Toolbox**: Aplicação Networking Toolbox. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

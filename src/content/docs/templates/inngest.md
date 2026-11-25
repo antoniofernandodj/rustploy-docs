@@ -1,11 +1,11 @@
 ---
 title: Hospedar Inngest com Rustploy
-description: "Motor para orquestração e execução de workflows serverless baseados em eventos. Crie Inngest em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Inngest. Crie Inngest em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Inngest**: Motor para orquestração e execução de workflows serverless baseados em eventos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Inngest**: Aplicação Inngest. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

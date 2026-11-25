@@ -1,11 +1,11 @@
 ---
 title: Hospedar Habitica com Rustploy
-description: "Gamificação de rotinas e tarefas diárias em formato de RPG. Crie Habitica em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Habitica. Crie Habitica em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Habitica**: Gamificação de rotinas e tarefas diárias em formato de RPG. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Habitica**: Aplicação Habitica. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

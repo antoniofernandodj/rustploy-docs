@@ -1,11 +1,11 @@
 ---
 title: Hospedar Lobe Chat com Rustploy
-description: "Framework de chat com IA moderno, modular e com suporte a plugins de voz. Crie Lobe Chat em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Lobe Chat. Crie Lobe Chat em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Lobe Chat**: Framework de chat com IA moderno, modular e com suporte a plugins de voz. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Lobe Chat**: Aplicação Lobe Chat. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

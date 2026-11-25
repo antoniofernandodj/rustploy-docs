@@ -1,11 +1,11 @@
 ---
 title: Hospedar Glitchtip com Rustploy
-description: "Coletor centralizado e simplificado de erros de aplicações (Alternativa ao Sentry). Crie Glitchtip em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Glitchtip. Crie Glitchtip em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Glitchtip**: Coletor centralizado e simplificado de erros de aplicações (Alternativa ao Sentry). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Glitchtip**: Aplicação Glitchtip. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

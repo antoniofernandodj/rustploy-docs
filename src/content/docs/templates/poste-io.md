@@ -1,11 +1,11 @@
 ---
 title: Hospedar Poste.io com Rustploy
-description: "Servidor de e-mail corporativo completo (SMTP, IMAP, Antivírus) em uma única imagem estável. Crie Poste.io em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Poste.io. Crie Poste.io em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Poste.io**: Servidor de e-mail corporativo completo (SMTP, IMAP, Antivírus) em uma única imagem estável. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Poste.io**: Aplicação Poste.io. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

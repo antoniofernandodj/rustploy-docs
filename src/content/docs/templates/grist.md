@@ -1,11 +1,11 @@
 ---
 title: Hospedar Grist com Rustploy
-description: "Planilha inteligente open-source integrada com a estrutura relacional de banco de dados. Crie Grist em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Grist. Crie Grist em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Grist**: Planilha inteligente open-source integrada com a estrutura relacional de banco de dados. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Grist**: Aplicação Grist. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

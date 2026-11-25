@@ -1,11 +1,11 @@
 ---
 title: Hospedar Akaunting com Rustploy
-description: "Software de contabilidade open-source para pequenas empresas. Crie Akaunting em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Akaunting. Crie Akaunting em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Akaunting**: Software de contabilidade open-source para pequenas empresas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Akaunting**: Aplicação Akaunting. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

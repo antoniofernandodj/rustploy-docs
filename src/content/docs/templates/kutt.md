@@ -1,11 +1,11 @@
 ---
 title: Hospedar Kutt com Rustploy
-description: "Encurtador de URLs moderno com suporte a domínios customizados e analytics. Crie Kutt em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Kutt. Crie Kutt em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Kutt**: Encurtador de URLs moderno com suporte a domínios customizados e analytics. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Kutt**: Aplicação Kutt. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

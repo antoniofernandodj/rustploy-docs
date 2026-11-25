@@ -1,11 +1,11 @@
 ---
 title: Hospedar Teable com Rustploy
-description: "Banco de dados baseado em Postgres com interface visual de planilha de altíssima performance. Crie Teable em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Teable. Crie Teable em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Teable**: Banco de dados baseado em Postgres com interface visual de planilha de altíssima performance. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Teable**: Aplicação Teable. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

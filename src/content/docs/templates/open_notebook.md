@@ -1,11 +1,11 @@
 ---
 title: Hospedar Open Notebook com Rustploy
-description: "Caderno de notas integrado com SurrealDB e utilitários assistidos por IA. Crie Open Notebook em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Open Notebook. Crie Open Notebook em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Open Notebook**: Caderno de notas integrado com SurrealDB e utilitários assistidos por IA. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Open Notebook**: Aplicação Open Notebook. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

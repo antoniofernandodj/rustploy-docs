@@ -1,11 +1,11 @@
 ---
 title: Hospedar Bytebase com Rustploy
-description: "Ferramenta para controle e gerenciamento do ciclo de vida de bancos de dados. Crie Bytebase em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Bytebase. Crie Bytebase em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Bytebase**: Ferramenta para controle e gerenciamento do ciclo de vida de bancos de dados. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Bytebase**: Aplicação Bytebase. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

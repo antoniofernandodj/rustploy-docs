@@ -1,11 +1,11 @@
 ---
-title: Host Affine Pro with Rustploy
-description: "Collaborative note-taking and project management platform (Notion/Miro style). Create Affine Pro in one click on Rustploy: 4 containers, generated variables, domain and automatic HTTPS."
+title: Host Affinepro with Rustploy
+description: "Collaborative note-taking and project management platform (Notion/Miro style). Create Affinepro in one click on Rustploy: 4 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Affine Pro**: Collaborative note-taking and project management platform (Notion/Miro style). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Affinepro**: Collaborative note-taking and project management platform (Notion/Miro style). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Affine Pro** and select it.
+2. Search for **Affinepro** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

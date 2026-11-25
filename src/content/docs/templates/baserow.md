@@ -1,11 +1,11 @@
 ---
 title: Hospedar Baserow com Rustploy
-description: "Banco de dados relacional com interface de planilha (Alternativa ao Airtable). Crie Baserow em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Baserow. Crie Baserow em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Baserow**: Banco de dados relacional com interface de planilha (Alternativa ao Airtable). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Baserow**: Aplicação Baserow. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

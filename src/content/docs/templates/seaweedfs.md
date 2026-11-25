@@ -1,11 +1,11 @@
 ---
-title: Hospedar SeaweedFS com Rustploy
-description: "Sistema de arquivos distribuído veloz com suporte a mounts POSIX e WebDAV. Crie SeaweedFS em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Seaweedfs com Rustploy
+description: "Aplicação Seaweedfs. Crie Seaweedfs em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**SeaweedFS**: Sistema de arquivos distribuído veloz com suporte a mounts POSIX e WebDAV. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Seaweedfs**: Aplicação Seaweedfs. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **SeaweedFS** e selecione.
+2. Busque por **Seaweedfs** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

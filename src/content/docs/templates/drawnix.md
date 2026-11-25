@@ -1,11 +1,11 @@
 ---
 title: Hospedar Drawnix com Rustploy
-description: "Aplicação para renderização e gerenciamento de ativos visuais. Crie Drawnix em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Drawnix. Crie Drawnix em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Drawnix**: Aplicação para renderização e gerenciamento de ativos visuais. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Drawnix**: Aplicação Drawnix. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

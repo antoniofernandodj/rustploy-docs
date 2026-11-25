@@ -1,11 +1,11 @@
 ---
 title: Hospedar Flagsmith com Rustploy
-description: "Ferramenta para gerenciamento de Feature Flags e configurações remotas. Crie Flagsmith em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Flagsmith. Crie Flagsmith em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Flagsmith**: Ferramenta para gerenciamento de Feature Flags e configurações remotas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Flagsmith**: Aplicação Flagsmith. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Firecrawl com Rustploy
-description: "API de raspagem web que transforma qualquer URL em Markdown limpo para LLMs. Crie Firecrawl em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Firecrawl. Crie Firecrawl em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Firecrawl**: API de raspagem web que transforma qualquer URL em Markdown limpo para LLMs. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Firecrawl**: Aplicação Firecrawl. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

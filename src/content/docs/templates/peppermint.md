@@ -1,11 +1,11 @@
 ---
 title: Hospedar Peppermint com Rustploy
-description: "Ambiente unificado focado em documentação, design e testes rápidos de endpoints de API. Crie Peppermint em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Peppermint. Crie Peppermint em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Peppermint**: Ambiente unificado focado em documentação, design e testes rápidos de endpoints de API. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Peppermint**: Aplicação Peppermint. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

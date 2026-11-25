@@ -1,11 +1,11 @@
 ---
 title: Hospedar Chromium com Rustploy
-description: "Navegador open-source empacotado para execução em container. Crie Chromium em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Chromium. Crie Chromium em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Chromium**: Navegador open-source empacotado para execução em container. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Chromium**: Aplicação Chromium. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

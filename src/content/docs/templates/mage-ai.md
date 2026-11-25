@@ -1,11 +1,11 @@
 ---
-title: Hospedar Mage AI com Rustploy
-description: "Ferramenta moderna de engenharia de dados para construir, rodar e monitorar pipelines. Crie Mage AI em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Mage Ai com Rustploy
+description: "Aplicação Mage Ai. Crie Mage Ai em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Mage AI**: Ferramenta moderna de engenharia de dados para construir, rodar e monitorar pipelines. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Mage Ai**: Aplicação Mage Ai. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Mage AI** e selecione.
+2. Busque por **Mage Ai** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

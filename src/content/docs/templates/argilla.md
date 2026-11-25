@@ -1,11 +1,11 @@
 ---
 title: Hospedar Argilla com Rustploy
-description: "Plataforma para curadoria de dados e fluxos de Machine Learning. Crie Argilla em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Argilla. Crie Argilla em um clique no Rustploy: 5 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Argilla**: Plataforma para curadoria de dados e fluxos de Machine Learning. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Argilla**: Aplicação Argilla. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

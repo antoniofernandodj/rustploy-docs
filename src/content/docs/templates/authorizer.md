@@ -1,11 +1,11 @@
 ---
 title: Hospedar Authorizer com Rustploy
-description: "Solução low-code de autenticação e autorização de usuários. Crie Authorizer em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Authorizer. Crie Authorizer em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Authorizer**: Solução low-code de autenticação e autorização de usuários. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Authorizer**: Aplicação Authorizer. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

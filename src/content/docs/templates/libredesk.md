@@ -1,11 +1,11 @@
 ---
 title: Hospedar Libredesk com Rustploy
-description: "Central de helpdesk e suporte ao cliente empacotada em binário único. Crie Libredesk em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Libredesk. Crie Libredesk em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Libredesk**: Central de helpdesk e suporte ao cliente empacotada em binário único. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Libredesk**: Aplicação Libredesk. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

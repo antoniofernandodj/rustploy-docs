@@ -1,11 +1,11 @@
 ---
 title: Hospedar Openinary com Rustploy
-description: "Alternativa de código aberto ao Cloudinary para processamento dinâmico de mídia. Crie Openinary em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Openinary. Crie Openinary em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Openinary**: Alternativa de código aberto ao Cloudinary para processamento dinâmico de mídia. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Openinary**: Aplicação Openinary. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

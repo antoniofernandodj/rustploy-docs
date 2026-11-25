@@ -1,11 +1,11 @@
 ---
 title: Hospedar Letterfeed com Rustploy
-description: "Conversor inteligente que transforma newsletters recebidas por e-mail em feeds RSS. Crie Letterfeed em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Letterfeed. Crie Letterfeed em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Letterfeed**: Conversor inteligente que transforma newsletters recebidas por e-mail em feeds RSS. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Letterfeed**: Aplicação Letterfeed. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

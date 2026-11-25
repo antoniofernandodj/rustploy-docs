@@ -1,11 +1,11 @@
 ---
 title: Hospedar Coder com Rustploy
-description: "Ambiente de desenvolvimento baseado em nuvem (CDE) corporativo. Crie Coder em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Coder. Crie Coder em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Coder**: Ambiente de desenvolvimento baseado em nuvem (CDE) corporativo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Coder**: Aplicação Coder. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

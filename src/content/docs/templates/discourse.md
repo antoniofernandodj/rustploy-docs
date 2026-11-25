@@ -1,11 +1,11 @@
 ---
 title: Hospedar Discourse com Rustploy
-description: "Plataforma moderna para fóruns de discussão e comunidades. Crie Discourse em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Discourse. Crie Discourse em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Discourse**: Plataforma moderna para fóruns de discussão e comunidades. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Discourse**: Aplicação Discourse. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

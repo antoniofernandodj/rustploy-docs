@@ -1,11 +1,11 @@
 ---
 title: Hospedar Answer com Rustploy
-description: "Plataforma de perguntas e respostas (Estilo StackOverflow privado). Crie Answer em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Answer. Crie Answer em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Answer**: Plataforma de perguntas e respostas (Estilo StackOverflow privado). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Answer**: Aplicação Answer. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Quant-UX com Rustploy
-description: "Ferramenta avançada para prototipação e análise de comportamento e testes de UX de usuários. Crie Quant-UX em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Quant Ux com Rustploy
+description: "Aplicação Quant Ux. Crie Quant Ux em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Quant-UX**: Ferramenta avançada para prototipação e análise de comportamento e testes de UX de usuários. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Quant Ux**: Aplicação Quant Ux. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Quant-UX** e selecione.
+2. Busque por **Quant Ux** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Postiz com Rustploy
-description: "Plataforma focada em agendamento, análise e publicação multicanal de conteúdo. Crie Postiz em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Postiz. Crie Postiz em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Postiz**: Plataforma focada em agendamento, análise e publicação multicanal de conteúdo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Postiz**: Aplicação Postiz. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

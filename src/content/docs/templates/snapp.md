@@ -1,11 +1,11 @@
 ---
 title: Hospedar Snapp com Rustploy
-description: "Servidor ágil para captura, upload e compartilhamento de prints e imagens com controle de acessos. Crie Snapp em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Snapp. Crie Snapp em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Snapp**: Servidor ágil para captura, upload e compartilhamento de prints e imagens com controle de acessos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Snapp**: Aplicação Snapp. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

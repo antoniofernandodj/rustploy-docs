@@ -1,11 +1,11 @@
 ---
-title: Hospedar Crawl4AI com Rustploy
-description: "Web crawler otimizado para IA com suporte a extrações em Markdown e LLM. Crie Crawl4AI em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Crawl4ai com Rustploy
+description: "Aplicação Crawl4ai. Crie Crawl4ai em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Crawl4AI**: Web crawler otimizado para IA com suporte a extrações em Markdown e LLM. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Crawl4ai**: Aplicação Crawl4ai. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Crawl4AI** e selecione.
+2. Busque por **Crawl4ai** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

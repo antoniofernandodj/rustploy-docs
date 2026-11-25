@@ -1,11 +1,11 @@
 ---
 title: Hospedar Directus com Rustploy
-description: "CMS Headless e wrapper instantâneo de APIs para SQL. Crie Directus em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Directus. Crie Directus em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Directus**: CMS Headless e wrapper instantâneo de APIs para SQL. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Directus**: Aplicação Directus. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

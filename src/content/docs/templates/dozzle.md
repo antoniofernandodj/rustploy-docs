@@ -1,11 +1,11 @@
 ---
 title: Hospedar Dozzle com Rustploy
-description: "Visualizador leve e em tempo real para logs de containers Docker. Crie Dozzle em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Dozzle. Crie Dozzle em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Dozzle**: Visualizador leve e em tempo real para logs de containers Docker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Dozzle**: Aplicação Dozzle. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

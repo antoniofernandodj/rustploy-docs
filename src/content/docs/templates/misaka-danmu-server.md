@@ -1,11 +1,11 @@
 ---
 title: Hospedar Misaka Danmu Server com Rustploy
-description: "Servidor dedicado ao gerenciamento de comentários flutuantes (danmaku) para streams. Crie Misaka Danmu Server em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Misaka Danmu Server. Crie Misaka Danmu Server em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Misaka Danmu Server**: Servidor dedicado ao gerenciamento de comentários flutuantes (danmaku) para streams. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Misaka Danmu Server**: Aplicação Misaka Danmu Server. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

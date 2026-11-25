@@ -1,11 +1,11 @@
 ---
 title: Hospedar Uptime Kuma com Rustploy
-description: "Monitor visual de uptime de serviços e portas de rede com alertas via Telegram/Discord. Crie Uptime Kuma em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Uptime Kuma. Crie Uptime Kuma em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Uptime Kuma**: Monitor visual de uptime de serviços e portas de rede com alertas via Telegram/Discord. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Uptime Kuma**: Aplicação Uptime Kuma. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

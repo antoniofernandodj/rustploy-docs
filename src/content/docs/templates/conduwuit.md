@@ -1,11 +1,11 @@
 ---
 title: Hospedar Conduwuit com Rustploy
-description: "Versão otimizada e rica em recursos do servidor Matrix Conduit. Crie Conduwuit em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Conduwuit. Crie Conduwuit em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Conduwuit**: Versão otimizada e rica em recursos do servidor Matrix Conduit. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Conduwuit**: Aplicação Conduwuit. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

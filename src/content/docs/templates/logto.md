@@ -1,11 +1,11 @@
 ---
 title: Hospedar Logto com Rustploy
-description: "Plataforma CIAM moderna voltada para autenticação de clientes e colaboradores. Crie Logto em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Logto. Crie Logto em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Logto**: Plataforma CIAM moderna voltada para autenticação de clientes e colaboradores. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Logto**: Aplicação Logto. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

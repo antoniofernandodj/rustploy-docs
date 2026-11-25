@@ -1,11 +1,11 @@
 ---
-title: Hospedar RustDesk com Rustploy
-description: "Servidor de acesso remoto e controle de telas (Alternativa aberta ao TeamViewer/Anydesk). Crie RustDesk em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Rustdesk com Rustploy
+description: "Aplicação Rustdesk. Crie Rustdesk em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**RustDesk**: Servidor de acesso remoto e controle de telas (Alternativa aberta ao TeamViewer/Anydesk). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Rustdesk**: Aplicação Rustdesk. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -19,7 +19,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **RustDesk** e selecione.
+2. Busque por **Rustdesk** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

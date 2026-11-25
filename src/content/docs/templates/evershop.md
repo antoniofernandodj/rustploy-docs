@@ -1,11 +1,11 @@
 ---
 title: Hospedar Evershop com Rustploy
-description: "Solução completa e modular de e-commerce e loja virtual. Crie Evershop em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Evershop. Crie Evershop em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Evershop**: Solução completa e modular de e-commerce e loja virtual. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Evershop**: Aplicação Evershop. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

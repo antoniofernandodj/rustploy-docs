@@ -1,11 +1,11 @@
 ---
 title: Hospedar Photoprism com Rustploy
-description: "Organizador inteligente de fotos movido a IA para identificação automática de objetos e rostos. Crie Photoprism em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Photoprism. Crie Photoprism em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Photoprism**: Organizador inteligente de fotos movido a IA para identificação automática de objetos e rostos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Photoprism**: Aplicação Photoprism. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Soketi com Rustploy
-description: "Servidor WebSockets ultrarrápido construído em Node.js (Compatível com o ecossistema Laravel Pusher). Crie Soketi em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Soketi. Crie Soketi em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Soketi**: Servidor WebSockets ultrarrápido construído em Node.js (Compatível com o ecossistema Laravel Pusher). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Soketi**: Aplicação Soketi. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

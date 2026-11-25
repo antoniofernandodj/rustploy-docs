@@ -1,11 +1,11 @@
 ---
 title: Hospedar Morphos com Rustploy
-description: "Microserviço focado em tarefas de orquestração distribuída leve. Crie Morphos em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Morphos. Crie Morphos em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Morphos**: Microserviço focado em tarefas de orquestração distribuída leve. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Morphos**: Aplicação Morphos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

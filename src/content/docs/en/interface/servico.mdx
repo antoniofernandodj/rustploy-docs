@@ -17,6 +17,7 @@ import db from '../../../../assets/ui/servico-db-geral-en.png';
 import git from '../../../../assets/ui/servico-geral-git-en.png';
 import connection from '../../../../assets/ui/servico-connection-en.png';
 import deployments from '../../../../assets/ui/servico-deployments-en.png';
+import descricao from '../../../../assets/ui/servico-descricao-en.png';
 
 In **Projects → (project) → Services**, a card's **Open ›** button takes you to the service screen. This is where you
 deploy and configure everything.
@@ -77,6 +78,29 @@ after the last keystroke (there is no Rename button). The effect of the new name
 
 - **Compose:** *"The Docker stack and volumes do not change with the name: the data stays the same."*
 - **Application:** *"The internal hostname (`rp_<name>`) only applies on the next deploy. Other services that use the old name in environment variables need to be updated."*
+
+#### Description
+
+The **DESCRIPTION** panel, at the top of the tab, holds free text about the service: what it is for,
+what it does, what it depends on, what happens if it goes down, why it was created. Write it for
+whoever comes next, person or AI agent: agents connected through [MCP](/en/agentes/visao-geral/) read
+this text when they list the services and can update it when they learn something.
+
+<Shot
+  src={descricao}
+  alt="General tab with the Description panel: a text field with two lines about the service and the Save description and Cancel buttons."
+  caption="The Description panel at the top of the General tab."
+/>
+
+- It only saves on **Save description** (**Cancel** goes back to the saved text). No redeploy needed:
+  the description changes nothing that runs.
+- Clearing the whole text and saving asks for confirmation.
+- The first line shows on the service card, in the project list.
+- Up to 4000 characters; Markdown is fine.
+- **Do not put passwords or tokens in it**: the description goes into the
+  [infra state](/en/guias/infra-as-code/) and, with sync on, into git.
+- The description travels with [Export service](/en/guias/copiar-servico/) and with the copy to an
+  environment, but it is not part of the environment comparison nor of the release diff.
 
 #### A Compose service
 

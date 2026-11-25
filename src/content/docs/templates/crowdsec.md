@@ -1,11 +1,11 @@
 ---
 title: Hospedar Crowdsec com Rustploy
-description: "Sistema de segurança colaborativo contra IPs maliciosos. Crie Crowdsec em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Crowdsec. Crie Crowdsec em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Crowdsec**: Sistema de segurança colaborativo contra IPs maliciosos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Crowdsec**: Aplicação Crowdsec. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

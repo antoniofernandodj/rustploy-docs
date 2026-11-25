@@ -1,11 +1,11 @@
 ---
 title: Hospedar Gitingest com Rustploy
-description: "App utilitário integrado com S3, Sentry e coleta de métricas via Prometheus. Crie Gitingest em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Gitingest. Crie Gitingest em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Gitingest**: App utilitário integrado com S3, Sentry e coleta de métricas via Prometheus. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Gitingest**: Aplicação Gitingest. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

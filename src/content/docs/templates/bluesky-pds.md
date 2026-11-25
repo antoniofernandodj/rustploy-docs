@@ -1,11 +1,11 @@
 ---
-title: Hospedar Bluesky PDS com Rustploy
-description: "Servidor de Dados Pessoais (PDS) para a rede descentralizada Bluesky. Crie Bluesky PDS em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Bluesky Pds com Rustploy
+description: "Aplicação Bluesky Pds. Crie Bluesky Pds em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Bluesky PDS**: Servidor de Dados Pessoais (PDS) para a rede descentralizada Bluesky. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Bluesky Pds**: Aplicação Bluesky Pds. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Bluesky PDS** e selecione.
+2. Busque por **Bluesky Pds** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

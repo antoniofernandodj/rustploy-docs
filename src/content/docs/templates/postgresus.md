@@ -1,11 +1,11 @@
 ---
 title: Hospedar Postgresus com Rustploy
-description: "Utilitário para automação e agendamento contínuo de backups de bancos PostgreSQL. Crie Postgresus em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Postgresus. Crie Postgresus em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Postgresus**: Utilitário para automação e agendamento contínuo de backups de bancos PostgreSQL. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Postgresus**: Aplicação Postgresus. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

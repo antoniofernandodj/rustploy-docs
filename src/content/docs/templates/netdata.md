@@ -1,11 +1,11 @@
 ---
 title: Hospedar Netdata com Rustploy
-description: "Monitor analítico de infraestrutura em tempo real com métricas detalhadas por segundo. Crie Netdata em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Netdata. Crie Netdata em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Netdata**: Monitor analítico de infraestrutura em tempo real com métricas detalhadas por segundo. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Netdata**: Aplicação Netdata. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

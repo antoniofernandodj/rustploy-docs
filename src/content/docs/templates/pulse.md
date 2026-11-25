@@ -1,11 +1,11 @@
 ---
 title: Hospedar Pulse com Rustploy
-description: "Painel responsivo para monitoramento centralizado de ambientes Proxmox VE e Docker. Crie Pulse em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Pulse. Crie Pulse em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Pulse**: Painel responsivo para monitoramento centralizado de ambientes Proxmox VE e Docker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Pulse**: Aplicação Pulse. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Grimoire com Rustploy
-description: "Organizador e salvador de favoritos (bookmarks) ultra veloz. Crie Grimoire em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Grimoire. Crie Grimoire em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Grimoire**: Organizador e salvador de favoritos (bookmarks) ultra veloz. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Grimoire**: Aplicação Grimoire. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

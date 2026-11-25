@@ -1,11 +1,11 @@
 ---
 title: Hospedar Penpot com Rustploy
-description: "Ferramenta avançada de design vetorial e prototipação web (Alternativa open-source ao Figma). Crie Penpot em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Penpot. Crie Penpot em um clique no Rustploy: 6 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Penpot**: Ferramenta avançada de design vetorial e prototipação web (Alternativa open-source ao Figma). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Penpot**: Aplicação Penpot. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

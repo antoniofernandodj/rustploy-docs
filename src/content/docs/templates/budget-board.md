@@ -1,11 +1,11 @@
 ---
 title: Hospedar Budget Board com Rustploy
-description: "App de orçamento financeiro com backend em PostgreSQL. Crie Budget Board em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Budget Board. Crie Budget Board em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Budget Board**: App de orçamento financeiro com backend em PostgreSQL. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Budget Board**: Aplicação Budget Board. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

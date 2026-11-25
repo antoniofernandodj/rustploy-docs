@@ -1,11 +1,11 @@
 ---
 title: Hospedar Flatnotes com Rustploy
-description: "Bloco de notas que salva arquivos diretamente em Markdown puro. Crie Flatnotes em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Flatnotes. Crie Flatnotes em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Flatnotes**: Bloco de notas que salva arquivos diretamente em Markdown puro. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Flatnotes**: Aplicação Flatnotes. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

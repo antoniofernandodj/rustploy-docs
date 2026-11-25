@@ -1,11 +1,11 @@
 ---
 title: Hospedar Borgitory com Rustploy
-description: "Interface web para visualizar e gerenciar repositórios BorgBackup. Crie Borgitory em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Borgitory. Crie Borgitory em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Borgitory**: Interface web para visualizar e gerenciar repositórios BorgBackup. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Borgitory**: Aplicação Borgitory. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

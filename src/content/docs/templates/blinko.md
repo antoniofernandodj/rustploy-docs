@@ -1,11 +1,11 @@
 ---
 title: Hospedar Blinko com Rustploy
-description: "Aplicativo moderno de anotações rápidas e organização de fluxos. Crie Blinko em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Blinko. Crie Blinko em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Blinko**: Aplicativo moderno de anotações rápidas e organização de fluxos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Blinko**: Aplicação Blinko. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

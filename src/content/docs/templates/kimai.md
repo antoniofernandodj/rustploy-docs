@@ -1,11 +1,11 @@
 ---
 title: Hospedar Kimai com Rustploy
-description: "Sistema multiusuário para controle e monitoramento de horas trabalhadas (Time-tracking). Crie Kimai em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Kimai. Crie Kimai em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Kimai**: Sistema multiusuário para controle e monitoramento de horas trabalhadas (Time-tracking). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Kimai**: Aplicação Kimai. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

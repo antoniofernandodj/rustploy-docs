@@ -1,11 +1,11 @@
 ---
 title: Hospedar Mumble com Rustploy
-description: "Servidor de comunicação de voz com baixíssima latência voltado para jogos cooperativos. Crie Mumble em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Mumble. Crie Mumble em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Mumble**: Servidor de comunicação de voz com baixíssima latência voltado para jogos cooperativos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Mumble**: Aplicação Mumble. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

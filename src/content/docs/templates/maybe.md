@@ -1,11 +1,11 @@
 ---
 title: Hospedar Maybe com Rustploy
-description: "Aplicação privada e moderna para acompanhamento financeiro e despesas domésticas. Crie Maybe em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Maybe. Crie Maybe em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Maybe**: Aplicação privada e moderna para acompanhamento financeiro e despesas domésticas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Maybe**: Aplicação Maybe. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

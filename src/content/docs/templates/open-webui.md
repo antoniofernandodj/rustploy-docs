@@ -1,11 +1,11 @@
 ---
-title: Hospedar Open WebUI com Rustploy
-description: "Interface web completa para modelos LLM locais (Ollama) no estilo ChatGPT (inclui o Ollama). Crie Open WebUI em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Open Webui com Rustploy
+description: "Aplicação Open Webui. Crie Open Webui em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Open WebUI**: Interface web completa para modelos LLM locais (Ollama) no estilo ChatGPT (inclui o Ollama). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Open Webui**: Aplicação Open Webui. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Open WebUI** e selecione.
+2. Busque por **Open Webui** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Flatnotes (TOTP) com Rustploy
-description: "Versão do Flatnotes com camada de autenticação em duas etapas (2FA). Crie Flatnotes (TOTP) em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Flatnotes Totp com Rustploy
+description: "Aplicação Flatnotes Totp. Crie Flatnotes Totp em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Flatnotes (TOTP)**: Versão do Flatnotes com camada de autenticação em duas etapas (2FA). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Flatnotes Totp**: Aplicação Flatnotes Totp. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Flatnotes (TOTP)** e selecione.
+2. Busque por **Flatnotes Totp** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

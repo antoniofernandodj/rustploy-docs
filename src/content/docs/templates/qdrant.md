@@ -1,11 +1,11 @@
 ---
 title: Hospedar Qdrant com Rustploy
-description: "Banco de dados vetorial focado em busca de similaridade e armazenamento de embeddings em alta performance. Crie Qdrant em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Qdrant. Crie Qdrant em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Qdrant**: Banco de dados vetorial focado em busca de similaridade e armazenamento de embeddings em alta performance. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Qdrant**: Aplicação Qdrant. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

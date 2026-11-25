@@ -1,11 +1,11 @@
 ---
-title: Hospedar KitchenOwl com Rustploy
-description: "Organizador inteligente de receitas culinárias e listas de supermercado. Crie KitchenOwl em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Kitchenowl com Rustploy
+description: "Aplicação Kitchenowl. Crie Kitchenowl em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**KitchenOwl**: Organizador inteligente de receitas culinárias e listas de supermercado. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Kitchenowl**: Aplicação Kitchenowl. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **KitchenOwl** e selecione.
+2. Busque por **Kitchenowl** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Paymenter com Rustploy
-description: "Sistema de cobrança, faturamento automático e área do cliente focado em provedores de hospedagem. Crie Paymenter em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Paymenter. Crie Paymenter em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Paymenter**: Sistema de cobrança, faturamento automático e área do cliente focado em provedores de hospedagem. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Paymenter**: Aplicação Paymenter. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

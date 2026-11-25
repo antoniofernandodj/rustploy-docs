@@ -1,11 +1,11 @@
 ---
 title: Hospedar Movary com Rustploy
-description: "Rastreador pessoal de histórico de filmes assistidos integrado à base de dados do TMDB. Crie Movary em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Movary. Crie Movary em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Movary**: Rastreador pessoal de histórico de filmes assistidos integrado à base de dados do TMDB. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Movary**: Aplicação Movary. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

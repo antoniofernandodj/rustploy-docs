@@ -1,11 +1,11 @@
 ---
-title: Hospedar Hi.events com Rustploy
-description: "Plataforma integrada de venda de ingressos e gestão de eventos locais. Crie Hi.events em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Hi Events com Rustploy
+description: "Aplicação Hi Events. Crie Hi Events em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Hi.events**: Plataforma integrada de venda de ingressos e gestão de eventos locais. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Hi Events**: Aplicação Hi Events. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Hi.events** e selecione.
+2. Busque por **Hi Events** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

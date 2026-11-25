@@ -1,11 +1,11 @@
 ---
-title: Hospedar DumbPad com Rustploy
-description: "Bloco de notas web simples com proteção por senha. Crie DumbPad em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Dumbpad com Rustploy
+description: "Aplicação Dumbpad. Crie Dumbpad em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**DumbPad**: Bloco de notas web simples com proteção por senha. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Dumbpad**: Aplicação Dumbpad. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **DumbPad** e selecione.
+2. Busque por **Dumbpad** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

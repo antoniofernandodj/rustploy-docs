@@ -1,11 +1,11 @@
 ---
-title: Hospedar qBittorrent com Rustploy
-description: "Cliente de BitTorrent clássico equipado com sua interface web nativa de gerenciamento. Crie qBittorrent em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Qbittorrent com Rustploy
+description: "Aplicação Qbittorrent. Crie Qbittorrent em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**qBittorrent**: Cliente de BitTorrent clássico equipado com sua interface web nativa de gerenciamento. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Qbittorrent**: Aplicação Qbittorrent. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **qBittorrent** e selecione.
+2. Busque por **Qbittorrent** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

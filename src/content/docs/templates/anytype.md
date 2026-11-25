@@ -1,11 +1,11 @@
 ---
 title: Hospedar Anytype com Rustploy
-description: "Base de conhecimento pessoal \"offline-first\" e criptografada. Crie Anytype em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Anytype. Crie Anytype em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Anytype**: Base de conhecimento pessoal "offline-first" e criptografada. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Anytype**: Aplicação Anytype. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

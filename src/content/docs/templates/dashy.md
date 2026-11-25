@@ -1,11 +1,11 @@
 ---
 title: Hospedar Dashy com Rustploy
-description: "Dashboard pessoal customizável com monitoramento de status e widgets. Crie Dashy em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Dashy. Crie Dashy em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Dashy**: Dashboard pessoal customizável com monitoramento de status e widgets. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Dashy**: Aplicação Dashy. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

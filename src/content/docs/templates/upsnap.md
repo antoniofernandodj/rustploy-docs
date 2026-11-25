@@ -1,11 +1,11 @@
 ---
 title: Hospedar Upsnap com Rustploy
-description: "Dashboard simples integrado ao PocketBase feito para enviar pacotes Wake-on-LAN e monitorar dispositivos de rede. Crie Upsnap em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Upsnap. Crie Upsnap em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Upsnap**: Dashboard simples integrado ao PocketBase feito para enviar pacotes Wake-on-LAN e monitorar dispositivos de rede. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Upsnap**: Aplicação Upsnap. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

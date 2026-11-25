@@ -1,11 +1,11 @@
 ---
 title: Hospedar Appwrite com Rustploy
-description: "Plataforma Backend-as-a-Service (BaaS) completa em Docker. Crie Appwrite em um clique no Rustploy: 25 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Appwrite. Crie Appwrite em um clique no Rustploy: 25 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Appwrite**: Plataforma Backend-as-a-Service (BaaS) completa em Docker. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Appwrite**: Aplicação Appwrite. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Unleash com Rustploy
-description: "Plataforma corporativa robusta voltada ao gerenciamento de Feature Flags e estratégias de rollout. Crie Unleash em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Unleash. Crie Unleash em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Unleash**: Plataforma corporativa robusta voltada ao gerenciamento de Feature Flags e estratégias de rollout. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Unleash**: Aplicação Unleash. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

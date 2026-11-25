@@ -1,11 +1,11 @@
 ---
-title: Hospedar AzuraCast com Rustploy
-description: "Painel completo \"all-in-one\" para gerenciamento de Web Rádios. Crie AzuraCast em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Azuracast com Rustploy
+description: "Aplicação Azuracast. Crie Azuracast em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**AzuraCast**: Painel completo "all-in-one" para gerenciamento de Web Rádios. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Azuracast**: Aplicação Azuracast. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **AzuraCast** e selecione.
+2. Busque por **Azuracast** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

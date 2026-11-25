@@ -1,11 +1,11 @@
 ---
 title: Hospedar Mattermost com Rustploy
-description: "Plataforma de chat corporativo e colaboração técnica focada em DevOps. Crie Mattermost em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Mattermost. Crie Mattermost em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Mattermost**: Plataforma de chat corporativo e colaboração técnica focada em DevOps. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Mattermost**: Aplicação Mattermost. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

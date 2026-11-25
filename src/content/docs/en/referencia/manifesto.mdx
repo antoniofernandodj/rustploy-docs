@@ -24,6 +24,7 @@ daemon and `rustploy-shared` code.
 | Field | Type | Required | Default | |
 |---|---|---|---|---|
 | `name` | text | yes | — | Required. **Matching key** within the project. |
+| `description` | text | no | absent | A descrição do serviço (ver `ServiceSpec::description`). Viaja no "Exportar serviço". |
 | `source` | `source` object | yes | — | Required. Where the service comes from (see `source`). |
 | `port` | integer | no | `0` | App port **inside** the container. If omitted, it is `0` (no error, but the service will have no useful port). |
 | `host_port` | integer | no | absent | Legacy: **one** TCP port opened on the server, bound to the service `port`. `0` asks for automatic allocation (reuses the port already allocated to the service with the same name). With `tcp_ports`, it is only a mirror of the port that leads to `port`. |

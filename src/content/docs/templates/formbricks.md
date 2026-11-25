@@ -1,11 +1,11 @@
 ---
 title: Hospedar Formbricks com Rustploy
-description: "Ferramenta modular para criação e análise de pesquisas com usuários. Crie Formbricks em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Formbricks. Crie Formbricks em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Formbricks**: Ferramenta modular para criação e análise de pesquisas com usuários. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Formbricks**: Aplicação Formbricks. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

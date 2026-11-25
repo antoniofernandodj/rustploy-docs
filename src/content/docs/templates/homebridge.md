@@ -1,11 +1,11 @@
 ---
 title: Hospedar Homebridge com Rustploy
-description: "Emulador para trazer compatibilidade com o Apple HomeKit para dispositivos legados. Crie Homebridge em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Homebridge. Crie Homebridge em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Homebridge**: Emulador para trazer compatibilidade com o Apple HomeKit para dispositivos legados. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Homebridge**: Aplicação Homebridge. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

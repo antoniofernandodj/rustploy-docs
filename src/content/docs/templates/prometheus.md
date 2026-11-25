@@ -1,11 +1,11 @@
 ---
 title: Hospedar Prometheus com Rustploy
-description: "Banco de dados e central de monitoramento de séries temporais via scraping de métricas. Crie Prometheus em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Prometheus. Crie Prometheus em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Prometheus**: Banco de dados e central de monitoramento de séries temporais via scraping de métricas. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Prometheus**: Aplicação Prometheus. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

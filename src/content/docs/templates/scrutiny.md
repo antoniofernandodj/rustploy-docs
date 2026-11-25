@@ -1,11 +1,11 @@
 ---
 title: Hospedar Scrutiny com Rustploy
-description: "Interface de monitoramento de integridade física e relatórios S.M.A.R.T. de discos rígidos. Crie Scrutiny em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Scrutiny. Crie Scrutiny em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Scrutiny**: Interface de monitoramento de integridade física e relatórios S.M.A.R.T. de discos rígidos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Scrutiny**: Aplicação Scrutiny. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

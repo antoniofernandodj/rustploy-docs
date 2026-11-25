@@ -1,11 +1,11 @@
 ---
 title: Hospedar Reactive Resume com Rustploy
-description: "Gerador moderno de currículos baseado em seções estruturadas com exportação limpa. Crie Reactive Resume em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Reactive Resume. Crie Reactive Resume em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Reactive Resume**: Gerador moderno de currículos baseado em seções estruturadas com exportação limpa. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Reactive Resume**: Aplicação Reactive Resume. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

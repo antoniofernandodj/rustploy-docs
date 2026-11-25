@@ -1,11 +1,11 @@
 ---
-title: Host ERPNext with Rustploy
-description: "Complete open-source integrated business management system. Create ERPNext in one click on Rustploy: 14 containers, generated variables, domain and automatic HTTPS."
+title: Host Erpnext with Rustploy
+description: "Complete open-source integrated business management system. Create Erpnext in one click on Rustploy: 14 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**ERPNext**: Complete open-source integrated business management system. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Erpnext**: Complete open-source integrated business management system. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **ERPNext** and select it.
+2. Search for **Erpnext** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

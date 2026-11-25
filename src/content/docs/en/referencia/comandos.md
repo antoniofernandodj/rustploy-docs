@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 167 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 168 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **167 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **168 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -255,6 +255,19 @@ The value is a `ServiceSpec`.
 | `spec` | `ServiceSpec` |
 
 **Used by:** GUI and web UI.
+
+### ServiceDescriptionSet
+
+Grava só a **descrição** do serviço (texto livre: para que serve, o que faz, do que depende), sem reenviar o spec. `description` vazio apaga. Até 4000 caracteres. Não muda o que roda (nada de redeploy). Os agentes leem a descrição no `list_services`. Resposta: `Service`.
+
+```json
+{"ServiceDescriptionSet":{"service_id":"svc_…","description":"…"}}
+```
+
+| Field | Type |
+|---|---|
+| `service_id` | `String` |
+| `description` | `String` |
 
 ### ServiceDelete
 
@@ -1403,7 +1416,7 @@ Desiste: esquece a chave de recuperação da memória. A infra restaurada contin
 
 ### RecoveryKeyStatus
 
-A chave **pública** de recuperação deste servidor (`[secrets] recovery_recipient`), se houver. Nunca devolve a privada. Resposta: `RecoveryKey`. Plano: `docs/plano-chave-de-recuperacao.md`.
+A chave **pública** de recuperação deste servidor (`[secrets] recovery_recipient`), se houver. Nunca devolve a privada. Resposta: `RecoveryKey`. Plano: `docs/arquivo/plano-chave-de-recuperacao.md`.
 
 ```json
 "RecoveryKeyStatus"
@@ -1413,7 +1426,7 @@ A chave **pública** de recuperação deste servidor (`[secrets] recovery_recipi
 
 ### RecoveryKeyGenerate
 
-**Gera** a chave de recuperação: grava só a pública no `config.toml` e devolve a privada **uma única vez** (o servidor não a guarda; quem chama deve baixá-la na hora). Já havendo chave, recusa — a não ser com `replace: true` (a antiga deixa de cifrar o que for exportado daí em diante). Resposta: `RecoveryKeyGenerated`. A privada sai num **arquivo de recuperação** (`.rpkit`, `features::data_backup::recovery_kit`) junto com o que a tela Recuperar pede: `infra_remote` (obrigatório), `infra_branch` (opcional) e o token da conta Git `provider_id` (obrigatório para `https://`; o token só entra se a URL for do host da conta). Tudo é conferido **antes** de gerar: um erro aqui não troca a chave. Plano: `docs/plano-arquivo-de-recuperacao.md`.
+**Gera** a chave de recuperação: grava só a pública no `config.toml` e devolve a privada **uma única vez** (o servidor não a guarda; quem chama deve baixá-la na hora). Já havendo chave, recusa — a não ser com `replace: true` (a antiga deixa de cifrar o que for exportado daí em diante). Resposta: `RecoveryKeyGenerated`. A privada sai num **arquivo de recuperação** (`.rpkit`, `features::data_backup::recovery_kit`) junto com o que a tela Recuperar pede: `infra_remote` (obrigatório), `infra_branch` (opcional) e o token da conta Git `provider_id` (obrigatório para `https://`; o token só entra se a URL for do host da conta). Tudo é conferido **antes** de gerar: um erro aqui não troca a chave. Plano: `docs/arquivo/plano-arquivo-de-recuperacao.md`.
 
 ```json
 {"RecoveryKeyGenerate":{"replace":false,"infra_remote":"…","infra_branch":null,"provider_id":null}}

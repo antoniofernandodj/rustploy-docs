@@ -1,11 +1,11 @@
 ---
-title: Host Statping-NG with Rustploy
-description: "Visual uptime and page health monitor with elegant status dashboards. Create Statping-NG in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host Statping Ng with Rustploy
+description: "Visual uptime and page health monitor with elegant status dashboards. Create Statping Ng in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**Statping-NG**: Visual uptime and page health monitor with elegant status dashboards. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Statping Ng**: Visual uptime and page health monitor with elegant status dashboards. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **Statping-NG** and select it.
+2. Search for **Statping Ng** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

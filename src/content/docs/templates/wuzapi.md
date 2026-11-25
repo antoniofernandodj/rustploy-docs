@@ -1,11 +1,11 @@
 ---
-title: Hospedar WuzAPI com Rustploy
-description: "API RESTful leve para integração e automação multi-dispositivo com contas de WhatsApp. Crie WuzAPI em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Wuzapi com Rustploy
+description: "Aplicação Wuzapi. Crie Wuzapi em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**WuzAPI**: API RESTful leve para integração e automação multi-dispositivo com contas de WhatsApp. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Wuzapi**: Aplicação Wuzapi. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **WuzAPI** e selecione.
+2. Busque por **Wuzapi** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Grafana com Rustploy
-description: "Suíte de observabilidade para criação de dashboards gráficos analíticos. Crie Grafana em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Grafana. Crie Grafana em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Grafana**: Suíte de observabilidade para criação de dashboards gráficos analíticos. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Grafana**: Aplicação Grafana. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

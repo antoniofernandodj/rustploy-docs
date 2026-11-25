@@ -1,11 +1,11 @@
 ---
 title: Hospedar Plane com Rustploy
-description: "Sistema moderno e ágil de gerenciamento de projetos e sprints (Alternativa ao Jira). Crie Plane em um clique no Rustploy: 13 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Plane. Crie Plane em um clique no Rustploy: 13 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Plane**: Sistema moderno e ágil de gerenciamento de projetos e sprints (Alternativa ao Jira). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Plane**: Aplicação Plane. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

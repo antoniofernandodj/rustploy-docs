@@ -1,11 +1,11 @@
 ---
 title: Hospedar Ackee com Rustploy
-description: "Analytics focado em privacidade para websites. Crie Ackee em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Ackee. Crie Ackee em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Ackee**: Analytics focado em privacidade para websites. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Ackee**: Aplicação Ackee. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

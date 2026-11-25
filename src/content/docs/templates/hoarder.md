@@ -1,11 +1,11 @@
 ---
 title: Hospedar Hoarder com Rustploy
-description: "Aplicativo inteligente de bookmarks com auto-tagging baseado em IA. Crie Hoarder em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Hoarder. Crie Hoarder em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Hoarder**: Aplicativo inteligente de bookmarks com auto-tagging baseado em IA. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Hoarder**: Aplicação Hoarder. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

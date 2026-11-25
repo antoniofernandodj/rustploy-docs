@@ -1,11 +1,11 @@
 ---
 title: Hospedar Vikunja com Rustploy
-description: "Organizador completo de tarefas e listas de afazeres com suporte a Kanbans e visualizações de Gantt. Crie Vikunja em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Vikunja. Crie Vikunja em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Vikunja**: Organizador completo de tarefas e listas de afazeres com suporte a Kanbans e visualizações de Gantt. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Vikunja**: Aplicação Vikunja. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

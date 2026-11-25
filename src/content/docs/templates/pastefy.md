@@ -1,11 +1,11 @@
 ---
 title: Hospedar Pastefy com Rustploy
-description: "Repositório privado de textos (Pastebin) com realce de sintaxe e login via OAuth2. Crie Pastefy em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Pastefy. Crie Pastefy em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Pastefy**: Repositório privado de textos (Pastebin) com realce de sintaxe e login via OAuth2. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Pastefy**: Aplicação Pastefy. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

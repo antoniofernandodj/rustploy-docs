@@ -1,11 +1,11 @@
 ---
 title: Hospedar Pyrodactyl com Rustploy
-description: "Alternativa leve, segura e rápida construída sobre a base do painel Pterodactyl. Crie Pyrodactyl em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Pyrodactyl. Crie Pyrodactyl em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Pyrodactyl**: Alternativa leve, segura e rápida construída sobre a base do painel Pterodactyl. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Pyrodactyl**: Aplicação Pyrodactyl. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

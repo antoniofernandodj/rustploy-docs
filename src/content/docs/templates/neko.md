@@ -1,11 +1,11 @@
 ---
 title: Hospedar Neko com Rustploy
-description: "Navegador virtual compartilhado operando diretamente dentro de um container Docker (via WebRTC/VNC). Crie Neko em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Neko. Crie Neko em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Neko**: Navegador virtual compartilhado operando diretamente dentro de um container Docker (via WebRTC/VNC). O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Neko**: Aplicação Neko. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

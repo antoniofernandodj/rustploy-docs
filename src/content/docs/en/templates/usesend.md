@@ -1,11 +1,11 @@
 ---
-title: Host useSend with Rustploy
-description: "Open platform for bulk and transactional email sending (Resend and SendGrid alternative). Create useSend in one click on Rustploy: 4 containers, generated variables, domain and automatic HTTPS."
+title: Host Usesend with Rustploy
+description: "Open platform for bulk and transactional email sending (Resend and SendGrid alternative). Create Usesend in one click on Rustploy: 4 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**useSend**: Open platform for bulk and transactional email sending (Resend and SendGrid alternative). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Usesend**: Open platform for bulk and transactional email sending (Resend and SendGrid alternative). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **useSend** and select it.
+2. Search for **Usesend** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

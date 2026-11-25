@@ -1,11 +1,11 @@
 ---
 title: Hospedar Komari Monitor com Rustploy
-description: "Painel web leve para visualização rápida de desempenho de hardware. Crie Komari Monitor em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Komari Monitor. Crie Komari Monitor em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Komari Monitor**: Painel web leve para visualização rápida de desempenho de hardware. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Komari Monitor**: Aplicação Komari Monitor. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

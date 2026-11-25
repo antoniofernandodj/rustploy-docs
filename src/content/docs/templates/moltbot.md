@@ -1,11 +1,11 @@
 ---
 title: Hospedar Moltbot com Rustploy
-description: "Gateway e agente CLI de WhatsApp integrado com inteligência artificial. Crie Moltbot em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Moltbot. Crie Moltbot em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Moltbot**: Gateway e agente CLI de WhatsApp integrado com inteligência artificial. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Moltbot**: Aplicação Moltbot. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

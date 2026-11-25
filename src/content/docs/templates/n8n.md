@@ -1,11 +1,11 @@
 ---
-title: Hospedar n8n com Rustploy
-description: "Plataforma low-code avançada para automação de tarefas e fluxos complexos de integração. Crie n8n em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar N8n com Rustploy
+description: "Aplicação N8n. Crie N8n em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**n8n**: Plataforma low-code avançada para automação de tarefas e fluxos complexos de integração. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**N8n**: Aplicação N8n. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **n8n** e selecione.
+2. Busque por **N8n** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

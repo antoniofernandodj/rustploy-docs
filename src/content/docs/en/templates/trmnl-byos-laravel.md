@@ -1,11 +1,11 @@
 ---
-title: Host TRMNL BYOS Laravel with Rustploy
-description: "Self-hosted Laravel application for managing TRMNL e-ink screens. Create TRMNL BYOS Laravel in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
+title: Host Trmnl Byos Laravel with Rustploy
+description: "Self-hosted Laravel application for managing TRMNL e-ink screens. Create Trmnl Byos Laravel in one click on Rustploy: 1 container, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**TRMNL BYOS Laravel**: Self-hosted Laravel application for managing TRMNL e-ink screens. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Trmnl Byos Laravel**: Self-hosted Laravel application for managing TRMNL e-ink screens. Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **TRMNL BYOS Laravel** and select it.
+2. Search for **Trmnl Byos Laravel** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

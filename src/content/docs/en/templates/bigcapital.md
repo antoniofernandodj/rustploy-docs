@@ -1,11 +1,11 @@
 ---
-title: Host BigCapital with Rustploy
-description: "Corporate ERP and accounting system (QuickBooks alternative). Create BigCapital in one click on Rustploy: 6 containers, generated variables, domain and automatic HTTPS."
+title: Host Bigcapital with Rustploy
+description: "Corporate ERP and accounting system (QuickBooks alternative). Create Bigcapital in one click on Rustploy: 6 containers, generated variables, domain and automatic HTTPS."
 sidebar:
   hidden: true
 ---
 
-**BigCapital**: Corporate ERP and accounting system (QuickBooks alternative). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
+**Bigcapital**: Corporate ERP and accounting system (QuickBooks alternative). Rustploy ships a ready-made template: you pick it, adjust the domain and deploy.
 
 ## Summary
 
@@ -20,7 +20,7 @@ sidebar:
 ## How to create it
 
 1. In the project, click **+ Novo serviço → Template** (New service → Template).
-2. Search for **BigCapital** and select it.
+2. Search for **Bigcapital** and select it.
 3. Name the service and review the variables. Passwords and keys come already generated.
 4. Create it and run **Deploy**.
 5. Point your domain in **Domains**. See [Domains and HTTPS](/en/guias/dominios-e-tls/).

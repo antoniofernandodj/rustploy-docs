@@ -1,11 +1,11 @@
 ---
 title: Hospedar Navidrome com Rustploy
-description: "Servidor leve de streaming de áudio compatível com o protocolo Subsonic. Crie Navidrome em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Navidrome. Crie Navidrome em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Navidrome**: Servidor leve de streaming de áudio compatível com o protocolo Subsonic. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Navidrome**: Aplicação Navidrome. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

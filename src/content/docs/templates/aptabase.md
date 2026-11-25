@@ -1,11 +1,11 @@
 ---
 title: Hospedar Aptabase com Rustploy
-description: "Plataforma auto-hospedada para análise de tráfego web. Crie Aptabase em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Aptabase. Crie Aptabase em um clique no Rustploy: 3 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Aptabase**: Plataforma auto-hospedada para análise de tráfego web. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Aptabase**: Aplicação Aptabase. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

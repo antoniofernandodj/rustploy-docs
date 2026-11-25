@@ -1,11 +1,11 @@
 ---
 title: Hospedar Meilisearch com Rustploy
-description: "Motor de busca textual open-source focado em velocidade extrema e experiência do usuário. Crie Meilisearch em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Meilisearch. Crie Meilisearch em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Meilisearch**: Motor de busca textual open-source focado em velocidade extrema e experiência do usuário. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Meilisearch**: Aplicação Meilisearch. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

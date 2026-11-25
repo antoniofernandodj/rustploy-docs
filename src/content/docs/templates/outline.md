@@ -1,11 +1,11 @@
 ---
 title: Hospedar Outline com Rustploy
-description: "Base de conhecimento corporativa moderna e extremamente limpa para equipes ágeis. Crie Outline em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Outline. Crie Outline em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Outline**: Base de conhecimento corporativa moderna e extremamente limpa para equipes ágeis. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Outline**: Aplicação Outline. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
-title: Hospedar Kokoro TTS com Rustploy
-description: "Wrapper FastAPI em Docker para síntese de voz usando o modelo Kokoro-82M. Crie Kokoro TTS em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Kokoro Tts com Rustploy
+description: "Aplicação Kokoro Tts. Crie Kokoro Tts em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Kokoro TTS**: Wrapper FastAPI em Docker para síntese de voz usando o modelo Kokoro-82M. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Kokoro Tts**: Aplicação Kokoro Tts. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -19,7 +19,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **Kokoro TTS** e selecione.
+2. Busque por **Kokoro Tts** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

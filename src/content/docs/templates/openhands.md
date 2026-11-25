@@ -1,11 +1,11 @@
 ---
-title: Hospedar OpenHands com Rustploy
-description: "Ambiente centralizado voltado para a orquestração e deploy de agentes autônomos de IA. Crie OpenHands em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+title: Hospedar Openhands com Rustploy
+description: "Aplicação Openhands. Crie Openhands em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**OpenHands**: Ambiente centralizado voltado para a orquestração e deploy de agentes autônomos de IA. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Openhands**: Aplicação Openhands. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
@@ -20,7 +20,7 @@ sidebar:
 ## Como criar
 
 1. No projeto, clique em **+ Novo serviço → Template**.
-2. Busque por **OpenHands** e selecione.
+2. Busque por **Openhands** e selecione.
 3. Dê um nome ao serviço e revise as variáveis. As senhas e chaves já vêm geradas.
 4. Crie e faça o **Deploy**.
 5. Aponte o seu domínio em **Domínios**. Veja [Domínios e HTTPS](/guias/dominios-e-tls/).

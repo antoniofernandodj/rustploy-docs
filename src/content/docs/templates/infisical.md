@@ -1,11 +1,11 @@
 ---
 title: Hospedar Infisical com Rustploy
-description: "Plataforma unificada de gerenciamento de secrets, chaves e variáveis de ambiente. Crie Infisical em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Infisical. Crie Infisical em um clique no Rustploy: 4 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Infisical**: Plataforma unificada de gerenciamento de secrets, chaves e variáveis de ambiente. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Infisical**: Aplicação Infisical. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

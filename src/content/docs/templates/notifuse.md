@@ -1,11 +1,11 @@
 ---
 title: Hospedar Notifuse com Rustploy
-description: "Central open-source para criação, envio e acompanhamento de métricas de newsletters. Crie Notifuse em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Notifuse. Crie Notifuse em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Notifuse**: Central open-source para criação, envio e acompanhamento de métricas de newsletters. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Notifuse**: Aplicação Notifuse. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

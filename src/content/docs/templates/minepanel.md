@@ -1,11 +1,11 @@
 ---
 title: Hospedar Minepanel com Rustploy
-description: "Painel em Docker voltado à criação, monitoramento e controle de instâncias de Minecraft. Crie Minepanel em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Minepanel. Crie Minepanel em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Minepanel**: Painel em Docker voltado à criação, monitoramento e controle de instâncias de Minecraft. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Minepanel**: Aplicação Minepanel. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

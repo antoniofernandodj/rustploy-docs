@@ -1,11 +1,11 @@
 ---
 title: Hospedar Glance com Rustploy
-description: "Feed unificado para reunir feeds RSS, clima, bookmarks e monitoramento. Crie Glance em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Glance. Crie Glance em um clique no Rustploy: 1 container, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Glance**: Feed unificado para reunir feeds RSS, clima, bookmarks e monitoramento. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Glance**: Aplicação Glance. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 

@@ -1,11 +1,11 @@
 ---
 title: Hospedar Etherpad com Rustploy
-description: "Editor de texto colaborativo multiusuário em tempo real. Crie Etherpad em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
+description: "Aplicação Etherpad. Crie Etherpad em um clique no Rustploy: 2 containers, variáveis geradas, domínio e HTTPS automático."
 sidebar:
   hidden: true
 ---
 
-**Etherpad**: Editor de texto colaborativo multiusuário em tempo real. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
+**Etherpad**: Aplicação Etherpad. O Rustploy tem um template pronto: você escolhe, ajusta o domínio e faz o deploy.
 
 ## Resumo
 
