@@ -46,7 +46,7 @@ Em **Settings → Manutenção**, **LIMPEZA AUTOMÁTICA**:
 | **Redes sem uso** | remove as redes sem containers |
 | **Cache de build** | remove o cache sem uso |
 | **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | padrão **168 h**. `0` apaga todo o cache sem uso. Com um prazo, o cache de um deploy ou job recente sobrevive e o próximo build não recomeça do zero |
-| **Aquecer os builds depois da limpeza** | ligado por padrão. Reconstrói a imagem de cada serviço Git ou zip que ficou **frio**, um de cada vez, na fila de deploy |
+| **Aquecer os builds depois da limpeza** | ligado por padrão. Reconstrói, na fila de deploy e um de cada vez, o que estiver marcado na lista logo abaixo e ficou **frio** (veja [Escolher o que aquecer](#escolher-o-que-aquecer)) |
 | **Volumes sem uso** | **cuidado**: veja abaixo |
 
 <Aside type="danger" title="Volumes podem conter dados">
@@ -66,7 +66,31 @@ esse build logo após a limpeza, **um serviço por vez**, e cada serviço mostra
 deploy bem-sucedido também deixa o serviço quente. Serviços de imagem pronta ou Compose
 não têm build e não têm selo.
 
+## Escolher o que aquecer
+
+Abaixo de **Aquecer os builds depois da limpeza** fica a lista do que pode ser aquecido,
+agrupada por projeto: cada serviço com repositório Git ou zip e cada job, como
+`Job: <nome>`. Marque o que deve ser reconstruído depois da limpeza e clique em
+**Salvar**. Os jobs que são pré-deploy de algum serviço aparecem com **(pré-deploy)**.
+
+Sem escolha sua, vale o padrão:
+
+| Item | Aquece por padrão? |
+|---|---|
+| Serviço com repositório Git ou zip | sim |
+| Job de [pré-deploy](/guias/pre-deploy/) de algum serviço | sim: é ele que segura o deploy enquanto constrói a própria imagem (uma migração, por exemplo) |
+| Outro job | não |
+
+Na aba **Advanced** de um serviço há o mesmo controle, **Aquecer depois da limpeza do
+Docker**, que vale na hora, sem **Salvar**. Ele fica desativado (e não dá para mudar)
+enquanto a limpeza automática estiver desligada ou com **Aquecer os builds depois da
+limpeza** desmarcado: nessas condições nada é aquecido.
+
+Para agentes, a mesma lista sai em `WarmAfterCleanupTargets`, e uma escolha se grava com
+`WarmAfterCleanupChoiceSet{id, warm}` (veja o [manual do agente](/agentes/manual/)).
+
 ## Relação com os jobs
 
 A limpeza de cache de build pode deixar um [job](/guias/jobs/#aquecer-um-job)
-**frio**. O prazo de retenção do cache existe para evitar isso.
+**frio**. O prazo de retenção do cache existe para evitar isso, e os jobs marcados na
+lista [acima](#escolher-o-que-aquecer) são aquecidos de novo logo depois da limpeza.

@@ -1,9 +1,9 @@
 ---
 title: Comandos do protocolo
-description: "Referência dos 168 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
+description: "Referência dos 170 comandos da API do Rustploy (POST /api/rpc): nome, campos, exemplo JSON e se a GUI ou a web UI os usam."
 ---
 
-Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **168 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
+Toda a API do Rustploy passa por **um** endpoint, `POST /api/rpc`, que recebe um **comando** em JSON e devolve uma **resposta**. Esta página lista os **170 comandos**. A mesma lista vale para a ferramenta `rpc` do [MCP](/agentes/ferramentas/).
 
 ## Como chamar
 
@@ -39,6 +39,7 @@ Uma falha vem como `{"Err":{"code":"…","message":"…"}}`. Os exemplos abaixo 
 - [Jobs](#jobs)
 - [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
 - [Docker](#docker)
+- [Limpeza automática (agendada) dos recursos acima](#limpeza-automatica-agendada-dos-recursos-acima)
 - [Remoção INDIVIDUAL de um recurso Docker (o par por-item dos `Prune*`)](#remocao-individual-de-um-recurso-docker-o-par-por-item-dos-prune)
 - [Ingress](#ingress)
 - [Ingress proxy](#ingress-proxy)
@@ -1801,6 +1802,33 @@ Stops every container labeled `rustploy.managed=true`, regardless of what the DB
 ```json
 "StopAllManaged"
 ```
+
+**Usado por:** GUI e web UI.
+
+## Limpeza automática (agendada) dos recursos acima
+
+### WarmAfterCleanupTargets
+
+Os serviços (com build) e jobs que a limpeza pode aquecer em seguida, com a escolha de cada um. Resposta: `WarmAfterCleanupTargets`.
+
+```json
+"WarmAfterCleanupTargets"
+```
+
+**Usado por:** GUI e web UI.
+
+### WarmAfterCleanupChoiceSet
+
+Escolhe se `id` (serviço ou job) é aquecido depois da limpeza. Escolher o padrão apaga a escolha. Resposta: `WarmAfterCleanupTargets`, já atualizada.
+
+```json
+{"WarmAfterCleanupChoiceSet":{"id":"…","warm":false}}
+```
+
+| Campo | Tipo |
+|---|---|
+| `id` | `String` |
+| `warm` | `bool` |
 
 **Usado por:** GUI e web UI.
 

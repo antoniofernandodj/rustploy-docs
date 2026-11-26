@@ -45,7 +45,7 @@ In **Settings → Maintenance**, **AUTOMATIC CLEANUP**:
 | **Unused networks** | removes networks with no containers |
 | **Build cache** | removes unused cache |
 | **KEEP THE CACHE USED IN THE LAST (HOURS)** | default **168 h**. `0` deletes all unused cache. With a period, the cache of a recent deploy or job survives and the next build does not start from scratch |
-| **Warm the builds after cleanup** | on by default. Rebuilds the image of every Git or zip service that became **cold**, one at a time, in the deploy queue |
+| **Warm the builds after cleanup** | on by default. Rebuilds, in the deploy queue and one at a time, whatever is checked in the list right below and became **cold** (see [Choosing what to warm](#choosing-what-to-warm)) |
 | **Unused volumes** | **careful**: see below |
 
 <Aside type="danger" title="Volumes may hold data">
@@ -64,6 +64,29 @@ and each service shows a **warm** or **cold** badge (in the project's service li
 the service header). A successful deploy also leaves the service warm. Services using a
 ready-made image or Compose have no build and no badge.
 
+## Choosing what to warm
+
+Below **Warm the builds after cleanup** is the list of what can be warmed, grouped by
+project: every service with a Git repository or zip and every job, as `Job: <name>`.
+Tick what should be rebuilt after the cleanup and click **Save**. Jobs that are a
+pre-deploy step of some service show **(pre-deploy)**.
+
+Without a choice of yours, the default applies:
+
+| Item | Warmed by default? |
+|---|---|
+| Service with a Git repository or zip | yes |
+| [Pre-deploy](/en/guias/pre-deploy/) job of some service | yes: it is what holds the deploy while it builds its own image (a migration, for example) |
+| Any other job | no |
+
+A service's **Advanced** tab has the same control, **Warm after the Docker cleanup**,
+which takes effect immediately, without **Save**. It is disabled (and cannot be changed)
+while the automatic cleanup is off or **Warm the builds after cleanup** is unticked: in
+those cases nothing is warmed.
+
+For agents, the same list comes from `WarmAfterCleanupTargets`, and a choice is saved
+with `WarmAfterCleanupChoiceSet{id, warm}` (see the [agent manual](/en/agentes/manual/)).
+
 ## Relationship with jobs
 
-Cleaning the build cache can leave a [job](/en/guias/jobs/#warm-a-job) **cold**. The cache retention period exists to avoid that.
+Cleaning the build cache can leave a [job](/en/guias/jobs/#warm-a-job) **cold**. The cache retention period exists to avoid that, and the jobs ticked in the list [above](#choosing-what-to-warm) are warmed again right after the cleanup.

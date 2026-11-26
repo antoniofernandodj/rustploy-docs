@@ -137,7 +137,7 @@ This is where the **automatic Docker cleanup** lives. It comes **off** and **rem
 | **Unused networks** | removes networks with no containers |
 | **Build cache** | removes unused cache |
 | **KEEP THE CACHE USED IN THE LAST (HOURS)** | default **168**. `0` deletes all unused cache |
-| **Warm the builds after cleanup** | on by default. After cleaning, rebuilds the image of every service with a Git repository or zip, **one at a time**, in the deploy queue, so the first deploy of the day does not pay for the whole build. Each service shows a **warm / cold** badge |
+| **Warm the builds after cleanup** | on by default. After cleaning, rebuilds **one at a time**, in the deploy queue, whatever is ticked in the list below it (services with a Git repository or zip and jobs, grouped by project), so the first deploy of the day does not pay for the whole build. Services with a build and pre-deploy jobs come ticked by default. See [Choosing what to warm](/en/guias/limpeza-docker/#choosing-what-to-warm) |
 | **Unused volumes** | **careful** |
 
 <Aside type="danger" title="Volumes">

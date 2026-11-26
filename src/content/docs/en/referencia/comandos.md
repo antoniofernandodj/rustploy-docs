@@ -1,9 +1,9 @@
 ---
 title: Protocol commands
-description: "Reference of the 168 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
+description: "Reference of the 170 Rustploy API commands (POST /api/rpc): name, fields, JSON example and whether the GUI or the web UI use them."
 ---
 
-The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **168 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
+The whole Rustploy API goes through **one** endpoint, `POST /api/rpc`, which takes a JSON **command** and returns a **response**. This page lists the **170 commands**. The same list applies to the `rpc` tool of the [MCP](/en/agentes/ferramentas/).
 
 ## How to call
 
@@ -39,6 +39,7 @@ A failure comes as `{"Err":{"code":"…","message":"…"}}`. The examples below 
 - [Jobs](#jobs)
 - [Jobs (tarefas one-shot via docker-compose, agendadas ou manuais)](#jobs-tarefas-one-shot-via-docker-compose-agendadas-ou-manuais)
 - [Docker](#docker)
+- [Limpeza automática (agendada) dos recursos acima](#limpeza-automatica-agendada-dos-recursos-acima)
 - [Remoção INDIVIDUAL de um recurso Docker (o par por-item dos `Prune*`)](#remocao-individual-de-um-recurso-docker-o-par-por-item-dos-prune)
 - [Ingress](#ingress)
 - [Ingress proxy](#ingress-proxy)
@@ -1801,6 +1802,33 @@ Stops every container labeled `rustploy.managed=true`, regardless of what the DB
 ```json
 "StopAllManaged"
 ```
+
+**Used by:** GUI and web UI.
+
+## Limpeza automática (agendada) dos recursos acima
+
+### WarmAfterCleanupTargets
+
+Os serviços (com build) e jobs que a limpeza pode aquecer em seguida, com a escolha de cada um. Resposta: `WarmAfterCleanupTargets`.
+
+```json
+"WarmAfterCleanupTargets"
+```
+
+**Used by:** GUI and web UI.
+
+### WarmAfterCleanupChoiceSet
+
+Escolhe se `id` (serviço ou job) é aquecido depois da limpeza. Escolher o padrão apaga a escolha. Resposta: `WarmAfterCleanupTargets`, já atualizada.
+
+```json
+{"WarmAfterCleanupChoiceSet":{"id":"…","warm":false}}
+```
+
+| Field | Type |
+|---|---|
+| `id` | `String` |
+| `warm` | `bool` |
 
 **Used by:** GUI and web UI.
 

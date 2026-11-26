@@ -143,7 +143,7 @@ nada** até você marcar pelo menos um recurso e ativar.
 | **Redes sem uso** | remove redes sem containers |
 | **Cache de build** | remove o cache sem uso |
 | **MANTER O CACHE USADO NAS ÚLTIMAS (HORAS)** | padrão **168**. `0` apaga todo o cache sem uso |
-| **Aquecer os builds depois da limpeza** | ligado por padrão. Depois de limpar, reconstrói a imagem de cada serviço com repositório Git ou zip, **um de cada vez**, na fila de deploy, para o primeiro deploy do dia não pagar o build inteiro. Cada serviço mostra o selo **quente / frio** |
+| **Aquecer os builds depois da limpeza** | ligado por padrão. Depois de limpar, reconstrói **um de cada vez**, na fila de deploy, o que estiver marcado na lista abaixo dele (serviços com repositório Git ou zip e jobs, agrupados por projeto), para o primeiro deploy do dia não pagar o build inteiro. Por padrão vêm marcados os serviços com build e os jobs de pré-deploy. Veja [Escolher o que aquecer](/guias/limpeza-docker/#escolher-o-que-aquecer) |
 | **Volumes sem uso** | **cuidado** |
 
 <Aside type="danger" title="Volumes">
