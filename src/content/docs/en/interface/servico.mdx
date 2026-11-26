@@ -81,20 +81,24 @@ after the last keystroke (there is no Rename button). The effect of the new name
 
 #### Description
 
-The **DESCRIPTION** panel, at the top of the tab, holds free text about the service: what it is for,
-what it does, what it depends on, what happens if it goes down, why it was created. Write it for
+Right below the name, in the service header, there is a free-text field about the service: what it is
+for, what it does, what it depends on, what happens if it goes down, why it was created. Write it for
 whoever comes next, person or AI agent: agents connected through [MCP](/en/agentes/visao-geral/) read
 this text when they list the services and can update it when they learn something.
 
 <Shot
   src={descricao}
-  alt="General tab with the Description panel: a text field with two lines about the service and the Save description and Cancel buttons."
-  caption="The Description panel at the top of the General tab."
+  alt="Service header with the description field right below the name: borderless, three visible lines."
+  caption="The description is the borderless field in the header, below the service name."
 />
 
-- It only saves on **Save description** (**Cancel** goes back to the saved text). No redeploy needed:
-  the description changes nothing that runs.
-- Clearing the whole text and saving asks for confirmation.
+- It saves on its own: half a second after your last keystroke the text goes to the server, and the
+  "Description saved" notice appears once you stop typing. There is no button, and no redeploy is
+  needed: the description changes nothing that runs.
+- Clearing the whole text saves the empty value directly — do it knowing the text disappears for
+  everyone, people and agents, and that nothing undoes it except the git history.
+- Three lines stay visible; the rest scrolls inside the field. Hovering the field shows what it is
+  for (and the warning about passwords).
 - The first line shows on the service card, in the project list.
 - Up to 4000 characters; Markdown is fine.
 - **Do not put passwords or tokens in it**: the description goes into the

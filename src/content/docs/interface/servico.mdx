@@ -86,20 +86,24 @@ meio segundo depois da última tecla (não há botão Renomear). O efeito do nov
 
 #### Descrição
 
-O painel **DESCRIÇÃO**, no topo da aba, guarda um texto livre sobre o serviço: para que ele existe, o
-que faz, do que depende, o que acontece se cair, por que foi criado. Escreva para quem vier depois,
-pessoa ou agente de IA: os agentes conectados pelo [MCP](/agentes/visao-geral/) leem esse texto ao
-listar os serviços e podem atualizá-lo quando aprendem algo.
+Logo abaixo do nome, no cabeçalho do serviço, há um campo de texto livre sobre o serviço: para que ele
+existe, o que faz, do que depende, o que acontece se cair, por que foi criado. Escreva para quem vier
+depois, pessoa ou agente de IA: os agentes conectados pelo [MCP](/agentes/visao-geral/) leem esse texto
+ao listar os serviços e podem atualizá-lo quando aprendem algo.
 
 <Shot
   src={descricao}
-  alt="Aba Geral com o painel Descrição: um campo de texto com duas linhas sobre o serviço e os botões Salvar descrição e Cancelar."
-  caption="O painel Descrição no topo da aba Geral."
+  alt="Cabeçalho do serviço com o campo de descrição logo abaixo do nome, sem borda, três linhas visíveis."
+  caption="A descrição é o campo sem borda do cabeçalho, abaixo do nome do serviço."
 />
 
-- Grava só no botão **Salvar descrição** (**Cancelar** volta ao texto gravado). Não pede redeploy:
-  a descrição não muda nada do que roda.
-- Apagar o texto todo e salvar pede confirmação.
+- Grava sozinha: meio segundo depois da última tecla o texto vai para o servidor, e o aviso
+  "Descrição salva" aparece quando você para de digitar. Não há botão, e não pede redeploy: a
+  descrição não muda nada do que roda.
+- Apagar o texto todo grava o vazio direto — faça-o sabendo que o texto some para todos, pessoas e
+  agentes, e que não há como desfazer a não ser pelo histórico do git.
+- Três linhas ficam visíveis; o restante rola dentro do campo. O aviso do que o campo é (e de não pôr
+  senhas) aparece ao parar o ponteiro sobre ele.
 - A primeira linha aparece no cartão do serviço, na lista do projeto.
 - Até 4000 caracteres; aceita Markdown.
 - **Não ponha senhas nem tokens**: a descrição vai para o [estado de infra](/guias/infra-as-code/) e,
